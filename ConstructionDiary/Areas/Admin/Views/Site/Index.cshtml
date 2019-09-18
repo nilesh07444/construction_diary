@@ -1,0 +1,283 @@
+﻿@using ConstructionDiary.Models
+@model List<SP_GetSitesList_Result>
+@{
+    ViewBag.Title = "Site"; 
+}
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Site List</strong>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <button id="btnAddSite" class="btn green">
+                                    <i class="fa fa-plus"></i> Add New Site
+                                </button>
+                            </div>
+                            @*<div class="btn-group pull-right">
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        Tools <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="#">Print</a></li>
+                                        <li><a href="#">Save as PDF</a></li>
+                                        <li><a href="#">Export to Excel</a></li>
+                                    </ul>
+                                </div>*@
+                        </div>
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped" id="tblSitesList">
+                            <thead>
+                                <tr>
+                                    <th>Site Name</th>
+                                    <th>Site Detail</th>
+                                    <th>Total Credit</th>
+                                    <th>Total Debit</th>
+                                    <th>Total Balance</th>
+                                    <th>Finance</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (SP_GetSitesList_Result site in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@site.SiteName</td>
+                                            <td>@site.SiteDescription</td>
+                                            <td>@CoreHelper.GetFormatterAmount(site.TotalCreditAmount)</td>
+                                            <td>@CoreHelper.GetFormatterAmount(site.TotalDebitAmount)</td>
+                                            <td>@CoreHelper.GetFormatterAmount(site.TotalRemainingAmount)</td>
+                                            <td><button onclick="fnFinanceSite('@site.SiteId')" type="button" class="btn btn-primary">Finance</button></td>
+                                            <td>
+                                                @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
+                                                <button data-id="@site.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
+                                                <button onclick="fnDeleteSite('@site.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Save Modal -->
+<div class="modal fade" id="addNewSiteModal" tabindex="-1" role="dialog" aria-labelledby="addNewSiteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add New Site</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <section class="panel" style="margin-bottom:0px;">
+                            <div class="panel-body">
+                                <div class=" form">
+                                    <form class="cmxform form-horizontal tasi-form" id="siteForm">
+                                        <div class="form-group ">
+                                            <label for="txtSitename" class="control-label col-lg-3">Site Name</label>
+                                            <div class="col-lg-9">
+                                                <input class="form-control" id="txtSitename" name="txtSitename" minlength="2" type="text" required />
+                                                <span id="spn_sitename" class="clserror">This field is required</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="txtSiteDescription" class="control-label col-lg-3">Site Description</label>
+                                            <div class="col-lg-9">
+                                                <textarea class="form-control " id="txtSiteDescription" name="txtSiteDescription" required></textarea>
+                                            </div>
+                                        </div>
+                                        <div id="dvMessage" class="form-group"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top:0px;">
+                <input type="hidden" id="hdnSiteIdToEdit" value="0" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                <button id="btnSaveSite" class="btn btn-success" type="button">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Save modal -->
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteSiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure want to Delete ?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteSite" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                <button id="btnDeleteSite" class="btn btn-danger" type="button"> Delete </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblSitesList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [5,6]
+                }]
+        });
+    });
+
+    jQuery(document).on("click", "#btnSaveSite", function () {
+        var flag = true;
+        jQuery(".clserror").hide();
+
+        var site_id = jQuery("#hdnSiteIdToEdit").val();
+        var site_name = jQuery("#txtSitename").val();
+        var site_desc = jQuery("#txtSiteDescription").val();
+
+        if (jQuery.trim(site_name) == "") {
+            flag = false;
+            jQuery("#spn_sitename").show();
+
+        }
+
+        if (flag) {
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("SaveSite", "Site")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?site_id=" + site_id + "&site_name=" + site_name + "&site_desc=" + site_desc,
+                success: function (result) {
+                    if (result == "created") {
+                        showSuccessMsg("Site saved successfully", "dvMessage");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                    else if (result == "updated") {
+                        showSuccessMsg("Site updated successfully", "dvMessage");
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                    }
+                    else if (result == "alreadyexist") {
+                        showErrorMsg("Site Name already exists", "dvMessage");
+                    }
+                    else {
+                        showErrorMsg("Something went wrong. Please try again", "dvMessage");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+
+    });
+
+    jQuery(document).on("click", "#btnDeleteSite", function () {
+
+        var site_id = jQuery("#hdnDeleteSite").val();
+        if (site_id != "" && site_id != null) {
+            $('#deleteSiteModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteSite", "Site")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?SiteId=" + site_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Site deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Site Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    jQuery(document).on("click", "#btnAddSite", function () {
+        $('#addNewSiteModal h4').text("Add New Site");
+        $('#addNewSiteModal #btnSaveSite').text("Save");
+        $(".clserror").hide();
+        $('#txtSitename').val('');
+        $('#txtSiteDescription').val('');
+        $('#hdnSiteIdToEdit').val('0');
+        $('#addNewSiteModal').modal('show');
+
+    });
+
+    jQuery(document).on("click", ".clsEditSite", function () {
+        var site_id = $(this).attr("data-id");
+        var site_name = $(this).parent().parent().find("td:eq(0)").text();
+        var site_desc = $(this).parent().parent().find("td:eq(1)").text();
+        $('#txtSitename').val(site_name);
+        $('#txtSiteDescription').val(site_desc);
+        $('#addNewSiteModal h4').text("Update Site Details");
+        $('#addNewSiteModal #btnSaveSite').text("Update");
+        $('#hdnSiteIdToEdit').val(site_id);
+        $(".clserror").hide();
+        $('#addNewSiteModal').modal('show');
+    });
+
+    function fnDeleteSite(site_id) {
+        jQuery("#hdnDeleteSite").val(site_id);
+        $('#deleteSiteModal').modal('show');
+    }
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+    function fnFinanceSite(siteid) {
+        window.location.href = "sites/sitedetail?id=" + siteid;
+    }
+
+</script>
