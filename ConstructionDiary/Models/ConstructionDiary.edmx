@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ConstructionDiaryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ConstructionDiaryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="tbl_Clients">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -14,6 +14,7 @@
           <Property Name="FirmName" Type="nvarchar" MaxLength="100" />
           <Property Name="PackageTypeId" Type="int" Nullable="false" />
           <Property Name="ExpireDate" Type="datetime" />
+          <Property Name="Remarks" Type="nvarchar(max)" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -98,8 +99,6 @@
           </Key>
           <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PersonFirstName" Type="nvarchar" MaxLength="365" />
-          <Property Name="PersonMiddleName" Type="nvarchar" MaxLength="365" />
-          <Property Name="PersonLastName" Type="nvarchar" MaxLength="365" />
           <Property Name="PersonAddress" Type="nvarchar" MaxLength="365" />
           <Property Name="MobileNo" Type="nvarchar" MaxLength="50" />
           <Property Name="PersonPhoto" Type="nvarchar" MaxLength="365" />
@@ -143,7 +142,6 @@
           <Property Name="ClientId" Type="uniqueidentifier" />
           <Property Name="RoleId" Type="int" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="367" Nullable="false" />
-          <Property Name="LastName" Type="nvarchar" MaxLength="367" />
           <Property Name="EmailId" Type="nvarchar" MaxLength="67" />
           <Property Name="MobileNo" Type="nvarchar" MaxLength="15" />
           <Property Name="UserPhoto" Type="nvarchar" MaxLength="365" />
@@ -192,7 +190,9 @@
         <Function Name="SP_GetSiteDetailById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SiteId" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="SP_GetSitesList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_GetSitesList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ClientId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="SP_GetTodayPartyFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="SP_GetTodayPersonFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="ConstructionDiaryModelStoreContainer">
@@ -219,8 +219,7 @@
             <End Role="tbl_Users" EntitySet="tbl_Users" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ConstructionDiaryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -233,6 +232,7 @@
           <Property Name="FirmName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="PackageTypeId" Type="Int32" Nullable="false" />
           <Property Name="ExpireDate" Type="DateTime" Precision="3" />
+          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
@@ -320,8 +320,6 @@
           </Key>
           <Property Name="PersonId" Type="Guid" Nullable="false" />
           <Property Name="PersonFirstName" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
-          <Property Name="PersonMiddleName" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
-          <Property Name="PersonLastName" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
           <Property Name="PersonAddress" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
           <Property Name="MobileNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PersonPhoto" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
@@ -366,7 +364,6 @@
           <Property Name="ClientId" Type="Guid" />
           <Property Name="RoleId" Type="Int32" Nullable="false" />
           <Property Name="FirstName" Type="String" MaxLength="367" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="367" FixedLength="false" Unicode="true" />
           <Property Name="EmailId" Type="String" MaxLength="67" FixedLength="false" Unicode="true" />
           <Property Name="MobileNo" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="UserPhoto" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
@@ -438,17 +435,17 @@
           </AssociationSet>
           <FunctionImport Name="SP_GetPersonsList" ReturnType="Collection(ConstructionDiaryModel.SP_GetPersonsList_Result)" />
           <FunctionImport Name="SP_GetSiteDetailById" ReturnType="Collection(ConstructionDiaryModel.SP_GetSiteDetailById_Result)">
-            <Parameter Name="SiteId" Mode="In" Type="Guid" />
+          <Parameter Name="SiteId" Mode="In" Type="Guid" />
           </FunctionImport>
-          <FunctionImport Name="SP_GetSitesList" ReturnType="Collection(ConstructionDiaryModel.SP_GetSitesList_Result)" />
-          <FunctionImport Name="SP_GetTodayPartyFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPartyFinance_Result)" />
+          <FunctionImport Name="SP_GetTodayPartyFinance" />
           <FunctionImport Name="SP_GetTodayPersonFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPersonFinance_Result)" />
+          <FunctionImport Name="SP_GetSitesList" ReturnType="Collection(ConstructionDiaryModel.SP_GetSitesList_Result)">
+            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
           <Property Type="String" Name="PersonFirstName" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="PersonMiddleName" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="PersonLastName" Nullable="true" MaxLength="365" />
           <Property Type="String" Name="PersonAddress" Nullable="true" MaxLength="365" />
           <Property Type="String" Name="MobileNo" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="PersonPhoto" Nullable="true" MaxLength="365" />
@@ -472,38 +469,10 @@
           <Property Type="String" Name="BankBranch" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Remarks" Nullable="true" />
         </ComplexType>
-        <ComplexType Name="SP_GetSitesList_Result">
-          <Property Type="Guid" Name="SiteId" Nullable="true" />
-          <Property Type="String" Name="SiteName" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="SiteDescription" Nullable="true" MaxLength="365" />
-          <Property Type="Boolean" Name="IsActive" Nullable="true" />
-          <Property Type="Boolean" Name="IsDeleted" Nullable="true" />
-          <Property Type="Decimal" Name="TotalCreditAmount" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="TotalDebitAmount" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="TotalRemainingAmount" Nullable="true" Precision="19" Scale="2" />
-        </ComplexType>
-        <ComplexType Name="SP_GetTodayPartyFinance_Result">
-          <Property Type="Guid" Name="ContractorFinanceId" Nullable="true" />
-          <Property Type="Guid" Name="SiteId" Nullable="true" />
-          <Property Type="String" Name="SiteName" Nullable="true" MaxLength="365" />
-          <Property Type="DateTime" Name="SelectedDate" Nullable="true" Precision="23" />
-          <Property Type="Decimal" Name="Amount" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="String" Name="CreditOrDebit" Nullable="true" MaxLength="50" />
-          <Property Type="Guid" Name="UserId" Nullable="true" />
-          <Property Type="String" Name="ReasonFor" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="PaymentType" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="ChequeNo" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="BankName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="BankBranch" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
-        </ComplexType>
         <ComplexType Name="SP_GetTodayPersonFinance_Result">
           <Property Type="Guid" Name="FinanceId" Nullable="true" />
           <Property Type="Guid" Name="PersonId" Nullable="true" />
           <Property Type="String" Name="PersonFirstName" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="PersonMiddleName" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="PersonLastName" Nullable="true" MaxLength="365" />
           <Property Type="DateTime" Name="SelectedDate" Nullable="true" Precision="23" />
           <Property Type="Decimal" Name="Amount" Nullable="true" Precision="18" Scale="2" />
           <Property Type="String" Name="CreditOrDebit" Nullable="true" MaxLength="50" />
@@ -515,6 +484,16 @@
           <Property Type="String" Name="BankBranch" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Remarks" Nullable="true" MaxLength="365" />
           <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SP_GetSitesList_Result">
+          <Property Type="Guid" Name="SiteId" Nullable="true" />
+          <Property Type="String" Name="SiteName" Nullable="true" MaxLength="365" />
+          <Property Type="String" Name="SiteDescription" Nullable="true" MaxLength="365" />
+          <Property Type="Boolean" Name="IsActive" Nullable="true" />
+          <Property Type="Boolean" Name="IsDeleted" Nullable="true" />
+          <Property Type="Decimal" Name="TotalCreditAmount" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="TotalDebitAmount" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="TotalRemainingAmount" Nullable="true" Precision="19" Scale="2" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -530,6 +509,7 @@
                 <ScalarProperty Name="FirmName" ColumnName="FirmName" />
                 <ScalarProperty Name="PackageTypeId" ColumnName="PackageTypeId" />
                 <ScalarProperty Name="ExpireDate" ColumnName="ExpireDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
@@ -620,8 +600,6 @@
               <MappingFragment StoreEntitySet="tbl_Persons">
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="PersonFirstName" ColumnName="PersonFirstName" />
-                <ScalarProperty Name="PersonMiddleName" ColumnName="PersonMiddleName" />
-                <ScalarProperty Name="PersonLastName" ColumnName="PersonLastName" />
                 <ScalarProperty Name="PersonAddress" ColumnName="PersonAddress" />
                 <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
                 <ScalarProperty Name="PersonPhoto" ColumnName="PersonPhoto" />
@@ -668,7 +646,6 @@
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="EmailId" ColumnName="EmailId" />
                 <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
                 <ScalarProperty Name="UserPhoto" ColumnName="UserPhoto" />
@@ -684,8 +661,6 @@
               <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetPersonsList_Result">
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="PersonFirstName" ColumnName="PersonFirstName" />
-                <ScalarProperty Name="PersonMiddleName" ColumnName="PersonMiddleName" />
-                <ScalarProperty Name="PersonLastName" ColumnName="PersonLastName" />
                 <ScalarProperty Name="PersonAddress" ColumnName="PersonAddress" />
                 <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
                 <ScalarProperty Name="PersonPhoto" ColumnName="PersonPhoto" />
@@ -715,48 +690,13 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetSitesList" FunctionName="ConstructionDiaryModel.Store.SP_GetSitesList">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetSitesList_Result">
-                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
-                <ScalarProperty Name="SiteName" ColumnName="SiteName" />
-                <ScalarProperty Name="SiteDescription" ColumnName="SiteDescription" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="TotalCreditAmount" ColumnName="TotalCreditAmount" />
-                <ScalarProperty Name="TotalDebitAmount" ColumnName="TotalDebitAmount" />
-                <ScalarProperty Name="TotalRemainingAmount" ColumnName="TotalRemainingAmount" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetTodayPartyFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPartyFinance">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetTodayPartyFinance_Result">
-                <ScalarProperty Name="ContractorFinanceId" ColumnName="ContractorFinanceId" />
-                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
-                <ScalarProperty Name="SiteName" ColumnName="SiteName" />
-                <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="CreditOrDebit" ColumnName="CreditOrDebit" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="ReasonFor" ColumnName="ReasonFor" />
-                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
-                <ScalarProperty Name="ChequeNo" ColumnName="ChequeNo" />
-                <ScalarProperty Name="BankName" ColumnName="BankName" />
-                <ScalarProperty Name="BankBranch" ColumnName="BankBranch" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetTodayPartyFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPartyFinance" />
           <FunctionImportMapping FunctionImportName="SP_GetTodayPersonFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPersonFinance">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetTodayPersonFinance_Result">
                 <ScalarProperty Name="FinanceId" ColumnName="FinanceId" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="PersonFirstName" ColumnName="PersonFirstName" />
-                <ScalarProperty Name="PersonMiddleName" ColumnName="PersonMiddleName" />
-                <ScalarProperty Name="PersonLastName" ColumnName="PersonLastName" />
                 <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="CreditOrDebit" ColumnName="CreditOrDebit" />
@@ -768,6 +708,20 @@
                 <ScalarProperty Name="BankBranch" ColumnName="BankBranch" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetSitesList" FunctionName="ConstructionDiaryModel.Store.SP_GetSitesList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetSitesList_Result">
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="SiteName" ColumnName="SiteName" />
+                <ScalarProperty Name="SiteDescription" ColumnName="SiteDescription" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="TotalCreditAmount" ColumnName="TotalCreditAmount" />
+                <ScalarProperty Name="TotalDebitAmount" ColumnName="TotalDebitAmount" />
+                <ScalarProperty Name="TotalRemainingAmount" ColumnName="TotalRemainingAmount" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

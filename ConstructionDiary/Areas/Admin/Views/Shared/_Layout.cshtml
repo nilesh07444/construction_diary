@@ -49,15 +49,23 @@
                 <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
             </div>
             <!--logo start-->
-            <a style="font-weight:bold;" href="/dashboard" class="logo">Construction <span class="hidden-phone">Software</span></a>
+            @if (clsSession.FirmName != "")
+            {
+                <a style="font-weight:bold;" href="/dashboard" class="logo"><span>@clsSession.FirmName</span></a>
+            }
+            else
+            {
+                <a style="font-weight:bold;" href="/dashboard" class="logo">Construction <span class="hidden-phone">Software</span></a>
+            }
+
             <!--logo end-->
 
             <div class="top-nav ">
                 <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
                     @*<li>
-                            <input type="text" class="form-control search" placeholder="Search">
-                        </li>*@
+                    <input type="text" class="form-control search" placeholder="Search">
+                </li>*@
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -86,40 +94,59 @@
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu" id="nav-accordion">
                     <li>
-                        <a class="@(ViewBag.Title == "Dashboard" ? "active" : "")" href="dashboard">
+                        <a class="@(ViewBag.Title == "Dashboard" ? "active" : "")" href="/admin/dashboard">
                             <i class="fa fa-dashboard"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="sub-menu">
-                        <a class="clsMain @(ViewBag.Title == "Person" ? "active" : "")" href="javascript:;">
-                            <i class="fa fa-user"></i>
-                            <span>Debit</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a href="/person">Debit List</a></li>
-                            <li><a href="/person/account">Today Debit List</a></li>
-                        </ul>
-                    </li>
 
-                    <li class="sub-menu">
-                        <a class="clsMain @(ViewBag.Title == "MyAccount" ? "active" : "")" href="javascript:;">
-                            <i class="fa fa-search-plus"></i>
-                            <span>Credit</span>
-                        </a>
-                        <ul class="sub">
-                            <li><a href="/myaccount">Credit List</a></li>
-                            <li><a href="/myaccount/account">Today Credit List</a></li>
-                        </ul>
-                    </li>
+                    @{
+                        if (clsSession.RoleID == (int)UserRoles.SiteOwner)
+                        {
+                            <li>
+                                <a class="@(ViewBag.Title == "Client" ? "active" : "")" href="/admin/client">
+                                    <i class="fa fa-bookmark"></i>
+                                    <span>Client</span>
+                                </a>
+                            </li>
+                        }
+                    }
+
+                    @{
+                        if (clsSession.RoleID != (int)UserRoles.SiteOwner)
+                        {
+                            <li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "Person" ? "active" : "")" href="javascript:;">
+                                    <i class="fa fa-user"></i>
+                                    <span>Debit</span>
+                                </a>
+                                <ul class="sub">
+                                    <li><a href="/admin/person">Debit List</a></li>
+                                    <li><a href="/admin/person/account">Today Debit List</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "MyAccount" ? "active" : "")" href="javascript:;">
+                                    <i class="fa fa-search-plus"></i>
+                                    <span>Credit</span>
+                                </a>
+                                <ul class="sub">
+                                    <li><a href="/myaccount">Credit List</a></li>
+                                    <li><a href="/myaccount/account">Today Credit List</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site">
+                                    <i class="fa fa-list"></i>
+                                    <span>Sites</span>
+                                </a>
+                            </li>
+                        }
+                    }
+
                     <li>
-                        <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="site">
-                            <i class="fa fa-list"></i>
-                            <span>Sites</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="@(ViewBag.Title == "MyProfile" ? "active" : "")" href="myprofile">
+                        <a class="@(ViewBag.Title == "MyProfile" ? "active" : "")" href="/admin/profile">
                             <i class="fa fa-align-center"></i>
                             <span>My Profile</span>
                         </a>
@@ -138,7 +165,7 @@
         <!--footer start-->
         <footer class="site-footer">
             <div class="text-center">
-                @DateTime.Now.Year &copy; Hashmukh - Construction Software
+                @DateTime.Now.Year &copy; Construction Software
                 <a href="#" class="go-top">
                     <i class="fa fa-angle-up"></i>
                 </a>

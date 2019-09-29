@@ -5607,6 +5607,7 @@ a.guest-on {
     padding: 0px !important;
     margin-top: 6px;
     background: #ededed;
+    right: 20px;
 }
 
 .clsRadio input {
@@ -5645,4 +5646,6 @@ p.totalremaining {
     font-size : 24px;
 }
 
-
+.dataTables_wrapper {
+    overflow-x: auto !important;
+}

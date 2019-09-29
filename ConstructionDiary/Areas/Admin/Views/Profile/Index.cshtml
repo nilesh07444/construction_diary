@@ -1,7 +1,228 @@
 ﻿
+@model UserVM
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "MyProfile";
 }
 
-<h2>Index</h2>
+@{
+    string image_url = "/Images/default_image.png";
+    bool IsPhoto = false;
+    if (Model.UserPhoto != "" && Model.UserPhoto != null)
+    {
+        image_url = "/Images/UserPhoto/" + Model.UserPhoto;
+        IsPhoto = true;
+    }
+}
 
+<section class="wrapper site-min-height">
+
+    <section class="panel">
+        <header class="panel-heading tab-bg-dark-navy-blue ">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#myprofile">My Profile</a>
+                </li>
+                <li class="">
+                    <a data-toggle="tab" href="#changepassword">Change Password</a>
+                </li>
+            </ul>
+        </header>
+        <div class="panel-body">
+            <div class="tab-content">
+                <div id="myprofile" class="tab-pane active">
+                    <section class="panel">
+                        <div class="panel-body bio-graph-info">
+                            @using (Html.BeginForm("Index", "Profile", FormMethod.Post, new { @id = "userFormId", @class = "form-horizontal", enctype = "multipart/form-data", role = "form" }))
+                            {
+
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-lg-6">
+                                        <label class="col-lg-2 control-label" style="font-weight:bold;">@Model.UserName</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Firstname, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-lg-6">
+                                        @Html.EditorFor(model => model.Firstname, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
+                                        @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-lg-6">
+                                        @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
+                                        @Html.ValidationMessageFor(model => model.EmailId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-lg-6">
+                                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
+                                        @Html.ValidationMessageFor(model => model.MobileNo, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group last">
+                                    <label class="control-label col-lg-2">My Photo</label>
+                                    <div class="col-lg-10">
+                                        <div class="fileupload @(IsPhoto ? "fileupload-exists" : "fileupload-new")" data-provides="fileupload">
+                                            <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                                <img src="@image_url" alt="" />
+                                                @Html.HiddenFor(m => m.UserPhoto)
+                                            </div>
+                                            <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;">
+                                                <img src="@image_url" alt="" />
+                                            </div>
+                                            <div>
+                                                <span class="btn btn-white btn-file">
+                                                    <span class="fileupload-new clsfileupload-new"><i class="fa fa-paper-clip"></i> Select image</span>
+                                                    <span class="fileupload-exists clsfileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                                    @*<input type="file" class="default" />*@
+                                                    @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class = "default" })
+
+                                                </span>
+                                                <a href="javascript:void(0);" class="btn btn-danger fileupload-exists clsfileupload-exists clsDeletePhoto" data-dismiss="fileupload"><i class="fa fa-trash"></i> Remove</a>
+
+                                            </div>
+                                            @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-lg-offset-2 col-lg-10">
+                                        @Html.HiddenFor(x => x.UserName)
+                                        @Html.HiddenFor(x => x.Password)
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                        <button type="button" id="btnCancel" class="btn btn-default btnCancel">Cancel</button>
+                                    </div>
+                                </div>
+
+                            }
+                        </div>
+                    </section>
+                </div>
+                <div id="changepassword" class="tab-pane">
+                    <section>
+                        <div class="panel panel-primary">
+                            <div class="panel-body">
+                                <form id="frmChangePassword" class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Current Password</label>
+                                        <div class="col-lg-6">
+                                            <input type="password" class="form-control" id="currentpwd" name="currentpwd" placeholder="">
+                                            <span id="spn_currentpwd" class="clserror"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">New Password</label>
+                                        <div class="col-lg-6">
+                                            <input type="password" class="form-control" id="newpwd" name="newpwd" placeholder="">
+                                            <span id="spn_newpwd" class="clserror"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-2 control-label">Re-type New Password</label>
+                                        <div class="col-lg-6">
+                                            <input type="password" class="form-control" id="rtpwd" name="rtpwd" placeholder=" ">
+                                            <span id="spn_rtpwd" class="clserror"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-offset-2 col-lg-10">
+                                            <button id="btnChangePassword" type="button" class="btn btn-info">Save</button>
+                                            <button type="button" class="btn btn-default btnCancel">Cancel</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script>
+
+    jQuery(document).on("click", ".clsDeletePhoto", function () {
+        jQuery(".fileupload img").attr("src", "/Images/default_image.png");
+        jQuery("#UserPhoto").val("");
+    });
+    jQuery(document).on("click", ".btnCancel", function () {
+        window.location.reload();
+    });
+
+    jQuery(document).on("click", "#btnChangePassword", function () {
+        var flag = true;
+        jQuery(".clserror").hide();
+
+        var currentpwd = jQuery.trim(jQuery("#currentpwd").val());
+        var newpwd = jQuery.trim(jQuery("#newpwd").val());
+        var rtpwd = jQuery.trim(jQuery("#rtpwd").val());
+
+        if (currentpwd == "" || currentpwd == null) {
+            jQuery("#spn_currentpwd").text("This field is required");
+            jQuery("#spn_currentpwd").show();
+            flag = false;
+        }
+        if (newpwd == "" || newpwd == null) {
+            jQuery("#spn_newpwd").text("This field is required");
+            jQuery("#spn_newpwd").show();
+            flag = false;
+        }
+        if (rtpwd == "" || rtpwd == null) {
+            jQuery("#spn_rtpwd").text("This field is required");
+            jQuery("#spn_rtpwd").show();
+            flag = false;
+        }
+
+        if (newpwd != "" && rtpwd != "") {
+            if (newpwd != rtpwd) {
+                jQuery("#spn_rtpwd").text("New Password and Re-type password not matched");
+                jQuery("#spn_rtpwd").show();
+                flag = false;
+            }
+        }
+
+        if (flag) {
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("ChangePassword", "Profile")';
+            jQuery.ajax({
+                url: URL,
+                type: 'POST',
+                data: jQuery('#frmChangePassword').serialize(),
+                success: function (data) {
+                    $.unblockUI();
+                    if (data == "SUCCESS") {
+                        alert("Password changed successfully");
+                        window.location.href = "/login";
+                    }
+                    else if (data == "CP_NOT_MATCHED") {
+                        alert("Current Password is wrong");
+                    }
+                    else {
+                        alert("Error: Something went wrong. Please try again.");
+                    }
+                },
+                error: function (data) {
+                    alert("Something went wrong. Please try again.");
+                }
+
+            });
+        }
+
+
+    });
+
+
+</script>

@@ -12,13 +12,6 @@ namespace ConstructionDiary
         [Display(Name = "First Name")]
         public string Firstname { get; set; }
 
-        [Display(Name = "Middle Name")]
-        public string Middlename { get; set; }
-
-        [Required]
-        [Display(Name = "Last Name")]
-        public string Lastname { get; set; }
-
         [Display(Name = "Address")]
         public string Address { get; set; }
 

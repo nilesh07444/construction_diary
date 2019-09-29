@@ -25,6 +25,7 @@ namespace ConstructionDiary.Models
         public string FirmName { get; set; }
         public int PackageTypeId { get; set; }
         public Nullable<System.DateTime> ExpireDate { get; set; }
+        public string Remarks { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public System.DateTime CreatedDate { get; set; }

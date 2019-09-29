@@ -19,7 +19,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         // GET: MySites
         public ActionResult Index()
         {
-            var lstSites = (from p in _db.SP_GetSitesList()
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            var lstSites = (from p in _db.SP_GetSitesList(ClientId)
                             select p).ToList();
 
             //List<tbl_Sites> lstSites = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == clsSession.ClientID).ToList();

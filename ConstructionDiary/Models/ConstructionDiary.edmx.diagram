@@ -4,16 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="b78afd48f3a04857a8b747e629af4e56" Name="Diagram1">
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Clients" Width="1.5" PointX="3" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_ContractorFinance" Width="1.5" PointX="5.75" PointY="6.75" IsExpanded="true" />
+      <Diagram DiagramId="bd9a1968bae34ab6b9ddf2b1e0fc439b" Name="Diagram1">
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Clients" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_ContractorFinance" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Finance" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_GeneralSetting" Width="1.5" PointX="7.75" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PackageType" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PaymentTransaction" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Persons" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Role" Width="1.5" PointX="3" PointY="7.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Sites" Width="1.5" PointX="0.75" PointY="9.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PackageType" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PaymentTransaction" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Persons" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Role" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Sites" Width="1.5" PointX="7.75" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Users" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Clients_tbl_PackageType" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Users_tbl_Clients" ManuallyRouted="false" />

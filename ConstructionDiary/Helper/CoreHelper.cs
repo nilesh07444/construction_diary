@@ -35,30 +35,6 @@ namespace ConstructionDiary
             var base64EncodedBytes = System.Convert.FromBase64String(Text);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
-
-        //public static string GetUserName(Guid? Id) {
-        //    string userName = "";
-
-        //    if (Id != null)
-        //    {
-        //        tbl_Users objUser = _db.tbl_Users.Where(x => x.UserId == Id).FirstOrDefault();
-        //        if (objUser != null)
-        //            userName = objUser.FirstName + " " + objUser.LastName;
-        //    }
-        //    return userName;
-        //}
-
-        //public string GetPersonName(Guid Id)
-        //{
-        //    string personName = "";
-
-        //    tbl_Persons objPerson = _db.tbl_Persons.Where(x => x.PersonId == Id).FirstOrDefault();
-        //    if(objPerson != null)
-        //        personName = objPerson.PersonFirstName + " " + objPerson.PersonLastName;
-
-        //    return personName;
-        //}
-
-
+               
     }
 }

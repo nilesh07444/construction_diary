@@ -1,4 +1,5 @@
-﻿@model DashboardCount
+﻿@using ConstructionDiary.Models
+@model DashboardCount
 @{
     ViewBag.Title = "Dashboard";
 }
@@ -7,73 +8,93 @@
     <!--state overview start-->
     <div class="row state-overview">
 
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol red">
-                    <i class="fa fa-money"></i>
+        @{
+            if (clsSession.RoleID == (int)UserRoles.SiteOwner)
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol terques">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="value">
+                            <h1>@Model.TotalClients</h1>
+                            <p>Total Clients</p>
+                        </div>
+                    </section>
                 </div>
-                <div class="value" style="padding-top: 0px;">
-                    <h3>@Model.TotalTakenAmountFromSites</h3>
-                    <p>Total Credit Amount</p>
-                </div>
-            </section>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol yellow">
-                    <i class="fa fa-shopping-cart"></i>
-                </div>
-                <div class="value" style="padding-top: 0px;">
-                    <h3>@Model.TotalGivenAmountToPersons</h3>
-                    <p>Total Debit Amount</p>
-                </div>
-            </section>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol green">
-                    <i class="fa fa-list"></i>
-                </div>
-                <div class="value" style="padding-top: 0px;">
-                    <h3>@Model.TotalBalanceAmount</h3>
-                    <p>Total Balance Amount</p>
-                </div>
-            </section>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol blue">
-                    <i class="fa fa-bar-chart-o"></i>
+            }
+        }
+        @{
+            if (clsSession.RoleID != (int)UserRoles.SiteOwner)
+            {
+                <div class="col-lg-3 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol red">
+                            <i class="fa fa-money"></i>
+                        </div>
+                        <div class="value" style="padding-top: 0px;">
+                            <h3>@Model.TotalTakenAmountFromSites</h3>
+                            <p>Total Credit Amount</p>
+                        </div>
+                    </section>
                 </div>
 
-                <div class="value">
-                    <h1>@Model.TotalSites</h1>
-                    <p>Total Sites</p>
+                <div class="col-lg-3 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol yellow">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+                        <div class="value" style="padding-top: 0px;">
+                            <h3>@Model.TotalGivenAmountToPersons</h3>
+                            <p>Total Debit Amount</p>
+                        </div>
+                    </section>
                 </div>
-            </section>
-        </div>
 
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol terques">
-                    <i class="fa fa-user"></i>
+                <div class="col-lg-3 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol green">
+                            <i class="fa fa-list"></i>
+                        </div>
+                        <div class="value" style="padding-top: 0px;">
+                            <h3>@Model.TotalBalanceAmount</h3>
+                            <p>Total Balance Amount</p>
+                        </div>
+                    </section>
                 </div>
-                <div class="value">
-                    <h1>@Model.TotalPersons</h1>
-                    <p>Total Debit Persons</p>
-                </div>
-            </section>
-        </div>
 
+                <div class="col-lg-3 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol blue">
+                            <i class="fa fa-bar-chart-o"></i>
+                        </div>
+
+                        <div class="value">
+                            <h1>@Model.TotalSites</h1>
+                            <p>Total Sites</p>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-lg-3 col-sm-6">
+                    <section class="panel">
+                        <div class="symbol terques">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="value">
+                            <h1>@Model.TotalPersons</h1>
+                            <p>Total Debit Persons</p>
+                        </div>
+                    </section>
+                </div>
+            }
+        }
     </div>
     <!--state overview end-->
 
 </section>
 
-<script src="/Content/js/jquery.js"></script>
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
 <script>
 
     jQuery(document).ready(function () {

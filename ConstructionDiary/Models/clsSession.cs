@@ -32,11 +32,11 @@ namespace ConstructionDiary.Models
                 HttpContext.Current.Session["ClientID"] = value;
             }
         }
-        public static Guid RoleID
+        public static int RoleID
         {
             get
             {
-                return HttpContext.Current.Session["RoleID"] != null ? new Guid(Convert.ToString(HttpContext.Current.Session["RoleID"])) : Guid.Empty;
+                return HttpContext.Current.Session["RoleID"] != null ? Int32.Parse(Convert.ToString(HttpContext.Current.Session["RoleID"])) : 0;
             }
             set
             {
@@ -63,6 +63,18 @@ namespace ConstructionDiary.Models
             set
             {
                 HttpContext.Current.Session["RoleName"] = value;
+            }
+        }
+
+        public static String FirmName
+        {
+            get
+            {
+                return HttpContext.Current.Session["FirmName"] != null ? Convert.ToString(HttpContext.Current.Session["FirmName"]) : String.Empty;
+            }
+            set
+            {
+                HttpContext.Current.Session["FirmName"] = value;
             }
         }
         public static string ImagePath

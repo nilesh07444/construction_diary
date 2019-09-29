@@ -1,0 +1,182 @@
+﻿@using ConstructionDiary.Models
+@model List<UserVM>
+@{
+    ViewBag.Title = "Client";
+}
+
+@{
+    int counter = 0;
+}
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Users List</strong>
+                    <a href="/admin/client" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                @*<button id="btnAddClient" class="btn green">
+                                        <i class="fa fa-plus"></i> Add New Client
+                                    </button>*@
+                                <a class="btn btn-success" href="/admin/client/adduser/@ViewBag.ClientId"><i class="fa fa-plus"></i> Add New User</a>
+                            </div>
+                            @*<div class="btn-group pull-right">
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        Tools <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="#">Print</a></li>
+                                        <li><a href="#">Save as PDF</a></li>
+                                        <li><a href="#">Export to Excel</a></li>
+                                    </ul>
+                                </div>*@
+                        </div>
+                        <div class="space15"></div>
+
+                        <table class="display table table-bordered table-striped" id="tblUserList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>Full Name</th>
+                                    <th>Role</th>
+                                    <th>Email Id</th>
+                                    <th>Mobile No</th>
+                                    <th>User Name</th>
+                                    <th>Password</th>
+                                    <th width="5%">Active</th>
+                                    <th width="5%">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (UserVM user in Model)
+                                    {
+                                        counter++;
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@user.Firstname</td>
+                                            <td>@user.RoleName</td>
+                                            <td>@user.EmailId</td>
+                                            <td>@user.MobileNo</td>
+                                            <td>@user.UserName</td>
+                                            <td>@user.Password</td>
+                                            <td>
+                                                @if (user.IsActive)
+                                                {
+                                                    <a href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="javascript:void(0);"><span class="badge bg-important">InActive</span></a>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="/admin/client/edituser/@user.UserId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button onclick="fnDeleteUser('@user.UserId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure want to Delete ?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteUser" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                <button id="btnDeleteUser" class="btn btn-danger" type="button"> Delete </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblUserList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0,7]
+                }]
+        });
+    });
+
+    jQuery(document).on("click", "#btnDeleteUser", function () {
+
+        var user_id = jQuery("#hdnDeleteUser").val();
+        if (user_id != "" && user_id != null) {
+            $('#deleteUserModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteUser", "Client")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?UserId=" + user_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("User deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Client Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    function fnDeleteUser(user_id) {
+        jQuery("#hdnDeleteUser").val(user_id);
+        $('#deleteUserModal').modal('show');
+    }
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+
+</script>

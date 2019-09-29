@@ -16,8 +16,6 @@ namespace ConstructionDiary.Models
         public Nullable<System.Guid> FinanceId { get; set; }
         public Nullable<System.Guid> PersonId { get; set; }
         public string PersonFirstName { get; set; }
-        public string PersonMiddleName { get; set; }
-        public string PersonLastName { get; set; }
         public Nullable<System.DateTime> SelectedDate { get; set; }
         public Nullable<decimal> Amount { get; set; }
         public string CreditOrDebit { get; set; }

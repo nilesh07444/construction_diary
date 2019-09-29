@@ -16,8 +16,6 @@ namespace ConstructionDiary.Models
     {
         public System.Guid PersonId { get; set; }
         public string PersonFirstName { get; set; }
-        public string PersonMiddleName { get; set; }
-        public string PersonLastName { get; set; }
         public string PersonAddress { get; set; }
         public string MobileNo { get; set; }
         public string PersonPhoto { get; set; }

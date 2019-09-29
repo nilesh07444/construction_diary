@@ -24,9 +24,7 @@ namespace ConstructionDiary
         public Guid? CreatedBy { get; set; }
         public Guid? UpdatedBy { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
-
-        public string LastName { get; set; }
+        public DateTime? ModifiedDate { get; set; } 
         public string FirstName { get; set; }
     }
 
@@ -53,10 +51,10 @@ namespace ConstructionDiary
         public DateTime? ModifiedDate { get; set; }
 
         public string FirstName { get; set; }
-        public string LastName { get; set; }
     }
     public class DashboardCount
     {
+        public long TotalClients { get; set; }
         public long TotalPersons { get; set; }
         public long TotalSites { get; set; }
         public string TotalGivenAmountToPersons { get; set; }
