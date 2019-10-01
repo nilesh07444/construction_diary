@@ -75,6 +75,14 @@ namespace ConstructionDiary.Areas.Admin
                 new { controller = "Client", action = "EditUser", id = UrlParameter.Optional }
             );
 
+            // MyAccount Routes
+
+            context.MapRoute(
+                "Admin_myaccount",
+                "admin/myaccount",
+                new { controller = "MyAccount", action = "Index", id = UrlParameter.Optional }
+            );
+
         }
     }
 }

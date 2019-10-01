@@ -10,29 +10,22 @@
 namespace ConstructionDiary.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class tbl_ContractorFinance
+    public partial class SP_GetTodayPartyFinance_Result
     {
-        public System.Guid ContractorFinanceId { get; set; }
+        public Nullable<System.Guid> ContractorFinanceId { get; set; }
         public Nullable<System.Guid> SiteId { get; set; }
-        public Nullable<System.Guid> UserId { get; set; }
+        public string SiteName { get; set; }
         public Nullable<System.DateTime> SelectedDate { get; set; }
         public Nullable<decimal> Amount { get; set; }
         public string CreditOrDebit { get; set; }
+        public Nullable<System.Guid> UserId { get; set; }
         public string ReasonFor { get; set; }
         public string PaymentType { get; set; }
         public string ChequeNo { get; set; }
         public string BankName { get; set; }
         public string BankBranch { get; set; }
         public string Remarks { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        public Nullable<bool> IsDeleted { get; set; }
-        public Nullable<System.Guid> CreatedBy { get; set; }
-        public Nullable<System.Guid> UpdatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<System.DateTime> ModifiedDate { get; set; }
-    
-        public virtual tbl_Sites tbl_Sites { get; set; }
+        public string UserName { get; set; }
     }
 }

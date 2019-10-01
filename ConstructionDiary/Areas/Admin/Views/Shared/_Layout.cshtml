@@ -73,6 +73,10 @@
                             {
                                 <img style="width:30px; height:30px;" alt="" src="~/Images/UserPhoto/@clsSession.ImagePath">
                             }
+                            else
+                            {
+                                <img style="width:30px; height:30px;" alt="" src="~/Images/default_user_image.png">
+                            }
 
                             <span class="username hidden-phone">@clsSession.UserName</span>
                             <b class="caret"></b>
@@ -132,8 +136,8 @@
                                     <span>Credit</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="/myaccount">Credit List</a></li>
-                                    <li><a href="/myaccount/account">Today Credit List</a></li>
+                                    <li><a href="/admin/myaccount">Credit List</a></li>
+                                    <li><a href="/admin/myaccount/account">Today Credit List</a></li>
                                 </ul>
                             </li>
                             <li>

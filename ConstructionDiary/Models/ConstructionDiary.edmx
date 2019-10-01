@@ -162,6 +162,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tbl_ContractorFinance_tbl_Sites">
+          <End Role="tbl_Sites" Type="Self.tbl_Sites" Multiplicity="0..1" />
+          <End Role="tbl_ContractorFinance" Type="Self.tbl_ContractorFinance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Sites">
+              <PropertyRef Name="SiteId" />
+            </Principal>
+            <Dependent Role="tbl_ContractorFinance">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tbl_Users_tbl_Clients">
           <End Role="tbl_Clients" Type="Self.tbl_Clients" Multiplicity="0..1" />
           <End Role="tbl_Users" Type="Self.tbl_Users" Multiplicity="*" />
@@ -193,7 +205,9 @@
         <Function Name="SP_GetSitesList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ClientId" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="SP_GetTodayPartyFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_GetTodayPartyFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ClientId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="SP_GetTodayPersonFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="ConstructionDiaryModelStoreContainer">
           <EntitySet Name="tbl_Clients" EntityType="Self.tbl_Clients" Schema="dbo" store:Type="Tables" />
@@ -209,6 +223,10 @@
           <AssociationSet Name="FK_tbl_Clients_tbl_PackageType" Association="Self.FK_tbl_Clients_tbl_PackageType">
             <End Role="tbl_PackageType" EntitySet="tbl_PackageType" />
             <End Role="tbl_Clients" EntitySet="tbl_Clients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_ContractorFinance_tbl_Sites" Association="Self.FK_tbl_ContractorFinance_tbl_Sites">
+            <End Role="tbl_Sites" EntitySet="tbl_Sites" />
+            <End Role="tbl_ContractorFinance" EntitySet="tbl_ContractorFinance" />
           </AssociationSet>
           <AssociationSet Name="FK_tbl_Users_tbl_Clients" Association="Self.FK_tbl_Users_tbl_Clients">
             <End Role="tbl_Clients" EntitySet="tbl_Clients" />
@@ -262,6 +280,7 @@
           <Property Name="UpdatedBy" Type="Guid" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_Sites" Relationship="ConstructionDiaryModel.FK_tbl_ContractorFinance_tbl_Sites" FromRole="tbl_ContractorFinance" ToRole="tbl_Sites" />
         </EntityType>
         <EntityType Name="tbl_Finance">
           <Key>
@@ -353,6 +372,7 @@
           <Property Name="UpdatedBy" Type="Guid" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_ContractorFinance" Relationship="ConstructionDiaryModel.FK_tbl_ContractorFinance_tbl_Sites" FromRole="tbl_Sites" ToRole="tbl_ContractorFinance" />
         </EntityType>
         <EntityType Name="tbl_Users">
           <Key>
@@ -437,9 +457,15 @@
           <FunctionImport Name="SP_GetSiteDetailById" ReturnType="Collection(ConstructionDiaryModel.SP_GetSiteDetailById_Result)">
           <Parameter Name="SiteId" Mode="In" Type="Guid" />
           </FunctionImport>
-          <FunctionImport Name="SP_GetTodayPartyFinance" />
           <FunctionImport Name="SP_GetTodayPersonFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPersonFinance_Result)" />
           <FunctionImport Name="SP_GetSitesList" ReturnType="Collection(ConstructionDiaryModel.SP_GetSitesList_Result)">
+          <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <AssociationSet Name="FK_tbl_ContractorFinance_tbl_Sites" Association="ConstructionDiaryModel.FK_tbl_ContractorFinance_tbl_Sites">
+            <End Role="tbl_Sites" EntitySet="tbl_Sites" />
+            <End Role="tbl_ContractorFinance" EntitySet="tbl_ContractorFinance" />
+          </AssociationSet>
+          <FunctionImport Name="SP_GetTodayPartyFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPartyFinance_Result)">
             <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
         </EntityContainer>
@@ -494,6 +520,34 @@
           <Property Type="Decimal" Name="TotalCreditAmount" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="TotalDebitAmount" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="TotalRemainingAmount" Nullable="true" Precision="19" Scale="2" />
+        </ComplexType>
+        <Association Name="FK_tbl_ContractorFinance_tbl_Sites">
+          <End Type="ConstructionDiaryModel.tbl_Sites" Role="tbl_Sites" Multiplicity="0..1" />
+          <End Type="ConstructionDiaryModel.tbl_ContractorFinance" Role="tbl_ContractorFinance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Sites">
+              <PropertyRef Name="SiteId" />
+            </Principal>
+            <Dependent Role="tbl_ContractorFinance">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="SP_GetTodayPartyFinance_Result">
+          <Property Type="Guid" Name="ContractorFinanceId" Nullable="true" />
+          <Property Type="Guid" Name="SiteId" Nullable="true" />
+          <Property Type="String" Name="SiteName" Nullable="true" MaxLength="365" />
+          <Property Type="DateTime" Name="SelectedDate" Nullable="true" Precision="23" />
+          <Property Type="Decimal" Name="Amount" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="String" Name="CreditOrDebit" Nullable="true" MaxLength="50" />
+          <Property Type="Guid" Name="UserId" Nullable="true" />
+          <Property Type="String" Name="ReasonFor" Nullable="true" MaxLength="365" />
+          <Property Type="String" Name="PaymentType" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ChequeNo" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="BankName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="BankBranch" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Remarks" Nullable="true" MaxLength="365" />
+          <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -690,7 +744,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetTodayPartyFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPartyFinance" />
           <FunctionImportMapping FunctionImportName="SP_GetTodayPersonFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPersonFinance">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetTodayPersonFinance_Result">
@@ -722,6 +775,26 @@
                 <ScalarProperty Name="TotalCreditAmount" ColumnName="TotalCreditAmount" />
                 <ScalarProperty Name="TotalDebitAmount" ColumnName="TotalDebitAmount" />
                 <ScalarProperty Name="TotalRemainingAmount" ColumnName="TotalRemainingAmount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetTodayPartyFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPartyFinance">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetTodayPartyFinance_Result">
+                <ScalarProperty Name="ContractorFinanceId" ColumnName="ContractorFinanceId" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="SiteName" ColumnName="SiteName" />
+                <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="CreditOrDebit" ColumnName="CreditOrDebit" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ReasonFor" ColumnName="ReasonFor" />
+                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="ChequeNo" ColumnName="ChequeNo" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
+                <ScalarProperty Name="BankBranch" ColumnName="BankBranch" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

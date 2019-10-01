@@ -14,6 +14,12 @@ namespace ConstructionDiary.Models
     
     public partial class tbl_Sites
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tbl_Sites()
+        {
+            this.tbl_ContractorFinance = new HashSet<tbl_ContractorFinance>();
+        }
+    
         public System.Guid SiteId { get; set; }
         public string SiteName { get; set; }
         public string SiteDescription { get; set; }
@@ -24,5 +30,8 @@ namespace ConstructionDiary.Models
         public Nullable<System.Guid> UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_ContractorFinance> tbl_ContractorFinance { get; set; }
     }
 }

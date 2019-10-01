@@ -132,6 +132,7 @@
     <Compile Include="Areas\Admin\Controllers\ClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MyAccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\PersonController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Admin\Controllers\SiteController.cs" />
@@ -166,6 +167,9 @@
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_GetSitesList_Result.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SP_GetTodayPartyFinance_Result.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SP_GetTodayPersonFinance_Result.cs">
@@ -1887,6 +1891,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\default_image.png" />
+    <Content Include="Images\default_user_image.png" />
     <Content Include="Models\ConstructionDiary.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ConstructionDiary.edmx</DependentUpon>
@@ -2176,6 +2181,8 @@
       <DependentUpon>ConstructionDiary.edmx</DependentUpon>
     </Content>
     <Content Include="Areas\Admin\Views\Client\EditUser.cshtml" />
+    <Content Include="Areas\Admin\Views\MyAccount\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

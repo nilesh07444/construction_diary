@@ -47,7 +47,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 decimal? TotalTakenAmount = (from finance in _db.tbl_ContractorFinance
                                              join site in _db.tbl_Sites
                                              on finance.SiteId equals site.SiteId
-                                             where site.IsActive == true && site.IsDeleted == false && finance.IsActive == true && finance.IsDeleted == false
+                                             where site.IsActive && !site.IsDeleted && finance.IsActive == true && finance.IsDeleted == false
+                                                && site.ClientId == ClientId
                                              select finance
                     ).ToList().Select(x => x.Amount).Sum();
 
@@ -57,5 +58,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
             return View(objDashboard);
         }
+         
     }
 }

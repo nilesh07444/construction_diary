@@ -1,0 +1,325 @@
+﻿@using ConstructionDiary.Models;
+@model MyFinanceVM
+@{
+    ViewBag.Title = "MyAccount";
+}
+
+@{
+    List<MyFinanceList> lstFinance = ViewData["FinanceList"] as List<MyFinanceList>;
+    decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
+    string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
+
+    decimal? TotalDebitAmount = lstFinance.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
+    string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
+
+    decimal? RemainingAmount = TotalCreditAmount - TotalDebitAmount;
+    string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
+
+}
+
+<!--main content start-->
+<section class="wrapper site-min-height">
+    <!-- page start-->
+
+    <div class="row state-overview">
+
+        <div class="col-lg-3 col-sm-6">
+            <section class="panel">
+                <div class="symbol red">
+                    <i class="fa fa-money"></i>
+                </div>
+                <div class="value" style="padding-top: 0px;">
+                    <h2>@strTotalCreditAmount</h2>
+                    <p class="total totalcredit">Total Credit Amount</p>
+                </div>
+            </section>
+        </div>
+
+        <div class="col-lg-3 col-sm-6">
+            <section class="panel">
+                <div class="symbol yellow">
+                    <i class="fa fa-shopping-cart"></i>
+                </div>
+                <div class="value" style="padding-top: 0px;">
+                    <h2>@strTotalDebitAmount</h2>
+                    <p class="total totaldebit">Total Debit Amount</p>
+                </div>
+            </section>
+        </div>
+
+
+        <div class="col-lg-3 col-sm-6">
+            <section class="panel">
+                <div class="symbol green">
+                    <i class="fa fa-list"></i>
+                </div>
+                <div class="value" style="padding-top: 0px;">
+                    <h2>@strRemainingAmount</h2>
+                    <p class="total totalremaining">Total Balance</p>
+                </div>
+            </section>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                @using (Html.BeginForm("Index", "MyAccount", FormMethod.Post, new { @id = "myFinanceFormId", enctype = "multipart/form-data", role = "form" }))
+                {
+                    <header class="panel-heading">
+                        <strong>Create Credit Entry</strong>
+                        <span class="pull-right clsRadio">
+                            <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit", new { @checked = true }) CREDIT</label>
+                            <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit") DEBIT</label>
+                        </span>
+                    </header>
+
+                    <div class="panel-body">
+
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label>Date:</label>
+                                @*@Html.EditorFor(model => model.SelectedDate, new { htmlAttributes = new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY" } })*@
+                                @Html.TextBoxFor(model => model.SelectedDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
+
+                                <span class="input-group-btn add-on">
+                                    <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
+                                </span>
+                                @Html.ValidationMessageFor(model => model.SelectedDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Amount:</label>
+                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Amount", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Site Name:</label>
+                                @Html.DropDownList("SiteId", new SelectList(Model.SitesList, "Value", "Text"), "-Select Site-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.SiteId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label>Reason:</label>
+                                @Html.EditorFor(model => model.ReasonFor, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Reason", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.ReasonFor, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label>By Given/Taken Amount:</label>
+                                @Html.DropDownList("UserId", new SelectList(Model.UsersList, "Value", "Text"), "-Select User-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label>Payment Type:</label>
+                                @Html.DropDownList("PaymentType", new SelectList(Enum.GetValues(typeof(PaymentTypes))), "-Select Type-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PaymentType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row clsPaymentDetails" style="display:none;">
+                            <div class="col-sm-4 form-group">
+                                <label>Cheque No:</label>
+                                @Html.EditorFor(model => model.ChequeNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Cheque No", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Bank Name:</label>
+                                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Bank Name", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Branch Name:</label>
+                                @Html.EditorFor(model => model.BranchName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Branch Name", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <label>Remarks:</label>
+                                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Remarks", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <button class="btn btn-success" id="btnSubmit" type="submit">Save</button>
+                                <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Credit List</strong>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped" id="tblFinanceList">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%;">Date</th>
+                                    <th style="width:10%;">Amount</th>
+                                    <th style="width:10%;">Site Name</th>
+                                    <th>Reason</th>
+                                    <th style="width:10%;">Type</th>
+                                    <th style="width:10%;">Payment Type</th>
+                                    <th style="width:20%;">By Amount</th>
+                                    <th style="width:5%;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (lstFinance != null && lstFinance.Count() > 0)
+                                {
+                                    foreach (var obj in lstFinance)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy")</td>
+                                            <td>@obj.Amount</td>
+                                            <td>@obj.SiteName</td>
+                                            <td>@obj.ReasonFor</td>
+                                            <td>
+                                                <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
+                                            </td>
+                                            <td>@obj.PaymentType</td>
+                                            <td>@obj.FirstName</td>
+                                            <td>
+                                                @*<button data-id="@obj.ContractorFinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
+                                                @*<button data-id="@obj.ContractorFinanceId" class="btn btn-primary btn-xs clsEditFinance"><i class="fa fa-pencil"></i></button>*@
+                                                <button onclick="fnDeleteFinance('@obj.ContractorFinanceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteFinanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Delete Confirmation</h4>
+                </div>
+                <div class="modal-body">
+                    Are you sure want to Delete ?
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="hdnFinancePerson" />
+                    <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                    <button id="btnDeleteFinance" class="btn btn-danger" type="button">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete modal -->
+
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var newdate = (day < 10 ? '0' + day : '' + day) + "/" + (month < 10 ? '0' + month : '' + month) + "/" + year;
+
+    jQuery("#SelectedDate").val(newdate);
+
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblFinanceList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [7]
+                }]
+        });
+    });
+
+    jQuery(document).on("change", "#PaymentType", function () {
+        var value = jQuery(this).val();
+        if (value == "Cheque")
+            jQuery(".clsPaymentDetails").show();
+        else
+            jQuery(".clsPaymentDetails").hide();
+    });
+
+    function fnDeleteFinance(financeid) {
+        jQuery("#hdnFinancePerson").val(financeid);
+        $('#deleteFinanceModal').modal('show');
+    }
+
+    jQuery(document).on("click", "#btnDeleteFinance", function () {
+
+        var financeid = jQuery("#hdnFinancePerson").val();
+        if (financeid != "" && financeid != null) {
+            jQuery('#deletePersonModal').modal('hide');
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteContractorFinance", "MyAccount")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?FinanceId=" + financeid,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Credit Entry Deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Credit Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+    jQuery("#btnSubmit").click(function (event) {
+        //event.preventDefault();
+        if (jQuery("form").valid()) {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        }
+    });
+</script>

@@ -18,6 +18,7 @@
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Clients_tbl_PackageType" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Users_tbl_Clients" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Users_tbl_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_ContractorFinance_tbl_Sites" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
