@@ -35,7 +35,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             lstClients.ForEach(x =>
             {
-                x.TotalUsers = _db.tbl_Users.Where(p => p.ClientId == x.ClientId).ToList().Count();
+                x.TotalUsers = _db.tbl_Users.Where(p => p.ClientId == x.ClientId && !p.IsDeleted).ToList().Count();
             });
 
             return View(lstClients);
@@ -287,26 +287,51 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             UserVM user = new UserVM();
 
-            tbl_Users objUser = _db.tbl_Users.Where(x => x.UserId == id).FirstOrDefault();
-
-            if (objUser != null)
+            try
             {
-                user.UserId = objUser.UserId;
-                user.Firstname = objUser.FirstName;
-                user.UserName = objUser.UserName;
-                user.Password = objUser.Password;
-                user.EmailId = objUser.EmailId;
-                user.RoleId = objUser.RoleId;
-                user.ClientId = objUser.ClientId;
-                user.EmailId = objUser.EmailId;
-                user.MobileNo = objUser.MobileNo;
-                user.UserPhoto = objUser.UserPhoto;
-            }
-
-            user.UserRoleList = _db.tbl_Role.Where(x => x.RoleId > 1)
+                user.UserRoleList = _db.tbl_Role.Where(x => x.RoleId > 1)
                          .Select(o => new SelectListItem { Value = o.RoleId.ToString(), Text = o.RoleName })
                          .ToList();
 
+                var existData = _db.tbl_Users.Where(x => x.UserId != id && !x.IsDeleted &&
+                                                       (x.UserName.ToLower() == user.UserName.ToLower() || x.EmailId.ToLower() == user.EmailId.ToLower())).FirstOrDefault();
+
+                if (existData != null)
+                {
+                    if (existData.UserName.ToLower() == user.UserName.ToLower())
+                    {
+                        ModelState.AddModelError("Username", "UserName is already exist");
+                    }
+                    if (existData.EmailId.ToLower() == user.EmailId.ToLower())
+                    {
+                        ModelState.AddModelError("EmailId", "EmailId is already exist");
+                    }
+
+                    return View(user);
+                }
+
+                tbl_Users objUser = _db.tbl_Users.Where(x => x.UserId == id).FirstOrDefault();
+
+                if (objUser != null)
+                {
+                    user.UserId = objUser.UserId;
+                    user.Firstname = objUser.FirstName;
+                    user.UserName = objUser.UserName;
+                    user.Password = objUser.Password;
+                    user.EmailId = objUser.EmailId;
+                    user.RoleId = objUser.RoleId;
+                    user.ClientId = objUser.ClientId;
+                    user.EmailId = objUser.EmailId;
+                    user.MobileNo = objUser.MobileNo;
+                    user.UserPhoto = objUser.UserPhoto;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+               
             return View(user);
         }
 
@@ -358,7 +383,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(user);
         }
-
 
     }
 }

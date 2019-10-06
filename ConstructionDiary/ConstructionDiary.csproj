@@ -136,6 +136,7 @@
     <Compile Include="Areas\Admin\Controllers\PersonController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Admin\Controllers\SiteController.cs" />
+    <Compile Include="Areas\Admin\Controllers\UserController.cs" />
     <Compile Include="Areas\WebApi\WebApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -2182,6 +2183,13 @@
     </Content>
     <Content Include="Areas\Admin\Views\Client\EditUser.cshtml" />
     <Content Include="Areas\Admin\Views\MyAccount\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\Detail.cshtml" />
+    <Content Include="Areas\Admin\Views\MyAccount\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\MyAccount\Report.cshtml" />
+    <Content Include="Areas\Admin\Views\MyAccount\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\User\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

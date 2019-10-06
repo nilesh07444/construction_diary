@@ -9,6 +9,8 @@ namespace ConstructionDiary
 {
     public class MyFinanceVM
     {
+        public Guid ContractorFinanceId { get; set; }
+
         [Required(ErrorMessage = "This field is required")]
         public string SelectedDate { get; set; }
 

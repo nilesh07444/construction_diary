@@ -1,7 +1,7 @@
 ﻿@using ConstructionDiary.Models
 @model List<UserVM>
 @{
-    ViewBag.Title = "Client";
+    ViewBag.Title = "Users";
 }
 
 @{
@@ -15,29 +15,13 @@
             <section class="panel">
                 <header class="panel-heading">
                     <strong>Users List</strong>
-                    <a href="/admin/client" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
-                        <i class="fa fa-backward"></i> Back
-                    </a>
                 </header>
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
                             <div class="btn-group pull-right">
-                                @*<button id="btnAddClient" class="btn green">
-                                        <i class="fa fa-plus"></i> Add New Client
-                                    </button>*@
-                                <a class="btn btn-success" href="/admin/client/adduser/@ViewBag.ClientId"><i class="fa fa-plus"></i> Add New User</a>
+                                <a class="btn btn-success" href="/admin/user/add"><i class="fa fa-plus"></i> Add New User</a>
                             </div>
-                            @*<div class="btn-group pull-right">
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                        Tools <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a href="#">Print</a></li>
-                                        <li><a href="#">Save as PDF</a></li>
-                                        <li><a href="#">Export to Excel</a></li>
-                                    </ul>
-                                </div>*@
                         </div>
                         <div class="space15"></div>
 

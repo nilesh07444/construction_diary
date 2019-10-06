@@ -20,16 +20,26 @@ namespace ConstructionDiary.Areas.Admin
                 new { action = "Index", id = UrlParameter.Optional }
             );
 
+            // Dashboard Routes
+
             context.MapRoute(
                 "Admin_dashboard",
                 "admin/dashboard",
                 new { controller = "Dashboard", action = "Index", id = UrlParameter.Optional }
             );
 
+            // Site Routes
+
             context.MapRoute(
                 "Admin_site",
                 "admin/site",
                 new { controller = "Site", action = "Index", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_sitedetail",
+                "admin/site/detail",
+                new { controller = "Site", action = "Detail", id = UrlParameter.Optional }
             );
 
             context.MapRoute(
@@ -81,6 +91,32 @@ namespace ConstructionDiary.Areas.Admin
                 "Admin_myaccount",
                 "admin/myaccount",
                 new { controller = "MyAccount", action = "Index", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_myaccount_add",
+                "admin/myaccount/add",
+                new { controller = "MyAccount", action = "Add", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_myaccount_edit",
+                "admin/myaccount/edit",
+                new { controller = "MyAccount", action = "Edit", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_myaccount_report",
+                "admin/myaccount/report",
+                new { controller = "MyAccount", action = "Report", id = UrlParameter.Optional }
+            );
+
+            // User Routes
+
+            context.MapRoute(
+                "Admin_user",
+                "admin/user",
+                new { controller = "User", action = "Index", id = UrlParameter.Optional }
             );
 
         }

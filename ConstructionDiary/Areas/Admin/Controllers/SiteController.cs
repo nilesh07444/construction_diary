@@ -16,7 +16,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             _db = new ConstructionDiaryEntities();
         }
 
-        // GET: MySites
         public ActionResult Index()
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
@@ -130,8 +129,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
 
-        [Route("sitedetail")]
-        public ActionResult SiteDetail(Guid id)
+        public ActionResult Detail(Guid id)
         {
 
             tbl_Sites objSite = new tbl_Sites();

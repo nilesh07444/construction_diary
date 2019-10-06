@@ -1,0 +1,156 @@
+﻿@model MyFinanceVM
+@{
+    ViewBag.Title = "Credit";
+}
+
+<!--main content start-->
+<section class="wrapper site-min-height">
+    <!-- page start-->
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                @using (Html.BeginForm("Add", "MyAccount", FormMethod.Post, new { @id = "myFinanceFormId", enctype = "multipart/form-data", role = "form" }))
+                {
+                    <header class="panel-heading">
+                        <strong>Create Credit Entry</strong>
+                        <span class="pull-right clsRadio">
+                            <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit", new { @checked = true }) CREDIT</label>
+                            <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit") DEBIT</label>
+                        </span>
+                    </header>
+
+                    <div class="panel-body">
+
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label>Date:</label>
+                                @*@Html.EditorFor(model => model.SelectedDate, new { htmlAttributes = new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY" } })*@
+                                @Html.TextBoxFor(model => model.SelectedDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
+
+                                <span class="input-group-btn add-on">
+                                    <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
+                                </span>
+                                @Html.ValidationMessageFor(model => model.SelectedDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Amount:</label>
+                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Amount", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Site Name:</label>
+                                @Html.DropDownList("SiteId", new SelectList(Model.SitesList, "Value", "Text"), "-Select Site-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.SiteId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label>Reason:</label>
+                                @Html.EditorFor(model => model.ReasonFor, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Reason", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.ReasonFor, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label>By Given/Taken Amount:</label>
+                                @Html.DropDownList("UserId", new SelectList(Model.UsersList, "Value", "Text"), "-Select User-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="col-sm-4 form-group">
+                                <label>Payment Type:</label>
+                                @Html.DropDownList("PaymentType", new SelectList(Enum.GetValues(typeof(PaymentTypes))), "-Select Type-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PaymentType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row clsPaymentDetails" style="display:none;">
+                            <div class="col-sm-4 form-group">
+                                <label>Cheque No:</label>
+                                @Html.EditorFor(model => model.ChequeNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Cheque No", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Bank Name:</label>
+                                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Bank Name", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>Branch Name:</label>
+                                @Html.EditorFor(model => model.BranchName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Branch Name", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.BranchName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <label>Remarks:</label>
+                                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Remarks", maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <button class="btn btn-success" id="btnSubmit" type="submit">Save</button>
+                                <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
+
+
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var newdate = (day < 10 ? '0' + day : '' + day) + "/" + (month < 10 ? '0' + month : '' + month) + "/" + year;
+
+    jQuery("#SelectedDate").val(newdate);
+
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+    });
+
+    jQuery(document).on("change", "#PaymentType", function () {
+        var value = jQuery(this).val();
+        if (value == "Cheque")
+            jQuery(".clsPaymentDetails").show();
+        else
+            jQuery(".clsPaymentDetails").hide();
+    });
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+    jQuery("#btnSubmit").click(function (event) {
+        //event.preventDefault();
+        if (jQuery("form").valid()) {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        }
+    });
+
+    jQuery("#btnCancel").click(function (event) {
+        window.location.href = "/admin/myaccount"
+    });
+    
+</script>

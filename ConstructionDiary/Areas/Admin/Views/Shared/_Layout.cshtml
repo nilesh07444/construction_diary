@@ -64,8 +64,8 @@
                 <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
                     @*<li>
-                    <input type="text" class="form-control search" placeholder="Search">
-                </li>*@
+                            <input type="text" class="form-control search" placeholder="Search">
+                        </li>*@
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -119,25 +119,34 @@
                     @{
                         if (clsSession.RoleID != (int)UserRoles.SiteOwner)
                         {
-                            <li class="sub-menu">
-                                <a class="clsMain @(ViewBag.Title == "Person" ? "active" : "")" href="javascript:;">
-                                    <i class="fa fa-user"></i>
-                                    <span>Debit</span>
+                            <li>
+                                <a class="@(ViewBag.Title == "Users" ? "active" : "")" href="/admin/user">
+                                    <i class="fa fa-users"></i>
+                                    <span>Users</span>
                                 </a>
-                                <ul class="sub">
-                                    <li><a href="/admin/person">Debit List</a></li>
-                                    <li><a href="/admin/person/account">Today Debit List</a></li>
-                                </ul>
                             </li>
 
+                            @*<li class="sub-menu">
+                                    <a class="clsMain @(ViewBag.Title == "Person" ? "active" : "")" href="javascript:;">
+                                        <i class="fa fa-user"></i>
+                                        <span>Debit</span>
+                                    </a>
+                                    <ul class="sub">
+                                        <li><a href="/admin/person">Debit List</a></li>
+                                        <li><a href="/admin/person/account">Today Debit List</a></li>
+                                    </ul>
+                                </li>*@
+
                             <li class="sub-menu">
-                                <a class="clsMain @(ViewBag.Title == "MyAccount" ? "active" : "")" href="javascript:;">
+                                <a class="clsMain @(ViewBag.Title == "Credit" ? "active" : "")" href="javascript:;">
                                     <i class="fa fa-search-plus"></i>
                                     <span>Credit</span>
                                 </a>
                                 <ul class="sub">
+                                    <li><a href="/admin/myaccount/add">Add New Credit Entry</a></li>
                                     <li><a href="/admin/myaccount">Credit List</a></li>
-                                    <li><a href="/admin/myaccount/account">Today Credit List</a></li>
+                                    <li><a href="/admin/myaccount/report">Credit Report</a></li>
+                                    @*<li><a href="/admin/myaccount/account">Today Credit List</a></li>*@
                                 </ul>
                             </li>
                             <li>
@@ -146,6 +155,7 @@
                                     <span>Sites</span>
                                 </a>
                             </li>
+
                         }
                     }
 
@@ -153,6 +163,13 @@
                         <a class="@(ViewBag.Title == "MyProfile" ? "active" : "")" href="/admin/profile">
                             <i class="fa fa-align-center"></i>
                             <span>My Profile</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
+                            <i class="fa fa-cog"></i>
+                            <span>Setting</span>
                         </a>
                     </li>
 

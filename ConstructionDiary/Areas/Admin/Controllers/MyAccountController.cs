@@ -7,6 +7,7 @@ using ConstructionDiary.Models;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
+    [filters]
     public class MyAccountController : Controller
     {
         ConstructionDiaryEntities _db;
@@ -68,62 +69,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(MyFinanceVM objFinance)
-        {
-            try
-            {
-                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
-
-                Guid ClientId = new Guid(clsSession.ClientID.ToString());
-
-                // Get Users List
-                objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
-                         .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
-                         .ToList();
-
-                // Get Sites List
-                objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
-                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName })
-                         .ToList();
-
-                if (ModelState.IsValid)
-                {
-                    DateTime date = DateTime.ParseExact(objFinance.SelectedDate, "dd/MM/yyyy", null);
-
-                    tbl_ContractorFinance finance = new tbl_ContractorFinance();
-                    finance.ContractorFinanceId = Guid.NewGuid();
-
-                    finance.SiteId = objFinance.SiteId;
-                    finance.UserId = objFinance.UserId;
-                    finance.SelectedDate = date;
-                    finance.Amount = objFinance.Amount;
-                    finance.CreditOrDebit = objFinance.CreditOrDebit;
-                    finance.ReasonFor = objFinance.ReasonFor;
-                    finance.PaymentType = objFinance.PaymentType;
-                    finance.ChequeNo = objFinance.ChequeNo;
-                    finance.BankName = objFinance.BankName;
-                    finance.BankBranch = objFinance.BranchName;
-                    finance.Remarks = objFinance.Remarks;
-                    finance.IsActive = true;
-                    finance.IsDeleted = false;
-                    finance.CreatedBy = clsSession.UserID;
-                    finance.CreatedDate = DateTime.UtcNow;
-                    _db.tbl_ContractorFinance.Add(finance);
-                    _db.SaveChanges();
-
-                    return RedirectToAction("Index");
-
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            return View();
-        }
-
-        [HttpPost]
         public string DeleteContractorFinance(string FinanceId)
         {
             string ReturnMessage = "";
@@ -165,5 +110,252 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(lstFinance);
         }
+
+        public ActionResult Add()
+        {
+            MyFinanceVM objFinance = new MyFinanceVM();
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                         .ToList();
+
+                objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName })
+                         .ToList();
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return View(objFinance);
+        }
+
+        [HttpPost]
+        public ActionResult Add(MyFinanceVM objFinance)
+        {
+            try
+            {
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                // Get Users List
+                objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                         .ToList();
+
+                // Get Sites List
+                objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName })
+                         .ToList();
+
+                if (ModelState.IsValid)
+                {
+                    DateTime date = DateTime.ParseExact(objFinance.SelectedDate, "dd/MM/yyyy", null);
+
+                    tbl_ContractorFinance finance = new tbl_ContractorFinance();
+                    finance.ContractorFinanceId = Guid.NewGuid();
+
+                    finance.SiteId = objFinance.SiteId;
+                    finance.UserId = objFinance.UserId;
+                    finance.SelectedDate = date;
+                    finance.Amount = objFinance.Amount;
+                    finance.CreditOrDebit = objFinance.CreditOrDebit;
+                    finance.ReasonFor = objFinance.ReasonFor;
+                    finance.PaymentType = objFinance.PaymentType;
+
+                    if (objFinance.PaymentType == "Cheque")
+                    {
+                        finance.ChequeNo = objFinance.ChequeNo;
+                        finance.BankName = objFinance.BankName;
+                        finance.BankBranch = objFinance.BranchName;
+                    }
+                    else
+                    {
+                        finance.ChequeNo = "";
+                        finance.BankName = "";
+                        finance.BankBranch = "";
+                    }
+
+                    finance.Remarks = objFinance.Remarks;
+                    finance.IsActive = true;
+                    finance.IsDeleted = false;
+                    finance.CreatedBy = clsSession.UserID;
+                    finance.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_ContractorFinance.Add(finance);
+                    _db.SaveChanges();
+
+                    return RedirectToAction("Index");
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return View();
+        }
+
+        public ActionResult Edit(Guid Id)
+        {
+            MyFinanceVM objFinance = new MyFinanceVM();
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                tbl_ContractorFinance objContractorFinance = _db.tbl_ContractorFinance.Where(x => x.ContractorFinanceId == Id).FirstOrDefault();
+
+                if (objContractorFinance != null)
+                {
+                    objFinance.ContractorFinanceId = objContractorFinance.ContractorFinanceId;
+                    objFinance.SiteId = objContractorFinance.SiteId;
+                    objFinance.UserId = objContractorFinance.UserId;
+                    objFinance.SelectedDate = Convert.ToDateTime(objContractorFinance.SelectedDate).ToString("dd/MM/yyyy");
+                    objFinance.Amount = objContractorFinance.Amount;
+                    objFinance.CreditOrDebit = objContractorFinance.CreditOrDebit;
+                    objFinance.ReasonFor = objContractorFinance.ReasonFor;
+                    objFinance.PaymentType = objContractorFinance.PaymentType;
+                    objFinance.ChequeNo = objContractorFinance.ChequeNo;
+                    objFinance.BankName = objContractorFinance.BankName;
+                    objFinance.BranchName = objContractorFinance.BankBranch;
+                    objFinance.Remarks = objContractorFinance.Remarks;
+                }
+
+                objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                         .ToList();
+
+                objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName })
+                         .ToList();
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return View(objFinance);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(MyFinanceVM objFinance)
+        {
+            try
+            {
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                // Get Users List
+                objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                         .ToList();
+
+                // Get Sites List
+                objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName })
+                         .ToList();
+
+                if (ModelState.IsValid)
+                {
+                    DateTime date = DateTime.ParseExact(objFinance.SelectedDate, "dd/MM/yyyy", null);
+
+                    tbl_ContractorFinance finance = _db.tbl_ContractorFinance.Where(x => x.ContractorFinanceId == objFinance.ContractorFinanceId).FirstOrDefault();
+
+                    if (finance != null)
+                    {
+                        finance.SiteId = objFinance.SiteId;
+                        finance.UserId = objFinance.UserId;
+                        finance.SelectedDate = date;
+                        finance.Amount = objFinance.Amount;
+                        finance.CreditOrDebit = objFinance.CreditOrDebit;
+                        finance.ReasonFor = objFinance.ReasonFor;
+                        finance.PaymentType = objFinance.PaymentType;
+
+                        if (objFinance.PaymentType == "Cheque")
+                        {
+                            finance.ChequeNo = objFinance.ChequeNo;
+                            finance.BankName = objFinance.BankName;
+                            finance.BankBranch = objFinance.BranchName;
+                        }
+                        else
+                        {
+                            finance.ChequeNo = "";
+                            finance.BankName = "";
+                            finance.BankBranch = "";
+                        }
+
+                        finance.Remarks = objFinance.Remarks;
+                        finance.UpdatedBy = clsSession.UserID;
+                        finance.ModifiedDate = DateTime.UtcNow;
+                        _db.SaveChanges();
+                    }
+
+                    return RedirectToAction("Index");
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return View();
+        }
+
+        public ActionResult Report()
+        {
+            MyFinanceVM objFinance = new MyFinanceVM();
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                List<MyFinanceList> financeList = (from finance in _db.tbl_ContractorFinance
+                                                   join user in _db.tbl_Users on finance.UserId equals user.UserId
+                                                   join site in _db.tbl_Sites on finance.SiteId equals site.SiteId
+                                                   where site.ClientId == ClientId
+                                                   select new MyFinanceList
+                                                   {
+                                                       ContractorFinanceId = finance.ContractorFinanceId,
+                                                       SiteId = finance.SiteId,
+                                                       SelectedDate = finance.SelectedDate,
+                                                       Amount = finance.Amount,
+                                                       CreditOrDebit = finance.CreditOrDebit,
+                                                       SiteName = site.SiteName,
+                                                       UserId = finance.UserId,
+                                                       ReasonFor = finance.ReasonFor,
+                                                       PaymentType = finance.PaymentType,
+                                                       ChequeNo = finance.ChequeNo,
+                                                       BankName = finance.BankName,
+                                                       BankBranch = finance.BankBranch,
+                                                       Remarks = finance.Remarks,
+                                                       IsActive = finance.IsActive,
+                                                       IsDeleted = finance.IsDeleted,
+                                                       CreatedBy = finance.CreatedBy,
+                                                       UpdatedBy = finance.UpdatedBy,
+                                                       CreatedDate = finance.CreatedDate,
+                                                       ModifiedDate = finance.ModifiedDate,
+                                                       FirstName = user.FirstName
+                                                   }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.CreatedDate).ToList();
+                ViewData["FinanceList"] = financeList;
+
+                objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                         .ToList();
+
+                objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName })
+                         .ToList();
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return View(objFinance);
+        }
+
     }
 }

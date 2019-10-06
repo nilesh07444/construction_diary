@@ -1,31 +1,40 @@
-﻿@model MyFinanceVM
+﻿@model ConstructionDiary.Models.tbl_Sites
 @{
-    ViewBag.Title = "Credit";
+    ViewBag.Title = "Site";
 }
 
 @{
-    List<MyFinanceList> lstFinance = ViewData["FinanceList"] as List<MyFinanceList>;
-    decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
-    string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
+    List<ConstructionDiary.Models.SP_GetSiteDetailById_Result> lstFinance = ViewData["SiteFinanceList"] as List<ConstructionDiary.Models.SP_GetSiteDetailById_Result>;
 
     decimal? TotalDebitAmount = lstFinance.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
     string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
+
+    decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
+    string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
 
     decimal? RemainingAmount = TotalCreditAmount - TotalDebitAmount;
     string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
 
 }
 
-<!--main content start-->
 <section class="wrapper site-min-height">
-    <!-- page start-->
+
+    <!--state overview start-->
 
     <div class="row state-overview">
 
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-primary" style="opacity: 1;">
+                <div class="panel-heading text-center" style="background-color:#3c8bb9; border-color: #3c8bb9;">
+                    <strong> @Model.SiteName </strong>
+                </div>
+            </div>
+        </div>
+
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <div class="symbol red">
-                    <i class="fa fa-money"></i>
+                <div class="symbol yellow">
+                    <i class="fa fa-shopping-cart"></i>
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strTotalCreditAmount</h2>
@@ -36,8 +45,8 @@
 
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <div class="symbol yellow">
-                    <i class="fa fa-shopping-cart"></i>
+                <div class="symbol blue">
+                    <i class="fa fa-bar-chart-o"></i>
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strTotalDebitAmount</h2>
@@ -46,11 +55,10 @@
             </section>
         </div>
 
-
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
-                <div class="symbol green">
-                    <i class="fa fa-list"></i>
+                <div class="symbol red">
+                    <i class="fa fa-money"></i>
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strRemainingAmount</h2>
@@ -65,16 +73,20 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>Credit List</strong>
+                    <strong>Finance List Of @Model.SiteName</strong>
                 </header>
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
-                            <div class="btn-group pull-right">
-                                <button id="btnAddCreditEntry" class="btn green">
-                                    <i class="fa fa-plus"></i> Add New Credit Entry
-                                </button>
-                            </div>
+                            @*<div class="btn-group pull-right">
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        Tools <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a id="btnSavePDF" href="javascript:void(0);">Save as PDF</a></li>
+                                        <li><a href="javascript:void(0);">Export to Excel</a></li>
+                                    </ul>
+                                </div>*@
                         </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped" id="tblFinanceList">
@@ -82,12 +94,11 @@
                                 <tr>
                                     <th style="width:10%;">Date</th>
                                     <th style="width:10%;">Amount</th>
-                                    <th style="width:10%;">Site Name</th>
-                                    <th>Reason</th>
                                     <th style="width:10%;">Type</th>
+                                    <th>Reason</th>
                                     <th style="width:10%;">Payment Type</th>
-                                    <th style="width:20%;">By Amount</th>
-                                    <th style="width:5%;">Action</th>
+                                    <th style="width:20%;">Given/Taken By</th>
+                                    <th style="width:10%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -98,13 +109,12 @@
                                         <tr class="gradeX">
                                             <td>@Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy")</td>
                                             <td>@CoreHelper.GetFormatterAmount(obj.Amount)</td>
-                                            <td>@obj.SiteName</td>
-                                            <td>@obj.ReasonFor</td>
                                             <td>
                                                 <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
                                             </td>
+                                            <td>@obj.ReasonFor</td>
                                             <td>@obj.PaymentType</td>
-                                            <td>@obj.FirstName</td>
+                                            <td>@obj.UserName</td>
                                             <td>
                                                 @*<button data-id="@obj.ContractorFinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
                                                 <a href="/admin/myaccount/edit/@obj.ContractorFinanceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
@@ -121,28 +131,28 @@
         </div>
     </div>
 
-    <!-- Delete Modal -->
-    <div class="modal fade" id="deleteFinanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Delete Confirmation</h4>
-                </div>
-                <div class="modal-body">
-                    Are you sure want to Delete ?
-                </div>
-                <div class="modal-footer">
-                    <input type="hidden" id="hdnFinanceId" />
-                    <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                    <button id="btnDeleteFinance" class="btn btn-danger" type="button">Delete</button>
-                </div>
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteFinanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Delete Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure want to Delete ?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnFinanceId" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
+                <button id="btnDeleteFinance" class="btn btn-danger" type="button">Delete</button>
             </div>
         </div>
     </div>
-    <!-- Delete modal -->
-
-</section>
+</div>
+<!-- Delete modal -->
 
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 <script>
@@ -156,15 +166,25 @@
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': [7]
+                    'aTargets': [6]
                 }]
         });
+    });
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+    jQuery(document).on("click", "#btnSavePDF", function () {
+        var SiteId = '@ViewBag.SiteID';
+        var DownloadUrl = "/sites/DownloadSitePDF?SiteId=" + SiteId;
+        window.location.href = DownloadUrl;
     });
 
     function fnDeleteFinance(financeid) {
         jQuery("#hdnFinanceId").val(financeid);
         $('#deleteFinanceModal').modal('show');
-    }
+        }
 
     jQuery(document).on("click", "#btnDeleteFinance", function () {
 
@@ -197,14 +217,6 @@
                 }
             });
         }
-    });
-
-    jQuery(document).on("click", "#btnAddCreditEntry", function () {
-        window.location.href = "/admin/myaccount/add"
-    });
-
-    jQuery(window).on("load", function () {
-        jQuery.unblockUI();
     });
 
 </script>
