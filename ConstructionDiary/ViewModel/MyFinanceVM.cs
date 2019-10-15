@@ -26,10 +26,7 @@ namespace ConstructionDiary
         public Guid? SiteId { get; set; }
 
         public List<SelectListItem> SitesList { get; set; }
-         
-        [Required(ErrorMessage = "This field is required")]
-        public string ReasonFor { get; set; }
-
+        
         [Required(ErrorMessage = "This field is required")]
         public string PaymentType { get; set; }
 
@@ -39,7 +36,7 @@ namespace ConstructionDiary
 
         public string BankName { get; set; }
 
-        public string BranchName { get; set; }
+        public string ChequeFor { get; set; }
 
         public string Remarks { get; set; }
 

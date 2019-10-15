@@ -5287,7 +5287,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/22/2018 13:51:46</publishTime>
     </File>
     <File Include="Areas/Admin/Content/css/bootstrap-reset.css">
-      <publishTime>09/22/2018 13:51:46</publishTime>
+      <publishTime>10/05/2019 20:58:02</publishTime>
     </File>
     <File Include="Areas/Admin/Content/css/bootstrap-theme.css">
       <publishTime>09/22/2018 13:51:46</publishTime>
@@ -5785,7 +5785,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2019 14:51:15</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/Users.cshtml">
-      <publishTime>09/29/2019 14:50:14</publishTime>
+      <publishTime>10/09/2019 00:09:12</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Dashboard/Index.cshtml">
       <publishTime>09/29/2019 22:11:56</publishTime>
@@ -5793,20 +5793,41 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Areas/Admin/Views/Login/Index.cshtml">
       <publishTime>09/29/2019 14:24:07</publishTime>
     </File>
+    <File Include="Areas/Admin/Views/MyAccount/Add.cshtml">
+      <publishTime>10/14/2019 22:15:17</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/MyAccount/Edit.cshtml">
+      <publishTime>10/14/2019 22:15:05</publishTime>
+    </File>
     <File Include="Areas/Admin/Views/MyAccount/Index.cshtml">
-      <publishTime>09/29/2019 23:50:23</publishTime>
+      <publishTime>10/14/2019 22:19:10</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/MyAccount/Report.cshtml">
+      <publishTime>10/13/2019 16:52:42</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Index.cshtml">
       <publishTime>09/16/2019 23:56:28</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Profile/Index.cshtml">
-      <publishTime>09/29/2019 11:10:55</publishTime>
+      <publishTime>10/06/2019 23:03:40</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Shared/_Layout.cshtml">
-      <publishTime>09/29/2019 23:08:59</publishTime>
+      <publishTime>10/14/2019 22:20:49</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Site/Detail.cshtml">
+      <publishTime>10/10/2019 00:21:29</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Site/Index.cshtml">
-      <publishTime>09/18/2019 00:40:43</publishTime>
+      <publishTime>10/10/2019 20:57:13</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/User/Add.cshtml">
+      <publishTime>10/06/2019 15:17:03</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/User/Edit.cshtml">
+      <publishTime>10/06/2019 16:09:47</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/User/Index.cshtml">
+      <publishTime>10/13/2019 17:26:59</publishTime>
     </File>
     <File Include="Areas/Admin/Views/web.config">
       <publishTime>09/16/2019 23:50:42</publishTime>
@@ -5824,10 +5845,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>10/01/2019 22:26:51</publishTime>
+      <publishTime>10/14/2019 22:21:43</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>10/01/2019 22:26:51</publishTime>
+      <publishTime>10/14/2019 22:21:43</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>06/07/2018 11:03:48</publishTime>
@@ -6061,7 +6082,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2019 22:49:51</publishTime>
     </File>
     <File Include="Models/ConstructionDiary.edmx.diagram">
-      <publishTime>09/29/2019 23:28:22</publishTime>
+      <publishTime>10/13/2019 19:49:53</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>06/28/2019 00:03:56</publishTime>
@@ -6127,7 +6148,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2019 23:48:10</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/01/2019 22:26:53</publishTime>
+      <publishTime>10/14/2019 22:21:45</publishTime>
     </File>
   </ItemGroup>
 </Project>

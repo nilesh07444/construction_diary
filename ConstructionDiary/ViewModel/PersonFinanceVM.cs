@@ -20,10 +20,7 @@ namespace ConstructionDiary
         public Guid? GivenAmountBy { get; set; }
 
         public List<SelectListItem> UsersList { get; set; }
-
-        [Required(ErrorMessage = "This field is required")]
-        public string ReasonFor { get; set; }
-
+        
         [Required(ErrorMessage = "This field is required")]
         public string PaymentType { get; set; }
 

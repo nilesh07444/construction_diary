@@ -13,11 +13,10 @@ namespace ConstructionDiary
         public decimal? Amount { get; set; }
         public string CreditOrDebit { get; set; }
         public Guid? GivenAmountBy { get; set; }
-        public string ReasonFor { get; set; }
         public string PaymentType { get; set; }
         public string ChequeNo { get; set; }
         public string BankName { get; set; }
-        public string BankBranch { get; set; }
+        public string ChequeFor { get; set; }
         public string Remarks { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
@@ -37,11 +36,10 @@ namespace ConstructionDiary
         public decimal? Amount { get; set; }
         public string CreditOrDebit { get; set; }
         public string SiteName { get; set; }
-        public string ReasonFor { get; set; }
         public string PaymentType { get; set; }
         public string ChequeNo { get; set; }
         public string BankName { get; set; }
-        public string BankBranch { get; set; }
+        public string ChequeFor { get; set; }
         public string Remarks { get; set; }
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }

@@ -19,11 +19,10 @@ namespace ConstructionDiary.Models
         public Nullable<decimal> Amount { get; set; }
         public string CreditOrDebit { get; set; }
         public Nullable<System.Guid> SiteId { get; set; }
-        public string ReasonFor { get; set; }
         public string PaymentType { get; set; }
         public string ChequeNo { get; set; }
         public string BankName { get; set; }
-        public string BankBranch { get; set; }
+        public string ChequeFor { get; set; }
         public string Remarks { get; set; }
     }
 }

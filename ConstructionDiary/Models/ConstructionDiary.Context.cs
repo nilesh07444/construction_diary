@@ -52,11 +52,6 @@ namespace ConstructionDiary.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetSiteDetailById_Result>("SP_GetSiteDetailById", siteIdParameter);
         }
     
-        public virtual ObjectResult<SP_GetTodayPersonFinance_Result> SP_GetTodayPersonFinance()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPersonFinance_Result>("SP_GetTodayPersonFinance");
-        }
-    
         public virtual ObjectResult<SP_GetSitesList_Result> SP_GetSitesList(Nullable<System.Guid> clientId)
         {
             var clientIdParameter = clientId.HasValue ?
@@ -73,6 +68,11 @@ namespace ConstructionDiary.Models
                 new ObjectParameter("ClientId", typeof(System.Guid));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPartyFinance_Result>("SP_GetTodayPartyFinance", clientIdParameter);
+        }
+    
+        public virtual ObjectResult<SP_GetTodayPersonFinance_Result> SP_GetTodayPersonFinance()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPersonFinance_Result>("SP_GetTodayPersonFinance");
         }
     }
 }

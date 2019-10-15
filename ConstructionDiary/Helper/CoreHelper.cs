@@ -17,7 +17,7 @@ namespace ConstructionDiary
             {
                 double ammountDouble = Convert.ToDouble(TotalGivenAmount);
                 CultureInfo cultureInfo = new CultureInfo("en-IN");
-                ConvertedString = string.Format(cultureInfo, "{0:N}", ammountDouble);
+                ConvertedString = string.Format(cultureInfo, "{0:N0}", ammountDouble);
             }
             return ConvertedString;
         }

@@ -37,11 +37,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                        CreditOrDebit = finance.CreditOrDebit,
                                                        SiteName = site.SiteName,
                                                        UserId = finance.UserId,
-                                                       ReasonFor = finance.ReasonFor,
+                                                       
                                                        PaymentType = finance.PaymentType,
                                                        ChequeNo = finance.ChequeNo,
                                                        BankName = finance.BankName,
-                                                       BankBranch = finance.BankBranch,
+                                                       ChequeFor = finance.ChequeFor,
                                                        Remarks = finance.Remarks,
                                                        IsActive = finance.IsActive,
                                                        IsDeleted = finance.IsDeleted,
@@ -50,7 +50,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                        CreatedDate = finance.CreatedDate,
                                                        ModifiedDate = finance.ModifiedDate,
                                                        FirstName = user.FirstName
-                                                   }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.CreatedDate).ToList();
+                                                   }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
                 ViewData["FinanceList"] = financeList;
 
                 objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
@@ -164,20 +164,19 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     finance.SelectedDate = date;
                     finance.Amount = objFinance.Amount;
                     finance.CreditOrDebit = objFinance.CreditOrDebit;
-                    finance.ReasonFor = objFinance.ReasonFor;
                     finance.PaymentType = objFinance.PaymentType;
 
                     if (objFinance.PaymentType == "Cheque")
                     {
                         finance.ChequeNo = objFinance.ChequeNo;
                         finance.BankName = objFinance.BankName;
-                        finance.BankBranch = objFinance.BranchName;
+                        finance.ChequeFor = objFinance.ChequeFor;
                     }
                     else
                     {
                         finance.ChequeNo = "";
                         finance.BankName = "";
-                        finance.BankBranch = "";
+                        finance.ChequeFor = "";
                     }
 
                     finance.Remarks = objFinance.Remarks;
@@ -217,11 +216,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objFinance.SelectedDate = Convert.ToDateTime(objContractorFinance.SelectedDate).ToString("dd/MM/yyyy");
                     objFinance.Amount = objContractorFinance.Amount;
                     objFinance.CreditOrDebit = objContractorFinance.CreditOrDebit;
-                    objFinance.ReasonFor = objContractorFinance.ReasonFor;
                     objFinance.PaymentType = objContractorFinance.PaymentType;
                     objFinance.ChequeNo = objContractorFinance.ChequeNo;
                     objFinance.BankName = objContractorFinance.BankName;
-                    objFinance.BranchName = objContractorFinance.BankBranch;
+                    objFinance.ChequeFor = objContractorFinance.ChequeFor;
                     objFinance.Remarks = objContractorFinance.Remarks;
                 }
 
@@ -272,20 +270,19 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         finance.SelectedDate = date;
                         finance.Amount = objFinance.Amount;
                         finance.CreditOrDebit = objFinance.CreditOrDebit;
-                        finance.ReasonFor = objFinance.ReasonFor;
                         finance.PaymentType = objFinance.PaymentType;
 
                         if (objFinance.PaymentType == "Cheque")
                         {
                             finance.ChequeNo = objFinance.ChequeNo;
                             finance.BankName = objFinance.BankName;
-                            finance.BankBranch = objFinance.BranchName;
+                            finance.ChequeFor = objFinance.ChequeFor;
                         }
                         else
                         {
                             finance.ChequeNo = "";
                             finance.BankName = "";
-                            finance.BankBranch = "";
+                            finance.ChequeFor = "";
                         }
 
                         finance.Remarks = objFinance.Remarks;
@@ -326,11 +323,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                        CreditOrDebit = finance.CreditOrDebit,
                                                        SiteName = site.SiteName,
                                                        UserId = finance.UserId,
-                                                       ReasonFor = finance.ReasonFor,
                                                        PaymentType = finance.PaymentType,
                                                        ChequeNo = finance.ChequeNo,
                                                        BankName = finance.BankName,
-                                                       BankBranch = finance.BankBranch,
+                                                       ChequeFor = finance.ChequeFor,
                                                        Remarks = finance.Remarks,
                                                        IsActive = finance.IsActive,
                                                        IsDeleted = finance.IsDeleted,
@@ -339,7 +335,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                        CreatedDate = finance.CreatedDate,
                                                        ModifiedDate = finance.ModifiedDate,
                                                        FirstName = user.FirstName
-                                                   }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.CreatedDate).ToList();
+                                                   }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
                 ViewData["FinanceList"] = financeList;
 
                 objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)

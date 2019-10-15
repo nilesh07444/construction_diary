@@ -25,7 +25,7 @@
                         </div>
                         <div class="space15"></div>
 
-                        <table class="display table table-bordered table-striped" id="tblUserList">
+                        <table class="display table table-bordered table-striped table-hover" id="tblUserList">
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
@@ -64,7 +64,7 @@
                                                 }
                                             </td>
                                             <td>
-                                                <a href="/admin/client/edituser/@user.UserId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <a href="/admin/user/edit/@user.UserId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 <button onclick="fnDeleteUser('@user.UserId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
                                         </tr>

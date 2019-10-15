@@ -32,7 +32,7 @@
                                 </div>*@
                         </div>
                         <div class="space15"></div>
-                        <table class="display table table-bordered table-striped" id="tblSitesList">
+                        <table class="display table table-bordered table-striped table-hover" id="tblSitesList">
                             <thead>
                                 <tr>
                                     <th>Site Name</th>
@@ -52,9 +52,9 @@
                                         <tr class="gradeX">
                                             <td>@site.SiteName</td>
                                             <td>@site.SiteDescription</td>
-                                            <td>@CoreHelper.GetFormatterAmount(site.TotalCreditAmount)</td>
-                                            <td>@CoreHelper.GetFormatterAmount(site.TotalDebitAmount)</td>
-                                            <td>@CoreHelper.GetFormatterAmount(site.TotalRemainingAmount)</td>
+                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalCreditAmount)</span></td>
+                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalDebitAmount)</span></td>
+                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalRemainingAmount)</span></td>
                                             <td><button onclick="fnFinanceSite('@site.SiteId')" type="button" class="btn btn-primary">Finance</button></td>
                                             <td>
                                                 @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@

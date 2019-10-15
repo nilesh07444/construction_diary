@@ -68,7 +68,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 try
                 {
                     var existData = _db.tbl_Users.Where(x => !x.IsDeleted &&
-                                                       (x.UserName.ToLower() == user.UserName.ToLower() || x.EmailId.ToLower() == user.EmailId.ToLower())).FirstOrDefault();
+                                                       (x.UserName.ToLower() == user.UserName.ToLower() || (!string.IsNullOrEmpty(user.EmailId) && x.EmailId.ToLower() == user.EmailId.ToLower()))
+                                                       ).FirstOrDefault();
 
                     if (existData != null)
                     {
@@ -119,7 +120,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                              .ToList();
 
                 var existData = _db.tbl_Users.Where(x => x.UserId != id && !x.IsDeleted &&
-                                                       (x.UserName.ToLower() == user.UserName.ToLower() || x.EmailId.ToLower() == user.EmailId.ToLower())).FirstOrDefault();
+                                                       (x.UserName.ToLower() == user.UserName.ToLower() || (!string.IsNullOrEmpty(user.EmailId) && x.EmailId.ToLower() == user.EmailId.ToLower()))).FirstOrDefault();
 
                 if (existData != null)
                 {
@@ -156,6 +157,57 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             catch (Exception ex)
             {
 
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(UserVM user)
+        {
+
+            user.UserRoleList = _db.tbl_Role.Where(x => x.RoleId > 1)
+                         .Select(o => new SelectListItem { Value = o.RoleId.ToString(), Text = o.RoleName })
+                         .ToList();
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existData = _db.tbl_Users.Where(x => !x.IsDeleted && x.UserId != user.UserId &&
+                                                       (
+                                                        x.UserName.ToLower() == user.UserName.ToLower() || (!string.IsNullOrEmpty(user.EmailId) && x.EmailId.ToLower() == user.EmailId.ToLower())
+                                                        )).FirstOrDefault();
+
+                    if (existData != null)
+                    {
+                        if (existData.UserName.ToLower() == user.UserName.ToLower())
+                        {
+                            ModelState.AddModelError("Username", "UserName is already exist");
+                        }
+                        if (existData.EmailId.ToLower() == user.EmailId.ToLower())
+                        {
+                            ModelState.AddModelError("EmailId", "EmailId is already exist");
+                        }
+
+                        return View(user);
+                    }
+
+                    tbl_Users objUser = _db.tbl_Users.Where(x => x.UserId == user.UserId).FirstOrDefault();
+                    objUser.UserName = user.UserName;
+                    objUser.Password = user.Password;
+                    objUser.RoleId = user.RoleId;
+                    objUser.FirstName = user.Firstname;
+                    objUser.EmailId = user.EmailId;
+                    objUser.MobileNo = user.MobileNo;
+                    objUser.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                }
+                return RedirectToAction("Index");
             }
 
             return View(user);

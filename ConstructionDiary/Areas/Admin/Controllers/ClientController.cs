@@ -243,7 +243,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 try
                 {
                     var existData = _db.tbl_Users.Where(x => !x.IsDeleted &&
-                                                       (x.UserName.ToLower() == user.UserName.ToLower() || x.EmailId.ToLower() == user.EmailId.ToLower())).FirstOrDefault();
+                                                       (
+                                                           x.UserName.ToLower() == user.UserName.ToLower() || 
+                                                           (!string.IsNullOrEmpty(user.EmailId) && x.EmailId.ToLower() == user.EmailId.ToLower())
+                                                       )).FirstOrDefault();
 
                     if (existData != null)
                     {
@@ -292,24 +295,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 user.UserRoleList = _db.tbl_Role.Where(x => x.RoleId > 1)
                          .Select(o => new SelectListItem { Value = o.RoleId.ToString(), Text = o.RoleName })
                          .ToList();
-
-                var existData = _db.tbl_Users.Where(x => x.UserId != id && !x.IsDeleted &&
-                                                       (x.UserName.ToLower() == user.UserName.ToLower() || x.EmailId.ToLower() == user.EmailId.ToLower())).FirstOrDefault();
-
-                if (existData != null)
-                {
-                    if (existData.UserName.ToLower() == user.UserName.ToLower())
-                    {
-                        ModelState.AddModelError("Username", "UserName is already exist");
-                    }
-                    if (existData.EmailId.ToLower() == user.EmailId.ToLower())
-                    {
-                        ModelState.AddModelError("EmailId", "EmailId is already exist");
-                    }
-
-                    return View(user);
-                }
-
+                 
                 tbl_Users objUser = _db.tbl_Users.Where(x => x.UserId == id).FirstOrDefault();
 
                 if (objUser != null)
@@ -349,7 +335,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 try
                 {
                     var existData = _db.tbl_Users.Where(x => !x.IsDeleted && x.UserId != user.UserId &&
-                                                       (x.UserName.ToLower() == user.UserName.ToLower() || x.EmailId.ToLower() == user.EmailId.ToLower())).FirstOrDefault();
+                                                       (
+                                                        x.UserName.ToLower() == user.UserName.ToLower() || (!string.IsNullOrEmpty(user.EmailId) && x.EmailId.ToLower() == user.EmailId.ToLower())
+                                                        )).FirstOrDefault();
 
                     if (existData != null)
                     {
