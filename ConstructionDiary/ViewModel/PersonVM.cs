@@ -9,7 +9,7 @@ namespace ConstructionDiary
     public class PersonVM
     {        
         [Required]
-        [Display(Name = "First Name")]
+        [Display(Name = "Full Name")]
         public string Firstname { get; set; }
 
         [Display(Name = "Address")]

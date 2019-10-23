@@ -78,6 +78,9 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-default" href="/admin/myaccount/add?id=@Model.SiteId" style="color:#000000;"><i class="fa fa-plus"></i> Add New Credit Entry</a>
+                            </div>
                             @*<div class="btn-group pull-right">
                                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                                         Tools <i class="fa fa-angle-down"></i>
@@ -106,21 +109,21 @@
                                 {
                                     foreach (var obj in lstFinance)
                                     {
-                                <tr class="gradeX">
-                                    <td>@Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy")</td> 
-                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Amount)</span></td>
-                                    <td>
-                                        <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
-                                    </td>
-                                    <td>@obj.PaymentType</td>
-                                    <td>@obj.BankName</td>
-                                    <td>@obj.UserName</td>
-                                    <td>
-                                        @*<button data-id="@obj.ContractorFinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
-                                        <a href="/admin/myaccount/edit/@obj.ContractorFinanceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                        <button onclick="fnDeleteFinance('@obj.ContractorFinanceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                        <tr class="gradeX">
+                                            <td>@Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy")</td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Amount)</span></td>
+                                            <td>
+                                                <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
+                                            </td>
+                                            <td>@obj.PaymentType</td>
+                                            <td>@obj.BankName</td>
+                                            <td>@obj.UserName</td>
+                                            <td>
+                                                @*<button data-id="@obj.ContractorFinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
+                                                <a href="/admin/myaccount/edit/@obj.ContractorFinanceId?site=@Model.SiteId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button onclick="fnDeleteFinance('@obj.ContractorFinanceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                     }
                                 }
                             </tbody>
@@ -166,7 +169,7 @@
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': [6]
+                    'aTargets': [0, 6]
                 }]
         });
     });

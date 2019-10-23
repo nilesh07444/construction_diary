@@ -1,0 +1,91 @@
+﻿@model PersonVM
+@{
+    ViewBag.Title = "Person";
+}
+
+@{
+    string image_url = "";
+    if (Model.strPersonPhoto != "" && Model.strPersonPhoto != null)
+    {
+        image_url = "/Images/PersonPhoto/" + Model.strPersonPhoto;
+    }
+    else
+    {
+        image_url = "/Images/img_avatar.png";
+    }
+}
+
+<!--main content start-->
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <aside class="profile-nav col-lg-3">
+            <section class="panel">
+                <div class="user-heading round">
+                    <a href="javascript:void(0);">
+                        <img src="@image_url" alt="">
+                    </a>
+                    <h1>@Model.Firstname</h1>
+                </div>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="javascript:void(0);"> <i class="fa fa-user"></i> Profile</a></li>
+                    <li><a href="javascript:void(0);" data-id="@Model.PersonId" class="clsEditPerson"> <i class="fa fa-edit"></i> Edit profile</a></li>
+                </ul>
+            </section>
+        </aside>
+        <aside class="profile-info col-lg-9">
+
+            <section class="panel">
+                <div class="bio-graph-heading">
+                    More details of person
+                </div>
+                <div class="panel-body bio-graph-info">
+
+                    <div class="row">
+                        <div class="bio-row">
+                            <p><span>First Name </span>: @Model.Firstname</p>
+                        </div>
+                        <div class="bio-row">
+                            <p><span>Created By</span>: @Model.CreatedBy</p>
+                        </div>
+                        
+                        <div class="bio-row">
+                            <p><span>Last Updated By</span>: @Model.UpdatedBy</p>
+                        </div>
+                        
+                        <div class="bio-row">
+                            <p><span></span></p>
+                        </div>
+                        <div class="bio-row">
+                            <p><span>Mobile </span>: @Model.MobileNo</p>
+                        </div>
+                        <div class="bio-row">
+                            <p><span></span></p>
+                        </div>
+                        <div class="bio-row">
+                            <p><span>Address </span>: @Model.Address</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </aside>
+    </div>
+
+    <!-- page end-->
+</section>
+
+<!--main content end-->
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script>
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+
+    jQuery(document).on("click", ".clsEditPerson", function () {
+        var person_id = $(this).attr("data-id");
+        window.location.href = "/admin/person/edit/" + person_id;
+    });
+
+</script>

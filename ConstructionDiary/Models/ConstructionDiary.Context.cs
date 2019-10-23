@@ -38,11 +38,6 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_Sites> tbl_Sites { get; set; }
         public virtual DbSet<tbl_Users> tbl_Users { get; set; }
     
-        public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPersonsList_Result>("SP_GetPersonsList");
-        }
-    
         public virtual ObjectResult<SP_GetSiteDetailById_Result> SP_GetSiteDetailById(Nullable<System.Guid> siteId)
         {
             var siteIdParameter = siteId.HasValue ?
@@ -73,6 +68,15 @@ namespace ConstructionDiary.Models
         public virtual ObjectResult<SP_GetTodayPersonFinance_Result> SP_GetTodayPersonFinance()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPersonFinance_Result>("SP_GetTodayPersonFinance");
+        }
+    
+        public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList(Nullable<System.Guid> clientId)
+        {
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("ClientId", clientId) :
+                new ObjectParameter("ClientId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetPersonsList_Result>("SP_GetPersonsList", clientIdParameter);
         }
     }
 }

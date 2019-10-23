@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ConstructionDiaryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ConstructionDiaryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="tbl_Clients">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -196,7 +196,9 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="SP_GetPersonsList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SP_GetPersonsList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ClientId" Type="uniqueidentifier" Mode="In" />
+        </Function>
         <Function Name="SP_GetSiteDetailById" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="SiteId" Type="uniqueidentifier" Mode="In" />
         </Function>
@@ -235,8 +237,7 @@
             <End Role="tbl_Users" EntitySet="tbl_Users" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ConstructionDiaryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -466,30 +467,20 @@
             <End Role="tbl_Role" EntitySet="tbl_Role" />
             <End Role="tbl_Users" EntitySet="tbl_Users" />
           </AssociationSet>
-          <FunctionImport Name="SP_GetPersonsList" ReturnType="Collection(ConstructionDiaryModel.SP_GetPersonsList_Result)" />
           <FunctionImport Name="SP_GetSiteDetailById" ReturnType="Collection(ConstructionDiaryModel.SP_GetSiteDetailById_Result)">
-            <Parameter Name="SiteId" Mode="In" Type="Guid" />
+          <Parameter Name="SiteId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_GetSitesList" ReturnType="Collection(ConstructionDiaryModel.SP_GetSitesList_Result)">
-            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_GetTodayPartyFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPartyFinance_Result)">
-            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_GetTodayPersonFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPersonFinance_Result)" />
+          <FunctionImport Name="SP_GetPersonsList" ReturnType="Collection(ConstructionDiaryModel.SP_GetPersonsList_Result)">
+            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          </FunctionImport>
         </EntityContainer>
-        <ComplexType Name="SP_GetPersonsList_Result">
-          <Property Type="Guid" Name="PersonId" Nullable="true" />
-          <Property Type="String" Name="PersonFirstName" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="PersonAddress" Nullable="true" MaxLength="365" />
-          <Property Type="String" Name="MobileNo" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="PersonPhoto" Nullable="true" MaxLength="365" />
-          <Property Type="Boolean" Name="IsActive" Nullable="true" />
-          <Property Type="Boolean" Name="IsDeleted" Nullable="true" />
-          <Property Type="Decimal" Name="TotalCreditAmount" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="TotalDebitAmount" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="TotalRemainingAmount" Nullable="true" Precision="19" Scale="2" />
-        </ComplexType>
         <ComplexType Name="SP_GetSiteDetailById_Result">
           <Property Type="Guid" Name="ContractorFinanceId" Nullable="true" />
           <Property Type="String" Name="UserName" Nullable="true" MaxLength="365" />
@@ -542,6 +533,18 @@
           <Property Type="String" Name="ChequeFor" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Remarks" Nullable="true" MaxLength="365" />
           <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SP_GetPersonsList_Result">
+          <Property Type="Guid" Name="PersonId" Nullable="true" />
+          <Property Type="String" Name="PersonFirstName" Nullable="true" MaxLength="365" />
+          <Property Type="String" Name="PersonAddress" Nullable="true" MaxLength="365" />
+          <Property Type="String" Name="MobileNo" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="PersonPhoto" Nullable="true" MaxLength="365" />
+          <Property Type="Boolean" Name="IsActive" Nullable="true" />
+          <Property Type="Boolean" Name="IsDeleted" Nullable="true" />
+          <Property Type="Decimal" Name="TotalCreditAmount" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="TotalDebitAmount" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="TotalRemainingAmount" Nullable="true" Precision="19" Scale="2" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -702,22 +705,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetPersonsList" FunctionName="ConstructionDiaryModel.Store.SP_GetPersonsList">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetPersonsList_Result">
-                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
-                <ScalarProperty Name="PersonFirstName" ColumnName="PersonFirstName" />
-                <ScalarProperty Name="PersonAddress" ColumnName="PersonAddress" />
-                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
-                <ScalarProperty Name="PersonPhoto" ColumnName="PersonPhoto" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="TotalCreditAmount" ColumnName="TotalCreditAmount" />
-                <ScalarProperty Name="TotalDebitAmount" ColumnName="TotalDebitAmount" />
-                <ScalarProperty Name="TotalRemainingAmount" ColumnName="TotalRemainingAmount" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_GetSiteDetailById" FunctionName="ConstructionDiaryModel.Store.SP_GetSiteDetailById">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetSiteDetailById_Result">
@@ -784,6 +771,22 @@
                 <ScalarProperty Name="ChequeFor" ColumnName="ChequeFor" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SP_GetPersonsList" FunctionName="ConstructionDiaryModel.Store.SP_GetPersonsList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetPersonsList_Result">
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="PersonFirstName" ColumnName="PersonFirstName" />
+                <ScalarProperty Name="PersonAddress" ColumnName="PersonAddress" />
+                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+                <ScalarProperty Name="PersonPhoto" ColumnName="PersonPhoto" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="TotalCreditAmount" ColumnName="TotalCreditAmount" />
+                <ScalarProperty Name="TotalDebitAmount" ColumnName="TotalDebitAmount" />
+                <ScalarProperty Name="TotalRemainingAmount" ColumnName="TotalRemainingAmount" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

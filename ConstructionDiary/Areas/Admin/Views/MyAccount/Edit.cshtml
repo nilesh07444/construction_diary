@@ -88,6 +88,7 @@
                         </div>
                          
                         <div class="row">
+                            @{TempData.Keep("siteId");}
                             <div class="col-sm-12 form-group">
                                 @Html.HiddenFor(model => model.ContractorFinanceId)
                                 <button class="btn btn-success" id="btnSubmit" type="submit">Save</button>

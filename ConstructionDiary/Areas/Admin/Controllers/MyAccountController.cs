@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using ConstructionDiary.Models;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
@@ -111,11 +112,17 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return View(lstFinance);
         }
 
-        public ActionResult Add()
+        public ActionResult Add(Guid? id) // id == SiteId
         {
             MyFinanceVM objFinance = new MyFinanceVM();
             try
             {
+                TempData["siteId"] = id;
+                if (id != null)
+                {
+                    objFinance.SiteId = id;
+                }
+
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
                 objFinance.UsersList = _db.tbl_Users.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
@@ -138,6 +145,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             try
             {
+                string qSiteId = Convert.ToString(TempData["siteId"]);
+
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
@@ -187,8 +196,15 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     _db.tbl_ContractorFinance.Add(finance);
                     _db.SaveChanges();
 
-                    return RedirectToAction("Index");
-
+                    if (!string.IsNullOrEmpty(qSiteId))
+                    {
+                        return RedirectToAction("Detail", new RouteValueDictionary(new { controller = "Site", action = "Detail", Id = qSiteId }));
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index");
+                    }
+                     
                 }
             }
             catch (Exception ex)
@@ -199,11 +215,13 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return View();
         }
 
-        public ActionResult Edit(Guid Id)
+        public ActionResult Edit(Guid Id, Guid? site)
         {
             MyFinanceVM objFinance = new MyFinanceVM();
             try
             {
+                TempData["siteId"] = site;
+
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
                 tbl_ContractorFinance objContractorFinance = _db.tbl_ContractorFinance.Where(x => x.ContractorFinanceId == Id).FirstOrDefault();
@@ -243,6 +261,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             try
             {
+                string qSiteId = Convert.ToString(TempData["siteId"]);
+
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
@@ -291,7 +311,14 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         _db.SaveChanges();
                     }
 
-                    return RedirectToAction("Index");
+                    if (!string.IsNullOrEmpty(qSiteId))
+                    {
+                        return RedirectToAction("Detail", new RouteValueDictionary(new { controller = "Site", action = "Detail", Id = qSiteId }));
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index");
+                    }
 
                 }
             }

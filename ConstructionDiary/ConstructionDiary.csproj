@@ -51,6 +51,15 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus">
+      <HintPath>C:\Users\lappy\Desktop\export krutik\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>C:\Users\lappy\Desktop\export krutik\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker">
+      <HintPath>C:\Users\lappy\Desktop\export krutik\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -144,6 +153,7 @@
     </Compile>
     <Compile Include="Helper\CoreHelper.cs" />
     <Compile Include="Helper\Enums.cs" />
+    <Compile Include="Helper\PDFGeneratePageEventHelper.cs" />
     <Compile Include="Models\clsSession.cs" />
     <Compile Include="Models\ConstructionDiary.Context.cs">
       <AutoGen>True</AutoGen>
@@ -2190,6 +2200,10 @@
     <Content Include="Models\ConstructionDiary.edmx.diagram">
       <DependentUpon>ConstructionDiary.edmx</DependentUpon>
     </Content>
+    <Content Include="Areas\Admin\Views\Person\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\View.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\Finance.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

@@ -119,6 +119,32 @@ namespace ConstructionDiary.Areas.Admin
                 new { controller = "User", action = "Index", id = UrlParameter.Optional }
             );
 
+            // Person Routes
+
+            context.MapRoute(
+                "Admin_person",
+                "admin/person",
+                new { controller = "Person", action = "Index", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_person_add",
+                "admin/person/add",
+                new { controller = "Person", action = "Add", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_person_edit",
+                "admin/person/edit",
+                new { controller = "Person", action = "Edit", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_person_view",
+                "admin/person/view",
+                new { controller = "Person", action = "View", id = UrlParameter.Optional }
+            );
+
         }
     }
 }

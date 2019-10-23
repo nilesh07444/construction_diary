@@ -10,7 +10,8 @@
     <div class="row">
         <div class="col-lg-12">
             <section class="panel">
-                @using (Html.BeginForm("Add", "MyAccount", FormMethod.Post, new { @id = "myFinanceFormId", enctype = "multipart/form-data", role = "form" }))
+                @*@using (Html.BeginForm("Add", "MyAccount", FormMethod.Post, new { @id = "myFinanceFormId", enctype = "multipart/form-data", role = "form" }))*@
+                @using (Html.BeginForm("Add", "MyAccount", routeValues: new { id = "xyz" }, method: FormMethod.Post, htmlAttributes: new { @id = "myFinanceFormId", enctype = "multipart/form-data", role = "form" }))
                 {
                     <header class="panel-heading">
                         <strong>Create Credit Entry</strong>
@@ -88,10 +89,11 @@
                         </div>
 
                         <div class="row">
-                            
+
                         </div>
 
                         <div class="row">
+                            @{TempData.Keep("siteId");}
                             <div class="col-sm-12 form-group">
                                 <button class="btn btn-success" id="btnSubmit" type="submit">Save</button>
                                 <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>

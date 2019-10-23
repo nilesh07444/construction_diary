@@ -30,7 +30,7 @@ namespace ConstructionDiary
 
         public string BankName { get; set; }
 
-        public string BranchName { get; set; }
+        public string ChequeFor { get; set; }
 
         public string Remarks { get; set; }
 

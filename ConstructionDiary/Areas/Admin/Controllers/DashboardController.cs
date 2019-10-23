@@ -7,7 +7,7 @@ using ConstructionDiary.Models;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
-    [filters] 
+    [filters]
     public class DashboardController : Controller
     {
         ConstructionDiaryEntities _db;
@@ -33,6 +33,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
                 objDashboard.TotalSites = _db.tbl_Sites.Where(x => x.IsActive && !x.IsDeleted && x.ClientId == ClientId).ToList().Count;
+
+                /*
                 objDashboard.TotalPersons = _db.tbl_Persons.Where(x => x.IsActive == true && x.IsDeleted == false).ToList().Count;
 
                 decimal? TotalGivenAmount = (from finance in _db.tbl_Finance
@@ -42,8 +44,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                              select finance
                     ).ToList().Select(x => x.Amount).Sum();
 
-                objDashboard.TotalGivenAmountToPersons = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalGivenAmount));
-
                 decimal? TotalTakenAmount = (from finance in _db.tbl_ContractorFinance
                                              join site in _db.tbl_Sites
                                              on finance.SiteId equals site.SiteId
@@ -52,12 +52,15 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                              select finance
                     ).ToList().Select(x => x.Amount).Sum();
 
+                objDashboard.TotalGivenAmountToPersons = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalGivenAmount));
+
                 objDashboard.TotalTakenAmountFromSites = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalTakenAmount));
 
                 objDashboard.TotalBalanceAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalTakenAmount) - Convert.ToDecimal(TotalGivenAmount));
+                */
             }
             return View(objDashboard);
         }
-         
+
     }
 }
