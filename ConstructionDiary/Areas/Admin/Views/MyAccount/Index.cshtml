@@ -70,10 +70,19 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
-                            <div class="btn-group pull-right">
+                            <div class="btn-group pull-left">
                                 <button id="btnAddCreditEntry" class="btn green">
                                     <i class="fa fa-plus"></i> Add New Credit Entry
                                 </button>
+                            </div>
+                            <div class="btn-group pull-right hidden-sm hidden-md hidden-phone">
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    Download <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu pull-right">                                    
+                                    <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                    <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
+                                </ul>
                             </div>
                         </div>
                         <div class="space15"></div>
@@ -206,5 +215,14 @@
     jQuery(window).on("load", function () {
         jQuery.unblockUI();
     });
+
+    jQuery(document).on("click", "#btnDownloadPdf", function () {
+        window.location.href = "/admin/myaccount/ExportPDFOfAllCreditList"
+    });
+
+    jQuery(document).on("click", "#btnDownloadExcel", function () {
+        window.location.href = "/admin/myaccount/ExportExcelOfAllCreditList"
+    });
+
 
 </script>

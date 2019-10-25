@@ -7,7 +7,6 @@
       <Diagram DiagramId="86f4268c33d241eca7dded4651e4fe47" Name="Diagram1">
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Clients" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_ContractorFinance" Width="1.5" PointX="8" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Finance" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_GeneralSetting" Width="1.5" PointX="0.75" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PackageType" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PaymentTransaction" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
@@ -19,6 +18,7 @@
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Users_tbl_Clients" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_ContractorFinance_tbl_Sites" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Users_tbl_Role" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Finance" Width="1.5" PointX="10.375" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

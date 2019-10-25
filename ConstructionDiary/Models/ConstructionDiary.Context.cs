@@ -29,7 +29,6 @@ namespace ConstructionDiary.Models
     
         public virtual DbSet<tbl_Clients> tbl_Clients { get; set; }
         public virtual DbSet<tbl_ContractorFinance> tbl_ContractorFinance { get; set; }
-        public virtual DbSet<tbl_Finance> tbl_Finance { get; set; }
         public virtual DbSet<tbl_GeneralSetting> tbl_GeneralSetting { get; set; }
         public virtual DbSet<tbl_PackageType> tbl_PackageType { get; set; }
         public virtual DbSet<tbl_PaymentTransaction> tbl_PaymentTransaction { get; set; }
@@ -37,6 +36,7 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_Role> tbl_Role { get; set; }
         public virtual DbSet<tbl_Sites> tbl_Sites { get; set; }
         public virtual DbSet<tbl_Users> tbl_Users { get; set; }
+        public virtual DbSet<tbl_Finance> tbl_Finance { get; set; }
     
         public virtual ObjectResult<SP_GetSiteDetailById_Result> SP_GetSiteDetailById(Nullable<System.Guid> siteId)
         {

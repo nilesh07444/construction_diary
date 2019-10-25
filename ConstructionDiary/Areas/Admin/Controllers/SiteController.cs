@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using ConstructionDiary.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using System.IO; 
+using ConstructionDiary.Helper;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -149,5 +157,261 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(objSite);
         }
+
+        public string ExportPDFOfSelectedSite(Guid id)
+        {
+            tbl_Sites objSite = new tbl_Sites();
+            string Result = "";
+
+            try
+            {
+                objSite = _db.tbl_Sites.Where(x => x.SiteId == id).FirstOrDefault();
+
+                var list = (from p in _db.SP_GetSiteDetailById(id)
+                                               select p).ToList();
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+                 
+                string[] strColumns = new string[6] { "Date", "Amount", "Type", "Payment Type", "Bank Name", "By Amount" };
+                if (list != null && list.Count() > 0)
+                {
+
+                    List<DateTime> lstDateTemp = new List<DateTime>();
+                    StringBuilder strHTML = new StringBuilder();
+                    strHTML.Append("<!DOCTYPE html>");
+                    strHTML.Append("<style>");
+                    strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
+                    strHTML.Append("</style>");
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    string Title = "Credit List Of " + objSite.SiteName;
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append(Title);
+                    strHTML.Append("</th>");
+                    strHTML.Append("</tr>");
+                    strHTML.Append("<tr>");
+                    for (int idx = 0; idx < strColumns.Length; idx++)
+                    {
+                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append(strColumns[idx]);
+                        strHTML.Append("</th>");
+                    }
+                    strHTML.Append("</tr>");
+                    strHTML.Append("</thead>");
+                    strHTML.Append("<tbody>");
+                    foreach (var obj in list)
+                    {
+
+                        if (obj != null)
+                        {
+
+                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            {
+                                string strcolval = "";
+                                switch (strColumns[Col])
+                                {
+                                    case "Date":
+                                        {
+                                            strcolval = Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy");
+                                            break;
+                                        }
+                                    case "Amount":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
+                                            break;
+                                        } 
+                                    case "Type":
+                                        {
+                                            strcolval = obj.CreditOrDebit;
+                                            break;
+                                        }
+                                    case "Payment Type":
+                                        {
+                                            strcolval = obj.PaymentType;
+                                            break;
+                                        }
+                                    case "Bank Name":
+                                        {
+                                            strcolval = obj.BankName;
+                                            break;
+                                        }
+                                    case "By Amount":
+                                        {
+                                            strcolval = obj.UserName;
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+
+                                }
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append(strcolval);
+                                strHTML.Append("</td>");
+                            }
+                            strHTML.Append("</tr>");
+                        }
+                    }
+                    strHTML.Append("</tbody>");
+                    //strHTML.Append("<tfoot>");
+                    //strHTML.Append("<tr>");
+                    //strHTML.Append("<td colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    //strHTML.Append("Confidential: Personally Identifiable Materials");
+                    //strHTML.Append("</td>");
+                    //strHTML.Append("</tr>");
+                    //strHTML.Append("</tfoot>");
+                    strHTML.Append("</table>");
+                    StringReader sr = new StringReader(strHTML.ToString());
+
+                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+                    writer.PageEvent = new PDFGeneratePageEventHelper();
+                    pdfDoc.Open();
+
+                    XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
+                    objHelp.ParseXHtml(writer, pdfDoc, sr);
+                    pdfDoc.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "download;filename=Credit List Of " + objSite.SiteName +".pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(pdfDoc);
+                    Response.End();
+                }
+
+                return Result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+            }
+
+        }
+
+        public void ExportExcelOfSelectedSite(Guid id)
+        {
+
+            tbl_Sites objSite = new tbl_Sites();
+
+            objSite = _db.tbl_Sites.Where(x => x.SiteId == id).FirstOrDefault();
+
+            var dtList = (from p in _db.SP_GetSiteDetailById(id)
+                        select p).ToList();
+
+            ExcelPackage excel = new ExcelPackage();
+            var workSheet = excel.Workbook.Worksheets.Add("Credit List");
+            /*
+            workSheet.Cells[1, 1].Style.Font.Bold = true;
+            workSheet.Cells[1, 1].Style.Font.Size = 20;
+            workSheet.Cells[1, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+            workSheet.Cells[1, 1].Value = "Credit List"; 
+            */
+
+            string[] strColumns = new string[8] { "Date", "Amount", "Type", "Payment Type", "Cheque No", "Bank Name", "Cheque For", "By Amount" };
+
+            for (var col = 1; col < strColumns.Length + 1; col++)
+            {
+                workSheet.Cells[1, col].Style.Font.Bold = true;
+                workSheet.Cells[1, col].Style.Font.Size = 12;
+                workSheet.Cells[1, col].Value = strColumns[col - 1];
+                workSheet.Cells[1, col].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Cells[1, col].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                workSheet.Cells[1, col].AutoFitColumns(30, 70);
+                workSheet.Cells[1, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                workSheet.Cells[1, col].Style.WrapText = true;
+            }
+            
+            int row1 = 0;
+            foreach (var obj in dtList)
+            {
+                if (obj != null)
+                {
+
+                    for (var col = 1; col < strColumns.Length + 1; col++)
+                    {
+                        string strcolval = "";
+                        switch (strColumns[col - 1].Trim())
+                        {
+                            case "Date":
+                                {
+                                    strcolval = Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy");
+                                    break;
+                                }
+                            case "Amount":
+                                {
+                                    strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
+                                    break;
+                                } 
+                            case "Type":
+                                {
+                                    strcolval = obj.CreditOrDebit;
+                                    break;
+                                }
+                            case "Payment Type":
+                                {
+                                    strcolval = obj.PaymentType;
+                                    break;
+                                }
+                            case "Cheque No":
+                                {
+                                    strcolval = obj.ChequeNo;
+                                    break;
+                                }
+                            case "Bank Name":
+                                {
+                                    strcolval = obj.BankName;
+                                    break;
+                                }
+                            case "Cheque For":
+                                {
+                                    strcolval = obj.ChequeFor;
+                                    break;
+                                }
+                            case "By Amount":
+                                {
+                                    strcolval = obj.UserName;
+                                    break;
+                                }
+                            default:
+                                {
+                                    break;
+                                }
+                        }
+                        workSheet.Cells[row1 + 2, col].Style.Font.Bold = false;
+                        workSheet.Cells[row1 + 2, col].Style.Font.Size = 12;
+                        workSheet.Cells[row1 + 2, col].Value = strcolval;
+                        workSheet.Cells[row1 + 2, col].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        workSheet.Cells[row1 + 2, col].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+                        workSheet.Cells[row1 + 2, col].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row1 + 2, col].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row1 + 2, col].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row1 + 2, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        workSheet.Cells[row1 + 2, col].Style.WrapText = true;
+                        workSheet.Cells[row1 + 2, col].AutoFitColumns(30, 70);
+                    }
+                    row1 = row1 + 1;
+                }
+            }
+
+
+            using (var memoryStream = new MemoryStream())
+            {
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment;  filename=Credit List Of " + objSite.SiteName + ".xlsx");
+                excel.SaveAs(memoryStream);
+                memoryStream.WriteTo(Response.OutputStream);
+                Response.Flush();
+                Response.End();
+            }
+        }
+
     }
 }

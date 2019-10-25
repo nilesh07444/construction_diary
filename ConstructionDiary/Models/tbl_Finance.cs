@@ -15,21 +15,22 @@ namespace ConstructionDiary.Models
     public partial class tbl_Finance
     {
         public System.Guid FinanceId { get; set; }
-        public Nullable<System.Guid> PersonId { get; set; }
-        public Nullable<System.DateTime> SelectedDate { get; set; }
-        public Nullable<decimal> Amount { get; set; }
+        public System.Guid PersonId { get; set; }
+        public System.DateTime SelectedDate { get; set; }
+        public decimal Amount { get; set; }
+        public Nullable<System.Guid> SiteId { get; set; }
         public string CreditOrDebit { get; set; }
-        public Nullable<System.Guid> GivenAmountBy { get; set; }
+        public System.Guid GivenAmountBy { get; set; }
         public string PaymentType { get; set; }
         public string ChequeNo { get; set; }
         public string BankName { get; set; }
         public string ChequeFor { get; set; }
         public string Remarks { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        public Nullable<bool> IsDeleted { get; set; }
-        public Nullable<System.Guid> CreatedBy { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
+        public System.Guid CreatedBy { get; set; }
         public Nullable<System.Guid> UpdatedBy { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     }
 }

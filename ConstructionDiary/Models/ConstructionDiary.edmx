@@ -47,21 +47,22 @@
             <PropertyRef Name="FinanceId" />
           </Key>
           <Property Name="FinanceId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="PersonId" Type="uniqueidentifier" />
-          <Property Name="SelectedDate" Type="datetime" />
-          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="CreditOrDebit" Type="nvarchar" MaxLength="50" />
-          <Property Name="GivenAmountBy" Type="uniqueidentifier" />
-          <Property Name="PaymentType" Type="nvarchar" MaxLength="50" />
+          <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SelectedDate" Type="datetime" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SiteId" Type="uniqueidentifier" />
+          <Property Name="CreditOrDebit" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GivenAmountBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PaymentType" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ChequeNo" Type="nvarchar" MaxLength="50" />
           <Property Name="BankName" Type="nvarchar" MaxLength="50" />
           <Property Name="ChequeFor" Type="nvarchar" MaxLength="50" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="365" />
-          <Property Name="IsActive" Type="bit" />
-          <Property Name="IsDeleted" Type="bit" />
-          <Property Name="CreatedBy" Type="uniqueidentifier" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
           <Property Name="UpdatedBy" Type="uniqueidentifier" />
-          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="tbl_GeneralSetting">
@@ -281,28 +282,6 @@
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tbl_Sites" Relationship="Self.FK_tbl_ContractorFinance_tbl_Sites" FromRole="tbl_ContractorFinance" ToRole="tbl_Sites" />
         </EntityType>
-        <EntityType Name="tbl_Finance">
-          <Key>
-            <PropertyRef Name="FinanceId" />
-          </Key>
-          <Property Name="FinanceId" Type="Guid" Nullable="false" />
-          <Property Name="PersonId" Type="Guid" />
-          <Property Name="SelectedDate" Type="DateTime" Precision="3" />
-          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="CreditOrDebit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="GivenAmountBy" Type="Guid" />
-          <Property Name="PaymentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ChequeNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="BankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ChequeFor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" />
-          <Property Name="IsDeleted" Type="Boolean" />
-          <Property Name="CreatedBy" Type="Guid" />
-          <Property Name="UpdatedBy" Type="Guid" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="tbl_GeneralSetting">
           <Key>
             <PropertyRef Name="GeneralSettingId" />
@@ -443,7 +422,6 @@
         <EntityContainer Name="ConstructionDiaryEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tbl_Clients" EntityType="Self.tbl_Clients" />
           <EntitySet Name="tbl_ContractorFinance" EntityType="Self.tbl_ContractorFinance" />
-          <EntitySet Name="tbl_Finance" EntityType="Self.tbl_Finance" />
           <EntitySet Name="tbl_GeneralSetting" EntityType="Self.tbl_GeneralSetting" />
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" />
@@ -478,8 +456,9 @@
           </FunctionImport>
           <FunctionImport Name="SP_GetTodayPersonFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPersonFinance_Result)" />
           <FunctionImport Name="SP_GetPersonsList" ReturnType="Collection(ConstructionDiaryModel.SP_GetPersonsList_Result)">
-            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
+          <EntitySet Name="tbl_Finance" EntityType="ConstructionDiaryModel.tbl_Finance" />
         </EntityContainer>
         <ComplexType Name="SP_GetSiteDetailById_Result">
           <Property Type="Guid" Name="ContractorFinanceId" Nullable="true" />
@@ -546,6 +525,29 @@
           <Property Type="Decimal" Name="TotalDebitAmount" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="TotalRemainingAmount" Nullable="true" Precision="19" Scale="2" />
         </ComplexType>
+        <EntityType Name="tbl_Finance">
+          <Key>
+            <PropertyRef Name="FinanceId" />
+          </Key>
+          <Property Name="FinanceId" Type="Guid" Nullable="false" />
+          <Property Name="PersonId" Type="Guid" Nullable="false" />
+          <Property Name="SelectedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SiteId" Type="Guid" />
+          <Property Name="CreditOrDebit" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GivenAmountBy" Type="Guid" Nullable="false" />
+          <Property Name="PaymentType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChequeNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChequeFor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="365" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="UpdatedBy" Type="Guid" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -577,29 +579,6 @@
                 <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="CreditOrDebit" ColumnName="CreditOrDebit" />
-                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
-                <ScalarProperty Name="ChequeNo" ColumnName="ChequeNo" />
-                <ScalarProperty Name="BankName" ColumnName="BankName" />
-                <ScalarProperty Name="ChequeFor" ColumnName="ChequeFor" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tbl_Finance">
-            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Finance">
-              <MappingFragment StoreEntitySet="tbl_Finance">
-                <ScalarProperty Name="FinanceId" ColumnName="FinanceId" />
-                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
-                <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="CreditOrDebit" ColumnName="CreditOrDebit" />
-                <ScalarProperty Name="GivenAmountBy" ColumnName="GivenAmountBy" />
                 <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
                 <ScalarProperty Name="ChequeNo" ColumnName="ChequeNo" />
                 <ScalarProperty Name="BankName" ColumnName="BankName" />
@@ -790,6 +769,30 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tbl_Finance">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Finance">
+              <MappingFragment StoreEntitySet="tbl_Finance">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ChequeFor" ColumnName="ChequeFor" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
+                <ScalarProperty Name="ChequeNo" ColumnName="ChequeNo" />
+                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="GivenAmountBy" ColumnName="GivenAmountBy" />
+                <ScalarProperty Name="CreditOrDebit" ColumnName="CreditOrDebit" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="FinanceId" ColumnName="FinanceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

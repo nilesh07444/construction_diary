@@ -78,18 +78,18 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
-                            <div class="btn-group pull-right">
+                            <div class="btn-group pull-left">
                                 <a class="btn btn-default" href="/admin/myaccount/add?id=@Model.SiteId" style="color:#000000;"><i class="fa fa-plus"></i> Add New Credit Entry</a>
                             </div>
-                            @*<div class="btn-group pull-right">
-                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                        Tools <i class="fa fa-angle-down"></i>
-                                    </button>
-                                    <ul class="dropdown-menu pull-right">
-                                        <li><a id="btnSavePDF" href="javascript:void(0);">Save as PDF</a></li>
-                                        <li><a href="javascript:void(0);">Export to Excel</a></li>
-                                    </ul>
-                                </div>*@
+                            <div class="btn-group pull-right hidden-sm hidden-md hidden-phone">
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    Download <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                    <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped table-hover" id="tblFinanceList">
@@ -222,4 +222,14 @@
         }
     });
 
+    jQuery(document).on("click", "#btnDownloadPdf", function () {
+        var SiteId = '@Model.SiteId';
+        window.location.href = "/admin/Site/ExportPDFOfSelectedSite/" + SiteId;
+    });
+
+    jQuery(document).on("click", "#btnDownloadExcel", function () {
+        var SiteId = '@Model.SiteId';
+        window.location.href = "/admin/Site/ExportExcelOfSelectedSite/" + SiteId;
+    });
+    
 </script>

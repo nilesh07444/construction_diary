@@ -8,6 +8,7 @@ using ConstructionDiary.Models;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
+    [filters]
     public class PersonController : Controller
     {
         ConstructionDiaryEntities _db;
@@ -196,8 +197,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
                 List<FinanceList> financeList = (from finance in _db.tbl_Finance
-                                                 join user in _db.tbl_Users
-                                                 on finance.GivenAmountBy equals user.UserId
+                                                 join user in _db.tbl_Users on finance.GivenAmountBy equals user.UserId
+                                                 join site in _db.tbl_Sites on finance.SiteId equals site.SiteId into outerJoinSite
+                                                 from site in outerJoinSite.DefaultIfEmpty()
                                                  where finance.PersonId == id
                                                  select new FinanceList
                                                  {
@@ -205,6 +207,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                      PersonId = finance.PersonId,
                                                      SelectedDate = finance.SelectedDate,
                                                      Amount = finance.Amount,
+                                                     SiteId = finance.SiteId,
+                                                     SiteName = (site != null) ? site.SiteName : "",
                                                      CreditOrDebit = finance.CreditOrDebit,
                                                      GivenAmountBy = finance.GivenAmountBy,
                                                      PaymentType = finance.PaymentType,
@@ -226,6 +230,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objFinance.UsersList = _db.tbl_Users.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false)
                          .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
                          .OrderBy(x => x.Text).ToList();
+
+                objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o=>o.Text)
+                         .ToList();
 
                 ViewBag.PersonName = GetPersonName(id);
 
@@ -259,6 +267,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objFinance.SelectedDate = date;
                     objFinance.GivenAmountBy = finance.GivenAmountBy;
                     objFinance.Amount = Convert.ToDecimal(finance.Amount);
+                    objFinance.SiteId = finance.SiteId;
                     objFinance.CreditOrDebit = finance.CreditOrDebit;
                     objFinance.PaymentType = finance.PaymentType;
                     objFinance.ChequeNo = finance.ChequeNo;

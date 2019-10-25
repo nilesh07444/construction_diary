@@ -14,10 +14,10 @@ namespace ConstructionDiary
         public string SelectedDate { get; set; }
 
         [Required(ErrorMessage = "This field is required")]
-        public decimal? Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [Required(ErrorMessage = "This field is required")]
-        public Guid? GivenAmountBy { get; set; }
+        public Guid GivenAmountBy { get; set; }
 
         public List<SelectListItem> UsersList { get; set; }
         
@@ -34,7 +34,10 @@ namespace ConstructionDiary
 
         public string Remarks { get; set; }
 
-        public Guid? PersonId { get; set; }
+        public Guid PersonId { get; set; }
+
+        public Guid? SiteId { get; set; }
+        public List<SelectListItem> SitesList { get; set; }
 
     }
 }
