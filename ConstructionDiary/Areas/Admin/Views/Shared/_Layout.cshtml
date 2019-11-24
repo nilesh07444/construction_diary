@@ -126,6 +126,13 @@
                                 </a>
                             </li>
 
+                            <li>
+                                <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site">
+                                    <i class="fa fa-list"></i>
+                                    <span>Sites</span>
+                                </a>
+                            </li>
+
                             <li class="sub-menu">
                                 <a class="clsMain @(ViewBag.Title == "Person" ? "active" : "")" href="javascript:;">
                                     <i class="fa fa-user"></i>
@@ -150,11 +157,17 @@
                                     @*<li><a href="/admin/myaccount/account">Today Credit List</a></li>*@
                                 </ul>
                             </li>
-                            <li>
-                                <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site">
-                                    <i class="fa fa-list"></i>
-                                    <span>Sites</span>
+
+                            <li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "Attendance" ? "active" : "")" href="javascript:;">
+                                    <i class="fa fa-search-plus"></i>
+                                    <span>Attendance</span>
                                 </a>
+                                <ul class="sub">
+                                    <li><a href="/admin/attendance/add">Add New Attendance</a></li>
+                                    <li><a href="/admin/attendance">Attendance List</a></li>
+                                    <li><a href="/admin/attendance/report">Attendance Report</a></li>
+                                </ul>
                             </li>
 
                         }
@@ -168,11 +181,11 @@
                     </li>
 
                     @*<li>
-                            <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
-                                <i class="fa fa-cog"></i>
-                                <span>Setting</span>
-                            </a>
-                        </li>*@
+            <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
+                <i class="fa fa-cog"></i>
+                <span>Setting</span>
+            </a>
+        </li>*@
 
                 </ul>
                 <!-- sidebar menu end-->

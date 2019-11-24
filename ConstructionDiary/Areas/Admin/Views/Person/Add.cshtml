@@ -16,64 +16,79 @@
 
                             @Html.AntiForgeryToken()
 
-                            <div class="form-horizontal">
+                        <div class="form-horizontal">
 
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Firstname, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
-                                        @Html.EditorFor(model => model.Firstname, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
-                                        @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
-                                    </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Firstname, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Firstname, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
+                                    @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
                                 </div>
-                                  
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
-                                        @Html.TextAreaFor(model => model.Address, 2, 5, new { @class = "form-control", maxlength = "250" })
-                                        @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
-                                    </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.TextAreaFor(model => model.Address, 2, 5, new { @class = "form-control", maxlength = "250" })
+                                    @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
                                 </div>
+                            </div>
 
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label col-md-2" })
-                                    <div class="col-md-10">
-                                        @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control", maxlength = "15" } })
-                                    </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MobileNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.MobileNo, new { htmlAttributes = new { @class = "form-control", maxlength = "15" } })
                                 </div>
+                            </div>
 
-                                <div class="form-group last hidden-phone">
-                                    <label class="control-label col-lg-2">Person's Photo</label>
-                                    <div class="col-lg-10">
-                                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                                            <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-                                                <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
-                                            </div>
-                                            <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-                                            <div>
-                                                <span class="btn btn-white btn-file">
-                                                    <span class="fileupload-new"><i class="fa fa-paper-clip"></i> Select image</span>
-                                                    <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
-                                                    @*<input type="file" class="default" />*@
-                                                    @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class = "default" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DailyRate, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.DailyRate, new { htmlAttributes = new { @class = "form-control", maxlength = "15" } })
+                                </div>
+                            </div>
 
-                                                </span>
-                                                <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash"></i> Remove</a>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PersonTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("PersonTypeId", new SelectList(Model.PersonTypeList, "Value", "Text"), "-Select Person Type-", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(m => m.PersonTypeId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
 
-                                            </div>
-                                            @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "text-danger" })
+                            <div class="form-group last hidden-phone">
+                                <label class="control-label col-lg-2">Person's Photo</label>
+                                <div class="col-lg-10">
+                                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                                        <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
+                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
+                                        <div>
+                                            <span class="btn btn-white btn-file">
+                                                <span class="fileupload-new"><i class="fa fa-paper-clip"></i> Select image</span>
+                                                <span class="fileupload-exists"><i class="fa fa-undo"></i> Change</span>
+                                                @*<input type="file" class="default" />*@
+                                                @Html.TextBoxFor(m => m.PostedFile, new { type = "file", @class = "default" })
 
-                                <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-10">
-                                        <input id="cmdSubmit" type="submit" value="Save" class="btn btn-success" />
-                                        <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                                            </span>
+                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash"></i> Remove</a>
+
+                                        </div>
+                                        @Html.ValidationMessageFor(m => m.PostedFile, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input id="cmdSubmit" type="submit" value="Save" class="btn btn-success" />
+                                    <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
                         }
 
                     </div>

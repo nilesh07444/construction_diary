@@ -101,6 +101,8 @@
           <Property Name="PersonAddress" Type="nvarchar" MaxLength="365" />
           <Property Name="MobileNo" Type="nvarchar" MaxLength="50" />
           <Property Name="PersonPhoto" Type="nvarchar" MaxLength="365" />
+          <Property Name="DailyRate" Type="int" />
+          <Property Name="PersonTypeId" Type="int" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
           <Property Name="ClientId" Type="uniqueidentifier" />
@@ -108,6 +110,13 @@
           <Property Name="UpdatedBy" Type="uniqueidentifier" />
           <Property Name="CreatedDate" Type="datetime" />
           <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_PersonType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PersonType" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_Role">
           <Key>
@@ -173,6 +182,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tbl_Persons_tbl_Persons">
+          <End Role="tbl_PersonType" Type="Self.tbl_PersonType" Multiplicity="0..1" />
+          <End Role="tbl_Persons" Type="Self.tbl_Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_PersonType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbl_Persons">
+              <PropertyRef Name="PersonTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tbl_Users_tbl_Clients">
           <End Role="tbl_Clients" Type="Self.tbl_Clients" Multiplicity="0..1" />
           <End Role="tbl_Users" Type="Self.tbl_Users" Multiplicity="*" />
@@ -218,6 +239,7 @@
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Persons" EntityType="Self.tbl_Persons" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_PersonType" EntityType="Self.tbl_PersonType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Role" EntityType="Self.tbl_Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Sites" EntityType="Self.tbl_Sites" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Users" EntityType="Self.tbl_Users" Schema="dbo" store:Type="Tables" />
@@ -228,6 +250,10 @@
           <AssociationSet Name="FK_tbl_ContractorFinance_tbl_Sites" Association="Self.FK_tbl_ContractorFinance_tbl_Sites">
             <End Role="tbl_Sites" EntitySet="tbl_Sites" />
             <End Role="tbl_ContractorFinance" EntitySet="tbl_ContractorFinance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_Persons_tbl_Persons" Association="Self.FK_tbl_Persons_tbl_Persons">
+            <End Role="tbl_PersonType" EntitySet="tbl_PersonType" />
+            <End Role="tbl_Persons" EntitySet="tbl_Persons" />
           </AssociationSet>
           <AssociationSet Name="FK_tbl_Users_tbl_Clients" Association="Self.FK_tbl_Users_tbl_Clients">
             <End Role="tbl_Clients" EntitySet="tbl_Clients" />
@@ -326,6 +352,9 @@
           <Property Name="UpdatedBy" Type="Guid" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="DailyRate" Type="Int32" />
+          <Property Name="PersonTypeId" Type="Int32" />
+          <NavigationProperty Name="tbl_PersonType" Relationship="ConstructionDiaryModel.FK_tbl_Persons_tbl_Persons" FromRole="tbl_Persons" ToRole="tbl_PersonType" />
         </EntityType>
         <EntityType Name="tbl_Role">
           <Key>
@@ -459,6 +488,11 @@
           <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
           <EntitySet Name="tbl_Finance" EntityType="ConstructionDiaryModel.tbl_Finance" />
+          <EntitySet Name="tbl_PersonType" EntityType="ConstructionDiaryModel.tbl_PersonType" />
+          <AssociationSet Name="FK_tbl_Persons_tbl_Persons" Association="ConstructionDiaryModel.FK_tbl_Persons_tbl_Persons">
+            <End Role="tbl_PersonType" EntitySet="tbl_PersonType" />
+            <End Role="tbl_Persons" EntitySet="tbl_Persons" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="SP_GetSiteDetailById_Result">
           <Property Type="Guid" Name="ContractorFinanceId" Nullable="true" />
@@ -548,6 +582,26 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="tbl_PersonType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PersonType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_Persons" Relationship="ConstructionDiaryModel.FK_tbl_Persons_tbl_Persons" FromRole="tbl_PersonType" ToRole="tbl_Persons" />
+        </EntityType>
+        <Association Name="FK_tbl_Persons_tbl_Persons">
+          <End Type="ConstructionDiaryModel.tbl_PersonType" Role="tbl_PersonType" Multiplicity="0..1" />
+          <End Type="ConstructionDiaryModel.tbl_Persons" Role="tbl_Persons" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_PersonType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tbl_Persons">
+              <PropertyRef Name="PersonTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -626,6 +680,8 @@
           <EntitySetMapping Name="tbl_Persons">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Persons">
               <MappingFragment StoreEntitySet="tbl_Persons">
+                <ScalarProperty Name="PersonTypeId" ColumnName="PersonTypeId" />
+                <ScalarProperty Name="DailyRate" ColumnName="DailyRate" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="PersonFirstName" ColumnName="PersonFirstName" />
                 <ScalarProperty Name="PersonAddress" ColumnName="PersonAddress" />
@@ -790,6 +846,14 @@
                 <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="FinanceId" ColumnName="FinanceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PersonType">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PersonType">
+              <MappingFragment StoreEntitySet="tbl_PersonType">
+                <ScalarProperty Name="PersonType" ColumnName="PersonType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

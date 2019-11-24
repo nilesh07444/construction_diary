@@ -28,12 +28,21 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         public ActionResult Add()
         {
-            return View();
+            PersonVM person = new PersonVM();
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
+            return View(person);
         }
 
         [HttpPost]
         public ActionResult Add(PersonVM person, HttpPostedFileBase postedFile)
         {
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
@@ -52,6 +61,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objPerson.PersonFirstName = person.Firstname;
                     objPerson.PersonAddress = person.Address;
                     objPerson.MobileNo = person.MobileNo;
+                    objPerson.DailyRate = person.DailyRate;
+                    objPerson.PersonTypeId = person.PersonTypeId;
                     objPerson.PersonPhoto = fileName;
                     objPerson.IsActive = true;
                     objPerson.IsDeleted = false;
@@ -74,6 +85,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         public ActionResult Edit(Guid id)
         {
             PersonVM person = new PersonVM();
+
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
             tbl_Persons obj = _db.tbl_Persons.Where(x => x.PersonId == id).FirstOrDefault();
             if (obj != null)
             {
@@ -81,6 +97,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 person.Firstname = obj.PersonFirstName;
                 person.Address = obj.PersonAddress;
                 person.MobileNo = obj.MobileNo;
+                person.DailyRate = obj.DailyRate;
+                person.PersonTypeId = obj.PersonTypeId;
                 person.strPersonPhoto = obj.PersonPhoto;
             }
 
@@ -90,6 +108,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         [HttpPost]
         public ActionResult Edit(PersonVM person, HttpPostedFileBase postedFile)
         {
+
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
             if (ModelState.IsValid)
@@ -116,6 +139,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objPerson.PersonFirstName = person.Firstname;
                         objPerson.PersonAddress = person.Address;
                         objPerson.PersonPhoto = fileName;
+                        objPerson.DailyRate = person.DailyRate;
+                        objPerson.PersonTypeId = person.PersonTypeId;
                         objPerson.MobileNo = person.MobileNo;
                         objPerson.ClientId = clsSession.ClientID;
                         objPerson.UpdatedBy = new Guid(clsSession.UserID.ToString());

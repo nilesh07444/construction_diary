@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace ConstructionDiary
 {
@@ -17,6 +18,14 @@ namespace ConstructionDiary
 
         [Display(Name = "Mobile No")]
         public string MobileNo { get; set; }
+
+        [Display(Name = "Daily Rate")]
+        public int? DailyRate { get; set; }
+
+        [Display(Name = "Person Type")]
+        public int? PersonTypeId { get; set; }
+
+        public List<SelectListItem> PersonTypeList { get; set; }
 
         //[Required(ErrorMessage = "Please Upload Photo")]
         //[ImageValidate]

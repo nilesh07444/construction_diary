@@ -19,6 +19,8 @@
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_ContractorFinance_tbl_Sites" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Users_tbl_Role" ManuallyRouted="false" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Finance" Width="1.5" PointX="10.375" PointY="5.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PersonType" Width="1.5" PointX="7.5" PointY="1.875" />
+        <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Persons_tbl_Persons" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
