@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="ConstructionDiaryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tbl_Attendance">
+          <Key>
+            <PropertyRef Name="AttendaceId" />
+          </Key>
+          <Property Name="AttendaceId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AttendanceDate" Type="datetime" Nullable="false" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="tbl_Clients">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -91,6 +101,21 @@
           <Property Name="IsPaid" Type="bit" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_PersonAttendance">
+          <Key>
+            <PropertyRef Name="PersonAttendanceId" />
+          </Key>
+          <Property Name="PersonAttendanceId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AttendanceId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="AttendanceStatus" Type="int" Nullable="false" />
+          <Property Name="SiteId" Type="uniqueidentifier" />
+          <Property Name="PersonDailyRate" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="tbl_Persons">
           <Key>
@@ -232,12 +257,14 @@
         </Function>
         <Function Name="SP_GetTodayPersonFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="ConstructionDiaryModelStoreContainer">
+          <EntitySet Name="tbl_Attendance" EntityType="Self.tbl_Attendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Clients" EntityType="Self.tbl_Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ContractorFinance" EntityType="Self.tbl_ContractorFinance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Finance" EntityType="Self.tbl_Finance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_GeneralSetting" EntityType="Self.tbl_GeneralSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_PersonAttendance" EntityType="Self.tbl_PersonAttendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Persons" EntityType="Self.tbl_Persons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonType" EntityType="Self.tbl_PersonType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Role" EntityType="Self.tbl_Role" Schema="dbo" store:Type="Tables" />
@@ -493,6 +520,8 @@
             <End Role="tbl_PersonType" EntitySet="tbl_PersonType" />
             <End Role="tbl_Persons" EntitySet="tbl_Persons" />
           </AssociationSet>
+          <EntitySet Name="tbl_Attendance" EntityType="ConstructionDiaryModel.tbl_Attendance" />
+          <EntitySet Name="tbl_PersonAttendance" EntityType="ConstructionDiaryModel.tbl_PersonAttendance" />
         </EntityContainer>
         <ComplexType Name="SP_GetSiteDetailById_Result">
           <Property Type="Guid" Name="ContractorFinanceId" Nullable="true" />
@@ -602,6 +631,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tbl_Attendance">
+          <Key>
+            <PropertyRef Name="AttendaceId" />
+          </Key>
+          <Property Name="AttendaceId" Type="Guid" Nullable="false" />
+          <Property Name="AttendanceDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_PersonAttendance">
+          <Key>
+            <PropertyRef Name="PersonAttendanceId" />
+          </Key>
+          <Property Name="PersonAttendanceId" Type="Guid" Nullable="false" />
+          <Property Name="AttendanceId" Type="Guid" Nullable="false" />
+          <Property Name="PersonId" Type="Guid" Nullable="false" />
+          <Property Name="AttendanceStatus" Type="Int32" Nullable="false" />
+          <Property Name="SiteId" Type="Guid" />
+          <Property Name="PersonDailyRate" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -854,6 +908,33 @@
               <MappingFragment StoreEntitySet="tbl_PersonType">
                 <ScalarProperty Name="PersonType" ColumnName="PersonType" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Attendance">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Attendance">
+              <MappingFragment StoreEntitySet="tbl_Attendance">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="AttendanceDate" ColumnName="AttendanceDate" />
+                <ScalarProperty Name="AttendaceId" ColumnName="AttendaceId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PersonAttendance">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PersonAttendance">
+              <MappingFragment StoreEntitySet="tbl_PersonAttendance">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PersonDailyRate" ColumnName="PersonDailyRate" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="AttendanceStatus" ColumnName="AttendanceStatus" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="AttendanceId" ColumnName="AttendanceId" />
+                <ScalarProperty Name="PersonAttendanceId" ColumnName="PersonAttendanceId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

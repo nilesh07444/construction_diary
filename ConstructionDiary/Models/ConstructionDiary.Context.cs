@@ -38,6 +38,8 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_Users> tbl_Users { get; set; }
         public virtual DbSet<tbl_Finance> tbl_Finance { get; set; }
         public virtual DbSet<tbl_PersonType> tbl_PersonType { get; set; }
+        public virtual DbSet<tbl_Attendance> tbl_Attendance { get; set; }
+        public virtual DbSet<tbl_PersonAttendance> tbl_PersonAttendance { get; set; }
     
         public virtual ObjectResult<SP_GetSiteDetailById_Result> SP_GetSiteDetailById(Nullable<System.Guid> siteId)
         {

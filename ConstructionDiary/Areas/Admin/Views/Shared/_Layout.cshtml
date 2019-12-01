@@ -160,13 +160,13 @@
 
                             <li class="sub-menu">
                                 <a class="clsMain @(ViewBag.Title == "Attendance" ? "active" : "")" href="javascript:;">
-                                    <i class="fa fa-search-plus"></i>
+                                    <i class="fa fa-calendar"></i>
                                     <span>Attendance</span>
                                 </a>
                                 <ul class="sub">
                                     <li><a href="/admin/attendance/add">Add New Attendance</a></li>
                                     <li><a href="/admin/attendance">Attendance List</a></li>
-                                    <li><a href="/admin/attendance/report">Attendance Report</a></li>
+                                    @*<li><a href="/admin/attendance/report">Attendance Report</a></li>*@
                                 </ul>
                             </li>
 
@@ -181,11 +181,11 @@
                     </li>
 
                     @*<li>
-            <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
-                <i class="fa fa-cog"></i>
-                <span>Setting</span>
-            </a>
-        </li>*@
+                            <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
+                                <i class="fa fa-cog"></i>
+                                <span>Setting</span>
+                            </a>
+                        </li>*@
 
                 </ul>
                 <!-- sidebar menu end-->
