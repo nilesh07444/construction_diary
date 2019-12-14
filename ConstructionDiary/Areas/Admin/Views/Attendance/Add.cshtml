@@ -1,0 +1,138 @@
+﻿@model AttendanceFormVM
+@{
+    ViewBag.Title = "Attendance";
+}
+
+@{
+    int counter = 0;
+}
+
+<section class="wrapper site-min-height">
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong> Add New Attendance </strong>
+                </header>
+                <div class="panel-body" style="font-size: 16px;">
+
+                    @using (Html.BeginForm("Add", "Attendance", FormMethod.Post, new { @id = "attendanceFormId", @class = "cmxform form-horizontal tasi-form", enctype = "multipart/form-data", role = "form" }))
+                    {
+                        
+
+                    <div class="form-horizontal">
+
+                        <div class="row" style="margin-left: 5px;">
+                            <div class="col-sm-4 form-group">
+                                <label>Date:</label>
+                                @Html.TextBoxFor(model => model.AttendanceDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
+
+                                <span class="input-group-btn add-on">
+                                    <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
+                                </span>
+                                @Html.ValidationMessageFor(model => model.AttendanceDate, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+
+                        <div class="">
+
+                            <table class="display table table-bordered table-striped table-hover" id="tblAttendanceForm" style="margin-top: 15px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width:3%;">#</th>
+                                        <th style="width:15%;">Name</th>
+                                        <th style="width:7%;">Status</th>
+                                        <th style="width:15%;">Site Name</th>
+                                        <th style="width:7%;">Daily Rate</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @if (Model.lstPersonAttendance != null && Model.lstPersonAttendance.Count() > 0)
+                                    {
+                                        foreach (var obj in Model.lstPersonAttendance)
+                                        {
+                                            counter++;
+                                    <tr class="gradeX">
+                                        <td>@counter</td>
+                                        <td>@obj.PersonName</td>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text"), "-Select Status-", new { @id = "attendancestatus_" + obj.PersonId, @class = "form-control ddlAttendanceStatus" })
+                                            @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text"), "-Select Site-", new { @id = "site_" + obj.PersonId, @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].SiteId, "", new { @class = "text-danger" })
+                                        </td>
+                                        <td>
+                                            @*@Html.EditorFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })*@
+                                            <span>@obj.PersonDailyRate</span>
+                                            @*@Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].PersonDailyRate, "", new { @class = "text-danger" })*@
+                                        </td>
+                                        @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonId)
+                                        @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonName)
+                                        @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate)
+                                    </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <div style="margin-top: 15px;">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    
+                                    <input id="cmdSubmit" type="submit" value="Save" class="btn btn-success" />
+                                    <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        @Html.AntiForgeryToken()
+
+                    </div>
+
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var newdate = (day < 10 ? '0' + day : '' + day) + "/" + (month < 10 ? '0' + month : '' + month) + "/" + year;
+
+    jQuery("#AttendanceDate").val(newdate);
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+    jQuery(document).on("click", "#btnCancel", function () {
+        window.location.href = '/admin/attendance';
+    });
+
+    jQuery(document).on("change", ".ddlAttendanceStatus", function () {
+        var id = $(this).attr("id");
+        var value = $(this).val();
+        var per_att_id = id.split("_")[1];
+        if (value == "0.0") {
+            $("#site_" + per_att_id).hide()
+        }
+        else {
+            $("#site_" + per_att_id).show();
+        }
+    });
+
+</script>
