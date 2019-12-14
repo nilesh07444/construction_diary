@@ -17,8 +17,8 @@
                         <div class="clearfix">
                             <div class="btn-group pull-right">
                                 @*<button id="btnAddAttendance" class="btn green">
-                                    <i class="fa fa-plus"></i> Add New Attendance
-                                </button>*@
+                                        <i class="fa fa-plus"></i> Add New Attendance
+                                    </button>*@
                                 <a class="btn btn-success" href="attendance/add"><i class="fa fa-plus"></i> Add New Attendance</a>
                             </div>
 
@@ -28,6 +28,11 @@
                             <thead>
                                 <tr>
                                     <th>Attendance Date</th>
+                                    <th>Paid Amount</th>
+                                    <th>Total</th>
+                                    <th>Full Day</th>
+                                    <th>Half Day</th>
+                                    <th>Absent</th>
                                     <th width="10%">Action</th>
                                 </tr>
                             </thead>
@@ -36,14 +41,27 @@
                                 {
                                     foreach (AttendanceVM attendance in Model)
                                     {
-                                        <tr class="gradeX">
-                                            <td>@attendance.AttendanceDate</td>
-                                            <td>
-                                                @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
-                                                <button data-id="@attendance.AttendaceId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
-                                                <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                            </td>
-                                        </tr>
+                                <tr class="gradeX">
+                                    <td>@Convert.ToDateTime(attendance.AttendanceDate).ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        @{ string amt = "0"; }
+                                        @if (attendance.TotalPaidAmount != null)
+                                        {
+                                            amt = CoreHelper.GetFormatterAmount(attendance.TotalPaidAmount);
+                                        }
+                                        @amt
+                                    </td>
+                                    <td>@attendance.TotalPerson</td>
+                                    <td>@attendance.TotalFullDay</td>
+                                    <td>@attendance.TotalHalfDay</td>
+                                    <td>@attendance.TotalAbsent</td>
+                                    <td>
+                                        @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
+                                        <a href="/admin/attendance/edit/@attendance.AttendaceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+
+                                        <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
                                     }
                                 }
                             </tbody>

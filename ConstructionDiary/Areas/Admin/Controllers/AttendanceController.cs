@@ -7,6 +7,7 @@ using ConstructionDiary.Models;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
+    [filters]
     public class AttendanceController : Controller
     {
         ConstructionDiaryEntities _db;
@@ -25,8 +26,13 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                 {
                                                     ClientId = atte.ClientId,
                                                     AttendanceDate = atte.AttendanceDate,
-                                                    AttendaceId = atte.AttendaceId
-                                                }).ToList();
+                                                    AttendaceId = atte.AttendaceId,
+                                                    TotalPaidAmount = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PayableAmount != null).ToList().Select(x => x.PayableAmount).Sum(),
+                                                    TotalPerson = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId).ToList().Count(),
+                                                    TotalFullDay = _db.tbl_PersonAttendance.Where(x=>x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1).ToList().Count(),
+                                                    TotalHalfDay = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5).ToList().Count(),
+                                                    TotalAbsent = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0).ToList().Count()
+                                                }).OrderByDescending(x=>x.AttendanceDate).ToList();
 
             return View(lstAttendance);
         }
@@ -42,31 +48,264 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
                 var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
 
+                objAttendance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+                var attandanceStatuses = GetAttandanceStatus();
+                objAttendance.AttendanceStatusList = attandanceStatuses
+                     .Select(o => new SelectListItem { Value = o.StatusValue.ToString(), Text = o.StatusText })
+                     .ToList();
+
                 List<PersonAttendanceVM> liststPersonAttendance = new List<PersonAttendanceVM>();
                 personList.ForEach(person =>
                 {
                     PersonAttendanceVM objPersonAttendance = new PersonAttendanceVM();
                     objPersonAttendance.PersonId = person.PersonId;
                     objPersonAttendance.PersonName = person.PersonFirstName;
-
-                    objPersonAttendance.PersonDailyRate = person.DailyRate; 
-
-                    objPersonAttendance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
-                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
-                         .ToList();
-
+                    objPersonAttendance.PersonDailyRate = person.DailyRate;
                     liststPersonAttendance.Add(objPersonAttendance);
-
                 });
 
                 objAttendance.lstPersonAttendance = liststPersonAttendance;
 
             }
             catch (Exception ex)
-            { 
+            {
             }
 
             return View(objAttendance);
+        }
+
+        [HttpPost]
+        public ActionResult Add(AttendanceFormVM attandance)
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
+            attandance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+            var attandanceStatuses = GetAttandanceStatus();
+            attandance.AttendanceStatusList = attandanceStatuses
+                 .Select(o => new SelectListItem { Value = o.StatusValue.ToString(), Text = o.StatusText })
+                 .ToList();
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            if (ModelState.IsValid)
+            {
+
+                DateTime aDate = DateTime.ParseExact(attandance.AttendanceDate, "dd/MM/yyyy", null);
+                var dateExist = _db.tbl_Attendance.Where(x => x.AttendanceDate == aDate).FirstOrDefault();
+
+                if (dateExist != null)
+                {
+                    ModelState.AddModelError("AttendanceDate", "Attendance Date is already exist");
+                    return View(attandance);
+                }
+                else
+                {
+                    tbl_Attendance objAttandance = new tbl_Attendance();
+                    objAttandance.AttendaceId = Guid.NewGuid();
+                    objAttandance.AttendanceDate = aDate;
+                    objAttandance.ClientId = ClientId;
+                    objAttandance.CreatedDate = DateTime.Now;
+                    _db.tbl_Attendance.Add(objAttandance);
+                    _db.SaveChanges();
+
+                    Guid AttandanceId = objAttandance.AttendaceId;
+
+                    List<PersonAttendanceVM> listPersons = attandance.lstPersonAttendance;
+
+                    listPersons.ForEach(x =>
+                    {
+
+                        tbl_PersonAttendance objPersonAttendance = new tbl_PersonAttendance();
+                        objPersonAttendance.PersonAttendanceId = Guid.NewGuid();
+                        objPersonAttendance.AttendanceId = AttandanceId;
+                        objPersonAttendance.PersonId = x.PersonId;
+                        objPersonAttendance.AttendanceStatus = x.AttendanceStatus;
+
+                        if (objPersonAttendance.AttendanceStatus != 0)
+                        {
+                            objPersonAttendance.PersonDailyRate = x.PersonDailyRate;
+                            objPersonAttendance.PayableAmount = x.PersonDailyRate * objPersonAttendance.AttendanceStatus;
+                            objPersonAttendance.SiteId = x.SiteId;
+                        }
+                        objPersonAttendance.CreatedBy = new Guid(clsSession.UserID.ToString());
+                        objPersonAttendance.CreatedDate = DateTime.UtcNow;
+                        _db.tbl_PersonAttendance.Add(objPersonAttendance);
+                        _db.SaveChanges();
+
+                    });
+
+                    return RedirectToAction("Index");
+                }
+                 
+            }
+            else
+            {
+                string err = "";
+            }
+
+            return View(attandance);
+        }
+
+        public ActionResult Edit(Guid Id)
+        {
+            AttendanceFormVM objAttendance = new AttendanceFormVM();
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
+                var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
+
+                objAttendance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+                var attandanceStatuses = GetAttandanceStatus();
+                objAttendance.AttendanceStatusList = attandanceStatuses
+                     .Select(o => new SelectListItem { Value = o.StatusValue.ToString(), Text = o.StatusText })
+                     .ToList();
+                 
+                tbl_Attendance objAttendanceData = _db.tbl_Attendance.Where(x => x.AttendaceId == Id).FirstOrDefault();
+                if (objAttendanceData != null)
+                {
+                    objAttendance.AttendaceId = objAttendanceData.AttendaceId;
+                    objAttendance.AttendanceDate = Convert.ToDateTime(objAttendanceData.AttendanceDate).ToString("dd/MM/yyyy");
+                }
+                 
+                objAttendance.lstPersonAttendance = (from personatta in _db.tbl_PersonAttendance
+                                                     join person in _db.tbl_Persons on personatta.PersonId equals person.PersonId
+                                                     where personatta.AttendanceId == Id
+                                                     select new PersonAttendanceVM
+                                                     {
+                                                         PersonAttendanceId = personatta.PersonAttendanceId,
+                                                         PersonId = personatta.PersonId,
+                                                         PersonName = person.PersonFirstName,
+                                                         AttendanceStatus = personatta.AttendanceStatus,
+                                                         PersonDailyRate = person.DailyRate,
+                                                         SiteId = personatta.SiteId
+                                                     }).ToList();
+                 
+            }
+            catch (Exception ex)
+            {
+            }
+            return View(objAttendance);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(AttendanceFormVM attandance)
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
+            attandance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+            var attandanceStatuses = GetAttandanceStatus();
+            attandance.AttendanceStatusList = attandanceStatuses
+                 .Select(o => new SelectListItem { Value = o.StatusValue.ToString(), Text = o.StatusText })
+                 .ToList();
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            if (ModelState.IsValid)
+            {
+                DateTime aDate = DateTime.ParseExact(attandance.AttendanceDate, "dd/MM/yyyy", null);
+                var dateExist = _db.tbl_Attendance.Where(x => x.AttendanceDate == aDate && x.AttendaceId != attandance.AttendaceId).FirstOrDefault();
+
+                if (dateExist != null)
+                {
+                    ModelState.AddModelError("AttendanceDate", "Attendance Date is already exist");
+                    return View(attandance);
+                }
+                else
+                {
+                    tbl_Attendance objAttandance = _db.tbl_Attendance.Where(x => x.AttendaceId == attandance.AttendaceId).FirstOrDefault();
+                    objAttandance.AttendanceDate = aDate;
+                    objAttandance.ModifiedDate = DateTime.UtcNow;
+                    //_db.SaveChanges();
+                    
+                    List<PersonAttendanceVM> listPersons = attandance.lstPersonAttendance;
+
+                    listPersons.ForEach(personAttendance =>
+                    {
+                        tbl_PersonAttendance objPersonAttendance = _db.tbl_PersonAttendance.Where(p=>p.PersonAttendanceId == personAttendance.PersonAttendanceId).FirstOrDefault();                        
+                        objPersonAttendance.PersonId = personAttendance.PersonId;
+                        objPersonAttendance.AttendanceStatus = personAttendance.AttendanceStatus;
+                        objPersonAttendance.PersonDailyRate = personAttendance.PersonDailyRate;
+
+                        if (objPersonAttendance.AttendanceStatus != 0)
+                        {                            
+                            objPersonAttendance.PayableAmount = personAttendance.PersonDailyRate * objPersonAttendance.AttendanceStatus;
+                            objPersonAttendance.SiteId = personAttendance.SiteId;
+                        }
+                        else
+                        {
+                            objPersonAttendance.PayableAmount = null;
+                            objPersonAttendance.SiteId = null;
+                        }
+
+                        objPersonAttendance.ModifiedBy = new Guid(clsSession.UserID.ToString());
+                        objPersonAttendance.ModifiedDate = DateTime.UtcNow;
+                        _db.SaveChanges();
+                    });
+
+                    return RedirectToAction("Index");
+                }
+            }
+            else
+            {
+                string err = "";
+            }
+
+            return View(attandance);
+        }
+
+        [HttpPost]
+        public string DeleteAttendance(Guid AttendanceId)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                tbl_Attendance objAttendance = _db.tbl_Attendance.Where(x => x.AttendaceId == AttendanceId).FirstOrDefault();
+
+                if (objAttendance == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+                    List<tbl_PersonAttendance> lstPersonAttendances = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == AttendanceId).ToList();
+                    _db.tbl_PersonAttendance.RemoveRange(lstPersonAttendances);
+
+                    _db.tbl_Attendance.Remove(objAttendance);
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
+        public List<AttendanceStatusVM> GetAttandanceStatus()
+        {
+            List<AttendanceStatusVM> lstAttendanceStatus = new List<AttendanceStatusVM>();
+
+            lstAttendanceStatus.Add(new AttendanceStatusVM { StatusText = "Full Day", StatusValue = "1.0" });
+            lstAttendanceStatus.Add(new AttendanceStatusVM { StatusText = "Half Day", StatusValue = "0.5" });
+            lstAttendanceStatus.Add(new AttendanceStatusVM { StatusText = "Absent", StatusValue = "0.0" });
+
+            return lstAttendanceStatus;
+
         }
 
     }

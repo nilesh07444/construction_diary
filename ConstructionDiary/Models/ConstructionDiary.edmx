@@ -109,9 +109,10 @@
           <Property Name="PersonAttendanceId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="AttendanceId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="AttendanceStatus" Type="int" Nullable="false" />
+          <Property Name="AttendanceStatus" Type="decimal" Precision="18" Scale="1" Nullable="false" />
           <Property Name="SiteId" Type="uniqueidentifier" />
           <Property Name="PersonDailyRate" Type="int" />
+          <Property Name="PayableAmount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
@@ -648,9 +649,10 @@
           <Property Name="PersonAttendanceId" Type="Guid" Nullable="false" />
           <Property Name="AttendanceId" Type="Guid" Nullable="false" />
           <Property Name="PersonId" Type="Guid" Nullable="false" />
-          <Property Name="AttendanceStatus" Type="Int32" Nullable="false" />
+          <Property Name="AttendanceStatus" Type="Decimal" Nullable="false" Precision="18" Scale="1" />
           <Property Name="SiteId" Type="Guid" />
           <Property Name="PersonDailyRate" Type="Int32" />
+          <Property Name="PayableAmount" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
@@ -929,6 +931,7 @@
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="PayableAmount" ColumnName="PayableAmount" />
                 <ScalarProperty Name="PersonDailyRate" ColumnName="PersonDailyRate" />
                 <ScalarProperty Name="SiteId" ColumnName="SiteId" />
                 <ScalarProperty Name="AttendanceStatus" ColumnName="AttendanceStatus" />

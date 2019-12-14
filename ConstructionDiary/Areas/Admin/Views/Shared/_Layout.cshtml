@@ -38,10 +38,37 @@
       <script src="~/Areas/Admin/Content//js/html5shiv.js"></script>
       <script src="~/Areas/Admin/Content//js/respond.min.js"></script>
     <![endif]-->
+
+    <style>
+    div.growlUI {
+        background: url(http://malsup.com/jquery/block/check48.png) no-repeat 10px 10px;
+        width: 350px;
+                top: 10px; 
+                
+                right: 10px;
+                border: none; 
+                padding: 5px; 
+                background-color: #000;
+                -webkit-border-radius: 10px;
+                -moz-border-radius: 10px;
+                opacity: 0.6;
+                color: #fff; 
+    }
+
+        div.growlUI h1, div.growlUI h2 {
+            color: white;
+            padding: 5px 5px 5px 75px;
+            text-align: left
+        }
+
+  </style>
+
 </head>
 
 <body>
-
+    <div class="growlUI" style="display: none; cursor: default;">
+        <p>Growl Notification</p>
+    </div>
     <section id="container">
         <!--header start-->
         <header class="header white-bg">
@@ -51,11 +78,11 @@
             <!--logo start-->
             @if (clsSession.FirmName != "")
             {
-                <a style="font-weight:bold;" href="/dashboard" class="logo"><span>@clsSession.FirmName</span></a>
+                <a style="        font-weight: bold;" href="/dashboard" class="logo"><span>@clsSession.FirmName</span></a>
             }
             else
             {
-                <a style="font-weight:bold;" href="/dashboard" class="logo">Construction <span class="hidden-phone">Software</span></a>
+                <a style="        font-weight: bold;" href="/dashboard" class="logo">Construction <span class="hidden-phone">Software</span></a>
             }
 
             <!--logo end-->
@@ -71,11 +98,13 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             @if (clsSession.ImagePath != "")
                             {
-                                <img style="width:30px; height:30px;" alt="" src="~/Images/UserPhoto/@clsSession.ImagePath">
+                                <img style="        width: 30px;
+        height: 30px;" alt="" src="~/Images/UserPhoto/@clsSession.ImagePath">
                             }
                             else
                             {
-                                <img style="width:30px; height:30px;" alt="" src="~/Images/default_user_image.png">
+                                <img style="        width: 30px;
+        height: 30px;" alt="" src="~/Images/default_user_image.png">
                             }
 
                             <span class="username hidden-phone">@clsSession.UserName</span>
