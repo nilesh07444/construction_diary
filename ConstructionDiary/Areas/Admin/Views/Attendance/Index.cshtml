@@ -27,13 +27,13 @@
                         <table class="display table table-bordered table-striped table-hover" id="tblAttendanceList">
                             <thead>
                                 <tr>
-                                    <th>Attendance Date</th>
-                                    <th>Paid Amount</th>
-                                    <th>Total</th>
-                                    <th>Full Day</th>
-                                    <th>Half Day</th>
-                                    <th>Absent</th>
-                                    <th width="10%">Action</th>
+                                    <th width="10%">Date</th>
+                                    <th width="15%">Paid Amount</th>
+                                    <th width="15%">Total</th>
+                                    <th width="15%">Full Day</th>
+                                    <th width="15%">Half Day</th>
+                                    <th width="15%">Absent</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,27 +41,27 @@
                                 {
                                     foreach (AttendanceVM attendance in Model)
                                     {
-                                <tr class="gradeX">
-                                    <td>@Convert.ToDateTime(attendance.AttendanceDate).ToString("dd/MM/yyyy")</td>
-                                    <td>
-                                        @{ string amt = "0"; }
-                                        @if (attendance.TotalPaidAmount != null)
-                                        {
-                                            amt = CoreHelper.GetFormatterAmount(attendance.TotalPaidAmount);
-                                        }
-                                        @amt
-                                    </td>
-                                    <td>@attendance.TotalPerson</td>
-                                    <td>@attendance.TotalFullDay</td>
-                                    <td>@attendance.TotalHalfDay</td>
-                                    <td>@attendance.TotalAbsent</td>
-                                    <td>
-                                        @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
-                                        <a href="/admin/attendance/edit/@attendance.AttendaceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                        <tr class="gradeX">
+                                            <td>@Convert.ToDateTime(attendance.AttendanceDate).ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                @{ string amt = "0"; }
+                                                @if (attendance.TotalPaidAmount != null)
+                                                {
+                                                    amt = CoreHelper.GetFormatterAmount(attendance.TotalPaidAmount);
+                                                }
+                                                <span style="float:right; padding-right: 15px;">@amt</span>
+                                            </td>
+                                            <td>@attendance.TotalPerson</td>
+                                            <td>@attendance.TotalFullDay</td>
+                                            <td>@attendance.TotalHalfDay</td>
+                                            <td>@attendance.TotalAbsent</td>
+                                            <td>
+                                                @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
+                                                <a href="/admin/attendance/edit/@attendance.AttendaceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
 
-                                        <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                                <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                     }
                                 }
                             </tbody>
@@ -108,7 +108,7 @@
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': []
+                    'aTargets': [0,1,6]
                 }]
         });
     });

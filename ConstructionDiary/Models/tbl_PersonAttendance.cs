@@ -25,5 +25,8 @@ namespace ConstructionDiary.Models
         public System.Guid CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<System.Guid> ModifiedBy { get; set; }
+        public Nullable<int> WithdrawAmount { get; set; }
+        public Nullable<int> OvertimeAmount { get; set; }
+        public string Remarks { get; set; }
     }
 }

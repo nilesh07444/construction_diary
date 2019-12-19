@@ -22,8 +22,15 @@ namespace ConstructionDiary
             return ConvertedString;
         }
 
-        
-
+        public static string GetAttendanceStatusText(string status)
+        {
+            if (status == "0.0")
+                return "0";
+            else if (status == "1.0")
+                return "1";
+            else
+                return status;
+        }
         public static string Encrypt(string Text)
         {            
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(Text);

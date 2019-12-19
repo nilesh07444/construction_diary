@@ -11,10 +11,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
     [filters]
     public class PersonController : Controller
     {
-        ConstructionDiaryEntities _db;
+        ConstructionDiaryEntities _db; 
         public PersonController()
         {
-            _db = new ConstructionDiaryEntities();
+            _db = new ConstructionDiaryEntities(); 
         }
         public ActionResult Index()
         {
@@ -257,7 +257,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                          .OrderBy(x => x.Text).ToList();
 
                 objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
-                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o=>o.Text)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
                          .ToList();
 
                 ViewBag.PersonName = GetPersonName(id);
@@ -349,7 +349,77 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return ReturnMessage;
         }
-         
+
+        public ActionResult Attandance(Guid id, string duration, string start, string end)
+        {
+            List<ReportPersonAttendanceVM> lstPersonAttendanceVM = new List<ReportPersonAttendanceVM>();
+            try
+            {
+                if (string.IsNullOrEmpty(duration))
+                    duration = "month";
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                ViewBag.PersonName = GetPersonName(id);
+                ViewBag.PersonId = id;
+                ViewBag.Duration = duration;
+                ViewBag.StartDate = start;
+                ViewBag.EndDate = end;
+
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = DateTime.Today;
+
+                if (duration == "month")
+                {
+                    var myDate = DateTime.Now;
+                    startDate = new DateTime(myDate.Year, myDate.Month, 1);
+                }
+                else if (duration == "custom")
+                {
+                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                    {
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                    }
+                }
+
+                lstPersonAttendanceVM = getAttendanceByFilter(id, startDate, endDate);
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return View(lstPersonAttendanceVM);
+        }
+
+        public List<ReportPersonAttendanceVM> getAttendanceByFilter(Guid PersonId, DateTime startDate, DateTime endDate)
+        {
+
+            List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == PersonId && att.AttendanceDate >= startDate && att.AttendanceDate <= endDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+            return lst;
+        }
+
         public string GetUserName(Guid? Id)
         {
             string userName = "";

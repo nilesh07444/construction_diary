@@ -195,7 +195,7 @@
                                     {
                                 <tr class="gradeX">
                                     <td>@Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy")</td>
-                                    <td>@CoreHelper.GetFormatterAmount(obj.Amount)</td>
+                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Amount)</span></td>
                                     <td>@obj.SiteName</td>
                                     <td class="hidden-phone">@obj.Remarks</td>
                                     <td>

@@ -36,14 +36,15 @@
                         <table class="display table table-bordered table-striped" id="tblPersonsList">
                             <thead>
                                 <tr>
-                                    <th>Photo</th>
+                                    <th width="3%;">Photo</th>
                                     <th>Person Name</th>
-                                    <th class="hidden-phone">Mobile No</th>
-                                    <th>Total Credit</th>
-                                    <th>Total Debit</th>
-                                    <th>Total Balance</th>
-                                    <th>Finance</th>
-                                    <th>Action</th>
+                                    <th width="7%;" class="hidden-phone">Mobile No</th>
+                                    <th width="12%;">Total Credit</th>
+                                    <th width="12%;">Total Debit</th>
+                                    <th width="13%;">Total Balance</th>
+                                    <th width="8%;">Attandance</th>
+                                    <th width="8%;">Finance</th>
+                                    <th width="10%;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,30 +52,31 @@
                                 {
                                     foreach (SP_GetPersonsList_Result obj in Model)
                                     {                                        
-                                        <tr class="gradeX">
+                                <tr class="gradeX">
 
-                                            <td>
-                                                @if (obj.PersonPhoto != "" && obj.PersonPhoto != null)
-                                                {
-                                                    if (File.Exists(Server.MapPath("~/Images/PersonPhoto/" + obj.PersonPhoto)))
-                                                    {
-                                                        <img src="~/Images/PersonPhoto/@obj.PersonPhoto" style="width:30px; height:30px;" />
-                                                    }
-                                                }
-                                            </td>
+                                    <td>
+                                        @if (obj.PersonPhoto != "" && obj.PersonPhoto != null)
+                                        {
+                                            if (File.Exists(Server.MapPath("~/Images/PersonPhoto/" + obj.PersonPhoto)))
+                                            {
+                                                <img src="~/Images/PersonPhoto/@obj.PersonPhoto" style="width:30px; height:30px;" />
+                                            }
+                                        }
+                                    </td>
 
-                                            <td>@obj.PersonFirstName</td>
-                                            <td class="hidden-phone">@obj.MobileNo</td>
-                                            <td>@CoreHelper.GetFormatterAmount(obj.TotalCreditAmount)</td>
-                                            <td>@CoreHelper.GetFormatterAmount(obj.TotalDebitAmount)</td>
-                                            <td>@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</td>
-                                            <td><button onclick="fnFinancePerson('@obj.PersonId')" type="button" class="btn btn-primary">Finance</button></td>
-                                            <td>
-                                                <button title="View" data-id="@obj.PersonId" class="btn btn-success btn-xs clsViewPerson"><i class="fa fa-eye"></i></button>
-                                                <button title="Edit" data-id="@obj.PersonId" class="btn btn-primary btn-xs clsEditPerson"><i class="fa fa-pencil"></i></button>
-                                                <button title="Delete" onclick="fnDeletePerson('@obj.PersonId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                            </td>
-                                        </tr>
+                                    <td>@obj.PersonFirstName</td>
+                                    <td class="hidden-phone">@obj.MobileNo</td>
+                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalCreditAmount)</span></td>
+                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalDebitAmount)</span></td>
+                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td>
+                                    <td><button onclick="fnPersonAttandance('@obj.PersonId')" type="button" class="btn btn-primary">Attandance</button></td>
+                                    <td><button onclick="fnFinancePerson('@obj.PersonId')" type="button" class="btn btn-primary">Finance</button></td>
+                                    <td>
+                                        <button title="View" data-id="@obj.PersonId" class="btn btn-success btn-xs clsViewPerson"><i class="fa fa-eye"></i></button>
+                                        <button title="Edit" data-id="@obj.PersonId" class="btn btn-primary btn-xs clsEditPerson"><i class="fa fa-pencil"></i></button>
+                                        <button title="Delete" onclick="fnDeletePerson('@obj.PersonId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
                                     }
                                 }
                             </tbody>
@@ -131,6 +133,9 @@
 
     function fnFinancePerson(person_id) {
         window.location.href = '/admin/person/finance/' + person_id;
+    }
+    function fnPersonAttandance(person_id) {
+        window.location.href = '/admin/person/attandance?id=' + person_id;
     }
     function fnDeletePerson(person_id) {
         jQuery("#hdnDeletePerson").val(person_id);

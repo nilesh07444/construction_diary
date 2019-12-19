@@ -27,12 +27,12 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                     ClientId = atte.ClientId,
                                                     AttendanceDate = atte.AttendanceDate,
                                                     AttendaceId = atte.AttendaceId,
-                                                    TotalPaidAmount = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PayableAmount != null).ToList().Select(x => x.PayableAmount).Sum(),
+                                                    TotalPaidAmount = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PayableAmount != null).Select(x => x.PayableAmount).Sum(),
                                                     TotalPerson = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId).ToList().Count(),
-                                                    TotalFullDay = _db.tbl_PersonAttendance.Where(x=>x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1).ToList().Count(),
+                                                    TotalFullDay = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1).ToList().Count(),
                                                     TotalHalfDay = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5).ToList().Count(),
                                                     TotalAbsent = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0).ToList().Count()
-                                                }).OrderByDescending(x=>x.AttendanceDate).ToList();
+                                                }).OrderByDescending(x => x.AttendanceDate).ToList();
 
             return View(lstAttendance);
         }
@@ -45,7 +45,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
+                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).OrderBy(x => x.PersonFirstName).ToList();
                 var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
 
                 objAttendance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
@@ -96,7 +96,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
 
                 DateTime aDate = DateTime.ParseExact(attandance.AttendanceDate, "dd/MM/yyyy", null);
-                var dateExist = _db.tbl_Attendance.Where(x => x.AttendanceDate == aDate).FirstOrDefault();
+                var dateExist = _db.tbl_Attendance.Where(x => x.AttendanceDate == aDate && x.ClientId == ClientId).FirstOrDefault();
 
                 if (dateExist != null)
                 {
@@ -125,6 +125,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objPersonAttendance.AttendanceId = AttandanceId;
                         objPersonAttendance.PersonId = x.PersonId;
                         objPersonAttendance.AttendanceStatus = x.AttendanceStatus;
+                        objPersonAttendance.WithdrawAmount = x.WithdrawAmount;
+                        objPersonAttendance.OvertimeAmount = x.OvertimeAmount;
+                        objPersonAttendance.Remarks = x.Remarks;
+
 
                         if (objPersonAttendance.AttendanceStatus != 0)
                         {
@@ -141,7 +145,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     return RedirectToAction("Index");
                 }
-                 
+
             }
             else
             {
@@ -169,14 +173,14 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objAttendance.AttendanceStatusList = attandanceStatuses
                      .Select(o => new SelectListItem { Value = o.StatusValue.ToString(), Text = o.StatusText })
                      .ToList();
-                 
+
                 tbl_Attendance objAttendanceData = _db.tbl_Attendance.Where(x => x.AttendaceId == Id).FirstOrDefault();
                 if (objAttendanceData != null)
                 {
                     objAttendance.AttendaceId = objAttendanceData.AttendaceId;
                     objAttendance.AttendanceDate = Convert.ToDateTime(objAttendanceData.AttendanceDate).ToString("dd/MM/yyyy");
                 }
-                 
+
                 objAttendance.lstPersonAttendance = (from personatta in _db.tbl_PersonAttendance
                                                      join person in _db.tbl_Persons on personatta.PersonId equals person.PersonId
                                                      where personatta.AttendanceId == Id
@@ -187,9 +191,12 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                          PersonName = person.PersonFirstName,
                                                          AttendanceStatus = personatta.AttendanceStatus,
                                                          PersonDailyRate = person.DailyRate,
-                                                         SiteId = personatta.SiteId
-                                                     }).ToList();
-                 
+                                                         SiteId = personatta.SiteId,
+                                                         WithdrawAmount = personatta.WithdrawAmount,
+                                                         OvertimeAmount = personatta.OvertimeAmount,
+                                                         Remarks = personatta.Remarks
+                                                     }).OrderBy(x=>x.PersonName).ToList();
+
             }
             catch (Exception ex)
             {
@@ -215,7 +222,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 DateTime aDate = DateTime.ParseExact(attandance.AttendanceDate, "dd/MM/yyyy", null);
-                var dateExist = _db.tbl_Attendance.Where(x => x.AttendanceDate == aDate && x.AttendaceId != attandance.AttendaceId).FirstOrDefault();
+                var dateExist = _db.tbl_Attendance.Where(x => x.AttendanceDate == aDate && x.AttendaceId != attandance.AttendaceId && x.ClientId == ClientId).FirstOrDefault();
 
                 if (dateExist != null)
                 {
@@ -228,18 +235,18 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objAttandance.AttendanceDate = aDate;
                     objAttandance.ModifiedDate = DateTime.UtcNow;
                     //_db.SaveChanges();
-                    
+
                     List<PersonAttendanceVM> listPersons = attandance.lstPersonAttendance;
 
                     listPersons.ForEach(personAttendance =>
                     {
-                        tbl_PersonAttendance objPersonAttendance = _db.tbl_PersonAttendance.Where(p=>p.PersonAttendanceId == personAttendance.PersonAttendanceId).FirstOrDefault();                        
+                        tbl_PersonAttendance objPersonAttendance = _db.tbl_PersonAttendance.Where(p => p.PersonAttendanceId == personAttendance.PersonAttendanceId).FirstOrDefault();
                         objPersonAttendance.PersonId = personAttendance.PersonId;
                         objPersonAttendance.AttendanceStatus = personAttendance.AttendanceStatus;
                         objPersonAttendance.PersonDailyRate = personAttendance.PersonDailyRate;
 
                         if (objPersonAttendance.AttendanceStatus != 0)
-                        {                            
+                        {
                             objPersonAttendance.PayableAmount = personAttendance.PersonDailyRate * objPersonAttendance.AttendanceStatus;
                             objPersonAttendance.SiteId = personAttendance.SiteId;
                         }

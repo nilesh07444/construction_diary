@@ -113,6 +113,9 @@
           <Property Name="SiteId" Type="uniqueidentifier" />
           <Property Name="PersonDailyRate" Type="int" />
           <Property Name="PayableAmount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="WithdrawAmount" Type="int" />
+          <Property Name="OvertimeAmount" Type="int" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="100" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
@@ -657,6 +660,9 @@
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="WithdrawAmount" Type="Int32" />
+          <Property Name="OvertimeAmount" Type="Int32" />
+          <Property Name="Remarks" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -927,6 +933,9 @@
           <EntitySetMapping Name="tbl_PersonAttendance">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PersonAttendance">
               <MappingFragment StoreEntitySet="tbl_PersonAttendance">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="OvertimeAmount" ColumnName="OvertimeAmount" />
+                <ScalarProperty Name="WithdrawAmount" ColumnName="WithdrawAmount" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />

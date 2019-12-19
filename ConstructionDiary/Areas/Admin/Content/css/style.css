@@ -5655,3 +5655,7 @@ p.totalremaining {
 .form-control, .btn {
     font-size: 16px;
 }
+
+select.form-control {
+    font-size: 14px;
+}

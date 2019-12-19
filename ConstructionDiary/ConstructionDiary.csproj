@@ -2218,6 +2218,7 @@
     <Content Include="Areas\Admin\Views\Attendance\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\Attandance.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

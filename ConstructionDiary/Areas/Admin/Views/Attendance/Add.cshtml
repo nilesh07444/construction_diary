@@ -37,14 +37,17 @@
 
                         <div class="">
 
-                            <table class="display table table-bordered table-striped table-hover" id="tblAttendanceForm" style="margin-top: 15px;">
+                            <table class="display table table-bordered table-striped table-hover" id="tblAttendanceForm" style="margin-top: 15px; overflow-x: scroll; display: inline-block;">
                                 <thead>
                                     <tr>
                                         <th style="width:3%;">#</th>
-                                        <th style="width:15%;">Name</th>
-                                        <th style="width:7%;">Status</th>
+                                        <th>Name</th>
+                                        <th style="width:10%;">Daily Rate</th>
+                                        <th style="width:13%;">Status</th>
                                         <th style="width:15%;">Site Name</th>
-                                        <th style="width:7%;">Daily Rate</th>
+                                        <th style="width:7%;">Withdraw</th>
+                                        <th style="width:7%;">Overtime</th>
+                                        <th style="width:15%;">Remarks</th>
                                     </tr>
                                 </thead>
 
@@ -57,19 +60,25 @@
                                     <tr class="gradeX">
                                         <td>@counter</td>
                                         <td>@obj.PersonName</td>
+                                        <td><span>@obj.PersonDailyRate</span></td>
                                         <td>
-                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text"), "-Select Status-", new { @id = "attendancestatus_" + obj.PersonId, @class = "form-control ddlAttendanceStatus" })
+                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text"), "-Select-", new { @id = "attendancestatus_" + obj.PersonId, @class = "form-control ddlAttendanceStatus" })
                                             @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
                                         </td>
                                         <td>
-                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text"), "-Select Site-", new { @id = "site_" + obj.PersonId, @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text"), "-Select-", new { @id = "site_" + obj.PersonId, @class = "form-control" })
                                             @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].SiteId, "", new { @class = "text-danger" })
                                         </td>
                                         <td>
-                                            @*@Html.EditorFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })*@
-                                            <span>@obj.PersonDailyRate</span>
-                                            @*@Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].PersonDailyRate, "", new { @class = "text-danger" })*@
+                                            @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].WithdrawAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
                                         </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].OvertimeAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                        </td>
+
                                         @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonId)
                                         @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonName)
                                         @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate)

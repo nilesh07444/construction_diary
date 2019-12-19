@@ -27,7 +27,17 @@ namespace ConstructionDiary
         [Required(ErrorMessage = "Status is required.")]
         public decimal AttendanceStatus { get; set; }
         public Guid? SiteId { get; set; } 
-        public int? PersonDailyRate { get; set; }         
+        public int? PersonDailyRate { get; set; }
+        public int? WithdrawAmount { get; set; }
+        public int? OvertimeAmount { get; set; }
+        public string Remarks { get; set; }
+    }
+
+    public class ReportPersonAttendanceVM : PersonAttendanceVM {
+        public DateTime AttendanceDate { get; set; }
+        public string AttendanceStatusText { get; set; }
+        public string SiteName { get; set; }
+        public decimal? PayableAmount { get; set; }
     }
 
     public class AttendanceFormVM
