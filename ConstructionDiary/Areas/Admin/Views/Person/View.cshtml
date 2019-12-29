@@ -1,4 +1,5 @@
-﻿@model PersonVM
+﻿@using ConstructionDiary.ResourceFiles;
+@model PersonVM
 @{
     ViewBag.Title = "Person";
 }
@@ -29,7 +30,7 @@
                 </div>
                 <ul class="nav nav-pills nav-stacked">
                     <li class="active"><a href="javascript:void(0);"> <i class="fa fa-user"></i> Profile</a></li>
-                    <li><a href="javascript:void(0);" data-id="@Model.PersonId" class="clsEditPerson"> <i class="fa fa-edit"></i> Edit profile</a></li>
+                    <li><a href="javascript:void(0);" data-id="@Model.PersonId" class="clsEditPerson"> <i class="fa fa-edit"></i> @Resource.UpdatePersonDetail</a></li>
                 </ul>
             </section>
         </aside>
@@ -43,27 +44,27 @@
 
                     <div class="row">
                         <div class="bio-row">
-                            <p><span>First Name </span>: @Model.Firstname</p>
+                            <p><span>@Resource.Name </span>: @Model.Firstname</p>
                         </div>
                         <div class="bio-row">
                             <p><span>Created By</span>: @Model.CreatedBy</p>
                         </div>
-                        
+
                         <div class="bio-row">
                             <p><span>Last Updated By</span>: @Model.UpdatedBy</p>
                         </div>
-                        
+
                         <div class="bio-row">
                             <p><span></span></p>
                         </div>
                         <div class="bio-row">
-                            <p><span>Mobile </span>: @Model.MobileNo</p>
+                            <p><span>@Resource.MobileNo </span>: @Model.MobileNo</p>
                         </div>
                         <div class="bio-row">
                             <p><span></span></p>
                         </div>
                         <div class="bio-row">
-                            <p><span>Address </span>: @Model.Address</p>
+                            <p><span>@Resource.Address </span>: @Model.Address</p>
                         </div>
                     </div>
                 </div>

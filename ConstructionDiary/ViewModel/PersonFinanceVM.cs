@@ -14,7 +14,7 @@ namespace ConstructionDiary
         public string SelectedDate { get; set; }
 
         [Required(ErrorMessage = "This field is required")]
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         [Required(ErrorMessage = "This field is required")]
         public Guid GivenAmountBy { get; set; }

@@ -453,4 +453,10 @@
   <data name="Withdraw" xml:space="preserve">
     <value>Withdraw</value>
   </data>
+  <data name="UpdatePersonDetail" xml:space="preserve">
+    <value>Update Person Detail</value>
+  </data>
+  <data name="AddNewFinance" xml:space="preserve">
+    <value>Add New Finance</value>
+  </data>
 </root>

@@ -5770,10 +5770,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/22/2018 13:51:48</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/Add.cshtml">
-      <publishTime>12/15/2019 15:28:58</publishTime>
+      <publishTime>12/29/2019 18:31:43</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/AddPerson.cshtml">
-      <publishTime>12/21/2019 23:46:46</publishTime>
+      <publishTime>12/29/2019 18:05:25</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/Edit.cshtml">
       <publishTime>12/15/2019 15:29:30</publishTime>
@@ -5782,85 +5782,88 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/22/2019 00:12:14</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/Index.cshtml">
-      <publishTime>12/22/2019 10:07:01</publishTime>
+      <publishTime>12/29/2019 18:24:44</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/PersonList.cshtml">
-      <publishTime>12/22/2019 00:15:52</publishTime>
+      <publishTime>12/29/2019 18:30:11</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/Add.cshtml">
-      <publishTime>09/28/2019 18:40:08</publishTime>
+      <publishTime>12/29/2019 15:39:02</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/AddUser.cshtml">
-      <publishTime>09/29/2019 00:03:01</publishTime>
+      <publishTime>12/29/2019 15:37:57</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/Edit.cshtml">
-      <publishTime>09/23/2019 22:57:13</publishTime>
+      <publishTime>12/29/2019 15:40:59</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/EditUser.cshtml">
-      <publishTime>09/29/2019 00:03:11</publishTime>
+      <publishTime>12/29/2019 15:41:26</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/Index.cshtml">
-      <publishTime>09/29/2019 14:51:15</publishTime>
+      <publishTime>12/29/2019 15:36:09</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/Users.cshtml">
-      <publishTime>09/10/2019 00:09:12</publishTime>
+      <publishTime>12/29/2019 15:49:46</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Dashboard/Index.cshtml">
-      <publishTime>10/19/2019 13:43:23</publishTime>
+      <publishTime>12/29/2019 15:10:44</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Login/Index.cshtml">
-      <publishTime>09/29/2019 14:24:07</publishTime>
+      <publishTime>12/29/2019 12:37:46</publishTime>
     </File>
     <File Include="Areas/Admin/Views/MyAccount/Add.cshtml">
-      <publishTime>10/19/2019 20:17:41</publishTime>
+      <publishTime>12/29/2019 22:46:54</publishTime>
     </File>
     <File Include="Areas/Admin/Views/MyAccount/Edit.cshtml">
-      <publishTime>10/19/2019 20:18:04</publishTime>
+      <publishTime>12/29/2019 22:55:40</publishTime>
     </File>
     <File Include="Areas/Admin/Views/MyAccount/Index.cshtml">
-      <publishTime>10/25/2019 14:37:55</publishTime>
+      <publishTime>12/29/2019 22:57:01</publishTime>
     </File>
     <File Include="Areas/Admin/Views/MyAccount/Report.cshtml">
       <publishTime>10/19/2019 19:52:41</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Add.cshtml">
-      <publishTime>09/11/2019 12:01:40</publishTime>
+      <publishTime>12/29/2019 23:35:49</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Attandance.cshtml">
-      <publishTime>12/22/2019 11:40:40</publishTime>
+      <publishTime>12/29/2019 18:28:18</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Edit.cshtml">
-      <publishTime>10/11/2019 11:16:41</publishTime>
+      <publishTime>12/29/2019 23:39:19</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Finance.cshtml">
-      <publishTime>12/15/2019 14:53:13</publishTime>
+      <publishTime>12/29/2019 23:51:02</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Index.cshtml">
-      <publishTime>12/22/2019 00:08:24</publishTime>
+      <publishTime>12/29/2019 23:43:08</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/View.cshtml">
-      <publishTime>10/20/2019 17:28:46</publishTime>
+      <publishTime>12/29/2019 23:41:11</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Profile/Index.cshtml">
-      <publishTime>06/10/2019 23:03:40</publishTime>
+      <publishTime>12/29/2019 17:57:20</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Setting/Index.cshtml">
+      <publishTime>12/29/2019 11:01:04</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Shared/_Layout.cshtml">
-      <publishTime>12/22/2019 09:56:59</publishTime>
+      <publishTime>12/29/2019 23:00:59</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Site/Detail.cshtml">
-      <publishTime>10/25/2019 14:15:50</publishTime>
+      <publishTime>12/29/2019 18:56:53</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Site/Index.cshtml">
-      <publishTime>10/10/2019 20:57:13</publishTime>
+      <publishTime>12/29/2019 18:57:25</publishTime>
     </File>
     <File Include="Areas/Admin/Views/User/Add.cshtml">
-      <publishTime>06/10/2019 15:17:03</publishTime>
+      <publishTime>12/29/2019 13:04:18</publishTime>
     </File>
     <File Include="Areas/Admin/Views/User/Edit.cshtml">
       <publishTime>06/10/2019 16:09:47</publishTime>
     </File>
     <File Include="Areas/Admin/Views/User/Index.cshtml">
-      <publishTime>10/13/2019 17:26:59</publishTime>
+      <publishTime>12/29/2019 13:06:07</publishTime>
     </File>
     <File Include="Areas/Admin/Views/web.config">
       <publishTime>09/16/2019 23:50:42</publishTime>
@@ -5878,10 +5881,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/09/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>12/22/2019 11:42:36</publishTime>
+      <publishTime>12/29/2019 23:57:03</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>12/22/2019 11:42:36</publishTime>
+      <publishTime>12/29/2019 23:57:03</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>07/06/2018 11:03:48</publishTime>
@@ -5891,6 +5894,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="bin/EPPlus.dll">
       <publishTime>10/22/2019 23:00:28</publishTime>
+    </File>
+    <File Include="bin/gu/ConstructionDiary.resources.dll">
+      <publishTime>12/29/2019 23:57:03</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>10/22/2019 23:00:36</publishTime>
@@ -6190,7 +6196,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2019 23:48:10</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>12/19/2019 22:54:12</publishTime>
+      <publishTime>12/29/2019 23:06:19</publishTime>
     </File>
   </ItemGroup>
 </Project>

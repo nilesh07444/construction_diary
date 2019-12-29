@@ -453,4 +453,10 @@
   <data name="Withdraw" xml:space="preserve">
     <value>ઉપાડ</value>
   </data>
+  <data name="UpdatePersonDetail" xml:space="preserve">
+    <value>માણસ ની વિગત સુધારો</value>
+  </data>
+  <data name="AddNewFinance" xml:space="preserve">
+    <value>નવી હિસાબ ઉમેરો</value>
+  </data>
 </root>

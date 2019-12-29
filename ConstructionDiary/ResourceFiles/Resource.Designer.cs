@@ -133,6 +133,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Finance.
+        /// </summary>
+        public static string AddNewFinance {
+            get {
+                return ResourceManager.GetString("AddNewFinance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Material.
         /// </summary>
         public static string AddNewMaterial {
@@ -1020,6 +1029,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Person Detail.
+        /// </summary>
+        public static string UpdatePersonDetail {
+            get {
+                return ResourceManager.GetString("UpdatePersonDetail", resourceCulture);
             }
         }
         
