@@ -1,4 +1,5 @@
-﻿@model List<ReportPersonAttendanceVM>
+﻿@using ConstructionDiary.ResourceFiles;
+@model List<ReportPersonAttendanceVM>
 @{
     ViewBag.Title = "Person";
 }
@@ -47,7 +48,7 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong> Attandance </strong>
+                    <strong> @Resource.Attendance </strong>
                 </header>
                 <div class="panel-body">
                     <div class="row">
@@ -64,14 +65,14 @@
                                 <label for="StartDate">Start Date</label><span class="required">*</span>
                                 <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
                             </div>
-                            <span id="spn_StartDate" class="formerror">This field is required</span>
+                            <span id="spn_StartDate" class="formerror">@Resource.Required</span>
                         </div>
                         <div class="col-sm-3 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
                             <div class="">
                                 <label for="EndDate">End Date</label><span class="required">*</span>
                                 <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
                             </div>
-                            <span id="spn_EndDate" class="formerror">This field is required</span>
+                            <span id="spn_EndDate" class="formerror">@Resource.Required</span>
                         </div>
                         <div class="col-sm-3 form-group">
                             <label></label>
@@ -84,60 +85,78 @@
             </section>
 
             <section class="panel">
-                <div class="card-body">
-                    <div class="table-responsive" tabindex="1" style="overflow: hidden; outline: none;">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Amount</th>
-                                    <th>Overtime</th>
-                                    <th>Withdraw</th>
-                                    <th>Site Name</th>
-                                    <th>Remarks</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if (Model.Count > 0)
-                                {
-                                    int counter = 1;
-                                    foreach (var item in Model)
-                                    {
+                <div class="panel-body">
+                    @*<div class="row">
+                        <div class="col-sm-12">
+                            <div class="btn-group pull-right hidden-sm hidden-md hidden-phone" style="margin-bottom: 15px;">
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    Download <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                    <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="table-responsive" tabindex="1" style="overflow: hidden; outline: none;">
+                                <table class="table table-bordered">
+                                    <thead>
                                         <tr>
-                                            <td scope="row">@counter</td>
-                                            <td>@item.AttendanceDate.ToString("dd/MM/yyyy")</td>
-                                            <td>@CoreHelper.GetAttendanceStatusText(Convert.ToString(item.AttendanceStatus))</td>
-                                            <td>@CoreHelper.GetFormatterAmount(Convert.ToDecimal(item.PayableAmount))</td>
-                                            <td>@CoreHelper.GetFormatterAmount(Convert.ToDecimal(item.OvertimeAmount))</td>
-                                            <td>@CoreHelper.GetFormatterAmount(Convert.ToDecimal(item.WithdrawAmount))</td>
-                                            <td>@item.SiteName</td>
-                                            <td>@item.Remarks</td>
+                                            <th>#</th>
+                                            <th>@Resource.Date</th>
+                                            <th>@Resource.Status</th>
+                                            <th>@Resource.Amount</th>
+                                            <th>@Resource.Overtime</th>
+                                            <th>@Resource.Withdraw</th>
+                                            <th>@Resource.SiteName</th>
+                                            <th>@Resource.Remarks</th>
                                         </tr>
-                                        counter++;
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.Count > 0)
+                                        {
+                                            int counter = 1;
+                                            foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td scope="row">@counter</td>
+                                                    <td>@item.AttendanceDate.ToString("dd/MM/yyyy")</td>
+                                                    <td>@CoreHelper.GetAttendanceStatusText(Convert.ToString(item.AttendanceStatus))</td>
+                                                    <td>@CoreHelper.GetFormatterAmount(Convert.ToDecimal(item.PayableAmount))</td>
+                                                    <td>@CoreHelper.GetFormatterAmount(Convert.ToDecimal(item.OvertimeAmount))</td>
+                                                    <td>@CoreHelper.GetFormatterAmount(Convert.ToDecimal(item.WithdrawAmount))</td>
+                                                    <td>@item.SiteName</td>
+                                                    <td>@item.Remarks</td>
+                                                </tr>
+                                                counter++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td scope="row" colspan="8" style="text-align:center;">No Record Found !!!</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    @if (Model.Count > 0)
+                                    {
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" style="text-align: right;">@Resource.Total:</th>
+                                                <th>@strTotalPayableAmount</th>
+                                                <th>@strTotalOvertimeAmount</th>
+                                                <th>@strTotalWithdrawAmount</th>
+                                                <th colspan="2"></th>
+                                            </tr>
+                                        </tfoot>
                                     }
-                                }
-                                else
-                                {
-                                    <tr>
-                                        <td scope="row" colspan="8" style="text-align:center;">No Record Found !!!</td>
-                                    </tr>
-                                }
-                            </tbody>
-                            @if (Model.Count > 0)
-                            {
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="3" style="text-align: right;">Total:</th>
-                                        <th>@strTotalPayableAmount</th>
-                                        <th>@strTotalOvertimeAmount</th>
-                                        <th>@strTotalWithdrawAmount</th>
-                                        <th colspan="2"></th>
-                                    </tr>
-                                </tfoot>
-                            }
-                            </table>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -209,7 +228,6 @@
     }
 
     $(document).on("change", "#Duration", function () {
-        debugger;
         var seletedType = $(this).val();
 
         if (seletedType == "custom") {
@@ -217,9 +235,24 @@
         }
         else {
             $(".clsFilterdate").addClass("clsHide").removeClass("clsShow");
-
         }
 
+    });
+
+    function getDownloadParameters() {
+
+    }
+
+    jQuery(document).on("click", "#btnDownloadPdf", function () {
+        var parameters = getDownloadParameters();
+        alert(parameters);
+        //window.location.href = "/admin/myaccount/ExportPDFOfAllCreditList"
+
+    });
+
+    jQuery(document).on("click", "#btnDownloadExcel", function () {
+        var parameters = getDownloadParameters();
+        //window.location.href = "/admin/myaccount/ExportExcelOfAllCreditList"
     });
 
 </script>

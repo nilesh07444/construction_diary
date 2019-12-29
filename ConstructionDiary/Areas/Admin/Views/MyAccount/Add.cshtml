@@ -1,4 +1,5 @@
-﻿@model MyFinanceVM
+﻿@using ConstructionDiary.ResourceFiles;
+@model MyFinanceVM
 @{
     ViewBag.Title = "Credit";
 }
@@ -14,10 +15,10 @@
                 @using (Html.BeginForm("Add", "MyAccount", routeValues: new { id = "xyz" }, method: FormMethod.Post, htmlAttributes: new { @id = "myFinanceFormId", enctype = "multipart/form-data", role = "form" }))
                 {
                     <header class="panel-heading">
-                        <strong>Create Credit Entry</strong>
+                        <strong>@Resource.AddNewCredit</strong>
                         <span class="pull-right clsRadio">
-                            <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit", new { @checked = true }) CREDIT</label>
-                            <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit") DEBIT</label>
+                            <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit", new { @checked = true }) @Resource.Credit</label>
+                            <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit") @Resource.Debit</label>
                         </span>
                     </header>
 
@@ -29,7 +30,7 @@
 
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label>Date:</label>
+                                <label>@Resource.Date:</label>
                                 @*@Html.EditorFor(model => model.SelectedDate, new { htmlAttributes = new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY" } })*@
                                 @Html.TextBoxFor(model => model.SelectedDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
 
@@ -39,12 +40,12 @@
                                 @Html.ValidationMessageFor(model => model.SelectedDate, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label>Amount:</label>
-                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Amount", maxlength = "150" } })
+                                <label>@Resource.Amount:</label>
+                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = Resource.Amount, maxlength = "150" } })
                                 @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label>Site Name:</label>
+                                <label>@Resource.SiteName:</label>
                                 @Html.DropDownList("SiteId", new SelectList(Model.SitesList, "Value", "Text"), "-Select Site-", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.SiteId, "", new { @class = "text-danger" })
                             </div>
@@ -52,18 +53,18 @@
 
                         <div class="row">
                             <div class="col-sm-4 form-group">
-                                <label>Remarks:</label>
-                                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Remarks", maxlength = "150" } })
+                                <label>@Resource.Remarks:</label>
+                                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", placeholder = Resource.Remarks, maxlength = "150" } })
                                 @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label>By Given/Taken Amount:</label>
+                                <label>@Resource.GivenTakenBy:</label>
                                 @Html.DropDownList("UserId", new SelectList(Model.UsersList, "Value", "Text"), "-Select User-", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(m => m.UserId, "", new { @class = "text-danger" })
                             </div>
 
                             <div class="col-sm-4 form-group">
-                                <label>Payment Type:</label>
+                                <label>@Resource.PaymentType:</label>
                                 @Html.DropDownList("PaymentType", new SelectList(Enum.GetValues(typeof(PaymentTypes))), "-Select Type-", new { @class = "form-control" })
                                 @Html.ValidationMessageFor(model => model.PaymentType, "", new { @class = "text-danger" })
                             </div>
@@ -72,18 +73,18 @@
 
                         <div class="row clsPaymentDetails" style="display:none;">
                             <div class="col-sm-4 form-group">
-                                <label>Cheque No:</label>
-                                @Html.EditorFor(model => model.ChequeNo, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Cheque No", maxlength = "150" } })
+                                <label>@Resource.ChequeNo:</label>
+                                @Html.EditorFor(model => model.ChequeNo, new { htmlAttributes = new { @class = "form-control", placeholder = Resource.ChequeNo, maxlength = "150" } })
                                 @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label>Bank Name:</label>
-                                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Bank Name", maxlength = "150" } })
+                                <label>@Resource.BankName:</label>
+                                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control", placeholder = Resource.BankName, maxlength = "150" } })
                                 @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-sm-4 form-group">
-                                <label>Cheque For:</label>
-                                @Html.EditorFor(model => model.ChequeFor, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter Cheque For", maxlength = "150" } })
+                                <label>@Resource.ChequeFor:</label>
+                                @Html.EditorFor(model => model.ChequeFor, new { htmlAttributes = new { @class = "form-control", placeholder = Resource.ChequeFor, maxlength = "150" } })
                                 @Html.ValidationMessageFor(model => model.ChequeFor, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -95,8 +96,8 @@
                         <div class="row">
                             @{TempData.Keep("siteId");}
                             <div class="col-sm-12 form-group">
-                                <button class="btn btn-success" id="btnSubmit" type="submit">Save</button>
-                                <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                                <button class="btn btn-success" id="btnSubmit" type="submit">@Resource.Save</button>
+                                <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
                             </div>
                         </div>
 
@@ -150,5 +151,5 @@
     jQuery("#btnCancel").click(function (event) {
         window.location.href = "/admin/myaccount"
     });
-    
+
 </script>

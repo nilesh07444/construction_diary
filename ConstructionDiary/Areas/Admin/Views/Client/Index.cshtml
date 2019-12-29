@@ -1,4 +1,5 @@
-﻿@using ConstructionDiary.Models
+﻿@using ConstructionDiary.Models;
+@using ConstructionDiary.ResourceFiles;
 @model List<ClientVM>
 @{
     ViewBag.Title = "Client";
@@ -14,13 +15,13 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>Client List</strong>
+                    <strong>@Resource.ClientList</strong>
                 </header>
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-success" href="client/add"><i class="fa fa-plus"></i> Add New Client</a>
+                                <a class="btn btn-success" href="client/add"><i class="fa fa-plus"></i> @Resource.AddNewClient</a>
                             </div>
                         </div>
                         <div class="space15"></div>
@@ -28,13 +29,13 @@
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th>Client Name</th>
-                                    <th>Firm Name</th>
-                                    <th>Package Type</th>
-                                    <th width="12%">Expiry Date</th>
-                                    <th width="13%">Users</th>
-                                    <th width="5%">Active</th>
-                                    <th width="5%">Action</th>
+                                    <th>@Resource.ClientName</th>
+                                    <th>@Resource.FirmName</th>
+                                    <th>@Resource.PackageType</th>
+                                    <th width="12%">@Resource.ExpiryDate</th>
+                                    <th width="13%">@Resource.Users</th>
+                                    <th width="5%">@Resource.Active</th>
+                                    <th width="10%">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,7 +51,7 @@
                                             <td>@client.PackageType</td>
                                             <td>@Convert.ToDateTime(client.dtExpireDate).ToString("dd/MM/yyyy")</td>
                                             <td>
-                                                <a href="client/users/@client.ClientId">@client.TotalUsers Users</a>
+                                                <a href="client/users/@client.ClientId">@client.TotalUsers @Resource.Users</a>
                                             </td>
                                             <td>
                                                 @if (client.IsActive)
@@ -88,15 +89,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Delete Confirmation</h4>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
             </div>
             <div class="modal-body">
-                Are you sure want to Delete ?
+                @Resource.SureWantToDelete
             </div>
             <div class="modal-footer">
                 <input type="hidden" id="hdnDeleteClient" />
-                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                <button id="btnDeleteClient" class="btn btn-danger" type="button"> Delete </button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteClient" class="btn btn-danger" type="button"> @Resource.Delete </button>
             </div>
         </div>
     </div>

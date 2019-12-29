@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConstructionDiary.ResourceFiles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace ConstructionDiary
         public Guid PersonAttendanceId { get; set; }
         public Guid PersonId { get; set; }
         public string PersonName { get; set; }
-        [Required(ErrorMessage = "Status is required.")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public decimal AttendanceStatus { get; set; }
         public Guid? SiteId { get; set; } 
         public int? PersonDailyRate { get; set; }
@@ -43,7 +44,7 @@ namespace ConstructionDiary
     public class AttendanceFormVM
     {
         public Guid? AttendaceId { get; set; }
-        [Required]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public string AttendanceDate { get; set; }
         public List<PersonAttendanceVM> lstPersonAttendance { get; set; }
 

@@ -1,4 +1,5 @@
-﻿@model ConstructionDiary.Models.tbl_Sites
+﻿@using ConstructionDiary.ResourceFiles
+@model ConstructionDiary.Models.tbl_Sites
 @{
     ViewBag.Title = "Site";
 }
@@ -38,7 +39,7 @@
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strTotalCreditAmount</h2>
-                    <p class="total totalcredit">Total Credit Amount</p>
+                    <p class="total totalcredit">@Resource.TotalCredit</p>
                 </div>
             </section>
         </div>
@@ -50,7 +51,7 @@
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strTotalDebitAmount</h2>
-                    <p class="total totaldebit">Total Debit Amount</p>
+                    <p class="total totaldebit">@Resource.TotalDebit</p>
                 </div>
             </section>
         </div>
@@ -62,7 +63,7 @@
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strRemainingAmount</h2>
-                    <p class="total totalremaining">Total Balance</p>
+                    <p class="total totalremaining">@Resource.TotalBalance</p>
                 </div>
             </section>
         </div>
@@ -73,17 +74,17 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>Finance List Of @Model.SiteName</strong>
+                    <strong>Finance List - @Model.SiteName</strong>
                 </header>
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
                             <div class="btn-group pull-left">
-                                <a class="btn btn-default" href="/admin/myaccount/add?id=@Model.SiteId" style="color:#000000;"><i class="fa fa-plus"></i> Add New Credit Entry</a>
+                                <a class="btn btn-default" href="/admin/myaccount/add?id=@Model.SiteId" style="color:#000000;"><i class="fa fa-plus"></i> @Resource.AddNewCredit</a>
                             </div>
                             <div class="btn-group pull-right hidden-sm hidden-md hidden-phone">
                                 <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                    Download <i class="fa fa-angle-down"></i>
+                                    @Resource.Download <i class="fa fa-angle-down"></i>
                                 </button>
                                 <ul class="dropdown-menu pull-right">
                                     <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
@@ -95,13 +96,13 @@
                         <table class="display table table-bordered table-striped table-hover" id="tblFinanceList">
                             <thead>
                                 <tr>
-                                    <th style="width:8%;">Date</th>
-                                    <th style="width:10%;">Amount</th>
-                                    <th style="width:8%;">Type</th>
-                                    <th style="width:8%;">Payment Type</th>
-                                    <th>Bank Name</th>
-                                    <th style="width:20%;">Given/Taken By</th>
-                                    <th style="width:8%;">Action</th>
+                                    <th style="width:10%;">@Resource.Date</th>
+                                    <th style="width:10%;">@Resource.Amount</th>
+                                    <th style="width:8%;">@Resource.Type</th>
+                                    <th style="width:8%;">@Resource.PaymentType</th>
+                                    <th>@Resource.BankName</th>
+                                    <th style="width:20%;">@Resource.GivenTakenBy</th>
+                                    <th style="width:8%;">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -142,15 +143,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Delete Confirmation</h4>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
             </div>
             <div class="modal-body">
-                Are you sure want to Delete ?
+                @Resource.SureWantToDelete
             </div>
             <div class="modal-footer">
                 <input type="hidden" id="hdnFinanceId" />
-                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                <button id="btnDeleteFinance" class="btn btn-danger" type="button">Delete</button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteFinance" class="btn btn-danger" type="button">@Resource.Delete</button>
             </div>
         </div>
     </div>
@@ -231,5 +232,5 @@
         var SiteId = '@Model.SiteId';
         window.location.href = "/admin/Site/ExportExcelOfSelectedSite/" + SiteId;
     });
-    
+
 </script>

@@ -14,7 +14,7 @@ namespace ConstructionDiary
     {
         SiteOwner = 1,
         Admin = 2,
-        SubUser = 3
+        Staff = 3
     }
 
     public enum PackageTypes

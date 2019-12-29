@@ -9,7 +9,7 @@ using ConstructionDiary.Models;
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
     [filters]
-    public class ProfileController : Controller
+    public class ProfileController : MyBaseController
     {
         ConstructionDiaryEntities _db;
         public ProfileController()

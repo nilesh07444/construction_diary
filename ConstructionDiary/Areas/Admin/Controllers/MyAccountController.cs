@@ -17,7 +17,7 @@ using OfficeOpenXml.Style;
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
     [filters]
-    public class MyAccountController : Controller
+    public class MyAccountController : MyBaseController
     {
         ConstructionDiaryEntities _db;
         public MyAccountController()

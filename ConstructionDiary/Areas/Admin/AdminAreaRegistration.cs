@@ -171,6 +171,24 @@ namespace ConstructionDiary.Areas.Admin
                 new { controller = "Attendance", action = "View", id = UrlParameter.Optional }
             );
 
+            context.MapRoute(
+                "Admin_attendance_personlist",
+                "admin/attendance/personlist",
+                new { controller = "Attendance", action = "PersonList", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_attendance_addperson",
+                "admin/attendance/addperson",
+                new { controller = "Attendance", action = "AddPerson", id = UrlParameter.Optional }
+            );
+
+            context.MapRoute(
+                "Admin_attendance_editperson",
+                "admin/attendance/editperson",
+                new { controller = "Attendance", action = "EditPerson", id = UrlParameter.Optional }
+            );
+
         }
     }
 }

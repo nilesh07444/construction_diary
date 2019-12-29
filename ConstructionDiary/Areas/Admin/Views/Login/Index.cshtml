@@ -1,4 +1,5 @@
-﻿@model ConstructionDiary.LoginVM
+﻿@using ConstructionDiary.ResourceFiles
+@model ConstructionDiary.LoginVM
 @{
     Layout = null;
 }
@@ -12,7 +13,7 @@
     <meta name="author" content="Mosaddek">
     <meta name="keyword" content="FlatLab, Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
     <link rel="shortcut icon" href="~/Areas/Admin/Content/img/favicon.png">
-    <title>Construction Software</title>
+    <title>@Resource.Construction @Resource.Software</title>
     <!-- Bootstrap core CSS -->
     <link href="~/Areas/Admin/Content/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/Areas/Admin/Content/css/bootstrap-reset.css" rel="stylesheet">
@@ -36,7 +37,7 @@
 <body class="login-body">
     <div class="container">
         <form class="form-signin" method="post">
-            <h2 class="form-signin-heading">Construction Software</h2>
+            <h2 class="form-signin-heading">@Resource.Construction @Resource.Software</h2>
             <div class="login-wrap">
                 @if (@TempData["LoginError"] != null)
                 {
@@ -49,20 +50,20 @@
                     </div>
                 }
                 @*<input type="text" id="txtUserName" name="txtUserName" class="form-control" placeholder="User Name" autofocus>*@
-                @Html.TextBoxFor(model => model.UserName, new { id = "txtUserName", name = "txtUserName", placeholder = "User Name", @class = "form-control" })
+                @Html.TextBoxFor(model => model.UserName, new { id = "txtUserName", name = "txtUserName", placeholder = Resource.UserName, @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.UserName, "", new { @style = "color:red;" })
 
-                @Html.PasswordFor(model => model.Password, new { id = "txtPassword", name = "txtPassword", placeholder = "Password", @class = "form-control" })
+                @Html.PasswordFor(model => model.Password, new { id = "txtPassword", name = "txtPassword", placeholder = Resource.Password, @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Password, "", new { @style = "color:red;" })
 
                 @*<input id="txtPassword" name="txtPassword" type="password" class="form-control" placeholder="Password">*@
-                <label class="checkbox">
-                    <input type="checkbox" value="remember-me"> Remember Me
-                    @*<span class="pull-right">
-                            <a data-toggle="modal" href="#myModal"> Forgot Password?</a>
-                        </span>*@
-                </label>
-                <button id="cmdSubmit" class="btn btn-lg btn-login btn-block" type="submit">Login</button>
+            <label class="checkbox">
+                <input type="checkbox" value="remember-me">@Resource.RememberMe
+                @*<span class="pull-right">
+            <a data-toggle="modal" href="#myModal"> Forgot Password?</a>
+        </span>*@
+            </label>
+            <button id="cmdSubmit" class="btn btn-lg btn-login btn-block" type="submit">@Resource.Login</button>
                 @*<p>or you can sign in via social network</p>
                     <div class="login-social-link">
                         <a href="index.html" class="facebook">

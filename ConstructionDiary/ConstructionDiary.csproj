@@ -145,8 +145,10 @@
     <Compile Include="Areas\Admin\Controllers\MyAccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\PersonController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
+    <Compile Include="Areas\Admin\Controllers\SettingController.cs" />
     <Compile Include="Areas\Admin\Controllers\SiteController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\MyBaseController.cs" />
     <Compile Include="Areas\WebApi\WebApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -154,6 +156,7 @@
     </Compile>
     <Compile Include="Helper\CoreHelper.cs" />
     <Compile Include="Helper\Enums.cs" />
+    <Compile Include="Helper\LanguageMang.cs" />
     <Compile Include="Helper\PDFGeneratePageEventHelper.cs" />
     <Compile Include="Models\clsSession.cs" />
     <Compile Include="Models\ConstructionDiary.Context.cs">
@@ -227,6 +230,16 @@
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceFiles\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ResourceFiles\Resource.gu.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.gu.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\AttendanceVM.cs" />
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
     <Compile Include="ViewModel\ClientVM.cs" />
@@ -2219,6 +2232,10 @@
     <Content Include="Areas\Admin\Views\Attendance\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Person\Attandance.cshtml" />
+    <Content Include="Areas\Admin\Views\Attendance\PersonList.cshtml" />
+    <Content Include="Areas\Admin\Views\Attendance\AddPerson.cshtml" />
+    <Content Include="Areas\Admin\Views\Attendance\EditPerson.cshtml" />
+    <Content Include="Areas\Admin\Views\Setting\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -2272,6 +2289,16 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ResourceFiles\Resource.gu.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.gu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResourceFiles\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

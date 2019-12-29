@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConstructionDiary.ResourceFiles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,22 +11,22 @@ namespace ConstructionDiary
       
     public class UserVM
     {
-        [Required]
-        [Display(Name = "Username")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "UserName", ResourceType = typeof(Resource))]
         public string UserName { get; set; }
-         
-        [Required]
-        [Display(Name = "Password")]
+
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "Password", ResourceType = typeof(Resource))]
         public string Password { get; set; }
 
-        [Required]
-        [Display(Name = "Full Name")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "Name", ResourceType = typeof(Resource))]
         public string Firstname { get; set; }
 
-        [Display(Name = "Email Id")]
+        [Display(Name = "EmailId", ResourceType = typeof(Resource))]
         public string EmailId { get; set; }
 
-        [Display(Name = "Mobile No")]
+        [Display(Name = "MobileNo", ResourceType = typeof(Resource))]
         public string MobileNo { get; set; }
 
         public string UserPhoto { get; set; }
@@ -39,8 +40,8 @@ namespace ConstructionDiary
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        [Required]
-        [Display(Name = "Role")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "Role", ResourceType = typeof(Resource))]
         public int RoleId { get; set; }
 
         public string RoleName { get; set; }

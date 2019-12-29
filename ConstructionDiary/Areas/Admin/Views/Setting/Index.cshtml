@@ -1,0 +1,44 @@
+﻿@using ConstructionDiary.ResourceFiles
+@{
+    ViewBag.Title = "Setting";
+}
+
+<section class="wrapper site-min-height">
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>@Resource.Setting</strong>
+                </header>
+                <div class="panel-body">
+                    <div class="form">
+                        <div class="row">
+                            <div class="form-group col-sm-2">
+                                <label>@Resource.SelectLanguage:</label>
+                                <select id="ddlLanguage" class="form-control">
+                                    <option value="en" @(ViewBag.SelectedLanguage == "en" ? "selected" : "")>@Resource.English</option>
+                                    <option value="gu" @(ViewBag.SelectedLanguage == "gu" ? "selected" : "")>@Resource.Gujarati</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script>
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+
+    $(document).on("change", "#ddlLanguage", function () {
+        var lang = $("#ddlLanguage option:selected").val();
+        window.location.href = "/admin/setting/ChangeLanguage?lang=" + lang;
+    });
+
+</script>

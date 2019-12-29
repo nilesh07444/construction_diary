@@ -1,4 +1,5 @@
-﻿@model ConstructionDiary.ClientVM
+﻿@using ConstructionDiary.ResourceFiles;
+@model ConstructionDiary.ClientVM
 @{
     ViewBag.Title = "Client";
 }
@@ -9,7 +10,7 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong> Edit Client </strong>
+                    <strong> @Resource.EditClient </strong>
                 </header>
                 <div class="panel-body">
                     <div class="col-sm-8">
@@ -59,8 +60,8 @@
                                     <div class="form-group">
                                         <div class="col-md-offset-2 col-md-10">
                                             @Html.HiddenFor(x => x.ClientId)
-                                            <input id="cmdSubmit" type="submit" value="Save" class="btn btn-success" />
-                                            <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                                            <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
+                                            <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
                                         </div>
                                     </div>
                                 </div>

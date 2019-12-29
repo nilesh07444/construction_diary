@@ -1,4 +1,6 @@
-﻿@using ConstructionDiary.Models
+﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.Models
+
 @model List<AttendanceVM>
 @{
     ViewBag.Title = "Attendance";
@@ -10,7 +12,7 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>Attendance List</strong>
+                    <strong>@Resource.AttendanceList</strong>
                 </header>
                 <div class="panel-body">
                     <div class="adv-table">
@@ -19,7 +21,7 @@
                                 @*<button id="btnAddAttendance" class="btn green">
                                         <i class="fa fa-plus"></i> Add New Attendance
                                     </button>*@
-                                <a class="btn btn-success" href="attendance/add"><i class="fa fa-plus"></i> Add New Attendance</a>
+                                <a class="btn btn-success" href="attendance/add"><i class="fa fa-plus"></i> @Resource.AddNewAttendance</a>
                             </div>
 
                         </div>
@@ -27,18 +29,19 @@
                         <table class="display table table-bordered table-striped table-hover" id="tblAttendanceList">
                             <thead>
                                 <tr>
-                                    <th width="10%">Date</th>
-                                    <th width="15%">Paid Amount</th>
-                                    <th width="15%">Total</th>
-                                    <th width="15%">Full Day</th>
-                                    <th width="15%">Half Day</th>
-                                    <th width="15%">Absent</th>
-                                    <th>Action</th>
+                                    <th width="10%">@Resource.Date</th>
+                                    <th width="15%">@Resource.Amount</th>
+                                    <th width="15%">@Resource.Total</th>
+                                    <th width="15%">@Resource.FullDay</th>
+                                    <th width="15%">@Resource.HalfDay</th>
+                                    <th width="15%">@Resource.Absent</th>
+                                    <th>@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model != null && Model.Count > 0)
                                 {
+                                    DateTime today = DateTime.Today;
                                     foreach (AttendanceVM attendance in Model)
                                     {
                                         <tr class="gradeX">
@@ -56,10 +59,12 @@
                                             <td>@attendance.TotalHalfDay</td>
                                             <td>@attendance.TotalAbsent</td>
                                             <td>
-                                                @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
-                                                <a href="/admin/attendance/edit/@attendance.AttendaceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                @if (clsSession.RoleID == (int)UserRoles.Admin || (clsSession.RoleID == (int)UserRoles.Staff && attendance.AttendanceDate == today))
+                                                {
+                                                    <a href="/admin/attendance/edit/@attendance.AttendaceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
 
-                                                <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                    <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                }
                                             </td>
                                         </tr>
                                     }
@@ -81,15 +86,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Delete Confirmation</h4>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
             </div>
             <div class="modal-body">
-                Are you sure want to Delete ?
+                @Resource.SureWantToDelete
             </div>
             <div class="modal-footer">
                 <input type="hidden" id="hdnDeleteAttendance" />
-                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                <button id="btnDeleteAttendance" class="btn btn-danger" type="button"> Delete </button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteAttendance" class="btn btn-danger" type="button"> @Resource.Delete </button>
             </div>
         </div>
     </div>

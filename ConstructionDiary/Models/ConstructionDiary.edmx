@@ -134,6 +134,7 @@
           <Property Name="PersonTypeId" Type="int" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
+          <Property Name="IsAttendancePerson" Type="bit" />
           <Property Name="ClientId" Type="uniqueidentifier" />
           <Property Name="CreatedBy" Type="uniqueidentifier" />
           <Property Name="UpdatedBy" Type="uniqueidentifier" />
@@ -386,6 +387,7 @@
           <Property Name="DailyRate" Type="Int32" />
           <Property Name="PersonTypeId" Type="Int32" />
           <NavigationProperty Name="tbl_PersonType" Relationship="ConstructionDiaryModel.FK_tbl_Persons_tbl_Persons" FromRole="tbl_Persons" ToRole="tbl_PersonType" />
+          <Property Name="IsAttendancePerson" Type="Boolean" />
         </EntityType>
         <EntityType Name="tbl_Role">
           <Key>
@@ -742,6 +744,7 @@
           <EntitySetMapping Name="tbl_Persons">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Persons">
               <MappingFragment StoreEntitySet="tbl_Persons">
+                <ScalarProperty Name="IsAttendancePerson" ColumnName="IsAttendancePerson" />
                 <ScalarProperty Name="PersonTypeId" ColumnName="PersonTypeId" />
                 <ScalarProperty Name="DailyRate" ColumnName="DailyRate" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />

@@ -9,14 +9,14 @@ using ConstructionDiary.Models;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : MyBaseController
     {
         ConstructionDiaryEntities _db;
         public LoginController()
         {
             _db = new ConstructionDiaryEntities();
         }
-        // GET: Admin/Login
+        
         public ActionResult Index()
         {
             //if (clsSession.SessionID != null)

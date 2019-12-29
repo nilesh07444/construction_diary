@@ -8,7 +8,7 @@ using ConstructionDiary.Models;
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
     [filters]
-    public class UserController : Controller
+    public class UserController : MyBaseController
     {
         ConstructionDiaryEntities _db;
         public UserController()

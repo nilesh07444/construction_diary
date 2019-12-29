@@ -1,4 +1,5 @@
-﻿@using ConstructionDiary.Models;
+﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.Models;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,7 @@
 
     <link rel="shortcut icon" href="~/favicon.ico">
 
-    <title>Construction Software</title>
+    <title>@Resource.Construction @Resource.Software</title>
 
     <!-- Bootstrap core CSS -->
     <link href="~/Areas/Admin/Content/css/bootstrap.min.css" rel="stylesheet">
@@ -40,28 +41,26 @@
     <![endif]-->
 
     <style>
-    div.growlUI {
-        background: url(http://malsup.com/jquery/block/check48.png) no-repeat 10px 10px;
-        width: 350px;
-                top: 10px; 
-                
-                right: 10px;
-                border: none; 
-                padding: 5px; 
-                background-color: #000;
-                -webkit-border-radius: 10px;
-                -moz-border-radius: 10px;
-                opacity: 0.6;
-                color: #fff; 
-    }
-
-        div.growlUI h1, div.growlUI h2 {
-            color: white;
-            padding: 5px 5px 5px 75px;
-            text-align: left
+        div.growlUI {
+            background: url(http://malsup.com/jquery/block/check48.png) no-repeat 10px 10px;
+            width: 350px;
+            top: 10px;
+            right: 10px;
+            border: none;
+            padding: 5px;
+            background-color: #000;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            opacity: 0.6;
+            color: #fff;
         }
 
-  </style>
+            div.growlUI h1, div.growlUI h2 {
+                color: white;
+                padding: 5px 5px 5px 75px;
+                text-align: left
+            }
+    </style>
 
 </head>
 
@@ -78,11 +77,11 @@
             <!--logo start-->
             @if (clsSession.FirmName != "")
             {
-                <a style="        font-weight: bold;" href="/admin/dashboard" class="logo"><span>@clsSession.FirmName</span></a>
+                <a style="font-weight: bold;" href="/admin/dashboard" class="logo"><span>@clsSession.FirmName</span></a>
             }
             else
             {
-                <a style="        font-weight: bold;" href="/admin/dashboard" class="logo">Construction <span class="hidden-phone">Software</span></a>
+        <a style="font-weight: bold;" href="/admin/dashboard" class="logo">@Resource.Construction <span class="hidden-phone">@Resource.Software</span></a>
             }
 
             <!--logo end-->
@@ -98,13 +97,11 @@
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                             @if (clsSession.ImagePath != "")
                             {
-                                <img style="        width: 30px;
-        height: 30px;" alt="" src="~/Images/UserPhoto/@clsSession.ImagePath">
+                                <img style="width: 30px; height: 30px;" alt="" src="~/Images/UserPhoto/@clsSession.ImagePath">
                             }
                             else
                             {
-                                <img style="        width: 30px;
-        height: 30px;" alt="" src="~/Images/default_user_image.png">
+                                <img style="width: 30px; height: 30px;" alt="" src="~/Images/default_user_image.png">
                             }
 
                             <span class="username hidden-phone">@clsSession.UserName</span>
@@ -112,7 +109,7 @@
                         </a>
                         <ul class="dropdown-menu extended logout">
                             <div class="log-arrow-up"></div>
-                            <li><a href="/Login/Signout"><i class="fa fa-key"></i> Log Out</a></li>
+                            <li><a href="/Login/Signout"><i class="fa fa-key"></i>@Resource.LogOut</a></li>
                         </ul>
                     </li>
                     <!-- user login dropdown end -->
@@ -129,7 +126,7 @@
                     <li>
                         <a class="@(ViewBag.Title == "Dashboard" ? "active" : "")" href="/admin/dashboard">
                             <i class="fa fa-dashboard"></i>
-                            <span>Dashboard</span>
+                            <span>@Resource.Dashboard</span>
                         </a>
                     </li>
 
@@ -139,82 +136,87 @@
                             <li>
                                 <a class="@(ViewBag.Title == "Client" ? "active" : "")" href="/admin/client">
                                     <i class="fa fa-bookmark"></i>
-                                    <span>Client</span>
+                                    <span>@Resource.Client</span>
                                 </a>
                             </li>
                         }
                     }
 
                     @{
-                        if (clsSession.RoleID != (int)UserRoles.SiteOwner)
+                        if (clsSession.RoleID == (int)UserRoles.Admin)
                         {
-                            <li>
-                                <a class="@(ViewBag.Title == "Users" ? "active" : "")" href="/admin/user">
+                            <li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "Users" ? "active" : "")" href="javascript:;">
                                     <i class="fa fa-users"></i>
-                                    <span>Users</span>
+                                    <span>@Resource.Users</span>
                                 </a>
+                                <ul class="sub">
+                                    <li><a href="/admin/user/add">@Resource.AddNewUser</a></li>
+                                    <li><a href="/admin/user">@Resource.UsersList</a></li>
+                                </ul>
                             </li>
-
+                              
                             <li>
                                 <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site">
                                     <i class="fa fa-list"></i>
-                                    <span>Sites</span>
+                                    <span>@Resource.Sites</span>
                                 </a>
                             </li>
 
                             <li class="sub-menu">
                                 <a class="clsMain @(ViewBag.Title == "Person" ? "active" : "")" href="javascript:;">
                                     <i class="fa fa-user"></i>
-                                    <span>Debit</span>
+                                    <span>@Resource.Debit</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="/admin/person/add">Add New Person</a></li>
-                                    <li><a href="/admin/person">Debit List</a></li>
-                                    @*<li><a href="/admin/person/account">Today Debit List</a></li>*@
+                                    <li><a href="/admin/person/add">@Resource.AddNewPerson</a></li>
+                                    <li><a href="/admin/person">@Resource.DebitList</a></li>
                                 </ul>
                             </li>
 
                             <li class="sub-menu">
                                 <a class="clsMain @(ViewBag.Title == "Credit" ? "active" : "")" href="javascript:;">
                                     <i class="fa fa-search-plus"></i>
-                                    <span>Credit</span>
+                                    <span>@Resource.Credit</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="/admin/myaccount/add">Add New Credit Entry</a></li>
-                                    <li><a href="/admin/myaccount">Credit List</a></li>
-                                    <li><a href="/admin/myaccount/report">Credit Report</a></li>
+                                    <li><a href="/admin/myaccount/add">@Resource.AddNewCredit</a></li>
+                                    <li><a href="/admin/myaccount">@Resource.CreditList</a></li>
+                                    @*<li><a href="/admin/myaccount/report">Credit Report</a></li>*@
                                     @*<li><a href="/admin/myaccount/account">Today Credit List</a></li>*@
                                 </ul>
                             </li>
 
+                        }
+                        if (clsSession.RoleID == (int)UserRoles.Admin || clsSession.RoleID == (int)UserRoles.Staff)
+                        {
                             <li class="sub-menu">
                                 <a class="clsMain @(ViewBag.Title == "Attendance" ? "active" : "")" href="javascript:;">
                                     <i class="fa fa-calendar"></i>
-                                    <span>Attendance</span>
+                                    <span>@Resource.Attendance</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="/admin/attendance/add">Add New Attendance</a></li>
-                                    <li><a href="/admin/attendance">Attendance List</a></li>
-                                    @*<li><a href="/admin/attendance/report">Attendance Report</a></li>*@
+                                    <li><a href="/admin/attendance/personlist">@Resource.PersonList</a></li>
+                                    <li><a href="/admin/attendance/add">@Resource.AddNewAttendance</a></li>
+                                    <li><a href="/admin/attendance">@Resource.AttendanceList</a></li>
                                 </ul>
                             </li>
-
                         }
                     }
 
                     <li>
                         <a class="@(ViewBag.Title == "MyProfile" ? "active" : "")" href="/admin/profile">
                             <i class="fa fa-align-center"></i>
-                            <span>My Profile</span>
+                            <span>@Resource.MyProfile</span>
                         </a>
                     </li>
 
-                    @*<li>
-                            <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
-                                <i class="fa fa-cog"></i>
-                                <span>Setting</span>
-                            </a>
-                        </li>*@
+                    <li>
+                        <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
+                            <i class="fa fa-cog"></i>
+                            <span>@Resource.Setting</span>
+                        </a>
+                    </li>
 
                 </ul>
                 <!-- sidebar menu end-->
@@ -229,7 +231,7 @@
         <!--footer start-->
         <footer class="site-footer">
             <div class="text-center">
-                @DateTime.Now.Year &copy; Construction Software
+                @DateTime.Now.Year &copy; @Resource.Construction @Resource.Software
                 <a href="#" class="go-top">
                     <i class="fa fa-angle-up"></i>
                 </a>

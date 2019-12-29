@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddNewAttendance" xml:space="preserve">
+    <value>નવી હાજરી ઉમેરો</value>
+  </data>
+  <data name="AddNewCredit" xml:space="preserve">
+    <value>નવી જમા ઉમેરો</value>
+  </data>
+  <data name="AddNewCustomer" xml:space="preserve">
+    <value>નવો ગ્રાહક ઉમેરો</value>
+  </data>
+  <data name="AddNewExpense" xml:space="preserve">
+    <value>નવો ખર્ચ ઉમેરો</value>
+  </data>
+  <data name="AddNewMaterial" xml:space="preserve">
+    <value>નવું મટેરીઅલ ઉમેરો</value>
+  </data>
+  <data name="AddNewMerchant" xml:space="preserve">
+    <value>નવો વેપારી ઉમેરો</value>
+  </data>
+  <data name="AddNewPerson" xml:space="preserve">
+    <value>નવો માણસ ઉમેરો</value>
+  </data>
+  <data name="AddNewPurchase" xml:space="preserve">
+    <value>નવી ખરીદી ઉમેરો</value>
+  </data>
+  <data name="AddNewSale" xml:space="preserve">
+    <value>નવું વેચાણ ઉમેરો</value>
+  </data>
+  <data name="AddNewTruck" xml:space="preserve">
+    <value>નવી ગાડી ઉમેરો</value>
+  </data>
+  <data name="AddNewUser" xml:space="preserve">
+    <value>નવો યુઝર ઉમેરો</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>એડ્રેસ</value>
+  </data>
+  <data name="Attendance" xml:space="preserve">
+    <value>હાજરી</value>
+  </data>
+  <data name="AttendanceList" xml:space="preserve">
+    <value>હાજરી લિસ્ટ</value>
+  </data>
+  <data name="BabaRamdev" xml:space="preserve">
+    <value>બાબા રામદેવ</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>કેન્સલ</value>
+  </data>
+  <data name="Client" xml:space="preserve">
+    <value>ગ્રાહક</value>
+  </data>
+  <data name="ClientName" xml:space="preserve">
+    <value>ગ્રાહક નામ</value>
+  </data>
+  <data name="Construction" xml:space="preserve">
+    <value>કન્સ્ટ્રકશન</value>
+  </data>
+  <data name="Credit" xml:space="preserve">
+    <value>જમા</value>
+  </data>
+  <data name="CreditList" xml:space="preserve">
+    <value>જમા લિસ્ટ</value>
+  </data>
+  <data name="CurrentPassword" xml:space="preserve">
+    <value>હાલ નો પાસવર્ડ</value>
+  </data>
+  <data name="Customers" xml:space="preserve">
+    <value>ગ્રાહકો</value>
+  </data>
+  <data name="CustomersList" xml:space="preserve">
+    <value>ગ્રાહકોનું  લિસ્ટ</value>
+  </data>
+  <data name="DailyRate" xml:space="preserve">
+    <value>દિવસ ની હાજરી</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>ડેશબોર્ડ</value>
+  </data>
+  <data name="Debit" xml:space="preserve">
+    <value>ઉધાર</value>
+  </data>
+  <data name="DebitList" xml:space="preserve">
+    <value>ઉધાર લિસ્ટ</value>
+  </data>
+  <data name="EmailId" xml:space="preserve">
+    <value>ઇમેઇલ</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>અંગ્રેજી</value>
+  </data>
+  <data name="ExpenseList" xml:space="preserve">
+    <value>ખર્ચ નું લિસ્ટ</value>
+  </data>
+  <data name="Expenses" xml:space="preserve">
+    <value>ખર્ચા</value>
+  </data>
+  <data name="ExpiryDate" xml:space="preserve">
+    <value>પૂર્ણ તારીખ</value>
+  </data>
+  <data name="FirmName" xml:space="preserve">
+    <value>ધંધા નું નામ</value>
+  </data>
+  <data name="Gujarati" xml:space="preserve">
+    <value>ગુજરાતી</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>લોગીન</value>
+  </data>
+  <data name="LogOut" xml:space="preserve">
+    <value>બંધ કરો</value>
+  </data>
+  <data name="Material" xml:space="preserve">
+    <value>મટેરીઅલ</value>
+  </data>
+  <data name="MaterialList" xml:space="preserve">
+    <value>મટેરીઅલ નું લિસ્ટ</value>
+  </data>
+  <data name="Merchants" xml:space="preserve">
+    <value>વેપારીઓ</value>
+  </data>
+  <data name="MerchantsList" xml:space="preserve">
+    <value>વેપારી નું લિસ્ટ</value>
+  </data>
+  <data name="MobileNo" xml:space="preserve">
+    <value>મોબાઈલ નંબર</value>
+  </data>
+  <data name="MyProfile" xml:space="preserve">
+    <value>મારી પ્રોફાઈલ</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>નામ</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>કન્ફર્મ પાસવર્ડ</value>
+  </data>
+  <data name="PackageType" xml:space="preserve">
+    <value>પેકેજ</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>પાસવર્ડ</value>
+  </data>
+  <data name="PersonList" xml:space="preserve">
+    <value>માણસો લિસ્ટ</value>
+  </data>
+  <data name="PersonType" xml:space="preserve">
+    <value>માણસ રોલ</value>
+  </data>
+  <data name="Purchase" xml:space="preserve">
+    <value>ખરીદી</value>
+  </data>
+  <data name="PurchaseList" xml:space="preserve">
+    <value>ખરીદી નું લિસ્ટ</value>
+  </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>અન્ય વિગત</value>
+  </data>
+  <data name="RememberMe" xml:space="preserve">
+    <value>યાદ રાખો</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>આ ફિલ્ડ ફરજીયાત છે</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>રોલ</value>
+  </data>
+  <data name="Sales" xml:space="preserve">
+    <value>વેચાણ</value>
+  </data>
+  <data name="SalesList" xml:space="preserve">
+    <value>વેચાણ નું લિસ્ટ</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>સાચવો</value>
+  </data>
+  <data name="SelectLanguage" xml:space="preserve">
+    <value>ભાષા બદલો</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>સેટિંગ</value>
+  </data>
+  <data name="Sites" xml:space="preserve">
+    <value>સાઈટ</value>
+  </data>
+  <data name="Software" xml:space="preserve">
+    <value>સોફ્ટવેર</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>નવો પાસવર્ડ</value>
+  </data>
+  <data name="TotalCustomers" xml:space="preserve">
+    <value>કુલ ગ્રાહકો</value>
+  </data>
+  <data name="TotalMerchant" xml:space="preserve">
+    <value>કુલ વેપારીઓ</value>
+  </data>
+  <data name="TotalPurchase" xml:space="preserve">
+    <value>કુલ ખરીદી</value>
+  </data>
+  <data name="TotalSale" xml:space="preserve">
+    <value>કુલ વેચાણ</value>
+  </data>
+  <data name="Traders" xml:space="preserve">
+    <value>ટ્રેડર્સ</value>
+  </data>
+  <data name="Trucks" xml:space="preserve">
+    <value>ગાડીઓ</value>
+  </data>
+  <data name="TrucksList" xml:space="preserve">
+    <value>ગાડીઓ નું લિસ્ટ</value>
+  </data>
+  <data name="UserName" xml:space="preserve">
+    <value>આઈ ડી</value>
+  </data>
+  <data name="UserNameRequired" xml:space="preserve">
+    <value>આઈ ડી ફરજીયાત છે</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>યુઝર્સ</value>
+  </data>
+  <data name="UsersList" xml:space="preserve">
+    <value>યુઝર્સ લિસ્ટ</value>
+  </data>
+  <data name="TotalClient" xml:space="preserve">
+    <value>કુલ ગ્રાહકો</value>
+  </data>
+  <data name="TotalSite" xml:space="preserve">
+    <value>કુલ સાઈડ</value>
+  </data>
+  <data name="Action" xml:space="preserve">
+    <value>કાર્ય</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>એકટીવ</value>
+  </data>
+  <data name="AddNewClient" xml:space="preserve">
+    <value>નવો ગ્રાહક ઉમેરો</value>
+  </data>
+  <data name="ClientList" xml:space="preserve">
+    <value>ગ્રાહકોનું  લિસ્ટ</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>બંધ</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>કાઢી નાખો</value>
+  </data>
+  <data name="DeleteConfirm" xml:space="preserve">
+    <value>કાઢી નાખવું</value>
+  </data>
+  <data name="EditClient" xml:space="preserve">
+    <value>ગ્રાહક સુધારો</value>
+  </data>
+  <data name="SureWantToDelete" xml:space="preserve">
+    <value>તમારે સાચે જ કાઢી નાખવું છે ?</value>
+  </data>
+  <data name="Absent" xml:space="preserve">
+    <value>ગેરહાજર</value>
+  </data>
+  <data name="AddNewSite" xml:space="preserve">
+    <value>નવી સાઈટ ઉમેરો</value>
+  </data>
+  <data name="Amount" xml:space="preserve">
+    <value>રકમ</value>
+  </data>
+  <data name="BankName" xml:space="preserve">
+    <value>બેંક નામ</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>પાસવર્ડ બદલો</value>
+  </data>
+  <data name="ChequeFor" xml:space="preserve">
+    <value>કોનો ચેક</value>
+  </data>
+  <data name="ChequeNo" xml:space="preserve">
+    <value>ચેક નંબર</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>તારીખ</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>ડાઉનલોડ</value>
+  </data>
+  <data name="Finance" xml:space="preserve">
+    <value>હિસાબ</value>
+  </data>
+  <data name="FinanceList" xml:space="preserve">
+    <value>હિસાબ લિસ્ટ</value>
+  </data>
+  <data name="FullDay" xml:space="preserve">
+    <value>આખો દિવસ</value>
+  </data>
+  <data name="GivenTakenBy" xml:space="preserve">
+    <value>મળેલ/આપેલ ઘ્વારા</value>
+  </data>
+  <data name="HalfDay" xml:space="preserve">
+    <value>અડધો દિવસ</value>
+  </data>
+  <data name="Overtime" xml:space="preserve">
+    <value>ઓવરટાઈમ</value>
+  </data>
+  <data name="PaymentType" xml:space="preserve">
+    <value>પેમેન્ટ પ્રકાર</value>
+  </data>
+  <data name="Photo" xml:space="preserve">
+    <value>ફોટો</value>
+  </data>
+  <data name="SiteDetail" xml:space="preserve">
+    <value>સાઈટ વિગત</value>
+  </data>
+  <data name="SiteList" xml:space="preserve">
+    <value>સાઈટ લિસ્ટ</value>
+  </data>
+  <data name="SiteName" xml:space="preserve">
+    <value>સાઈટ નામ</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>સ્થિતિ</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>કુલ</value>
+  </data>
+  <data name="TotalBalance" xml:space="preserve">
+    <value>કુલ બેલેન્સ</value>
+  </data>
+  <data name="TotalCredit" xml:space="preserve">
+    <value>કુલ જમા</value>
+  </data>
+  <data name="TotalDebit" xml:space="preserve">
+    <value>કુલ ઉધાર</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>પ્રકાર</value>
+  </data>
+  <data name="Withdraw" xml:space="preserve">
+    <value>ઉપાડ</value>
+  </data>
+</root>

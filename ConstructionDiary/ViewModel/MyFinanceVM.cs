@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConstructionDiary.ResourceFiles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,23 +12,23 @@ namespace ConstructionDiary
     {
         public Guid ContractorFinanceId { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public string SelectedDate { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public decimal? Amount { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public Guid? UserId { get; set; }
         
         public List<SelectListItem> UsersList { get; set; }
 
-        [Required(ErrorMessage = "This field is required")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public Guid? SiteId { get; set; }
 
         public List<SelectListItem> SitesList { get; set; }
-        
-        [Required(ErrorMessage = "This field is required")]
+
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public string PaymentType { get; set; }
 
         public string CreditOrDebit { get; set; }

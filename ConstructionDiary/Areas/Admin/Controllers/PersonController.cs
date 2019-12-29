@@ -9,7 +9,7 @@ using ConstructionDiary.Models;
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
     [filters]
-    public class PersonController : Controller
+    public class PersonController : MyBaseController
     {
         ConstructionDiaryEntities _db; 
         public PersonController()
@@ -64,6 +64,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objPerson.DailyRate = person.DailyRate;
                     objPerson.PersonTypeId = person.PersonTypeId;
                     objPerson.PersonPhoto = fileName;
+                    objPerson.IsAttendancePerson = false;
                     objPerson.IsActive = true;
                     objPerson.IsDeleted = false;
                     objPerson.ClientId = clsSession.ClientID;

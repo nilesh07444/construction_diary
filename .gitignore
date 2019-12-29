@@ -5,6 +5,5 @@ ConstructionDiary/*.xdt
 ConstructionDiary/bin
 ConstructionDiary/obj
 packages
-
-/.vs/ConstructionDiary/DesignTimeBuild/.dtbcache
-/.vs/ConstructionDiary/v16/Server/sqlite3/*.lock
+ 
+/.vs/*

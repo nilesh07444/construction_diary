@@ -5772,11 +5772,20 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Areas/Admin/Views/Attendance/Add.cshtml">
       <publishTime>12/15/2019 15:28:58</publishTime>
     </File>
+    <File Include="Areas/Admin/Views/Attendance/AddPerson.cshtml">
+      <publishTime>12/21/2019 23:46:46</publishTime>
+    </File>
     <File Include="Areas/Admin/Views/Attendance/Edit.cshtml">
       <publishTime>12/15/2019 15:29:30</publishTime>
     </File>
+    <File Include="Areas/Admin/Views/Attendance/EditPerson.cshtml">
+      <publishTime>12/22/2019 00:12:14</publishTime>
+    </File>
     <File Include="Areas/Admin/Views/Attendance/Index.cshtml">
-      <publishTime>12/15/2019 15:06:18</publishTime>
+      <publishTime>12/22/2019 10:07:01</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Attendance/PersonList.cshtml">
+      <publishTime>12/22/2019 00:15:52</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Client/Add.cshtml">
       <publishTime>09/28/2019 18:40:08</publishTime>
@@ -5818,7 +5827,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/11/2019 12:01:40</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Attandance.cshtml">
-      <publishTime>12/19/2019 22:41:18</publishTime>
+      <publishTime>12/22/2019 11:40:40</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Edit.cshtml">
       <publishTime>10/11/2019 11:16:41</publishTime>
@@ -5827,7 +5836,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/15/2019 14:53:13</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Index.cshtml">
-      <publishTime>12/16/2019 22:59:55</publishTime>
+      <publishTime>12/22/2019 00:08:24</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/View.cshtml">
       <publishTime>10/20/2019 17:28:46</publishTime>
@@ -5836,7 +5845,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/10/2019 23:03:40</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Shared/_Layout.cshtml">
-      <publishTime>12/16/2019 20:52:44</publishTime>
+      <publishTime>12/22/2019 09:56:59</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Site/Detail.cshtml">
       <publishTime>10/25/2019 14:15:50</publishTime>
@@ -5869,10 +5878,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/09/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>12/19/2019 23:21:58</publishTime>
+      <publishTime>12/22/2019 11:42:36</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>12/19/2019 23:21:58</publishTime>
+      <publishTime>12/22/2019 11:42:36</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>07/06/2018 11:03:48</publishTime>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConstructionDiary.ResourceFiles;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,26 +10,26 @@ namespace ConstructionDiary
 {
     public class ClientVM
     {
-        [Required]
-        [Display(Name = "Client Name")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "ClientName", ResourceType = typeof(Resource))]
         public string ClientName { get; set; }
 
-        [Display(Name = "Firm Name")]
+        [Display(Name = "FirmName", ResourceType = typeof(Resource))]
         public string FirmName { get; set; }
 
-        [Required]
-        [Display(Name = "Package Type")]
+        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
+        [Display(Name = "PackageType", ResourceType = typeof(Resource))]
         public int PackageTypeId { get; set; }
 
         public string PackageType { get; set; }
 
-        [Display(Name = "Expiry Date")]
+        [Display(Name = "ExpiryDate", ResourceType = typeof(Resource))]
         public string ExpireDate { get; set; }
         public DateTime? dtExpireDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
-        [Display(Name = "Remarks")]
+        [Display(Name = "Remarks", ResourceType = typeof(Resource))]
         public string Remarks { get; set; }
         public Guid ClientId { get; set; }
         public List<SelectListItem> PackageTypeList { get; set; }

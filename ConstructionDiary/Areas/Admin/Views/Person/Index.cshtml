@@ -41,8 +41,7 @@
                                     <th width="7%;" class="hidden-phone">Mobile No</th>
                                     <th width="12%;">Total Credit</th>
                                     <th width="12%;">Total Debit</th>
-                                    <th width="13%;">Total Balance</th>
-                                    <th width="8%;">Attandance</th>
+                                    <th width="13%;">Total Balance</th> 
                                     <th width="8%;">Finance</th>
                                     <th width="10%;">Action</th>
                                 </tr>
@@ -68,8 +67,7 @@
                                     <td class="hidden-phone">@obj.MobileNo</td>
                                     <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalCreditAmount)</span></td>
                                     <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalDebitAmount)</span></td>
-                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td>
-                                    <td><button onclick="fnPersonAttandance('@obj.PersonId')" type="button" class="btn btn-primary">Attandance</button></td>
+                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td> 
                                     <td><button onclick="fnFinancePerson('@obj.PersonId')" type="button" class="btn btn-primary">Finance</button></td>
                                     <td>
                                         <button title="View" data-id="@obj.PersonId" class="btn btn-success btn-xs clsViewPerson"><i class="fa fa-eye"></i></button>
@@ -133,10 +131,7 @@
 
     function fnFinancePerson(person_id) {
         window.location.href = '/admin/person/finance/' + person_id;
-    }
-    function fnPersonAttandance(person_id) {
-        window.location.href = '/admin/person/attandance?id=' + person_id;
-    }
+    } 
     function fnDeletePerson(person_id) {
         jQuery("#hdnDeletePerson").val(person_id);
         $('#deletePersonModal').modal('show');

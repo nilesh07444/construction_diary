@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -8,7 +9,7 @@ using ConstructionDiary.Models;
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
     [filters]
-    public class AttendanceController : Controller
+    public class AttendanceController : MyBaseController
     {
         ConstructionDiaryEntities _db;
         public AttendanceController()
@@ -45,7 +46,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).OrderBy(x => x.PersonFirstName).ToList();
+                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsAttendancePerson == true && x.IsActive == true && x.IsDeleted == false).OrderBy(x => x.PersonFirstName).ToList();
                 var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
 
                 objAttendance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
@@ -314,6 +315,149 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return lstAttendanceStatus;
 
         }
+
+        public ActionResult PersonList()
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            List<tbl_Persons> lstPersons = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsAttendancePerson == true && x.IsDeleted == false).ToList();
+
+            return View(lstPersons);
+        }
+
+        public ActionResult AddPerson()
+        {
+            PersonVM person = new PersonVM();
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
+            return View(person);
+        }
+
+        [HttpPost]
+        public ActionResult AddPerson(PersonVM person, HttpPostedFileBase postedFile)
+        {
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+            if (ModelState.IsValid)
+            {
+                string fileName = string.Empty;
+                string path = Server.MapPath("~/Images/PersonPhoto/");
+                if (postedFile != null)
+                {
+                    fileName = Guid.NewGuid() + Path.GetFileName(postedFile.FileName);
+                    postedFile.SaveAs(path + fileName);
+                }
+
+                try
+                {
+                    tbl_Persons objPerson = new tbl_Persons();
+                    objPerson.PersonId = Guid.NewGuid();
+                    objPerson.PersonFirstName = person.Firstname;
+                    objPerson.PersonAddress = person.Address;
+                    objPerson.MobileNo = person.MobileNo;
+                    objPerson.DailyRate = person.DailyRate;
+                    objPerson.PersonTypeId = person.PersonTypeId;
+                    objPerson.PersonPhoto = fileName;
+                    objPerson.IsAttendancePerson = true;
+                    objPerson.IsActive = true;
+                    objPerson.IsDeleted = false;
+                    objPerson.ClientId = clsSession.ClientID;
+                    objPerson.CreatedBy = new Guid(clsSession.UserID.ToString());
+                    objPerson.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_Persons.Add(objPerson);
+                    _db.SaveChanges();
+                }
+                catch (Exception ex)
+                { 
+                }
+                return RedirectToAction("PersonList");
+            }
+
+            return View(person);
+        }
+
+
+        public ActionResult EditPerson(Guid id)
+        {
+            PersonVM person = new PersonVM();
+
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
+            tbl_Persons obj = _db.tbl_Persons.Where(x => x.PersonId == id).FirstOrDefault();
+            if (obj != null)
+            {
+                person.PersonId = obj.PersonId;
+                person.Firstname = obj.PersonFirstName;
+                person.Address = obj.PersonAddress;
+                person.MobileNo = obj.MobileNo;
+                person.DailyRate = obj.DailyRate;
+                person.PersonTypeId = obj.PersonTypeId;
+                person.strPersonPhoto = obj.PersonPhoto;
+            }
+
+            return View(person);
+        }
+
+        [HttpPost]
+        public ActionResult EditPerson(PersonVM person, HttpPostedFileBase postedFile)
+        {
+
+            person.PersonTypeList = _db.tbl_PersonType
+                         .Select(o => new SelectListItem { Value = o.Id.ToString(), Text = o.PersonType })
+                         .ToList();
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    tbl_Persons objPerson = _db.tbl_Persons.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
+
+                    if (objPerson != null)
+                    {
+
+                        string fileName = string.Empty;
+                        string path = Server.MapPath("~/Images/PersonPhoto/");
+                        if (postedFile != null)
+                        {
+                            fileName = Guid.NewGuid() + Path.GetFileName(postedFile.FileName);
+                            postedFile.SaveAs(path + fileName);
+                        }
+                        else
+                        {
+                            fileName = person.strPersonPhoto;
+                        }
+
+                        objPerson.PersonFirstName = person.Firstname;
+                        objPerson.PersonAddress = person.Address;
+                        objPerson.PersonPhoto = fileName;
+                        objPerson.DailyRate = person.DailyRate;
+                        objPerson.PersonTypeId = person.PersonTypeId;
+                        objPerson.MobileNo = person.MobileNo;
+                        objPerson.ClientId = clsSession.ClientID;
+                        objPerson.UpdatedBy = new Guid(clsSession.UserID.ToString());
+                        objPerson.ModifiedDate = DateTime.UtcNow;
+                        _db.SaveChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                return RedirectToAction("PersonList");
+            }
+
+            return View(person);
+        }
+
 
     }
 }
