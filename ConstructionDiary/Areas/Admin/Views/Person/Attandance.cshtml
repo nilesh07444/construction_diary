@@ -14,6 +14,9 @@
     decimal? TotalOvertimeAmount = Model.Select(x => x.OvertimeAmount).Sum();
     string strTotalOvertimeAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalOvertimeAmount));
 
+    decimal? RemainingAmt = (TotalPayableAmount + TotalOvertimeAmount) - TotalWithdrawAmount;
+    string strRemainingAmt = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmt));
+
 }
 <style>
     .formerror {
@@ -53,7 +56,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-3 form-group">
-                            <label for="Duration">Duration</label>
+                            <label for="Duration">@Resource.Duration</label>
                             <select class="form-control" id="Duration" name="Duration">
                                 <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
                                 <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
@@ -62,21 +65,21 @@
 
                         <div class="col-sm-3 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
                             <div class="">
-                                <label for="StartDate">Start Date</label><span class="required">*</span>
+                                <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
                                 <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
                             </div>
                             <span id="spn_StartDate" class="formerror">@Resource.Required</span>
                         </div>
                         <div class="col-sm-3 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
                             <div class="">
-                                <label for="EndDate">End Date</label><span class="required">*</span>
+                                <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
                                 <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
                             </div>
                             <span id="spn_EndDate" class="formerror">@Resource.Required</span>
                         </div>
                         <div class="col-sm-3 form-group">
                             <label></label>
-                            <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i>  Search</button>
+                            <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
                         </div>
 
                     </div>
@@ -87,23 +90,23 @@
             <section class="panel">
                 <div class="panel-body">
                     @*<div class="row">
-                        <div class="col-sm-12">
-                            <div class="btn-group pull-right hidden-sm hidden-md hidden-phone" style="margin-bottom: 15px;">
-                                <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                    Download <i class="fa fa-angle-down"></i>
-                                </button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
-                                    <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
-                                </ul>
+                            <div class="col-sm-12">
+                                <div class="btn-group pull-right hidden-sm hidden-md hidden-phone" style="margin-bottom: 15px;">
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        Download <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                        <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div>*@
+                        </div>*@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="table-responsive" tabindex="1" style="overflow: hidden; outline: none;">
-                                <table class="table table-bordered">
+                            <div class="table-responsive" tabindex="1">
+                                <table class="table table-bordered table-responsive table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -156,6 +159,28 @@
                                     }
                                 </table>
                             </div>
+                            @if (Model.Count > 0)
+                            {
+                                <div>
+                                    <table class="table table-bordered table-responsive table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th width="20%">@Resource.RemainingAmount</th>
+                                                <th>= (@Resource.Amount + @Resource.Overtime) - @Resource.Withdraw</th>
+                                            </tr>
+                                            <tr>
+                                                <th width="20%"> </th>
+                                                <th>= (@strTotalPayableAmount + @strTotalOvertimeAmount) - @strTotalWithdrawAmount</th>
+                                            </tr>
+                                            <tr>
+                                                <th width="20%"> </th>
+                                                <th>= @strRemainingAmt</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            }
+
                         </div>
                     </div>
                 </div>

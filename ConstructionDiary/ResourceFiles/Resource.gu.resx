@@ -459,4 +459,34 @@
   <data name="AddNewFinance" xml:space="preserve">
     <value>નવી હિસાબ ઉમેરો</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>વિગત</value>
+  </data>
+  <data name="ExpenseType" xml:space="preserve">
+    <value>ખર્ચ પ્રકાર</value>
+  </data>
+  <data name="AddNewMaterialType" xml:space="preserve">
+    <value>નવી મટીરીઅલ ટાઈપ ઉમેરો</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>અંતર</value>
+  </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>અંત તારીખ</value>
+  </data>
+  <data name="MaterialType" xml:space="preserve">
+    <value>મટીરીઅલ ટાઈપ</value>
+  </data>
+  <data name="MaterialTypeList" xml:space="preserve">
+    <value>મટીરીઅલ ટાઈપ લિસ્ટ</value>
+  </data>
+  <data name="RemainingAmount" xml:space="preserve">
+    <value>બાકી ની રકમ</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>શોધો</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>શરૂઆત તારીખ</value>
+  </data>
 </root>

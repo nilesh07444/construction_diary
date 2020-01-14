@@ -1,0 +1,148 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@model List<MaterialPurchaseVM>
+@{
+    ViewBag.Title = "Material";
+}
+
+@{
+    int counter = 1;
+}
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>@Resource.MaterialList</strong>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-success" href="/admin/material/add"><i class="fa fa-plus"></i> @Resource.AddNewMaterial</a>
+                            </div>
+                        </div>
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped table-hover" id="tblMaterialsList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="15%">@Resource.Date</th>
+                                    <th>@Resource.SiteName</th>
+                                    <th>GST (%)</th>
+                                    <th>@Resource.Total</th>
+                                    <th width="10%">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (MaterialPurchaseVM purchase in Model)
+                                    {
+                                <tr class="gradeX">
+                                    <td>@counter</td>
+                                    <td>@Convert.ToDateTime(purchase.dtPurchaseDate).ToString("dd/MM/yyyy")</td>
+                                    <td>@purchase.SiteName</td>
+                                    <td>@purchase.GST_Per%</td>
+                                    <td>@CoreHelper.GetFormatterAmount(purchase.Total)</td>
+                                    <td>
+                                        <a href="/admin/material/edit/@purchase.MaterialPurchaseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                        <button onclick="fnDeleteMaterial('@purchase.MaterialPurchaseId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
+                                        counter++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteMaterialModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                @Resource.SureWantToDelete
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteMaterial" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteMaterial" class="btn btn-danger" type="button"> @Resource.Delete </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblMaterialsList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0,1,5]
+                }]
+        });
+    });
+
+    jQuery(document).on("click", "#btnDeleteMaterial", function () {
+
+        var Material_id = jQuery("#hdnDeleteMaterial").val();
+        if (Material_id != "" && Material_id != null) {
+            $('#deleteMaterialModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteMaterial", "Material")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?MaterialId=" + Material_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Material deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Material Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    function fnDeleteMaterial(Material_id) {
+        jQuery("#hdnDeleteMaterial").val(Material_id);
+        $('#deleteMaterialModal').modal('show');
+    }
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+
+</script>

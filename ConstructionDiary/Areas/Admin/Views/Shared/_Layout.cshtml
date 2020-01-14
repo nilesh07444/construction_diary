@@ -81,7 +81,7 @@
             }
             else
             {
-        <a style="font-weight: bold;" href="/admin/dashboard" class="logo">@Resource.Construction <span class="hidden-phone">@Resource.Software</span></a>
+                <a style="font-weight: bold;" href="/admin/dashboard" class="logo">@Resource.Construction <span class="hidden-phone">@Resource.Software</span></a>
             }
 
             <!--logo end-->
@@ -155,7 +155,7 @@
                                     <li><a href="/admin/user">@Resource.UsersList</a></li>
                                 </ul>
                             </li>
-                              
+
                             <li>
                                 <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site">
                                     <i class="fa fa-list"></i>
@@ -184,6 +184,40 @@
                                     <li><a href="/admin/myaccount">@Resource.CreditList</a></li>
                                     @*<li><a href="/admin/myaccount/report">Credit Report</a></li>*@
                                     @*<li><a href="/admin/myaccount/account">Today Credit List</a></li>*@
+                                </ul>
+                            </li>
+
+                            <li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "Expenses" ? "active" : "")" href="javascript:;">
+                                    <i class="fa fa-sitemap"></i>
+                                    <span>@Resource.Expenses</span>
+                                </a>
+                                <ul class="sub">
+                                    <li><a href="/admin/expense/add">@Resource.AddNewExpense</a></li>
+                                    <li><a href="/admin/expense">@Resource.ExpenseList</a></li>
+                                </ul>
+                            </li>
+
+                            @*<li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "MaterialType" ? "active" : "")" href="javascript:;">
+                                    <i class="fa fa-camera-retro"></i>
+                                    <span>@Resource.MaterialType</span>
+                                </a>
+                                <ul class="sub">
+                                    <li><a href="/admin/materialtype/add">@Resource.AddNewMaterialType</a></li>
+                                    <li><a href="/admin/materialtype">@Resource.MaterialTypeList</a></li>
+                                </ul>
+                            </li>*@
+
+                            <li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "Material" ? "active" : "")" href="javascript:;">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <span>@Resource.Material</span>
+                                </a>
+                                <ul class="sub">
+                                    <li><a href="/admin/material/add">@Resource.AddNewMaterial</a></li>
+                                    <li><a href="/admin/material">@Resource.MaterialList</a></li>
+                                    <li><a href="/admin/materialtype">@Resource.MaterialTypeList</a></li>
                                 </ul>
                             </li>
 
@@ -315,6 +349,21 @@
         jQuery(document).on("click", "ul.sidebar-menu li a:not(.clsMain)", function () {
             jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
         });
+
+        jQuery("#btnSubmit").click(function (event) {
+            //event.preventDefault();
+            if (jQuery("form").valid()) {
+                jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            }
+        });
+
+        function StartLoading() {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        }
+
+        function StopLoading() {
+            jQuery.unblockUI();
+        }
 
     </script>
 

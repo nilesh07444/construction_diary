@@ -246,6 +246,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objPersonAttendance.AttendanceStatus = personAttendance.AttendanceStatus;
                         objPersonAttendance.PersonDailyRate = personAttendance.PersonDailyRate;
 
+                        objPersonAttendance.WithdrawAmount = personAttendance.WithdrawAmount;
+                        objPersonAttendance.OvertimeAmount = personAttendance.OvertimeAmount;
+
                         if (objPersonAttendance.AttendanceStatus != 0)
                         {
                             objPersonAttendance.PayableAmount = personAttendance.PersonDailyRate * objPersonAttendance.AttendanceStatus;

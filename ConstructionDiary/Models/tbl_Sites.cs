@@ -18,6 +18,7 @@ namespace ConstructionDiary.Models
         public tbl_Sites()
         {
             this.tbl_ContractorFinance = new HashSet<tbl_ContractorFinance>();
+            this.tbl_Expenses = new HashSet<tbl_Expenses>();
         }
     
         public System.Guid SiteId { get; set; }
@@ -33,5 +34,7 @@ namespace ConstructionDiary.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_ContractorFinance> tbl_ContractorFinance { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_Expenses> tbl_Expenses { get; set; }
     }
 }

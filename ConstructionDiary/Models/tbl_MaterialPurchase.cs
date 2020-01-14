@@ -12,30 +12,33 @@ namespace ConstructionDiary.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_Clients
+    public partial class tbl_MaterialPurchase
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tbl_Clients()
+        public tbl_MaterialPurchase()
         {
-            this.tbl_Users = new HashSet<tbl_Users>();
-            this.tbl_MaterialType = new HashSet<tbl_MaterialType>();
+            this.tbl_MaterialPurchaseItems = new HashSet<tbl_MaterialPurchaseItems>();
         }
     
-        public System.Guid ClientId { get; set; }
-        public string ClientName { get; set; }
-        public string FirmName { get; set; }
-        public int PackageTypeId { get; set; }
-        public Nullable<System.DateTime> ExpireDate { get; set; }
+        public System.Guid MaterialPurchaseId { get; set; }
+        public System.DateTime PurchaseDate { get; set; }
+        public System.Guid SiteId { get; set; }
         public string Remarks { get; set; }
+        public Nullable<int> GST_Per { get; set; }
+        public Nullable<decimal> CGST_Amount { get; set; }
+        public Nullable<decimal> SGST_Amount { get; set; }
+        public Nullable<decimal> AdjustmentAmount { get; set; }
+        public decimal SubTotal { get; set; }
+        public decimal Total { get; set; }
+        public System.Guid ClientId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public System.Guid CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public Nullable<System.Guid> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     
-        public virtual tbl_PackageType tbl_PackageType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_Users> tbl_Users { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_MaterialType> tbl_MaterialType { get; set; }
+        public virtual ICollection<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
     }
 }

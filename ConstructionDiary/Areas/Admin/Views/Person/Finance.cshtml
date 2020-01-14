@@ -174,7 +174,7 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="space15"></div>
-                        <table class="display table table-bordered table-striped" id="tblFinanceList">
+                        <table class="display table table-bordered table-striped table-hover" id="tblFinanceList">
                             <thead>
                                 <tr>
                                     <th style="width:10%;">@Resource.Date</th>
@@ -317,10 +317,5 @@
         window.location.href = "/admin/person";
     });
 
-    jQuery("#btnSubmit").click(function (event) {
-        //event.preventDefault();
-        if (jQuery("form").valid()) {
-            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
-        }
-    });
+    
 </script>

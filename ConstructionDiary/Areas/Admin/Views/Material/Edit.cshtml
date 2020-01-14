@@ -1,0 +1,502 @@
+﻿@using ConstructionDiary.Models;
+@model MaterialPurchaseVM
+@{
+    ViewBag.Title = "Purchase";
+}
+
+@{
+    ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+     Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+    List<tbl_Sites> lstSites = _db.tbl_Sites.Where(x => x.IsActive && !x.IsDeleted).OrderBy(x => x.SiteName).ToList();
+    List<tbl_MaterialType> lstMaterialType = _db.tbl_MaterialType.Where(x => x.IsActive && !x.IsDeleted).OrderBy(x => x.MaterialType).ToList();
+
+    List<tbl_MaterialPurchaseItems> lstPurchaseItems = _db.tbl_MaterialPurchaseItems.Where(x => x.MaterialPurchaseId == Model.MaterialPurchaseId).ToList();
+
+    decimal GSTPER = 0;
+    if (Model.GST_Per != null && Model.GST_Per > 0)
+    {
+        GSTPER = Convert.ToDecimal(Model.GST_Per) / 2;
+    }
+}
+
+<style>
+    .deleteitem {
+        display: none;
+    }
+</style>
+
+<section class="wrapper site-min-height">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong> Edit Purchase </strong>
+                </header>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            <label for="PurchaseDate">Purchase Date</label><span class="required">*</span>
+                            <input class="form-control default-date-picker" id="PurchaseDate" name="PurchaseDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text" value="@Model.PurchaseDate">
+
+                            <span id="spn_PurchaseDate" class="field-validation-valid text-danger"></span>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label for="PartyId">Site Name</label>
+                            <select class="form-control" id="SiteId" name="SiteId">
+                                <option value="">-Select Site-</option>
+                                @if (lstSites.Count > 0)
+                                {
+                                    foreach (var site in lstSites)
+                                    {
+                                        if (site.SiteId == Model.SiteId)
+                                        {
+                                            <option value="@site.SiteId" selected="selected">@site.SiteName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@site.SiteId">@site.SiteName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            <span id="spn_SiteId" class="field-validation-valid text-danger"></span>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label for="GST_Per">GST (%)</label>
+                            <select class="form-control" id="GST_Per" name="GST_Per">
+                                <option value="0">-Select-</option>
+                                <option value="5.00" @(Model.GST_Per == 5 ? "selected" : "")>5%</option>
+                                <option value="12.00" @(Model.GST_Per == 12 ? "selected" : "")>12%</option>
+                                <option value="18.00" @(Model.GST_Per == 18 ? "selected" : "")>18%</option>
+                                <option value="28.00" @(Model.GST_Per == 28 ? "selected" : "")>28%</option>
+                            </select>
+                            <span id="spn_GST_Per" class="field-validation-valid text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="row"> 
+                        <div class="col-sm-4 form-group">
+                            <label for="Remarks">Remarks</label>
+                            <input class="form-control" id="Remarks" name="Remarks" placeholder="Remarks" type="text" value="@Model.Remarks">
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong> Item Information </strong>
+                </header>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <table class="table table-striped table-hover" id="tbl_PurchaseItem">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Material</th>
+                                        <th width="20%">Weight/Nos.</th>
+                                        <th width="20%">Rate</th>
+                                        <th width="20%">Total</th>
+                                        <th width="10%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{ int itemCount = 1; }
+                                    @foreach (var item in lstPurchaseItems)
+                                    {
+                                        Guid newId = item.MaterialPurchaseItemId;
+                                        <tr id="@newId" data-Purchaseitemid="@item.MaterialPurchaseItemId">
+                                            <td>@itemCount</td>
+                                            <td>
+                                                <select class="form-control" id="MaterialTypeId_@newId" name="MaterialTypeId_@newId">
+                                                    <option value="">-Select Material-</option>
+                                                    @if (lstMaterialType.Count > 0)
+                                                    {
+                                                        foreach (var material in lstMaterialType)
+                                                        {
+                                                            if (material.MaterialTypeId == item.MaterialTypeId)
+                                                            {
+                                                                <option selected value="@material.MaterialTypeId">@material.MaterialType</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@material.MaterialTypeId">@material.MaterialType</option>
+                                                            }
+                                                        }
+                                                    }
+                                                </select>
+                                                <span id="spn_MaterialTypeId_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsWeight" id="Weight_@newId" name="Weight_@newId" placeholder="Weight/Nos" type="text" value="@item.Weight">
+                                                <span id="spn_Weight_@newId" name="spn_Weight_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td class="">
+                                                <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" placeholder="Rate" type="text" value="@item.Rate">
+                                                <span id="spn_Rate_@newId" name="spn_Rate_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <span id="ItemTotal_@newId">@item.Amount</span>
+                                            </td>
+                                            <td>
+                                                <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" data-isdelete="false" type="button" style="display:@(itemCount == 1 ? "none" : "block");"><i class="fa fa-trash-o"></i></button>
+                                            </td>
+                                        </tr>
+                                        itemCount++;
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6">
+                                            <button id="btnAddItem" class="btn btn-round btn-success pull-right" type="button"><i class="fa fa-plus"></i> Add Item</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 invoice-block pull-right">
+                            <ul class="unstyled amounts">
+                                <li><strong>Sub-Total amount : </strong> <span id="lblSubTotal">@Model.SubTotal</span></li>
+                                <li><strong>CGST (<span id="lblCGST_Per">@GSTPER</span>%) : </strong> <span id="lblCGST">@Model.CGST_Amount</span></li>
+                                <li><strong>SGST (<span id="lblSGST_Per">@GSTPER</span>%) : </strong> <span id="lblSGST">@Model.SGST_Amount</span></li>
+                                <li>
+                                    <strong>Adjustment Amount : </strong>
+                                    <input class="form-control" id="AdjustmentAmount" name="AdjustmentAmount" placeholder="Adjustment Amount" type="text" value="@Model.AdjustmentAmount">
+                                    <span id="AdjustmentAmount" class="field-validation-valid text-danger"></span>
+                                </li>
+                                <li>
+                                    <strong>Grand Total : </strong> <span id="lblGrandTotal">@Model.Total</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <input type="hidden" id="hdnMaterialPurchaseId" value="@Model.MaterialPurchaseId" />
+                            <button class="btn btn-success" id="btnSubmit" type="button">Save</button>
+                            <a href="/admin/material/" class="btn btn-default">Cancel</a>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script>
+
+    var materialList = "";
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+        getMaterialList();
+    });
+
+    function getMaterialList()
+    {
+        var optionData = "<option value=''>-Select Material-</option>";
+        var URL = '@Url.Action("GetMaterialList", "MaterialType")';
+            $.ajax({
+                type: 'GET',
+                async: true,
+                url: URL,
+                success: function (result) {
+
+                    if (result && result.length > 0) {
+                        result.forEach(function (site) {
+                            optionData += "<option value='" + site.MaterialTypeId + "'>" + site.MaterialType + "</option>";
+                        });
+                    }
+                    materialList = optionData;
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    StopLoading();
+                }
+            });
+    }
+
+    $(document).on("change", "#GST_Per", function () {
+        var GST_Per = $("#GST_Per option:selected").val();
+
+        if (GST_Per != "") {
+            var tax = GST_Per / 2;
+            $("#lblCGST_Per").text(tax);
+            $("#lblSGST_Per").text(tax);
+        }
+
+        // Get all totals
+        UpdateValues();
+
+    });
+
+    function ReArrangeIndex() {
+        var index = 1;
+        $("#tbl_PurchaseItem tbody tr:not(.deleteitem)").each(function () {
+            $(this).find("td:first").text(index);
+            index++;
+        });
+    }
+
+    $(document).on("click", "#btnAddItem", function () {
+
+        var nextIndex = $("#tbl_PurchaseItem tbody tr").length + 1;
+        var newGuid = uuid();
+
+        var htmlData = "<tr id='" + newGuid + "'>";
+        htmlData += "<td>" + nextIndex + "</td>";
+        htmlData += "<td> <select class='form-control' id='MaterialTypeId_" + newGuid + "'>" + materialList + "</select> <span id='spn_MaterialTypeId_" + newGuid + "' class='field-validation-valid text-danger'></span> </td>";
+        htmlData += "<td><input class='form-control clsWeight' id='Weight_"+ newGuid +"' placeholder='Weight/Nos' type='text' value=''> <span id='spn_Weight_"+ newGuid +"' class='field-validation-valid text-danger'></span></td>";
+        htmlData += "<td><input class='form-control clsRate' id='Rate_"+ newGuid +"' placeholder='Rate' type='text'> <span id='spn_Rate_"+ newGuid +"' class='field-validation-valid text-danger'></span></td>";
+        htmlData += "<td><span id='ItemTotal_"+ newGuid +"'>0</span></td>";
+        htmlData += "<td><button title='Delete' delete-id='"+ newGuid +"' class='btn btn-round btn-danger clsDelete' data-isdelete='true' type='button'><i class='fa fa-trash-o'></i></button></td>";
+        htmlData += "</tr>";
+
+        $("tbody").append(htmlData);
+
+        //
+        var itemscount = $("#tbl_PurchaseItem tbody tr").length;
+        if (itemscount > 1)
+            $("#tbl_PurchaseItem tbody tr .clsDelete").show();
+
+    });
+
+    function uuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+        });
+    }
+
+    $(document).on("keyup", ".clsWeight, .clsRate, #AdjustmentAmount", function () {
+
+        //this.value = this.value.replace(/[^0-9\.]/g, '');
+        //if (this.value == '') {
+        //    return false;
+        //}
+
+        var field_id = $(this).attr("id").split("_")[1];
+        var weight = $("#Weight_" + field_id).val();
+        var rate = $("#Rate_" + field_id).val();
+        var total = 0;
+
+        if (weight != undefined && rate != undefined) {
+            total = weight * rate;
+        }
+        $("#ItemTotal_" + field_id).text(parseFloat(total));
+
+        // Get all totals
+        UpdateValues();
+
+        return this.value;
+    });
+
+    function UpdateValues() {
+
+        var subTotal = 0;
+        var cgst = 0;
+        var sgst = 0;
+        var grandTotal = 0;
+        $("#tbl_PurchaseItem tbody tr:not(.deleteitem)").each(function () {
+            var value = $(this).find("td:eq(4) span").text();
+            if (value && value != undefined) {
+                subTotal += parseFloat(value);
+            }
+        });
+
+        var GST_Per = $("#GST_Per").val();
+        if (GST_Per && GST_Per != "") {
+            var gst = GST_Per / 2;
+            cgst = (subTotal * gst) / 100;
+            sgst = (subTotal * gst) / 100;
+        }
+
+        grandTotal = subTotal + cgst + sgst;
+
+        $("#lblCGST").text(cgst);
+        $("#lblSGST").text(sgst);
+        $("#lblSubTotal").text(subTotal);
+
+        var AdjustmentAmt = $("#AdjustmentAmount").val();
+        if (AdjustmentAmt == "" || AdjustmentAmt == undefined || AdjustmentAmt == NaN) {
+            AdjustmentAmt = 0;
+        }
+        grandTotal += parseFloat(AdjustmentAmt);
+        $("#lblGrandTotal").text(grandTotal);
+    }
+
+    $(document).on("click", ".clsDelete", function () {
+        var itemId = $(this).attr("delete-id");
+        var isdelete = $(this).attr("data-isdelete");
+
+        if (isdelete == "false") {
+            $("tr#" + itemId).addClass("deleteitem");
+        }
+        else {
+            $("tr#" + itemId).remove();
+        }
+
+        var itemscount = $("#tbl_PurchaseItem tbody tr:not(.deleteitem)").length;
+        if (itemscount == 1)
+            $("#tbl_PurchaseItem tbody tr:not(.deleteitem):first .clsDelete").hide();
+
+        ReArrangeIndex();
+
+        // Get all totals
+        UpdateValues();
+    });
+
+    $(document).on("click", "#btnSubmit", function () {
+        var isvalid = true;
+
+        var MaterialPurchaseId = $("#hdnMaterialPurchaseId").val();
+        var PurchaseDate = $("#PurchaseDate").val(); 
+        var GST_Per = $("#GST_Per").val();
+        var SiteId = $("#SiteId").val();
+        var Remarks = $("#Remarks").val();
+        var AdjustmentAmount = $("#AdjustmentAmount").val();
+
+        if (IsEmptyOrNull(PurchaseDate)) {
+            $("#spn_PurchaseDate").text("This field is required");
+            $("#spn_PurchaseDate").show();
+            isvalid = false;
+        }
+        else {
+            $("#spn_PurchaseDate").hide();
+        }
+         
+        if (IsEmptyOrNull(SiteId)) {
+            $("#spn_SiteId").text("This field is required");
+            $("#spn_SiteId").show();
+            isvalid = false;
+        }
+        else {
+            $("#spn_SiteId").hide();
+        }
+
+        // Validations for Items
+        $("#tbl_PurchaseItem tbody tr").each(function () {
+
+            var field_id = $(this).attr("id");
+
+            var material_value = $("#MaterialTypeId_" + field_id).val();
+            if (IsEmptyOrNull(material_value)) {
+                $("#spn_MaterialTypeId_" + field_id).text("This field is required");
+                $("#spn_MaterialTypeId_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_MaterialTypeId_" + field_id).hide();
+            }
+
+            // Weight
+            var weight_value = $("#Weight_" + field_id).val();
+            if (IsEmptyOrNull(weight_value)) {
+                $("#spn_Weight_" + field_id).text("This field is required");
+                $("#spn_Weight_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_Weight_" + field_id).hide();
+            }
+
+            // Rate
+            var rate_value = $("#Rate_" + field_id).val();
+            if (IsEmptyOrNull(rate_value)) {
+                $("#spn_Rate_" + field_id).text("This field is required");
+                $("#spn_Rate_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_Rate_" + field_id).hide();
+            }
+        });
+
+        if (!isvalid) {
+            jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+            return false;
+        }
+
+        // Create Object
+        var PurchaseItems = [];
+        $("#tbl_PurchaseItem tbody tr").each(function () {
+
+            var field_id = $(this).attr("id");
+
+            var PurchaseItemId = $(this).attr("data-Purchaseitemid");
+            var material_value = $("#MaterialTypeId_" + field_id).val();
+            var weight_value = $("#Weight_" + field_id).val();
+            var rate_value = $("#Rate_" + field_id).val();
+
+            var hasDeleteClass = $(this).hasClass("deleteitem");
+
+            PurchaseItems.push({
+                "MaterialPurchaseItemId": (PurchaseItemId == "" || PurchaseItemId == undefined ? null : PurchaseItemId),
+                "MaterialTypeId": material_value,
+                "Weight": weight_value,
+                "Rate": rate_value,
+                "IsDeleteItem" : hasDeleteClass
+            });
+
+        });
+
+        var PurchaseVM = {
+            "MaterialPurchaseId": MaterialPurchaseId,
+            "PurchaseDate": PurchaseDate,
+            "SiteId": SiteId, 
+            "Remarks": Remarks,
+            "GST_Per": GST_Per,
+            "AdjustmentAmount": AdjustmentAmount,
+            "PurchaseItem": PurchaseItems,
+        };
+
+        // Save
+        StartLoading();
+        var URL = '@Url.Action("EditPurchase", "Material")';
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: URL,
+            data: {
+                Purchase : JSON.stringify(PurchaseVM)
+            },
+            success: function (response) {
+                if (response.IsError) {
+                alert(response.ErrorMessage);
+                StopLoading();
+            }
+            else {
+                window.location.href = response.RedirectUrl;
+            }
+
+            },
+            error: function (resultData) {
+                alert("error");
+                StopLoading();
+            }
+        });
+
+    });
+
+    function IsEmptyOrNull(value) {
+        if (value == "" || value == undefined || value == NaN)
+            return true;
+        else
+            return false;
+    }
+
+</script>

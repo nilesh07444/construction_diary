@@ -12,30 +12,26 @@ namespace ConstructionDiary.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_Clients
+    public partial class tbl_MaterialType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tbl_Clients()
+        public tbl_MaterialType()
         {
-            this.tbl_Users = new HashSet<tbl_Users>();
-            this.tbl_MaterialType = new HashSet<tbl_MaterialType>();
+            this.tbl_MaterialPurchaseItems = new HashSet<tbl_MaterialPurchaseItems>();
         }
     
-        public System.Guid ClientId { get; set; }
-        public string ClientName { get; set; }
-        public string FirmName { get; set; }
-        public int PackageTypeId { get; set; }
-        public Nullable<System.DateTime> ExpireDate { get; set; }
-        public string Remarks { get; set; }
+        public System.Guid MaterialTypeId { get; set; }
+        public string MaterialType { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public System.Guid ClientId { get; set; }
+        public System.Guid CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
+        public Nullable<System.Guid> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     
-        public virtual tbl_PackageType tbl_PackageType { get; set; }
+        public virtual tbl_Clients tbl_Clients { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_Users> tbl_Users { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_MaterialType> tbl_MaterialType { get; set; }
+        public virtual ICollection<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
     }
 }

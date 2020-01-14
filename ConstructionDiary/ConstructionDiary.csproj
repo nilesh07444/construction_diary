@@ -141,7 +141,10 @@
     <Compile Include="Areas\Admin\Controllers\AttendanceController.cs" />
     <Compile Include="Areas\Admin\Controllers\ClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ExpenseController.cs" />
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MaterialController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MaterialTypeController.cs" />
     <Compile Include="Areas\Admin\Controllers\MyAccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\PersonController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
@@ -199,10 +202,25 @@
     <Compile Include="Models\tbl_ContractorFinance.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_Expenses.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_ExpenseType.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_Finance.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_GeneralSetting.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_MaterialPurchase.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_MaterialPurchaseItems.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_MaterialType.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_PackageType.cs">
@@ -244,7 +262,12 @@
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
     <Compile Include="ViewModel\ClientVM.cs" />
     <Compile Include="ViewModel\CommonClass.cs" />
+    <Compile Include="ViewModel\ExpenseVM.cs" />
+    <Compile Include="ViewModel\GeneralResponse.cs" />
     <Compile Include="ViewModel\LoginVM.cs" />
+    <Compile Include="ViewModel\MaterialPurchaseItemVM.cs" />
+    <Compile Include="ViewModel\MaterialPurchaseVM.cs" />
+    <Compile Include="ViewModel\MaterialTypeVM.cs" />
     <Compile Include="ViewModel\MyFinanceVM.cs" />
     <Compile Include="ViewModel\PersonFinanceVM.cs" />
     <Compile Include="ViewModel\PersonVM.cs" />
@@ -2217,13 +2240,6 @@
     <Content Include="Areas\Admin\Views\User\Index.cshtml" />
     <Content Include="Areas\Admin\Views\User\Add.cshtml" />
     <Content Include="Areas\Admin\Views\User\Edit.cshtml" />
-    <EntityDeploy Include="Models\ConstructionDiary.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ConstructionDiary.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\ConstructionDiary.edmx.diagram">
-      <DependentUpon>ConstructionDiary.edmx</DependentUpon>
-    </Content>
     <Content Include="Areas\Admin\Views\Person\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Person\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Person\View.cshtml" />
@@ -2236,6 +2252,22 @@
     <Content Include="Areas\Admin\Views\Attendance\AddPerson.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\EditPerson.cshtml" />
     <Content Include="Areas\Admin\Views\Setting\Index.cshtml" />
+    <EntityDeploy Include="Models\ConstructionDiary.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ConstructionDiary.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ConstructionDiary.edmx.diagram">
+      <DependentUpon>ConstructionDiary.edmx</DependentUpon>
+    </Content>
+    <Content Include="Areas\Admin\Views\Expense\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Expense\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Expense\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\MaterialType\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\MaterialType\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\MaterialType\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Material\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Material\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Material\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

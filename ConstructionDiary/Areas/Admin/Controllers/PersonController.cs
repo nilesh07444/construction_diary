@@ -61,8 +61,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objPerson.PersonFirstName = person.Firstname;
                     objPerson.PersonAddress = person.Address;
                     objPerson.MobileNo = person.MobileNo;
-                    objPerson.DailyRate = person.DailyRate;
-                    objPerson.PersonTypeId = person.PersonTypeId;
+                    //objPerson.DailyRate = person.DailyRate;
+                    //objPerson.PersonTypeId = person.PersonTypeId;
                     objPerson.PersonPhoto = fileName;
                     objPerson.IsAttendancePerson = false;
                     objPerson.IsActive = true;
@@ -98,8 +98,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 person.Firstname = obj.PersonFirstName;
                 person.Address = obj.PersonAddress;
                 person.MobileNo = obj.MobileNo;
-                person.DailyRate = obj.DailyRate;
-                person.PersonTypeId = obj.PersonTypeId;
+                //person.DailyRate = obj.DailyRate;
+                //person.PersonTypeId = obj.PersonTypeId;
                 person.strPersonPhoto = obj.PersonPhoto;
             }
 
@@ -140,8 +140,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objPerson.PersonFirstName = person.Firstname;
                         objPerson.PersonAddress = person.Address;
                         objPerson.PersonPhoto = fileName;
-                        objPerson.DailyRate = person.DailyRate;
-                        objPerson.PersonTypeId = person.PersonTypeId;
+                        //objPerson.DailyRate = person.DailyRate;
+                        //objPerson.PersonTypeId = person.PersonTypeId;
                         objPerson.MobileNo = person.MobileNo;
                         objPerson.ClientId = clsSession.ClientID;
                         objPerson.UpdatedBy = new Guid(clsSession.UserID.ToString());

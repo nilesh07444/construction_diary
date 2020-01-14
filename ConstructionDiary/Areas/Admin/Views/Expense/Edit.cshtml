@@ -1,0 +1,88 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@model ExpenseVM
+@{
+    ViewBag.Title = "Expense";
+}
+
+@{ 
+    string displayStyle = (Model.ExpenseTypeId == 1 ? "block" : "none");
+}
+
+<section class="wrapper site-min-height">
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Edit Expense</strong>
+                </header>
+                <div class="panel-body">
+                    <div class="col-sm-6">
+                        <div class="form">
+                            @using (Html.BeginForm("Edit", "Expense", FormMethod.Post, new { @id = "ExpenseFormId", @class = "cmxform form-horizontal", enctype = "multipart/form-data", role = "form" }))
+                            {
+
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ExpenseDate, htmlAttributes: new { @class = "" })
+                                    @Html.EditorFor(model => model.ExpenseDate, new { htmlAttributes = new { @class = "form-control default-date-picker valid", @placeholder = "DD/MM/YYYY", maxlength = "50", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.ExpenseDate, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "" })
+                                    @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", @placeholder = Resource.Amount, maxlength = "50", @autocomplete = "off" } })
+                                    @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ExpenseTypeId, htmlAttributes: new { @class = "" })
+                                    @Html.DropDownList("ExpenseTypeId", new SelectList(Model.ExpenseTypeList, "Value", "Text"), "-"+ Resource.ExpenseType +"-", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ExpenseTypeId, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group dvSite" style="display: @displayStyle">
+                                    @Html.LabelFor(model => model.SiteId, htmlAttributes: new { @class = "" })
+                                    @Html.DropDownList("SiteId", new SelectList(Model.SiteList, "Value", "Text"), "-"+ Resource.SiteName + "-", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.SiteId, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "" })
+                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @placeholder = Resource.Description, maxlength = "200" } })
+                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div>
+                                    @Html.HiddenFor(x => x.ExpenseId)
+                                    <button class="btn btn-info" type="submit">@Resource.Save</button>
+                                    <a href="/admin/expense/" class="btn btn-default">@Resource.Cancel</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script>
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+
+    $(document).on("change", "#ExpenseTypeId", function () { 
+        var type = $("#ExpenseTypeId option:selected").val(); 
+        if (type == "1") {
+            $(".dvSite").show();
+        }
+        else {
+            $(".dvSite").hide();
+        } 
+    });
+
+</script>
