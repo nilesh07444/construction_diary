@@ -199,15 +199,26 @@
                             </li>
 
                             @*<li class="sub-menu">
-                                <a class="clsMain @(ViewBag.Title == "MaterialType" ? "active" : "")" href="javascript:;">
-                                    <i class="fa fa-camera-retro"></i>
-                                    <span>@Resource.MaterialType</span>
+                                    <a class="clsMain @(ViewBag.Title == "MaterialType" ? "active" : "")" href="javascript:;">
+                                        <i class="fa fa-camera-retro"></i>
+                                        <span>@Resource.MaterialType</span>
+                                    </a>
+                                    <ul class="sub">
+                                        <li><a href="/admin/materialtype/add">@Resource.AddNewMaterialType</a></li>
+                                        <li><a href="/admin/materialtype">@Resource.MaterialTypeList</a></li>
+                                    </ul>
+                                </li>*@
+
+                            <li class="sub-menu">
+                                <a class="clsMain @(ViewBag.Title == "Merchants" ? "active" : "")" href="javascript:;">
+                                    <i class="fa fa-user"></i>
+                                    <span>@Resource.Merchants</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="/admin/materialtype/add">@Resource.AddNewMaterialType</a></li>
-                                    <li><a href="/admin/materialtype">@Resource.MaterialTypeList</a></li>
+                                    <li><a href="/admin/merchant/add">@Resource.AddNewMerchant</a></li>
+                                    <li><a href="/admin/merchant">@Resource.MerchantsList</a></li>
                                 </ul>
-                            </li>*@
+                            </li>
 
                             <li class="sub-menu">
                                 <a class="clsMain @(ViewBag.Title == "Material" ? "active" : "")" href="javascript:;">

@@ -129,14 +129,19 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objPersonAttendance.WithdrawAmount = x.WithdrawAmount;
                         objPersonAttendance.OvertimeAmount = x.OvertimeAmount;
                         objPersonAttendance.Remarks = x.Remarks;
-
+                        objPersonAttendance.PersonDailyRate = x.PersonDailyRate;
 
                         if (objPersonAttendance.AttendanceStatus != 0)
-                        {
-                            objPersonAttendance.PersonDailyRate = x.PersonDailyRate;
+                        { 
                             objPersonAttendance.PayableAmount = x.PersonDailyRate * objPersonAttendance.AttendanceStatus;
                             objPersonAttendance.SiteId = x.SiteId;
                         }
+                        else
+                        {
+                            objPersonAttendance.PayableAmount = null;
+                            objPersonAttendance.SiteId = null;
+                        }
+
                         objPersonAttendance.CreatedBy = new Guid(clsSession.UserID.ToString());
                         objPersonAttendance.CreatedDate = DateTime.UtcNow;
                         _db.tbl_PersonAttendance.Add(objPersonAttendance);
@@ -163,7 +168,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
+                //var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
                 var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
 
                 objAttendance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)

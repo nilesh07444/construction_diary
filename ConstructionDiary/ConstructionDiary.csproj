@@ -145,6 +145,7 @@
     <Compile Include="Areas\Admin\Controllers\LoginController.cs" />
     <Compile Include="Areas\Admin\Controllers\MaterialController.cs" />
     <Compile Include="Areas\Admin\Controllers\MaterialTypeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Admin\Controllers\MyAccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\PersonController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
@@ -223,6 +224,9 @@
     <Compile Include="Models\tbl_MaterialType.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_Merchant.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_PackageType.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -268,6 +272,7 @@
     <Compile Include="ViewModel\MaterialPurchaseItemVM.cs" />
     <Compile Include="ViewModel\MaterialPurchaseVM.cs" />
     <Compile Include="ViewModel\MaterialTypeVM.cs" />
+    <Compile Include="ViewModel\MerchantVM.cs" />
     <Compile Include="ViewModel\MyFinanceVM.cs" />
     <Compile Include="ViewModel\PersonFinanceVM.cs" />
     <Compile Include="ViewModel\PersonVM.cs" />
@@ -2268,6 +2273,9 @@
     <Content Include="Areas\Admin\Views\Material\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Material\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Material\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Merchant\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Merchant\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Merchant\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

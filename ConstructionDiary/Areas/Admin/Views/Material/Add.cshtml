@@ -8,6 +8,7 @@
     ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
     Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
+    List<tbl_Merchant> lstMerchants = _db.tbl_Merchant.Where(x => x.IsActive && !x.IsDeleted && x.ClientId == ClientId).OrderBy(x => x.MerchantName).ToList();
     List<tbl_Sites> lstSites = _db.tbl_Sites.Where(x => x.IsActive && !x.IsDeleted && x.ClientId == ClientId).OrderBy(x => x.SiteName).ToList();
     List<tbl_MaterialType> lstMaterialType = _db.tbl_MaterialType.Where(x => x.IsActive && !x.IsDeleted && x.ClientId == ClientId).OrderBy(x => x.MaterialType).ToList();
 
@@ -31,7 +32,7 @@
                         </div>
 
                         <div class="col-sm-4 form-group">
-                            <label for="PartyId">@Resource.SiteName</label>
+                            <label for="SiteId">@Resource.SiteName</label>
                             <select class="form-control" id="SiteId" name="SiteId">
                                 <option value="">-@Resource.SiteName-</option>
                                 @if (lstSites.Count > 0)
@@ -46,7 +47,26 @@
                         </div>
 
                         <div class="col-sm-4 form-group">
-                            <label for="GST_Per">GST (%)</label><span class="required">*</span>
+                            <label for="MerchantId">@Resource.Merchants</label>
+                            <select class="form-control" id="MerchantId" name="MerchantId">
+                                <option value="">-@Resource.Merchants-</option>
+                                @if (lstMerchants.Count > 0)
+                                {
+                                    foreach (var site in lstMerchants)
+                                    {
+                                        <option value="@site.MerchantId">@site.FirmName</option>
+                                    }
+                                }
+                            </select>
+                            <span id="spn_MerchantId" class="field-validation-valid text-danger"></span>
+                        </div>
+
+                        
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            <label for="GST_Per">@Resource.GST (%)</label><span class="required">*</span>
                             <select class="form-control" id="GST_Per" name="GST_Per">
                                 <option value="0">-Select-</option>
                                 <option value="5.00">5%</option>
@@ -56,13 +76,11 @@
                             </select>
                             <span id="spn_GST_Per" class="field-validation-valid text-danger"></span>
                         </div>
-                    </div>
 
-                    <div class="row"> 
                         <div class="col-sm-4 form-group">
                             <label for="Remarks">@Resource.Remarks</label>
                             <input class="form-control" id="Remarks" name="Remarks" placeholder="@Resource.Remarks" type="text" value="">
-                        </div> 
+                        </div>
                     </div>
 
                 </div>
@@ -70,7 +88,7 @@
 
             <section class="panel">
                 <header class="panel-heading">
-                    <strong> Item Information </strong>
+                    <strong> @Resource.ItemInfo </strong>
                 </header>
                 <div class="panel-body">
                     <div class="row">
@@ -80,8 +98,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>@Resource.Material</th>
-                                        <th width="20%">Weight/Nos.</th>
-                                        <th width="20%">Rate</th>
+                                        <th width="20%">@Resource.Weight_Nos</th>
+                                        <th width="20%">@Resource.Rate</th>
                                         <th width="20%">@Resource.Total</th>
                                         <th width="10%"></th>
                                     </tr>
@@ -104,11 +122,11 @@
                                             <span id="spn_MaterialTypeId_@newId" class="field-validation-valid text-danger"></span>
                                         </td>
                                         <td>
-                                            <input class="form-control clsWeight" id="Weight_@newId" name="Weight_@newId" placeholder="Weight/Nos" type="text" value="">
+                                            <input class="form-control clsWeight" id="Weight_@newId" name="Weight_@newId" placeholder="@Resource.Weight_Nos" type="number" value="">
                                             <span id="spn_Weight_@newId" name="spn_Weight_@newId" class="field-validation-valid text-danger"></span>
                                         </td>
                                         <td class="">
-                                            <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" placeholder="Rate" type="text" value="">
+                                            <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" placeholder="@Resource.Rate" type="number" value="">
                                             <span id="spn_Rate_@newId" name="spn_Rate_@newId" class="field-validation-valid text-danger"></span>
                                         </td>
                                         <td>
@@ -133,16 +151,16 @@
                     <div class="row">
                         <div class="col-lg-4 invoice-block pull-right">
                             <ul class="unstyled amounts">
-                                <li><strong>Sub-Total amount : </strong> <span id="lblSubTotal">0</span></li>
-                                <li><strong>CGST (<span id="lblCGST_Per">0</span>%) : </strong> <span id="lblCGST">0</span></li>
-                                <li><strong>SGST (<span id="lblSGST_Per">0</span>%) : </strong> <span id="lblSGST">0</span></li>
+                                <li><strong>@Resource.SubTotalAmount : </strong> <span id="lblSubTotal">0</span></li>
+                                <li><strong>@Resource.CGST (<span id="lblCGST_Per">0</span>%) : </strong> <span id="lblCGST">0</span></li>
+                                <li><strong>@Resource.SGST (<span id="lblSGST_Per">0</span>%) : </strong> <span id="lblSGST">0</span></li>
                                 <li>
-                                    <strong>Adjustment Amount : </strong>
-                                    <input class="form-control" id="AdjustmentAmount" name="AdjustmentAmount" placeholder="" type="text">
+                                    <strong>@Resource.AdjustmentAmount : </strong>
+                                    <input class="form-control" id="AdjustmentAmount" name="AdjustmentAmount" placeholder="" type="number">
                                     <span id="AdjustmentAmount" class="field-validation-valid text-danger"></span>
                                 </li>
                                 <li>
-                                    <strong>Grand Total : </strong> <span id="lblGrandTotal">0</span>
+                                    <strong>@Resource.GrandTotal : </strong> <span id="lblGrandTotal">0</span>
                                 </li>
                             </ul>
                         </div>
@@ -169,6 +187,7 @@
     var day = dateObj.getUTCDate();
     var year = dateObj.getUTCFullYear();
     var newdate = (day < 10 ? '0' + day : '' + day) + "/" + (month < 10 ? '0' + month : '' + month) + "/" + year;
+    var field_required_msg = '@Resource.Required';
 
     jQuery("#PurchaseDate").val(newdate);
 
@@ -230,8 +249,8 @@
         var htmlData = "<tr id='" + newGuid + "'>";
         htmlData += "<td>" + nextIndex + "</td>";
         htmlData += "<td> <select class='form-control' id='MaterialTypeId_" + newGuid + "'>" + materialList + "</select> <span id='spn_MaterialTypeId_" + newGuid + "' class='field-validation-valid text-danger'></span> </td>";
-        htmlData += "<td><input class='form-control clsWeight' id='Weight_"+ newGuid +"' placeholder='Weight/Nos' type='text' value=''> <span id='spn_Weight_"+ newGuid +"' class='field-validation-valid text-danger'></span></td>";
-        htmlData += "<td><input class='form-control clsRate' id='Rate_"+ newGuid +"' placeholder='Rate' type='text'> <span id='spn_Rate_"+ newGuid +"' class='field-validation-valid text-danger'></span></td>";
+        htmlData += "<td><input class='form-control clsWeight' id='Weight_"+ newGuid +"' placeholder='@Resource.Weight_Nos' type='number' value=''> <span id='spn_Weight_"+ newGuid +"' class='field-validation-valid text-danger'></span></td>";
+        htmlData += "<td><input class='form-control clsRate' id='Rate_"+ newGuid +"' placeholder='@Resource.Rate' type='number'> <span id='spn_Rate_"+ newGuid +"' class='field-validation-valid text-danger'></span></td>";
         htmlData += "<td><span id='ItemTotal_"+ newGuid +"'>0</span></td>";
         htmlData += "<td><button title='Delete' delete-id='"+ newGuid +"' class='btn btn-round btn-danger clsDelete' type='button'><i class='fa fa-trash-o'></i></button></td>";
         htmlData += "</tr>";
@@ -328,11 +347,12 @@
         var PurchaseDate = $("#PurchaseDate").val(); 
         var GST_Per = $("#GST_Per").val();
         var SiteId = $("#SiteId").val(); 
+        var MerchantId = $("#MerchantId").val(); 
         var Remarks = $("#Remarks").val();
         var AdjustmentAmount = $("#AdjustmentAmount").val();
 
         if (IsEmptyOrNull(PurchaseDate)) {
-            $("#spn_PurchaseDate").text("This field is required");
+            $("#spn_PurchaseDate").text(field_required_msg);
             $("#spn_PurchaseDate").show();
             isvalid = false;
         }
@@ -342,7 +362,7 @@
          
 
         if (IsEmptyOrNull(SiteId)) {
-            $("#spn_SiteId").text("This field is required");
+            $("#spn_SiteId").text(field_required_msg);
             $("#spn_SiteId").show();
             isvalid = false;
         }
@@ -350,6 +370,15 @@
             $("#spn_SiteId").hide();
         }
 
+        if (IsEmptyOrNull(MerchantId)) {
+            $("#spn_MerchantId").text(field_required_msg);
+            $("#spn_MerchantId").show();
+            isvalid = false;
+        }
+        else {
+            $("#spn_MerchantId").hide();
+        }
+        
         // Validations for Items
         $("#tbl_PurchaseItem tbody tr").each(function () {
 
@@ -357,7 +386,7 @@
 
             var material_value = $("#MaterialTypeId_" + field_id).val();
             if (IsEmptyOrNull(material_value)) {
-                $("#spn_MaterialTypeId_" + field_id).text("This field is required");
+                $("#spn_MaterialTypeId_" + field_id).text(field_required_msg);
                 $("#spn_MaterialTypeId_" + field_id).show();
                 isvalid = false;
             }
@@ -368,7 +397,7 @@
             // Weight
             var weight_value = $("#Weight_" + field_id).val();
             if (IsEmptyOrNull(weight_value)) {
-                $("#spn_Weight_" + field_id).text("This field is required");
+                $("#spn_Weight_" + field_id).text(field_required_msg);
                 $("#spn_Weight_" + field_id).show();
                 isvalid = false;
             }
@@ -379,7 +408,7 @@
             // Rate
             var rate_value = $("#Rate_" + field_id).val();
             if (IsEmptyOrNull(rate_value)) {
-                $("#spn_Rate_" + field_id).text("This field is required");
+                $("#spn_Rate_" + field_id).text(field_required_msg);
                 $("#spn_Rate_" + field_id).show();
                 isvalid = false;
             }
@@ -416,6 +445,7 @@
             "MaterialPurchaseId": null,
             "PurchaseDate": PurchaseDate,
             "SiteId": SiteId, 
+            "MerchantId" : MerchantId,
             "Remarks": Remarks,
             "GST_Per": GST_Per,
             "AdjustmentAmount": AdjustmentAmount,

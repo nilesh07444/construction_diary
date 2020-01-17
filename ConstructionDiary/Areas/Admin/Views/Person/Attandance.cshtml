@@ -165,6 +165,10 @@
                                     <table class="table table-bordered table-responsive table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th width="20%">@Resource.TotalPresentDays</th>
+                                                <th>= @Model.Sum(x => x.AttendanceStatus).ToString("0.##") @Resource.Day</th>
+                                            </tr>
+                                            <tr>
                                                 <th width="20%">@Resource.RemainingAmount</th>
                                                 <th>= (@Resource.Amount + @Resource.Overtime) - @Resource.Withdraw</th>
                                             </tr>

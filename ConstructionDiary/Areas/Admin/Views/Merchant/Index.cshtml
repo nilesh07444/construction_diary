@@ -1,7 +1,7 @@
 ﻿@using ConstructionDiary.ResourceFiles;
-@model List<MaterialPurchaseVM>
+@model List<MerchantVM>
 @{
-    ViewBag.Title = "Material";
+    ViewBag.Title = "Merchant";
 }
 
 @{
@@ -14,45 +14,52 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>@Resource.MaterialList</strong>
+                    <strong>@Resource.MerchantsList</strong>
                 </header>
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-success" href="/admin/material/add"><i class="fa fa-plus"></i> @Resource.AddNewMaterial</a>
+                                <a class="btn btn-success" href="/admin/merchant/add"><i class="fa fa-plus"></i> @Resource.AddNewMerchant</a>
                             </div>
                         </div>
                         <div class="space15"></div>
-                        <table class="display table table-bordered table-striped table-hover" id="tblMaterialsList">
+                        <table class="display table table-bordered table-striped table-hover" id="tblMerchantList">
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="15%">@Resource.Date</th>
-                                    <th>@Resource.Merchants</th>
-                                    <th>@Resource.SiteName</th>
-                                    <th>GST (%)</th>
-                                    <th>@Resource.Total</th>
+                                    <th>@Resource.MerchantName</th>
+                                    <th>@Resource.FirmName</th>
+                                    <th>@Resource.MobileNo</th> 
+                                    <th width="10%">@Resource.Active</th>
                                     <th width="10%">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if (Model != null && Model.Count > 0)
                                 {
-                                    foreach (MaterialPurchaseVM purchase in Model)
+                                    foreach (MerchantVM merchant in Model)
                                     {
-                                <tr class="gradeX">
-                                    <td>@counter</td>
-                                    <td>@Convert.ToDateTime(purchase.dtPurchaseDate).ToString("dd/MM/yyyy")</td>
-                                    <td>@purchase.MerchantName</td>
-                                    <td>@purchase.SiteName</td>
-                                    <td>@purchase.GST_Per%</td>
-                                    <td>@CoreHelper.GetFormatterAmount(purchase.Total)</td>
-                                    <td>
-                                        <a href="/admin/material/edit/@purchase.MaterialPurchaseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                        <button onclick="fnDeleteMaterial('@purchase.MaterialPurchaseId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                        <tr class="gradeX">
+                                            <td>@counter</td>
+                                            <td>@merchant.MerchantName</td>
+                                            <td>@merchant.FirmName</td>
+                                            <td>@merchant.MobileNo</td> 
+                                            <td>
+                                                @if (merchant.IsActive)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">InActive</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="/admin/merchant/edit/@merchant.MerchantId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button onclick="fnDeleteMerchant('@merchant.MerchantId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                         counter++;
                                     }
                                 }
@@ -67,7 +74,7 @@
 </section>
 
 <!-- Delete Modal -->
-<div class="modal fade" id="deleteMaterialModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteMerchantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -78,9 +85,9 @@
                 @Resource.SureWantToDelete
             </div>
             <div class="modal-footer">
-                <input type="hidden" id="hdnDeleteMaterial" />
+                <input type="hidden" id="hdnDeleteMerchant" />
                 <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
-                <button id="btnDeleteMaterial" class="btn btn-danger" type="button"> @Resource.Delete </button>
+                <button id="btnDeleteMerchant" class="btn btn-danger" type="button"> @Resource.Delete </button>
             </div>
         </div>
     </div>
@@ -94,34 +101,34 @@
         jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
         jQuery('html, body').animate({ scrollTop: 0 }, 1000);
 
-        jQuery('#tblMaterialsList').dataTable({
+        jQuery('#tblMerchantList').dataTable({
             "aaSorting": [],
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': [0,1,6]
+                    'aTargets': [0,5]
                 }]
         });
     });
 
-    jQuery(document).on("click", "#btnDeleteMaterial", function () {
+    jQuery(document).on("click", "#btnDeleteMerchant", function () {
 
-        var Material_id = jQuery("#hdnDeleteMaterial").val();
-        if (Material_id != "" && Material_id != null) {
-            $('#deleteMaterialModal').modal('hide');
+        var merchant_id = jQuery("#hdnDeleteMerchant").val();
+        if (merchant_id != "" && merchant_id != null) {
+            $('#deleteMerchantModal').modal('hide');
             $.blockUI({ message: "<h4>Please Wait...</h4>" });
-            var URL = '@Url.Action("DeleteMaterial", "Material")';
+            var URL = '@Url.Action("DeleteMerchant", "Merchant")';
             $.ajax({
                 type: 'POST',
                 async: true,
-                url: URL + "?MaterialId=" + Material_id,
+                url: URL + "?MerchantId=" + merchant_id,
                 success: function (result) {
                     if (result == "success") {
-                        alert("Material deleted successfully");
+                        alert("Merchant deleted successfully");
                         window.location.reload();
                     }
                     else if (result == "notfound") {
-                        alert("Material Not Found");
+                        alert("Merchant Not Found");
                     }
                     else {
                         alert("Something went wrong. Please try again");
@@ -137,14 +144,13 @@
         }
     });
 
-    function fnDeleteMaterial(Material_id) {
-        jQuery("#hdnDeleteMaterial").val(Material_id);
-        $('#deleteMaterialModal').modal('show');
+    function fnDeleteMerchant(merchant_id) {
+        jQuery("#hdnDeleteMerchant").val(merchant_id);
+        $('#deleteMerchantModal').modal('show');
     }
 
     jQuery(window).on("load", function () {
         jQuery.unblockUI();
     });
-
 
 </script>

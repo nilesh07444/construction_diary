@@ -11,6 +11,7 @@ namespace ConstructionDiary
         public string PurchaseDate { get; set; }
         public DateTime dtPurchaseDate { get; set; } 
         public Guid SiteId { get; set; }
+        public Guid? MerchantId { get; set; }
         public string Remarks { get; set; }
         public decimal? GST_Per { get; set; }
         public decimal? CGST_Amount { get; set; }
@@ -20,6 +21,7 @@ namespace ConstructionDiary
         public decimal? Total { get; set; }
         public bool IsActive { get; set; }
         public List<MaterialPurchaseItemVM> PurchaseItem { get; set; }
-        public string SiteName { get; set; } 
+        public string SiteName { get; set; }
+        public string MerchantName { get; set; }
     }
 }

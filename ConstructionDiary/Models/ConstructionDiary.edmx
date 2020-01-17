@@ -112,6 +112,7 @@
           </Key>
           <Property Name="MaterialPurchaseId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="PurchaseDate" Type="datetime" Nullable="false" />
+          <Property Name="MerchantId" Type="uniqueidentifier" />
           <Property Name="SiteId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="200" />
           <Property Name="GST_Per" Type="int" />
@@ -148,6 +149,23 @@
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_Merchant">
+          <Key>
+            <PropertyRef Name="MerchantId" />
+          </Key>
+          <Property Name="MerchantId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MerchantName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FirmName" Type="nvarchar" MaxLength="100" />
+          <Property Name="MobileNo" Type="nvarchar" MaxLength="15" />
+          <Property Name="Address" Type="nvarchar" MaxLength="100" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
@@ -332,6 +350,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tbl_Merchant_tbl_Clients">
+          <End Role="tbl_Clients" Type="Self.tbl_Clients" Multiplicity="1" />
+          <End Role="tbl_Merchant" Type="Self.tbl_Merchant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Clients">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="tbl_Merchant">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tbl_Persons_tbl_Persons">
           <End Role="tbl_PersonType" Type="Self.tbl_PersonType" Multiplicity="0..1" />
           <End Role="tbl_Persons" Type="Self.tbl_Persons" Multiplicity="*" />
@@ -392,6 +422,7 @@
           <EntitySet Name="tbl_MaterialPurchase" EntityType="Self.tbl_MaterialPurchase" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MaterialPurchaseItems" EntityType="Self.tbl_MaterialPurchaseItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MaterialType" EntityType="Self.tbl_MaterialType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Merchant" EntityType="Self.tbl_Merchant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonAttendance" EntityType="Self.tbl_PersonAttendance" Schema="dbo" store:Type="Tables" />
@@ -423,6 +454,10 @@
           <AssociationSet Name="FK_tbl_MaterialType_tbl_Clients" Association="Self.FK_tbl_MaterialType_tbl_Clients">
             <End Role="tbl_Clients" EntitySet="tbl_Clients" />
             <End Role="tbl_MaterialType" EntitySet="tbl_MaterialType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_Merchant_tbl_Clients" Association="Self.FK_tbl_Merchant_tbl_Clients">
+            <End Role="tbl_Clients" EntitySet="tbl_Clients" />
+            <End Role="tbl_Merchant" EntitySet="tbl_Merchant" />
           </AssociationSet>
           <AssociationSet Name="FK_tbl_Persons_tbl_Persons" Association="Self.FK_tbl_Persons_tbl_Persons">
             <End Role="tbl_PersonType" EntitySet="tbl_PersonType" />
@@ -468,6 +503,7 @@
           <NavigationProperty Name="tbl_PackageType" Relationship="Self.FK_tbl_Clients_tbl_PackageType" FromRole="tbl_Clients" ToRole="tbl_PackageType" />
           <NavigationProperty Name="tbl_Users" Relationship="Self.FK_tbl_Users_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_Users" />
           <NavigationProperty Name="tbl_MaterialType" Relationship="ConstructionDiaryModel.FK_tbl_MaterialType_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_MaterialType" />
+          <NavigationProperty Name="tbl_Merchant" Relationship="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_Merchant" />
         </EntityType>
         <EntityType Name="tbl_ContractorFinance">
           <Key>
@@ -795,6 +831,11 @@
             <End Role="tbl_MaterialType" EntitySet="tbl_MaterialType" />
             <End Role="tbl_MaterialPurchaseItems" EntitySet="tbl_MaterialPurchaseItems" />
           </AssociationSet>
+          <EntitySet Name="tbl_Merchant" EntityType="ConstructionDiaryModel.tbl_Merchant" />
+          <AssociationSet Name="FK_tbl_Merchant_tbl_Clients" Association="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients">
+            <End Role="tbl_Clients" EntitySet="tbl_Clients" />
+            <End Role="tbl_Merchant" EntitySet="tbl_Merchant" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -918,6 +959,7 @@
           <Property Name="ModifiedBy" Type="Guid" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tbl_MaterialPurchaseItems" Relationship="ConstructionDiaryModel.FK_tbl_MaterialPurchaseItems_tbl_MaterialPurchase" FromRole="tbl_MaterialPurchase" ToRole="tbl_MaterialPurchaseItems" />
+          <Property Name="MerchantId" Type="Guid" />
         </EntityType>
         <EntityType Name="tbl_MaterialPurchaseItems">
           <Key>
@@ -953,6 +995,36 @@
             </Principal>
             <Dependent Role="tbl_MaterialPurchaseItems">
               <PropertyRef Name="MaterialTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_Merchant">
+          <Key>
+            <PropertyRef Name="MerchantId" />
+          </Key>
+          <Property Name="MerchantId" Type="Guid" Nullable="false" />
+          <Property Name="MerchantName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FirmName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MobileNo" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_Clients" Relationship="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients" FromRole="tbl_Merchant" ToRole="tbl_Clients" />
+        </EntityType>
+        <Association Name="FK_tbl_Merchant_tbl_Clients">
+          <End Type="ConstructionDiaryModel.tbl_Clients" Role="tbl_Clients" Multiplicity="1" />
+          <End Type="ConstructionDiaryModel.tbl_Merchant" Role="tbl_Merchant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Clients">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="tbl_Merchant">
+              <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1288,6 +1360,7 @@
           <EntitySetMapping Name="tbl_MaterialPurchase">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_MaterialPurchase">
               <MappingFragment StoreEntitySet="tbl_MaterialPurchase">
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
@@ -1317,6 +1390,24 @@
                 <ScalarProperty Name="MaterialTypeId" ColumnName="MaterialTypeId" />
                 <ScalarProperty Name="MaterialPurchaseId" ColumnName="MaterialPurchaseId" />
                 <ScalarProperty Name="MaterialPurchaseItemId" ColumnName="MaterialPurchaseItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Merchant">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Merchant">
+              <MappingFragment StoreEntitySet="tbl_Merchant">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+                <ScalarProperty Name="FirmName" ColumnName="FirmName" />
+                <ScalarProperty Name="MerchantName" ColumnName="MerchantName" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

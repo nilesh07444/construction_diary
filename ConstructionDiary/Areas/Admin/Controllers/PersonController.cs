@@ -374,6 +374,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 {
                     var myDate = DateTime.Now;
                     startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                    DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                    endDate = lastDay;
                 }
                 else if (duration == "custom")
                 {
@@ -389,6 +392,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
+                string ErrorMessage = ex.Message.ToString();
             }
             return View(lstPersonAttendanceVM);
         }

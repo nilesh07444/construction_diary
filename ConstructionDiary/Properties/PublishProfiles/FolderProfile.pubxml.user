@@ -5821,13 +5821,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/29/2019 12:37:46</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Material/Add.cshtml">
-      <publishTime>01/12/2020 11:09:00</publishTime>
+      <publishTime>01/14/2020 23:11:04</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Material/Edit.cshtml">
-      <publishTime>01/12/2020 11:09:06</publishTime>
+      <publishTime>01/14/2020 23:11:18</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Material/Index.cshtml">
-      <publishTime>01/12/2020 00:04:14</publishTime>
+      <publishTime>01/14/2020 20:40:07</publishTime>
     </File>
     <File Include="Areas/Admin/Views/MaterialType/Add.cshtml">
       <publishTime>01/12/2020 00:07:30</publishTime>
@@ -5837,6 +5837,15 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Areas/Admin/Views/MaterialType/Index.cshtml">
       <publishTime>01/12/2020 00:06:15</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Merchant/Add.cshtml">
+      <publishTime>01/14/2020 22:46:12</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Merchant/Edit.cshtml">
+      <publishTime>01/14/2020 22:57:21</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Merchant/Index.cshtml">
+      <publishTime>01/14/2020 21:02:18</publishTime>
     </File>
     <File Include="Areas/Admin/Views/MyAccount/Add.cshtml">
       <publishTime>12/29/2019 22:46:54</publishTime>
@@ -5851,13 +5860,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/19/2019 19:52:41</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Add.cshtml">
-      <publishTime>12/29/2019 23:35:49</publishTime>
+      <publishTime>01/14/2020 18:14:31</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Attandance.cshtml">
-      <publishTime>01/12/2020 00:01:36</publishTime>
+      <publishTime>01/17/2020 23:38:02</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Edit.cshtml">
-      <publishTime>12/29/2019 23:39:19</publishTime>
+      <publishTime>01/14/2020 18:16:14</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Finance.cshtml">
       <publishTime>01/11/2020 12:14:04</publishTime>
@@ -5875,7 +5884,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/29/2019 11:01:04</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Shared/_Layout.cshtml">
-      <publishTime>01/12/2020 00:14:15</publishTime>
+      <publishTime>01/14/2020 19:45:24</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Site/Detail.cshtml">
       <publishTime>12/29/2019 18:56:53</publishTime>
@@ -5908,10 +5917,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>01/12/2020 13:04:26</publishTime>
+      <publishTime>01/17/2020 23:39:48</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>01/12/2020 13:04:26</publishTime>
+      <publishTime>01/17/2020 23:39:48</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>06/07/2018 11:03:48</publishTime>
@@ -5923,7 +5932,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2019 23:00:28</publishTime>
     </File>
     <File Include="bin/gu/ConstructionDiary.resources.dll">
-      <publishTime>01/12/2020 13:04:26</publishTime>
+      <publishTime>01/17/2020 23:39:49</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>10/22/2019 23:00:36</publishTime>
@@ -6157,7 +6166,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2019 22:49:51</publishTime>
     </File>
     <File Include="Models/ConstructionDiary.edmx.diagram">
-      <publishTime>01/11/2020 00:09:47</publishTime>
+      <publishTime>01/14/2020 19:35:34</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>06/28/2019 00:03:56</publishTime>

@@ -232,6 +232,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adjustment Amount.
+        /// </summary>
+        public static string AdjustmentAmount {
+            get {
+                return ResourceManager.GetString("AdjustmentAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string Amount {
@@ -282,6 +291,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CGST.
+        /// </summary>
+        public static string CGST {
+            get {
+                return ResourceManager.GetString("CGST", resourceCulture);
             }
         }
         
@@ -439,6 +457,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Day {
+            get {
+                return ResourceManager.GetString("Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debit.
         /// </summary>
         public static string Debit {
@@ -507,6 +534,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string EditClient {
             get {
                 return ResourceManager.GetString("EditClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Merchant.
+        /// </summary>
+        public static string EditMerchant {
+            get {
+                return ResourceManager.GetString("EditMerchant", resourceCulture);
             }
         }
         
@@ -619,6 +655,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grand Total.
+        /// </summary>
+        public static string GrandTotal {
+            get {
+                return ResourceManager.GetString("GrandTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GST.
+        /// </summary>
+        public static string GST {
+            get {
+                return ResourceManager.GetString("GST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gujarati.
         /// </summary>
         public static string Gujarati {
@@ -633,6 +687,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string HalfDay {
             get {
                 return ResourceManager.GetString("HalfDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Information.
+        /// </summary>
+        public static string ItemInfo {
+            get {
+                return ResourceManager.GetString("ItemInfo", resourceCulture);
             }
         }
         
@@ -687,6 +750,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string MaterialTypeList {
             get {
                 return ResourceManager.GetString("MaterialTypeList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merchant Name.
+        /// </summary>
+        public static string MerchantName {
+            get {
+                return ResourceManager.GetString("MerchantName", resourceCulture);
             }
         }
         
@@ -826,6 +898,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rate.
+        /// </summary>
+        public static string Rate {
+            get {
+                return ResourceManager.GetString("Rate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remaining Amount.
         /// </summary>
         public static string RemainingAmount {
@@ -925,6 +1006,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SGST.
+        /// </summary>
+        public static string SGST {
+            get {
+                return ResourceManager.GetString("SGST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Site Detail.
         /// </summary>
         public static string SiteDetail {
@@ -984,6 +1074,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Status {
             get {
                 return ResourceManager.GetString("Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sub Total Amount.
+        /// </summary>
+        public static string SubTotalAmount {
+            get {
+                return ResourceManager.GetString("SubTotalAmount", resourceCulture);
             }
         }
         
@@ -1056,6 +1155,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string TotalMerchant {
             get {
                 return ResourceManager.GetString("TotalMerchant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Present Days.
+        /// </summary>
+        public static string TotalPresentDays {
+            get {
+                return ResourceManager.GetString("TotalPresentDays", resourceCulture);
             }
         }
         
@@ -1164,6 +1272,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string UsersList {
             get {
                 return ResourceManager.GetString("UsersList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weight/Nos.
+        /// </summary>
+        public static string Weight_Nos {
+            get {
+                return ResourceManager.GetString("Weight_Nos", resourceCulture);
             }
         }
         

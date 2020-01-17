@@ -489,4 +489,43 @@
   <data name="StartDate" xml:space="preserve">
     <value>Start Date</value>
   </data>
+  <data name="MerchantName" xml:space="preserve">
+    <value>Merchant Name</value>
+  </data>
+  <data name="AdjustmentAmount" xml:space="preserve">
+    <value>Adjustment Amount</value>
+  </data>
+  <data name="CGST" xml:space="preserve">
+    <value>CGST</value>
+  </data>
+  <data name="EditMerchant" xml:space="preserve">
+    <value>Edit Merchant</value>
+  </data>
+  <data name="GrandTotal" xml:space="preserve">
+    <value>Grand Total</value>
+  </data>
+  <data name="GST" xml:space="preserve">
+    <value>GST</value>
+  </data>
+  <data name="ItemInfo" xml:space="preserve">
+    <value>Item Information</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>Rate</value>
+  </data>
+  <data name="SGST" xml:space="preserve">
+    <value>SGST</value>
+  </data>
+  <data name="SubTotalAmount" xml:space="preserve">
+    <value>Sub Total Amount</value>
+  </data>
+  <data name="Weight_Nos" xml:space="preserve">
+    <value>Weight/Nos</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>Day</value>
+  </data>
+  <data name="TotalPresentDays" xml:space="preserve">
+    <value>Total Present Days</value>
+  </data>
 </root>

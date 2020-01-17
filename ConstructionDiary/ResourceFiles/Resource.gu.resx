@@ -489,4 +489,43 @@
   <data name="StartDate" xml:space="preserve">
     <value>શરૂઆત તારીખ</value>
   </data>
+  <data name="MerchantName" xml:space="preserve">
+    <value>વેપારી નું નામ</value>
+  </data>
+  <data name="AdjustmentAmount" xml:space="preserve">
+    <value>ગોઠવણ રકમ</value>
+  </data>
+  <data name="CGST" xml:space="preserve">
+    <value>સી.જી.એસ.ટી.</value>
+  </data>
+  <data name="EditMerchant" xml:space="preserve">
+    <value>વેપારી સંપાદિત કરો</value>
+  </data>
+  <data name="GrandTotal" xml:space="preserve">
+    <value>કુલ રકમ</value>
+  </data>
+  <data name="GST" xml:space="preserve">
+    <value>જી.એસ.ટી.</value>
+  </data>
+  <data name="Rate" xml:space="preserve">
+    <value>ભાવ</value>
+  </data>
+  <data name="SGST" xml:space="preserve">
+    <value>એસ.જી.એસ.ટી.</value>
+  </data>
+  <data name="SubTotalAmount" xml:space="preserve">
+    <value>પેટા કુલ રકમ</value>
+  </data>
+  <data name="Weight_Nos" xml:space="preserve">
+    <value>વજન / સંખ્યા</value>
+  </data>
+  <data name="ItemInfo" xml:space="preserve">
+    <value>આઇટમ માહિતી</value>
+  </data>
+  <data name="Day" xml:space="preserve">
+    <value>દિવસ</value>
+  </data>
+  <data name="TotalPresentDays" xml:space="preserve">
+    <value>કુલ હાજર દિવસ</value>
+  </data>
 </root>

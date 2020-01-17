@@ -1,4 +1,5 @@
-﻿@using ConstructionDiary.Models;
+﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.Models;
 @model MaterialPurchaseVM
 @{
     ViewBag.Title = "Purchase";
@@ -6,9 +7,10 @@
 
 @{
     ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
-     Guid ClientId = new Guid(clsSession.ClientID.ToString());
+    Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-    List<tbl_Sites> lstSites = _db.tbl_Sites.Where(x => x.IsActive && !x.IsDeleted).OrderBy(x => x.SiteName).ToList();
+    List<tbl_Merchant> lstMerchants = _db.tbl_Merchant.Where(x => x.IsActive && !x.IsDeleted && x.ClientId == ClientId).OrderBy(x => x.MerchantName).ToList();
+    List<tbl_Sites> lstSites = _db.tbl_Sites.Where(x => x.IsActive && !x.IsDeleted && x.ClientId == ClientId).OrderBy(x => x.SiteName).ToList();
     List<tbl_MaterialType> lstMaterialType = _db.tbl_MaterialType.Where(x => x.IsActive && !x.IsDeleted).OrderBy(x => x.MaterialType).ToList();
 
     List<tbl_MaterialPurchaseItems> lstPurchaseItems = _db.tbl_MaterialPurchaseItems.Where(x => x.MaterialPurchaseId == Model.MaterialPurchaseId).ToList();
@@ -66,6 +68,32 @@
                         </div>
 
                         <div class="col-sm-4 form-group">
+                            <label for="MerchantId">@Resource.Merchants</label>
+                            <select class="form-control" id="MerchantId" name="MerchantId">
+                                <option value="">-@Resource.Merchants-</option>
+                                @if (lstMerchants.Count > 0)
+                                {
+                                    foreach (var merchant in lstMerchants)
+                                    {
+                                        if (merchant.MerchantId == Model.MerchantId)
+                                        {
+                                            <option value="@merchant.MerchantId" selected="selected">@merchant.FirmName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@merchant.MerchantId">@merchant.FirmName</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                            <span id="spn_MerchantId" class="field-validation-valid text-danger"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-sm-4 form-group">
                             <label for="GST_Per">GST (%)</label>
                             <select class="form-control" id="GST_Per" name="GST_Per">
                                 <option value="0">-Select-</option>
@@ -77,9 +105,6 @@
                             <span id="spn_GST_Per" class="field-validation-valid text-danger"></span>
                         </div>
 
-                    </div>
-
-                    <div class="row"> 
                         <div class="col-sm-4 form-group">
                             <label for="Remarks">Remarks</label>
                             <input class="form-control" id="Remarks" name="Remarks" placeholder="Remarks" type="text" value="@Model.Remarks">
@@ -364,9 +389,10 @@
         var isvalid = true;
 
         var MaterialPurchaseId = $("#hdnMaterialPurchaseId").val();
-        var PurchaseDate = $("#PurchaseDate").val(); 
+        var PurchaseDate = $("#PurchaseDate").val();
         var GST_Per = $("#GST_Per").val();
         var SiteId = $("#SiteId").val();
+        var MerchantId = $("#MerchantId").val();
         var Remarks = $("#Remarks").val();
         var AdjustmentAmount = $("#AdjustmentAmount").val();
 
@@ -378,7 +404,16 @@
         else {
             $("#spn_PurchaseDate").hide();
         }
-         
+
+        if (IsEmptyOrNull(MerchantId)) {
+            $("#spn_MerchantId").text("This field is required");
+            $("#spn_MerchantId").show();
+            isvalid = false;
+        }
+        else {
+            $("#spn_MerchantId").hide();
+        }
+
         if (IsEmptyOrNull(SiteId)) {
             $("#spn_SiteId").text("This field is required");
             $("#spn_SiteId").show();
@@ -457,7 +492,8 @@
         var PurchaseVM = {
             "MaterialPurchaseId": MaterialPurchaseId,
             "PurchaseDate": PurchaseDate,
-            "SiteId": SiteId, 
+            "SiteId": SiteId,
+            "MerchantId" : MerchantId,
             "Remarks": Remarks,
             "GST_Per": GST_Per,
             "AdjustmentAmount": AdjustmentAmount,

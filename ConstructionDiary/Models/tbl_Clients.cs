@@ -19,6 +19,7 @@ namespace ConstructionDiary.Models
         {
             this.tbl_Users = new HashSet<tbl_Users>();
             this.tbl_MaterialType = new HashSet<tbl_MaterialType>();
+            this.tbl_Merchant = new HashSet<tbl_Merchant>();
         }
     
         public System.Guid ClientId { get; set; }
@@ -37,5 +38,7 @@ namespace ConstructionDiary.Models
         public virtual ICollection<tbl_Users> tbl_Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_MaterialType> tbl_MaterialType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_Merchant> tbl_Merchant { get; set; }
     }
 }

@@ -22,6 +22,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
             List<MaterialPurchaseVM> lstPurchase = (from mat in _db.tbl_MaterialPurchase
                                                     join site in _db.tbl_Sites on mat.SiteId equals site.SiteId
+                                                    join marchant in _db.tbl_Merchant on mat.MerchantId equals marchant.MerchantId into outerJoinMerchant
+                                                    from marchant in outerJoinMerchant.DefaultIfEmpty()
                                                     where !mat.IsDeleted && mat.IsActive && mat.ClientId == ClientId
                                                     select new MaterialPurchaseVM
                                                     {
@@ -30,9 +32,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                         SiteId = mat.SiteId,
                                                         Total = mat.Total,
                                                         GST_Per = mat.GST_Per,
-                                                        SiteName = site.SiteName 
-                                                    }).ToList();
-
+                                                        SiteName = site.SiteName,
+                                                        MerchantName = marchant.FirmName
+                                                    }).ToList(); 
             return View(lstPurchase);
         }
 
@@ -85,6 +87,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objPurchase.MaterialPurchaseId = Guid.NewGuid();
                     objPurchase.PurchaseDate = sale_date;
                     objPurchase.SiteId = purchaseData.SiteId;
+                    objPurchase.MerchantId = purchaseData.MerchantId;
                     objPurchase.ClientId = ClientId;
                     objPurchase.Remarks = purchaseData.Remarks;
                     objPurchase.GST_Per = Convert.ToInt32(purchaseData.GST_Per);
@@ -139,6 +142,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                           MaterialPurchaseId = s.MaterialPurchaseId,
                                           dtPurchaseDate = s.PurchaseDate,
                                           SiteId = s.SiteId,
+                                          MerchantId = s.MerchantId,
                                           SubTotal = s.SubTotal,
                                           GST_Per = s.GST_Per,
                                           CGST_Amount = s.CGST_Amount,
@@ -201,6 +205,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                         objPurchase.PurchaseDate = sale_date;
                         objPurchase.SiteId = saleData.SiteId;
+                        objPurchase.MerchantId = saleData.MerchantId;
                         objPurchase.Remarks = saleData.Remarks;
                         objPurchase.GST_Per = Convert.ToInt32(saleData.GST_Per);
                         objPurchase.AdjustmentAmount = saleData.AdjustmentAmount;

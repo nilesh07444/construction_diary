@@ -32,6 +32,8 @@
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_MaterialPurchaseItems" Width="1.5" PointX="7.5" PointY="16.75" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_MaterialPurchaseItems_tbl_MaterialPurchase" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_MaterialPurchaseItems_tbl_MaterialType" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Merchant" Width="1.5" PointX="5.25" PointY="23.375" />
+        <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
