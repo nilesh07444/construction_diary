@@ -19,9 +19,18 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
-                            <div class="btn-group pull-right">
+                            <div class="btn-group pull-left">
                                 <a class="btn btn-success" href="/admin/material/add"><i class="fa fa-plus"></i> @Resource.AddNewMaterial</a>
                             </div>
+                        </div>
+                        <div class="btn-group pull-right">
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                @Resource.Download <i class="fa fa-angle-down"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                @*<li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>*@
+                            </ul>
                         </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped table-hover" id="tblMaterialsList">
@@ -41,18 +50,18 @@
                                 {
                                     foreach (MaterialPurchaseVM purchase in Model)
                                     {
-                                <tr class="gradeX">
-                                    <td>@counter</td>
-                                    <td>@Convert.ToDateTime(purchase.dtPurchaseDate).ToString("dd/MM/yyyy")</td>
-                                    <td>@purchase.MerchantName</td>
-                                    <td>@purchase.SiteName</td>
-                                    <td>@purchase.GST_Per%</td>
-                                    <td>@CoreHelper.GetFormatterAmount(purchase.Total)</td>
-                                    <td>
-                                        <a href="/admin/material/edit/@purchase.MaterialPurchaseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                        <button onclick="fnDeleteMaterial('@purchase.MaterialPurchaseId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                        <tr class="gradeX">
+                                            <td>@counter</td>
+                                            <td>@Convert.ToDateTime(purchase.dtPurchaseDate).ToString("dd/MM/yyyy")</td>
+                                            <td>@purchase.MerchantName</td>
+                                            <td>@purchase.SiteName</td>
+                                            <td>@purchase.GST_Per%</td>
+                                            <td>@CoreHelper.GetFormatterAmount(purchase.Total)</td>
+                                            <td>
+                                                <a href="/admin/material/edit/@purchase.MaterialPurchaseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button onclick="fnDeleteMaterial('@purchase.MaterialPurchaseId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                         counter++;
                                     }
                                 }
@@ -146,5 +155,13 @@
         jQuery.unblockUI();
     });
 
+    jQuery(document).on("click", "#btnDownloadPdf", function () {
+ 
+        var duration = "";
+        var start = "";
+        var end = "";
+
+        window.location.href = "/admin/material/ExportPDFOfMaterial?duration=" + duration + "&start=" + start+ "&end=" + end;
+    });
 
 </script>

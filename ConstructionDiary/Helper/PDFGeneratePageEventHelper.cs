@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using ConstructionDiary.Models;
 
 namespace ConstructionDiary.Helper
 {
@@ -49,7 +50,7 @@ namespace ConstructionDiary.Helper
             cb1.BeginText();
             cb1.SetFontAndSize(bf, 8);
             cb1.SetTextMatrix(document.LeftMargin + 310, pageSize.GetBottom(document.BottomMargin));
-            cb1.ShowText("Construction Software");
+            cb1.ShowText(clsSession.FirmName);
 
             cb1.EndText();
             cb1.AddTemplate(template1, document.LeftMargin + 260, pageSize.GetBottom(document.BottomMargin));

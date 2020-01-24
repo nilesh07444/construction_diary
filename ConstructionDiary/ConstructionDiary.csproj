@@ -2276,6 +2276,7 @@
     <Content Include="Areas\Admin\Views\Merchant\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Merchant\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Merchant\Edit.cshtml" />
+    <Content Include="fonts\ARIALUNI.TTF" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

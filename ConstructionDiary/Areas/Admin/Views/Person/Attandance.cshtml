@@ -89,20 +89,22 @@
 
             <section class="panel">
                 <div class="panel-body">
-                    @*<div class="row">
+                    @if (Model.Count > 0)
+                    {
+                        <div class="row">
                             <div class="col-sm-12">
-                                <div class="btn-group pull-right hidden-sm hidden-md hidden-phone" style="margin-bottom: 15px;">
+                                <div class="btn-group pull-right" style="margin-bottom: 15px;">
                                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                                         Download <i class="fa fa-angle-down"></i>
                                     </button>
                                     <ul class="dropdown-menu pull-right">
                                         <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
-                                        <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
+                                        @*<li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>*@
                                     </ul>
                                 </div>
                             </div>
-                        </div>*@
-
+                        </div>
+                    }
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="table-responsive" tabindex="1">
@@ -268,20 +270,41 @@
 
     });
 
-    function getDownloadParameters() {
+    function getDownloadParameters(methodname) {
 
+        var duration = $("#Duration").val();
+        var startDate = $("#StartDate").val();
+        var endDate = $("#EndDate").val();
+
+        var person_id = '@ViewBag.PersonId';
+        var url = "/admin/person/"+ methodname +"?id=" + person_id + "&duration=" + duration;
+
+        if (duration == "custom") {
+            if (!isNullOrUndefinedCustom(startDate))
+                url += "&start=" + startDate;
+
+            if (!isNullOrUndefinedCustom(endDate))
+                url += "&end=" + endDate;
+        }
+        return url;
     }
 
     jQuery(document).on("click", "#btnDownloadPdf", function () {
-        var parameters = getDownloadParameters();
-        alert(parameters);
-        //window.location.href = "/admin/myaccount/ExportPDFOfAllCreditList"
+
+        StartLoading();
+
+        var downloadUrl = getDownloadParameters("ExportPDFOfPersonAttendance");
+        window.location.href = downloadUrl;
+
+        setTimeout(function () { StopLoading(); }, 3000);
+
+        
 
     });
 
     jQuery(document).on("click", "#btnDownloadExcel", function () {
-        var parameters = getDownloadParameters();
-        //window.location.href = "/admin/myaccount/ExportExcelOfAllCreditList"
+        var downloadUrl = getDownloadParameters("ExportPDFOfPersonAttendance");
+        window.location.href = downloadUrl;
     });
 
 </script>

@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using ConstructionDiary.Helper;
 using ConstructionDiary.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
 using Newtonsoft.Json;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
@@ -34,7 +40,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                         GST_Per = mat.GST_Per,
                                                         SiteName = site.SiteName,
                                                         MerchantName = marchant.FirmName
-                                                    }).ToList(); 
+                                                    }).OrderByDescending(x=>x.dtPurchaseDate).ToList(); 
             return View(lstPurchase);
         }
 
@@ -305,6 +311,191 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return ReturnMessage;
         }
+        
+        public string ExportPDFOfMaterial(string expensetype, string duration, string start, string end)
+        {
 
+            string Result = "";
+            try
+            {
+                DateTime new_startDate = DateTime.Now;
+                DateTime new_endDate = DateTime.Now;
+                List<MaterialPurchaseVM> lstMaterial = GetMaterialListByFilter("", "", "");
+
+                decimal? TotalMaterialAmount = lstMaterial.Select(x => x.Total).Sum();
+                string strTotalMaterialAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalMaterialAmount));
+
+                string[] strColumns = new string[5] { "Date", "Merchant Name", "Site Name", "GST", "Total" };
+                if (lstMaterial != null && lstMaterial.Count() > 0)
+                {
+
+                    List<DateTime> lstDateTemp = new List<DateTime>();
+                    StringBuilder strHTML = new StringBuilder();
+                    strHTML.Append("<!DOCTYPE html>");
+                    strHTML.Append("<style>");
+                    strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
+                    strHTML.Append("</style>");
+
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    string Title = "Material List";
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append(Title);
+                    strHTML.Append("</th>");
+                    strHTML.Append("</tr>");
+                    //strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + new_startDate.ToString("dd/MM/yyyy") + " To " + new_endDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr>");
+                    for (int idx = 0; idx < strColumns.Length; idx++)
+                    {
+                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append(strColumns[idx]);
+                        strHTML.Append("</th>");
+                    }
+                    strHTML.Append("</tr>");
+                    strHTML.Append("</thead>");
+                    strHTML.Append("<tbody>");
+                    foreach (var obj in lstMaterial)
+                    {
+
+                        if (obj != null)
+                        {
+
+                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            {
+                                string strcolval = "";
+                                switch (strColumns[Col])
+                                {
+
+                                    case "Date":
+                                        {
+                                            strcolval = Convert.ToDateTime(obj.dtPurchaseDate).ToString("dd/MM/yyyy");
+                                            break;
+                                        }
+                                    case "Merchant Name":
+                                        {
+                                            strcolval = obj.MerchantName;
+                                            break;
+                                        }
+                                    case "Site Name":
+                                        {
+                                            strcolval = obj.SiteName;
+                                            break;
+                                        }
+                                    case "GST":
+                                        {
+                                            strcolval = obj.GST_Per.ToString() + "%";
+                                            break;
+                                        }
+                                    case "Total":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Total);
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+
+                                }
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append(strcolval);
+                                strHTML.Append("</td>");
+                            }
+                            strHTML.Append("</tr>");
+                        }
+                    }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan='4' style='text-align:right; border: 1px solid #ccc;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalMaterialAmount + " </th>");                    
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
+                    StringReader sr = new StringReader(strHTML.ToString());
+
+                    var myString = strHTML.ToString();
+                    var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
+                    var ms = new MemoryStream(myByteArray);
+
+                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+                    writer.PageEvent = new PDFGeneratePageEventHelper();
+                    pdfDoc.Open();
+
+                    XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
+                    objHelp.ParseXHtml(writer, pdfDoc, ms, null, Encoding.UTF8, new UnicodeFontFactory());
+
+                    pdfDoc.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "download;filename=Material List" + ".pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(pdfDoc);
+                    Response.End();
+                }
+
+                return Result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+            }
+
+        }
+        
+        public List<MaterialPurchaseVM> GetMaterialListByFilter(string duration, string start, string end)
+        {
+            List<MaterialPurchaseVM> lstMaterial = new List<MaterialPurchaseVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            if (string.IsNullOrEmpty(duration))
+                duration = "month";
+
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today;
+
+            if (duration == "month")
+            {
+                var myDate = DateTime.Now;
+                startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                endDate = lastDay;
+            }
+            else if (duration == "custom")
+            {
+                if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                {
+                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                }
+            }
+
+            lstMaterial = (from mat in _db.tbl_MaterialPurchase
+                           join site in _db.tbl_Sites on mat.SiteId equals site.SiteId
+                           join marchant in _db.tbl_Merchant on mat.MerchantId equals marchant.MerchantId into outerJoinMerchant
+                           from marchant in outerJoinMerchant.DefaultIfEmpty()
+                           where !mat.IsDeleted && mat.IsActive && mat.ClientId == ClientId
+                           select new MaterialPurchaseVM
+                           {
+                               MaterialPurchaseId = mat.MaterialPurchaseId,
+                               dtPurchaseDate = mat.PurchaseDate,
+                               SiteId = mat.SiteId,
+                               Total = mat.Total,
+                               GST_Per = mat.GST_Per,
+                               SiteName = site.SiteName,
+                               MerchantName = marchant.FirmName
+                           }).OrderByDescending(x => x.dtPurchaseDate).ToList();
+
+            return lstMaterial;
+        }
+        
     }
 }

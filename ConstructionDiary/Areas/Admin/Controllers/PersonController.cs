@@ -2,19 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using ConstructionDiary.Helper;
 using ConstructionDiary.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
+using ConstructionDiary.ResourceFiles;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
     [filters]
     public class PersonController : MyBaseController
     {
-        ConstructionDiaryEntities _db; 
+        ConstructionDiaryEntities _db;
         public PersonController()
         {
-            _db = new ConstructionDiaryEntities(); 
+            _db = new ConstructionDiaryEntities();
         }
         public ActionResult Index()
         {
@@ -449,5 +455,239 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return personName;
         }
 
+        public string ExportPDFOfPersonAttendance(Guid id, string duration, string start, string end)
+        {
+
+            string Result = "";
+
+            try
+            {
+                List<ReportPersonAttendanceVM> lstPersonAttendanceVM = new List<ReportPersonAttendanceVM>();
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                if (string.IsNullOrEmpty(duration))
+                    duration = "month";
+
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = DateTime.Today;
+
+                if (duration == "month")
+                {
+                    var myDate = DateTime.Now;
+                    startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                    DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                    endDate = lastDay;
+                }
+                else if (duration == "custom")
+                {
+                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                    {
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                    }
+                }
+
+                lstPersonAttendanceVM = getAttendanceByFilter(id, startDate, endDate);
+
+                string PersonName = GetPersonName(id);
+
+                decimal? TotalPayableAmount = lstPersonAttendanceVM.Select(x => x.PayableAmount).Sum();
+                string strTotalPayableAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalPayableAmount));
+
+                decimal? TotalWithdrawAmount = lstPersonAttendanceVM.Select(x => x.WithdrawAmount).Sum();
+                string strTotalWithdrawAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalWithdrawAmount));
+
+                decimal? TotalOvertimeAmount = lstPersonAttendanceVM.Select(x => x.OvertimeAmount).Sum();
+                string strTotalOvertimeAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalOvertimeAmount));
+
+                decimal? RemainingAmt = (TotalPayableAmount + TotalOvertimeAmount) - TotalWithdrawAmount;
+                string strRemainingAmt = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmt));
+
+                string[] strColumns = new string[7] { "Date", "Status", "Amount", "Overtime", "Withdraw", "Site Name", "Remarks" };
+                if (lstPersonAttendanceVM != null && lstPersonAttendanceVM.Count() > 0)
+                {
+
+                    List<DateTime> lstDateTemp = new List<DateTime>();
+                    StringBuilder strHTML = new StringBuilder();
+                    strHTML.Append("<!DOCTYPE html>");
+                    strHTML.Append("<style>");
+                    strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
+                    strHTML.Append("</style>");
+
+
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    string Title = "Attendance List Of " + PersonName;
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append(Title);
+                    strHTML.Append("</th>");
+                    strHTML.Append("</tr>");
+                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + startDate.ToString("dd/MM/yyyy") + " To " + endDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr>");
+                    for (int idx = 0; idx < strColumns.Length; idx++)
+                    {
+                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append(strColumns[idx]);
+                        strHTML.Append("</th>");
+                    }
+                    strHTML.Append("</tr>");
+                    strHTML.Append("</thead>");
+                    strHTML.Append("<tbody>");
+                    foreach (var obj in lstPersonAttendanceVM)
+                    {
+
+                        if (obj != null)
+                        {
+
+                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            {
+                                string strcolval = "";
+                                switch (strColumns[Col])
+                                {
+
+                                    case "Date":
+                                        {
+                                            strcolval = Convert.ToDateTime(obj.AttendanceDate).ToString("dd/MM/yyyy");
+                                            break;
+                                        }
+                                    case "Status":
+                                        {
+                                            strcolval = obj.AttendanceStatus.ToString();
+                                            break;
+                                        }
+                                    case "Amount":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.PayableAmount);
+                                            break;
+                                        }
+                                    case "Overtime":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.OvertimeAmount);
+                                            break;
+                                        }
+                                    case "Withdraw":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.WithdrawAmount);
+                                            break;
+                                        }
+                                    case "Site Name":
+                                        {
+                                            strcolval = obj.SiteName;
+                                            break;
+                                        }
+                                    case "Remarks":
+                                        {
+                                            strcolval = obj.Remarks;
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+
+                                }
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append(strcolval);
+                                strHTML.Append("</td>");
+                            }
+                            strHTML.Append("</tr>");
+                        }
+                    }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan='2' style='text-align:right; border: 1px solid #ccc;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalPayableAmount + " </th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalOvertimeAmount + " </th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalWithdrawAmount + " </th>");
+                    strHTML.Append("<th colspan='3' style='border: 1px solid #ccc;'></th>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
+                    // Calculation table
+
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='margin-top:20px; width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<tbody>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">Total Days</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">= " + lstPersonAttendanceVM.Sum(x => x.AttendanceStatus).ToString("0.##") + " Days</td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">Remaining Amount</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">= (Amount + Overtime) - Withdraw </td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">= (" + strTotalPayableAmount + " + " + strTotalOvertimeAmount + ") - " + strTotalWithdrawAmount + "  </td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">= " + strRemainingAmt + "</td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
+                    StringReader sr = new StringReader(strHTML.ToString());
+
+                    var myString = strHTML.ToString();
+                    var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
+                    var ms = new MemoryStream(myByteArray);
+
+                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+                    writer.PageEvent = new PDFGeneratePageEventHelper();
+                    pdfDoc.Open();
+
+                    XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
+                    objHelp.ParseXHtml(writer, pdfDoc, ms, null, Encoding.UTF8, new UnicodeFontFactory());
+
+                    pdfDoc.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "download;filename=Attendance List Of " + PersonName + ".pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(pdfDoc);
+                    Response.End();
+                }
+
+                return Result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+            }
+
+        }
+
     }
+
+    public class UnicodeFontFactory : FontFactoryImp
+    {
+        private static readonly string fontpath = System.Web.HttpContext.Current.Server.MapPath("~/fonts/");
+        private readonly BaseFont _baseFont;
+
+        public UnicodeFontFactory()
+        {
+            _baseFont = BaseFont.CreateFont(fontpath + "ARIALUNI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        }
+
+        public override Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,
+          bool cached)
+        {
+            return new Font(_baseFont, size, style, color);
+        }
+    }
+
 }

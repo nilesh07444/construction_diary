@@ -19,8 +19,17 @@
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
-                            <div class="btn-group pull-right">
+                            <div class="btn-group pull-left">
                                 <a class="btn btn-success" href="/admin/expense/add"><i class="fa fa-plus"></i> @Resource.AddNewExpense</a>
+                            </div>
+                            <div class="btn-group pull-right">
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    @Resource.Download <i class="fa fa-angle-down"></i>
+                                </button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                    @*<li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>*@
+                                </ul>
                             </div>
                         </div>
                         <div class="space15"></div>
@@ -41,18 +50,18 @@
                                 {
                                     foreach (ExpenseVM expense in Model)
                                     {
-                                <tr class="gradeX">
-                                    <td>@counter.</td>
-                                    <td>@Convert.ToDateTime(expense.dtExpenseDate).ToString("dd/MM/yyyy")</td>
-                                    <td>@CoreHelper.GetFormatterAmount(expense.Amount)</td>
-                                    <td>@expense.ExpenseType</td>
-                                    <td>@expense.SiteName</td>
-                                    <td>@expense.Description</td>
-                                    <td>
-                                        <a href="/admin/expense/edit/@expense.ExpenseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                        <button onclick="fnDeleteExpense('@expense.ExpenseId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@Convert.ToDateTime(expense.dtExpenseDate).ToString("dd/MM/yyyy")</td>
+                                            <td>@CoreHelper.GetFormatterAmount(expense.Amount)</td>
+                                            <td>@expense.ExpenseType</td>
+                                            <td>@expense.SiteName</td>
+                                            <td>@expense.Description</td>
+                                            <td>
+                                                <a href="/admin/expense/edit/@expense.ExpenseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button onclick="fnDeleteExpense('@expense.ExpenseId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                         counter++;
                                     }
                                 }
@@ -144,6 +153,16 @@
 
     jQuery(window).on("load", function () {
         jQuery.unblockUI();
+    });
+
+    jQuery(document).on("click", "#btnDownloadPdf", function () {
+
+        var expensetype = "";
+        var duration = "";
+        var start = "";
+        var end = "";
+
+        window.location.href = "/admin/expense/ExportPDFOfExpense?expensetype=" + expensetype + "&duration=" + duration + "&start=" + start+ "&end=" + end;
     });
 
 

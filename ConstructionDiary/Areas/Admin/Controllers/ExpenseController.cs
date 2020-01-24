@@ -5,6 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ConstructionDiary.ResourceFiles;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using iTextSharp.tool.xml;
+using System.Text;
+using ConstructionDiary.Helper;
+using System.IO;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -22,7 +28,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             List<ExpenseVM> lstExpense = (from c in _db.tbl_Expenses
-                                          join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId 
+                                          join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
                                           join site in _db.tbl_Sites on c.SiteId equals site.SiteId into outerJoinSite
                                           from site in outerJoinSite.DefaultIfEmpty()
                                           where !c.IsDeleted && c.ClientId == ClientId
@@ -37,7 +43,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                               ExpenseTypeId = c.ExpenseTypeId,
                                               ExpenseType = exp.ExpenseType,
                                               IsActive = c.IsActive
-                                          }).OrderByDescending(x=>x.dtExpenseDate).ToList();
+                                          }).OrderByDescending(x => x.dtExpenseDate).ToList();
             return View(lstExpense);
         }
 
@@ -116,7 +122,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 }
                 return RedirectToAction("Index");
             }
-              
+
             return View(expense);
         }
 
@@ -203,7 +209,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            
+
 
             return View(expense);
         }
@@ -239,5 +245,211 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
 
+        public string ExportPDFOfExpense(string expensetype, string duration, string start, string end)
+        {
+
+            string Result = "";
+            try
+            {
+                DateTime new_startDate = DateTime.Now;
+                DateTime new_endDate = DateTime.Now;
+                List<ExpenseVM> lstExpense = GetExpenseListByFilter("", "", "", "");
+
+                decimal? TotalExpenseAmount = lstExpense.Select(x => x.Amount).Sum();
+                string strTotalExpenseAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalExpenseAmount));
+
+                string[] strColumns = new string[5] { "Date", "Amount", "Expense Type", "Site Name", "Description" };
+                if (lstExpense != null && lstExpense.Count() > 0)
+                {
+
+                    List<DateTime> lstDateTemp = new List<DateTime>();
+                    StringBuilder strHTML = new StringBuilder();
+                    strHTML.Append("<!DOCTYPE html>");
+                    strHTML.Append("<style>");
+                    strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
+                    strHTML.Append("</style>");
+
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    string Title = "Expense List";
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append(Title);
+                    strHTML.Append("</th>");
+                    strHTML.Append("</tr>");
+                    //strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + new_startDate.ToString("dd/MM/yyyy") + " To " + new_endDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr>");
+                    for (int idx = 0; idx < strColumns.Length; idx++)
+                    {
+                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append(strColumns[idx]);
+                        strHTML.Append("</th>");
+                    }
+                    strHTML.Append("</tr>");
+                    strHTML.Append("</thead>");
+                    strHTML.Append("<tbody>");
+                    foreach (var obj in lstExpense)
+                    {
+
+                        if (obj != null)
+                        {
+
+                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            {
+                                string strcolval = "";
+                                switch (strColumns[Col])
+                                {
+
+                                    case "Date":
+                                        {
+                                            strcolval = Convert.ToDateTime(obj.dtExpenseDate).ToString("dd/MM/yyyy");
+                                            break;
+                                        }
+                                    case "Amount":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
+                                            break;
+                                        }
+                                    case "Expense Type":
+                                        {
+                                            strcolval = obj.ExpenseType;
+                                            break;
+                                        }
+                                    case "Site Name":
+                                        {
+                                            strcolval = obj.SiteName;
+                                            break;
+                                        }
+                                    case "Description":
+                                        {
+                                            strcolval = obj.Description;
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+
+                                }
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append(strcolval);
+                                strHTML.Append("</td>");
+                            }
+                            strHTML.Append("</tr>");
+                        }
+                    }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalExpenseAmount + " </th>");
+                    strHTML.Append("<th colspan='3' style='border: 1px solid #ccc;'></th>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
+                    StringReader sr = new StringReader(strHTML.ToString());
+
+                    var myString = strHTML.ToString();
+                    var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
+                    var ms = new MemoryStream(myByteArray);
+
+                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+                    writer.PageEvent = new PDFGeneratePageEventHelper();
+                    pdfDoc.Open();
+
+                    XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
+                    objHelp.ParseXHtml(writer, pdfDoc, ms, null, Encoding.UTF8, new UnicodeFontFactory());
+
+                    pdfDoc.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "download;filename=Expense List" + ".pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(pdfDoc);
+                    Response.End();
+                }
+
+                return Result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+            }
+
+        }
+
+        public List<ExpenseVM> GetExpenseListByFilter(string expensetype, string duration, string start, string end)
+        {
+            List<ExpenseVM> lstExpenses = new List<ExpenseVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            if (string.IsNullOrEmpty(duration))
+                duration = "month";
+
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today;
+
+            if (duration == "month")
+            {
+                var myDate = DateTime.Now;
+                startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                endDate = lastDay;
+            }
+            else if (duration == "custom")
+            {
+                if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                {
+                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                }
+            }
+
+            lstExpenses = (from c in _db.tbl_Expenses
+                           join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
+                           join site in _db.tbl_Sites on c.SiteId equals site.SiteId into outerJoinSite
+                           from site in outerJoinSite.DefaultIfEmpty()
+                           where !c.IsDeleted && c.ClientId == ClientId
+                           select new ExpenseVM
+                           {
+                               ExpenseId = c.ExpenseId,
+                               dtExpenseDate = c.ExpenseDate,
+                               Amount = c.Amount,
+                               Description = c.Description,
+                               SiteId = c.SiteId,
+                               SiteName = site.SiteName,
+                               ExpenseTypeId = c.ExpenseTypeId,
+                               ExpenseType = exp.ExpenseType,
+                               IsActive = c.IsActive
+                           }).OrderByDescending(x => x.dtExpenseDate).ToList();
+             
+            return lstExpenses;
+        }
+
     }
+
+    public class UnicodeFontFactory1 : FontFactoryImp
+    {
+        private static readonly string fontpath = System.Web.HttpContext.Current.Server.MapPath("~/fonts/");
+        private readonly BaseFont _baseFont;
+
+        public UnicodeFontFactory1()
+        {
+            _baseFont = BaseFont.CreateFont(fontpath + "ARIALUNI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        }
+
+        public override Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,
+          bool cached)
+        {
+            return new Font(_baseFont, size, style, color);
+        }
+    }
+
 }
