@@ -5,18 +5,74 @@
 }
 
 @{
+    decimal? TotalExpenseAmount = Model.Select(x => x.Amount).Sum();
+    string strTotalExpenseAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalExpenseAmount));
+
     int counter = 1;
 }
+ 
 
 <section class="wrapper site-min-height">
     <!-- page start-->
     <div class="row">
         <div class="col-lg-12">
+
             <section class="panel">
                 <header class="panel-heading">
                     <strong>@Resource.ExpenseList</strong>
                 </header>
                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-3 form-group">
+                            <label for="Duration">@Resource.Duration</label>
+                            <select class="form-control" id="Duration" name="Duration">
+                                <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
+                                <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-3 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="">
+                                <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
+                                <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            </div>
+                            <span id="spn_StartDate" class="formerror">@Resource.Required</span>
+                        </div>
+                        <div class="col-sm-3 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="">
+                                <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
+                                <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            </div>
+                            <span id="spn_EndDate" class="formerror">@Resource.Required</span>
+                        </div>
+                        <div class="col-sm-3 form-group">
+                            <label></label>
+                            <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="panel">
+
+                <div class="panel-body">
+
+                    <div class="row state-overview">
+                        <div class="col-lg-3 col-sm-6">
+                            <section class="panel" style="border: 1px solid #ddd;">
+                                <div class="symbol terques">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                </div>
+                                <div class="value">
+                                    <h1>@strTotalExpenseAmount</h1>
+                                    <p>@Resource.Total</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
                     <div class="adv-table">
                         <div class="clearfix">
                             <div class="btn-group pull-left">
@@ -157,13 +213,82 @@
 
     jQuery(document).on("click", "#btnDownloadPdf", function () {
 
-        var expensetype = "";
-        var duration = "";
-        var start = "";
-        var end = "";
+        StartLoading();
+        setTimeout(function(){ StopLoading() }, 3000);
 
-        window.location.href = "/admin/expense/ExportPDFOfExpense?expensetype=" + expensetype + "&duration=" + duration + "&start=" + start+ "&end=" + end;
+        //var expensetype = "";
+        //var duration = "";
+        var start = '@ViewBag.reportStartDate';
+        var end  = '@ViewBag.reportEndDate';
+
+        window.location.href = "/admin/expense/ExportPDFOfExpense?start=" + start+ "&end=" + end;
     });
+
+    $(document).on("click", "#btnSearchReport", function () {
+
+        var duration = $("#Duration").val();
+        var startDate = $("#StartDate").val();
+        var endDate = $("#EndDate").val();
+
+        var flag = true;
+        $(".formerror").hide();
+
+        if (duration == "") {
+            $("#spn_Duration").show();
+            flag = false;
+        }
+
+        if (duration == "custom") {
+            if (isNullOrUndefinedCustom(startDate)) {
+                $("#spn_StartDate").show();
+                flag = false;
+            }
+            if (isNullOrUndefinedCustom(endDate)) {
+                $("#spn_EndDate").show();
+                flag = false;
+            }
+        }
+
+        if (flag == true) {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            reloadFilterUrl(duration, startDate, endDate);
+        }
+
+    });
+
+    function reloadFilterUrl(duration, startDate, endDate) {
+
+        var url = "/admin/expense?duration=" + duration;
+
+        if (duration == "custom") {
+            if (!isNullOrUndefinedCustom(startDate))
+                url += "&start=" + startDate;
+
+            if (!isNullOrUndefinedCustom(endDate))
+                url += "&end=" + endDate;
+        }
+        window.location.href = url;
+    }
+
+    function isNullOrUndefinedCustom(str) {
+        if (str == "" || str == undefined || str == null)
+            return true;
+        else
+            return false;
+    }
+
+    $(document).on("change", "#Duration", function () {
+        var seletedType = $(this).val();
+
+        if (seletedType == "custom") {
+            $(".clsFilterdate").addClass("clsShow").removeClass("clsHide");
+        }
+        else {
+            $(".clsFilterdate").addClass("clsHide").removeClass("clsShow");
+        }
+
+    });
+
 
 
 </script>

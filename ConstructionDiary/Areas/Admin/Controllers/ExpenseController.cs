@@ -23,27 +23,54 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             _db = new ConstructionDiaryEntities();
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string duration, string start, string end)
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            List<ExpenseVM> lstExpense = new List<ExpenseVM>();
 
-            List<ExpenseVM> lstExpense = (from c in _db.tbl_Expenses
-                                          join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
-                                          join site in _db.tbl_Sites on c.SiteId equals site.SiteId into outerJoinSite
-                                          from site in outerJoinSite.DefaultIfEmpty()
-                                          where !c.IsDeleted && c.ClientId == ClientId
-                                          select new ExpenseVM
-                                          {
-                                              ExpenseId = c.ExpenseId,
-                                              dtExpenseDate = c.ExpenseDate,
-                                              Amount = c.Amount,
-                                              Description = c.Description,
-                                              SiteId = c.SiteId,
-                                              SiteName = site.SiteName,
-                                              ExpenseTypeId = c.ExpenseTypeId,
-                                              ExpenseType = exp.ExpenseType,
-                                              IsActive = c.IsActive
-                                          }).OrderByDescending(x => x.dtExpenseDate).ToList();
+            try
+            {
+                if (string.IsNullOrEmpty(duration))
+                    duration = "month";
+
+
+                //ViewBag.PersonName = GetPersonName(id);
+                //ViewBag.PersonId = id;
+                ViewBag.Duration = duration;
+                ViewBag.StartDate = start;
+                ViewBag.EndDate = end;
+
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = DateTime.Today;
+
+                if (duration == "month")
+                {
+                    var myDate = DateTime.Now;
+                    startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                    DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                    endDate = lastDay;
+                }
+                else if (duration == "custom")
+                {
+                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                    {
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                    }
+                }
+
+                ViewBag.reportStartDate = startDate.ToString("dd/MM/yyyy");
+                ViewBag.reportEndDate = endDate.ToString("dd/MM/yyyy");
+
+                lstExpense = GetExpenseListByFilter("", startDate, endDate);
+
+            }
+            catch (Exception ex)
+            {
+                string ErrorMessage = ex.Message.ToString();
+            }
+
             return View(lstExpense);
         }
 
@@ -245,15 +272,16 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
 
-        public string ExportPDFOfExpense(string expensetype, string duration, string start, string end)
+        public string ExportPDFOfExpense(string start, string end)
         {
 
             string Result = "";
             try
             {
-                DateTime new_startDate = DateTime.Now;
-                DateTime new_endDate = DateTime.Now;
-                List<ExpenseVM> lstExpense = GetExpenseListByFilter("", "", "", "");
+                DateTime start_date = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                DateTime end_date = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+
+                List<ExpenseVM> lstExpense = GetExpenseListByFilter("", start_date, end_date);
 
                 decimal? TotalExpenseAmount = lstExpense.Select(x => x.Amount).Sum();
                 string strTotalExpenseAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalExpenseAmount));
@@ -277,7 +305,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append(Title);
                     strHTML.Append("</th>");
                     strHTML.Append("</tr>");
-                    //strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + new_startDate.ToString("dd/MM/yyyy") + " To " + new_endDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + start_date.ToString("dd/MM/yyyy") + " To " + end_date.ToString("dd/MM/yyyy") + " </th></tr>");
                     strHTML.Append("<tr>");
                     for (int idx = 0; idx < strColumns.Length; idx++)
                     {
@@ -384,39 +412,17 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         }
 
-        public List<ExpenseVM> GetExpenseListByFilter(string expensetype, string duration, string start, string end)
+        public List<ExpenseVM> GetExpenseListByFilter(string expensetype, DateTime startDate, DateTime endDate)
         {
             List<ExpenseVM> lstExpenses = new List<ExpenseVM>();
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
-
-            if (string.IsNullOrEmpty(duration))
-                duration = "month";
-
-            DateTime startDate = DateTime.Today;
-            DateTime endDate = DateTime.Today;
-
-            if (duration == "month")
-            {
-                var myDate = DateTime.Now;
-                startDate = new DateTime(myDate.Year, myDate.Month, 1);
-
-                DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
-                endDate = lastDay;
-            }
-            else if (duration == "custom")
-            {
-                if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
-                {
-                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
-                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
-                }
-            }
 
             lstExpenses = (from c in _db.tbl_Expenses
                            join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
                            join site in _db.tbl_Sites on c.SiteId equals site.SiteId into outerJoinSite
                            from site in outerJoinSite.DefaultIfEmpty()
                            where !c.IsDeleted && c.ClientId == ClientId
+                                 && c.ExpenseDate >= startDate && c.ExpenseDate <= endDate
                            select new ExpenseVM
                            {
                                ExpenseId = c.ExpenseId,
@@ -429,27 +435,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                ExpenseType = exp.ExpenseType,
                                IsActive = c.IsActive
                            }).OrderByDescending(x => x.dtExpenseDate).ToList();
-             
+
             return lstExpenses;
         }
 
     }
-
-    public class UnicodeFontFactory1 : FontFactoryImp
-    {
-        private static readonly string fontpath = System.Web.HttpContext.Current.Server.MapPath("~/fonts/");
-        private readonly BaseFont _baseFont;
-
-        public UnicodeFontFactory1()
-        {
-            _baseFont = BaseFont.CreateFont(fontpath + "ARIALUNI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        }
-
-        public override Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,
-          bool cached)
-        {
-            return new Font(_baseFont, size, style, color);
-        }
-    }
-
+      
 }

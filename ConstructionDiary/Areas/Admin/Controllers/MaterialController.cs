@@ -23,24 +23,53 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             _db = new ConstructionDiaryEntities();
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string duration, string start, string end)
         {
-            Guid ClientId = new Guid(clsSession.ClientID.ToString());
-            List<MaterialPurchaseVM> lstPurchase = (from mat in _db.tbl_MaterialPurchase
-                                                    join site in _db.tbl_Sites on mat.SiteId equals site.SiteId
-                                                    join marchant in _db.tbl_Merchant on mat.MerchantId equals marchant.MerchantId into outerJoinMerchant
-                                                    from marchant in outerJoinMerchant.DefaultIfEmpty()
-                                                    where !mat.IsDeleted && mat.IsActive && mat.ClientId == ClientId
-                                                    select new MaterialPurchaseVM
-                                                    {
-                                                        MaterialPurchaseId = mat.MaterialPurchaseId,
-                                                        dtPurchaseDate = mat.PurchaseDate, 
-                                                        SiteId = mat.SiteId,
-                                                        Total = mat.Total,
-                                                        GST_Per = mat.GST_Per,
-                                                        SiteName = site.SiteName,
-                                                        MerchantName = marchant.FirmName
-                                                    }).OrderByDescending(x=>x.dtPurchaseDate).ToList(); 
+            List<MaterialPurchaseVM> lstPurchase = new List<MaterialPurchaseVM>();
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                if (string.IsNullOrEmpty(duration))
+                    duration = "month";
+
+
+                //ViewBag.PersonName = GetPersonName(id);
+                //ViewBag.PersonId = id;
+                ViewBag.Duration = duration;
+                ViewBag.StartDate = start;
+                ViewBag.EndDate = end;
+
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = DateTime.Today;
+
+                if (duration == "month")
+                {
+                    var myDate = DateTime.Now;
+                    startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                    DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                    endDate = lastDay;
+                }
+                else if (duration == "custom")
+                {
+                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                    {
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                    }
+                }
+
+                ViewBag.reportStartDate = startDate.ToString("dd/MM/yyyy");
+                ViewBag.reportEndDate = endDate.ToString("dd/MM/yyyy");
+
+                lstPurchase = GetMaterialListByFilter("", startDate, endDate);
+                  
+            }
+            catch (Exception ex)
+            { 
+            }
+             
             return View(lstPurchase);
         }
 
@@ -312,15 +341,16 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
         
-        public string ExportPDFOfMaterial(string expensetype, string duration, string start, string end)
+        public string ExportPDFOfMaterial(string start, string end)
         {
 
             string Result = "";
             try
             {
-                DateTime new_startDate = DateTime.Now;
-                DateTime new_endDate = DateTime.Now;
-                List<MaterialPurchaseVM> lstMaterial = GetMaterialListByFilter("", "", "");
+                DateTime start_date = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                DateTime end_date = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+
+                List<MaterialPurchaseVM> lstMaterial = GetMaterialListByFilter("", start_date, end_date);
 
                 decimal? TotalMaterialAmount = lstMaterial.Select(x => x.Total).Sum();
                 string strTotalMaterialAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalMaterialAmount));
@@ -344,7 +374,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append(Title);
                     strHTML.Append("</th>");
                     strHTML.Append("</tr>");
-                    //strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + new_startDate.ToString("dd/MM/yyyy") + " To " + new_endDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + start_date.ToString("dd/MM/yyyy") + " To " + end_date.ToString("dd/MM/yyyy") + " </th></tr>");
                     strHTML.Append("<tr>");
                     for (int idx = 0; idx < strColumns.Length; idx++)
                     {
@@ -450,39 +480,17 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         }
         
-        public List<MaterialPurchaseVM> GetMaterialListByFilter(string duration, string start, string end)
+        public List<MaterialPurchaseVM> GetMaterialListByFilter(string duration, DateTime startDate, DateTime endDate)
         {
             List<MaterialPurchaseVM> lstMaterial = new List<MaterialPurchaseVM>();
-            Guid ClientId = new Guid(clsSession.ClientID.ToString());
-
-            if (string.IsNullOrEmpty(duration))
-                duration = "month";
-
-            DateTime startDate = DateTime.Today;
-            DateTime endDate = DateTime.Today;
-
-            if (duration == "month")
-            {
-                var myDate = DateTime.Now;
-                startDate = new DateTime(myDate.Year, myDate.Month, 1);
-
-                DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
-                endDate = lastDay;
-            }
-            else if (duration == "custom")
-            {
-                if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
-                {
-                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
-                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
-                }
-            }
+            Guid ClientId = new Guid(clsSession.ClientID.ToString()); 
 
             lstMaterial = (from mat in _db.tbl_MaterialPurchase
                            join site in _db.tbl_Sites on mat.SiteId equals site.SiteId
                            join marchant in _db.tbl_Merchant on mat.MerchantId equals marchant.MerchantId into outerJoinMerchant
                            from marchant in outerJoinMerchant.DefaultIfEmpty()
                            where !mat.IsDeleted && mat.IsActive && mat.ClientId == ClientId
+                                 && mat.PurchaseDate >= startDate && mat.PurchaseDate <= endDate
                            select new MaterialPurchaseVM
                            {
                                MaterialPurchaseId = mat.MaterialPurchaseId,

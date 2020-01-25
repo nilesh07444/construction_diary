@@ -5659,3 +5659,16 @@ p.totalremaining {
 select.form-control {
     font-size: 14px;
 }
+
+.formerror {
+    color: red;
+    display: none;
+}
+
+.clsShow {
+    display: block;
+}
+
+.clsHide {
+    display: none;
+}
