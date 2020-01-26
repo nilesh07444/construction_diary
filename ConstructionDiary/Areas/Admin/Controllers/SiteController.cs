@@ -8,10 +8,11 @@ using ConstructionDiary.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
-using System.IO; 
+using System.IO;
 using ConstructionDiary.Helper;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using ConstructionDiary.ViewModel;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -168,10 +169,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objSite = _db.tbl_Sites.Where(x => x.SiteId == id).FirstOrDefault();
 
                 var list = (from p in _db.SP_GetSiteDetailById(id)
-                                               select p).ToList();
+                            select p).ToList();
 
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
-                 
+
                 string[] strColumns = new string[6] { "Date", "Amount", "Type", "Payment Type", "Bank Name", "By Amount" };
                 if (list != null && list.Count() > 0)
                 {
@@ -221,7 +222,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         {
                                             strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
                                             break;
-                                        } 
+                                        }
                                     case "Type":
                                         {
                                             strcolval = obj.CreditOrDebit;
@@ -275,7 +276,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objHelp.ParseXHtml(writer, pdfDoc, sr);
                     pdfDoc.Close();
                     Response.ContentType = "application/pdf";
-                    Response.AddHeader("content-disposition", "download;filename=Credit List Of " + objSite.SiteName +".pdf");
+                    Response.AddHeader("content-disposition", "download;filename=Credit List Of " + objSite.SiteName + ".pdf");
                     Response.Cache.SetCacheability(HttpCacheability.NoCache);
                     Response.Write(pdfDoc);
                     Response.End();
@@ -301,7 +302,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             objSite = _db.tbl_Sites.Where(x => x.SiteId == id).FirstOrDefault();
 
             var dtList = (from p in _db.SP_GetSiteDetailById(id)
-                        select p).ToList();
+                          select p).ToList();
 
             ExcelPackage excel = new ExcelPackage();
             var workSheet = excel.Workbook.Worksheets.Add("Credit List");
@@ -328,7 +329,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 workSheet.Cells[1, col].Style.Border.Right.Style = ExcelBorderStyle.Thin;
                 workSheet.Cells[1, col].Style.WrapText = true;
             }
-            
+
             int row1 = 0;
             foreach (var obj in dtList)
             {
@@ -349,7 +350,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                 {
                                     strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
                                     break;
-                                } 
+                                }
                             case "Type":
                                 {
                                     strcolval = obj.CreditOrDebit;
@@ -411,6 +412,60 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 Response.Flush();
                 Response.End();
             }
+        }
+
+        public ActionResult View(Guid id)
+        {
+            SiteInfoVM objSiteInfo = new SiteInfoVM();
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                objSiteInfo.SiteId = id;
+                objSiteInfo.SiteName = _db.tbl_Sites.First(x => x.SiteId == id).SiteName;
+
+                // Get Expenses Amount
+                objSiteInfo.TotalExpenseAmount = _db.tbl_Expenses.Where(x => x.SiteId == id).ToList().Select(x => x.Amount).Sum();
+
+                // Get Material Amount
+                objSiteInfo.TotalMaterialAmount = _db.tbl_MaterialPurchase.Where(x => x.SiteId == id).ToList().Select(x => x.Total).Sum();
+
+                // Get Attendance Amount
+                List<tbl_PersonAttendance> personAttendance = _db.tbl_PersonAttendance.Where(x => x.SiteId == id).ToList();
+                decimal? totalPayableAmount = personAttendance.Select(x => x.PayableAmount).Sum();
+                decimal? totalWithdrawAmount = personAttendance.Select(x => x.WithdrawAmount).Sum();
+                decimal? totalOvertimeAmount = personAttendance.Select(x => x.OvertimeAmount).Sum();
+
+                objSiteInfo.TotalPersonAttendanceAmount = Convert.ToDecimal(totalPayableAmount);
+
+                // Get Credit
+                List<tbl_ContractorFinance> lstCredit = _db.tbl_ContractorFinance.Where(x => x.SiteId == id).ToList();
+                decimal? totalCreditReceivedAmount = lstCredit.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
+                decimal? totalCreditGivenAmount = lstCredit.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum(); 
+                decimal totalCreditBalanceAmount = Convert.ToDecimal(totalCreditReceivedAmount) - Convert.ToDecimal(totalCreditGivenAmount);
+
+                objSiteInfo.TotalCreditAmount = totalCreditBalanceAmount;
+
+                // Get Debit
+                List<tbl_Finance> lstDebit = _db.tbl_Finance.Where(x => x.SiteId == id).ToList();
+                decimal? totalDebitReceivedAmount = lstDebit.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
+                decimal? totalDebitGivenAmount = lstDebit.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
+                decimal totalDebitBalanceAmount = Convert.ToDecimal(totalDebitGivenAmount) - Convert.ToDecimal(totalDebitReceivedAmount);
+
+                objSiteInfo.TotalDebitAmount = totalDebitBalanceAmount;
+
+                // Calculate Balance
+                objSiteInfo.CalculatedCreditAmount = objSiteInfo.TotalCreditAmount;
+                objSiteInfo.CalculatedDebitAmount = objSiteInfo.TotalDebitAmount + objSiteInfo.TotalMaterialAmount + objSiteInfo.TotalExpenseAmount + objSiteInfo.TotalPersonAttendanceAmount;
+                objSiteInfo.CalculatedBalanceAmount = objSiteInfo.CalculatedCreditAmount - objSiteInfo.CalculatedDebitAmount;
+                 
+            }
+            catch (Exception ex)
+            {
+                string ErrorMessage = ex.Message.ToString();
+            }
+
+            return View(objSiteInfo);
         }
 
     }

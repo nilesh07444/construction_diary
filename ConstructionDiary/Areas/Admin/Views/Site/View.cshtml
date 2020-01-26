@@ -1,0 +1,93 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.ViewModel;
+@model SiteInfoVM
+@{
+    ViewBag.Title = "Site";
+}
+
+<section class="wrapper site-min-height">
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+
+                <header class="panel-heading">
+                    <strong>@Model.SiteName</strong>
+                </header>
+
+                <div class="panel-body">
+                    <div class="adv-table">
+
+                        <table class="display table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Credit</th>
+                                    <th>Debit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Total Credit Amount (From Party)</td>
+                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalCreditAmount)</td>
+                                    <td></td>
+                                </tr>
+
+                                <tr>
+                                    <td>Total Debit Amount (Person)</td>
+                                    <td></td>
+                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalDebitAmount)</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Total Material Amount</td>
+                                    <td></td>
+                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalMaterialAmount)</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Total Expense Amount</td>
+                                    <td></td>
+                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalExpenseAmount)</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Total Attendance Amount</td>
+                                    <td></td>
+                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalPersonAttendanceAmount)</td>
+                                </tr>
+
+                                <tr>
+                                    <th>Net Total </th>
+                                    <th>@CoreHelper.GetFormatterAmount(Model.CalculatedCreditAmount)</th>
+                                    <th>@CoreHelper.GetFormatterAmount(Model.CalculatedDebitAmount)</th>
+                                </tr>
+
+                                <tr>
+                                    <th>Grand Total </th>
+                                    <th colspan="2">@CoreHelper.GetFormatterAmount(Model.CalculatedBalanceAmount)</th> 
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script>
+
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+</script>

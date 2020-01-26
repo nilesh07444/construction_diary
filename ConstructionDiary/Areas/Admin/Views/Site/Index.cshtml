@@ -59,6 +59,7 @@
                                             <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalRemainingAmount)</span></td>
                                             <td><button onclick="fnFinanceSite('@site.SiteId')" type="button" class="btn btn-primary">@Resource.Finance</button></td>
                                             <td>
+                                                <a href="/admin/site/view/@site.SiteId" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
                                                 @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
                                                 <button data-id="@site.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
                                                 <button onclick="fnDeleteSite('@site.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>

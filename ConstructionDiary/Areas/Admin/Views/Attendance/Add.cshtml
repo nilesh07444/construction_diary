@@ -17,93 +17,101 @@
                 </header>
                 <div class="panel-body" style="font-size: 16px;">
 
-                    @using (Html.BeginForm("Add", "Attendance", FormMethod.Post, new { @id = "attendanceFormId", @class = "cmxform form-horizontal tasi-form", enctype = "multipart/form-data", role = "form" }))
+                    @if (Model.lstPersonAttendance != null && Model.lstPersonAttendance.Count() > 0)
                     {
+                        using (Html.BeginForm("Add", "Attendance", FormMethod.Post, new { @id = "attendanceFormId", @class = "cmxform form-horizontal tasi-form", enctype = "multipart/form-data", role = "form" }))
+                        {
 
 
-                        <div class="form-horizontal">
+                            <div class="form-horizontal">
 
-                            <div class="row" style="margin-left: 5px;">
-                                <div class="col-sm-4 form-group">
-                                    <label>@Resource.Date:</label>
-                                    @Html.TextBoxFor(model => model.AttendanceDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
+                                <div class="row" style="margin-left: 5px;">
+                                    <div class="col-sm-4 form-group">
+                                        <label>@Resource.Date:</label>
+                                        @Html.TextBoxFor(model => model.AttendanceDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
 
-                                    <span class="input-group-btn add-on">
-                                        <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
-                                    </span>
-                                    @Html.ValidationMessageFor(model => model.AttendanceDate, "", new { @class = "text-danger" })
+                                        <span class="input-group-btn add-on">
+                                            <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                        @Html.ValidationMessageFor(model => model.AttendanceDate, "", new { @class = "text-danger" })
 
-                                </div>
-                            </div>
-
-                            <div class="">
-
-                                <table class="display table table-bordered table-striped table-hover" id="tblAttendanceForm" style="margin-top: 15px; overflow-x: scroll; display: inline-block;">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:3%;">#</th>
-                                            <th>@Resource.Name</th>
-                                            <th style="width:10%;">@Resource.DailyRate</th>
-                                            <th style="width:13%;">@Resource.Status</th>
-                                            <th style="width:15%;">@Resource.SiteName</th>
-                                            <th style="width:7%;">@Resource.Withdraw</th>
-                                            <th style="width:7%;">@Resource.Overtime</th>
-                                            <th style="width:15%;">@Resource.Remarks</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        @if (Model.lstPersonAttendance != null && Model.lstPersonAttendance.Count() > 0)
-                                        {
-                                            foreach (var obj in Model.lstPersonAttendance)
-                                            {
-                                                counter++;
-                                                <tr class="gradeX">
-                                                    <td>@counter</td>
-                                                    <td>@obj.PersonName</td>
-                                                    <td><span>@obj.PersonDailyRate</span></td>
-                                                    <td>
-                                                        @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text"), "-Select-", new { @id = "attendancestatus_" + obj.PersonId, @class = "form-control ddlAttendanceStatus" })
-                                                        @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
-                                                    </td>
-                                                    <td>
-                                                        @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text"), "-Select-", new { @id = "site_" + obj.PersonId, @class = "form-control" })
-                                                        @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].SiteId, "", new { @class = "text-danger" })
-                                                    </td>
-                                                    <td>
-                                                        @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].WithdrawAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
-                                                    </td>
-                                                    <td>
-                                                        @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].OvertimeAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
-                                                    </td>
-                                                    <td>
-                                                        @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
-                                                    </td>
-
-                                                    @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonId)
-                                                    @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonName)
-                                                    @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate)
-                                                </tr>
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
-
-                            </div>
-
-                            <div style="margin-top: 15px;">
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-
-                                        <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
-                                        <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
                                     </div>
                                 </div>
-                            </div>
 
-                            @Html.AntiForgeryToken() 
-                        </div> 
+                                <div class="">
+
+                                    <table class="display table table-bordered table-striped table-hover" id="tblAttendanceForm" style="margin-top: 15px; overflow-x: scroll; display: inline-block;">
+                                        <thead>
+                                            <tr>
+                                                <th style="width:3%;">#</th>
+                                                <th>@Resource.Name</th>
+                                                <th style="width:10%;">@Resource.DailyRate</th>
+                                                <th style="width:13%;">@Resource.Status</th>
+                                                <th style="width:15%;">@Resource.SiteName</th>
+                                                <th style="width:7%;">@Resource.Withdraw</th>
+                                                <th style="width:7%;">@Resource.Overtime</th>
+                                                <th style="width:15%;">@Resource.Remarks</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @if (Model.lstPersonAttendance != null && Model.lstPersonAttendance.Count() > 0)
+                                            {
+                                                foreach (var obj in Model.lstPersonAttendance)
+                                                {
+                                                    counter++;
+                                                    <tr class="gradeX">
+                                                        <td>@counter</td>
+                                                        <td>@obj.PersonName</td>
+                                                        <td><span>@obj.PersonDailyRate</span></td>
+                                                        <td>
+                                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text"), "-Select-", new { @id = "attendancestatus_" + obj.PersonId, @class = "form-control ddlAttendanceStatus" })
+                                                            @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
+                                                        </td>
+                                                        <td>
+                                                            @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text"), "-Select-", new { @id = "site_" + obj.PersonId, @class = "form-control" })
+                                                            @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].SiteId, "", new { @class = "text-danger" })
+                                                        </td>
+                                                        <td>
+                                                            @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].WithdrawAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                                        </td>
+                                                        <td>
+                                                            @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].OvertimeAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                                        </td>
+                                                        <td>
+                                                            @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                                        </td>
+
+                                                        @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonId)
+                                                        @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonName)
+                                                        @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate)
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                                <div style="margin-top: 15px;">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+
+                                            <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
+                                            <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @Html.AntiForgeryToken()
+                            </div>
+                        }
                     }
+                    else
+                    {
+                        <p> Add Person's for Attendance </p>
+                    }
+
                 </div>
             </section>
         </div>
