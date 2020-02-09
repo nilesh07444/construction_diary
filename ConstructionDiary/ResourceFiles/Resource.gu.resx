@@ -528,4 +528,37 @@
   <data name="TotalPresentDays" xml:space="preserve">
     <value>કુલ હાજર દિવસ</value>
   </data>
+  <data name="BillDate" xml:space="preserve">
+    <value>બિલ તારીખ</value>
+  </data>
+  <data name="BillNo" xml:space="preserve">
+    <value>બિલ નંબર</value>
+  </data>
+  <data name="BillType" xml:space="preserve">
+    <value>બિલ ટાઈપ</value>
+  </data>
+  <data name="SquareFeet" xml:space="preserve">
+    <value>સ્કવેર  ફૂટ</value>
+  </data>
+  <data name="AddNewBill" xml:space="preserve">
+    <value>નવું બિલ ઉમેરો</value>
+  </data>
+  <data name="Bill" xml:space="preserve">
+    <value>બિલ</value>
+  </data>
+  <data name="BillList" xml:space="preserve">
+    <value>બિલ લિસ્ટ</value>
+  </data>
+  <data name="EditBill" xml:space="preserve">
+    <value>બિલ વિગત સુધારો</value>
+  </data>
+  <data name="TotalGivenAmount" xml:space="preserve">
+    <value>કુલ આપેલ રકમ</value>
+  </data>
+  <data name="TotalRemainingAmount" xml:space="preserve">
+    <value>કુલ બાકી રકમ</value>
+  </data>
+  <data name="TotalTakenAmount" xml:space="preserve">
+    <value>કુલ મળેલ  રકમ</value>
+  </data>
 </root>

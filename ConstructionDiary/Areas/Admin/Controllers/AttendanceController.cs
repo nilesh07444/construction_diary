@@ -353,6 +353,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
+                /*
                 string fileName = string.Empty;
                 string path = Server.MapPath("~/Images/PersonPhoto/");
                 if (postedFile != null)
@@ -360,6 +361,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     fileName = Guid.NewGuid() + Path.GetFileName(postedFile.FileName);
                     postedFile.SaveAs(path + fileName);
                 }
+                */
 
                 try
                 {
@@ -367,10 +369,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objPerson.PersonId = Guid.NewGuid();
                     objPerson.PersonFirstName = person.Firstname;
                     objPerson.PersonAddress = person.Address;
-                    objPerson.MobileNo = person.MobileNo;
+                    //objPerson.MobileNo = person.MobileNo;
                     objPerson.DailyRate = person.DailyRate;
                     objPerson.PersonTypeId = person.PersonTypeId;
-                    objPerson.PersonPhoto = fileName;
+                    //objPerson.PersonPhoto = fileName;
                     objPerson.IsAttendancePerson = true;
                     objPerson.IsActive = true;
                     objPerson.IsDeleted = false;
@@ -388,8 +390,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(person);
         }
-
-
+         
         public ActionResult EditPerson(Guid id)
         {
             PersonVM person = new PersonVM();
@@ -466,6 +467,35 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return View(person);
         }
 
+        [HttpPost]
+        public string ChangePersonStatus(Guid PersonId, bool Status)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                tbl_Persons objPerson = _db.tbl_Persons.Where(x => x.PersonId == PersonId && x.IsDeleted == false).FirstOrDefault();
+
+                if (objPerson == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+                    objPerson.IsActive = Status;
+                    objPerson.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message.ToString();
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
 
     }
 }

@@ -40,6 +40,16 @@ namespace ConstructionDiary
         public List<SelectListItem> SitesList { get; set; }
 
     }
+
+    public class PersonDetailVM
+    {
+        public Guid PersonId { get; set; }
+        public string PersonName { get; set; }
+        public decimal? TotalBillAmount  { get; set; }
+        public decimal? TotalDebitAmount { get; set; }
+        public decimal? TotalRemainingAmount { get; set; }
+    }
+
 }
 
 

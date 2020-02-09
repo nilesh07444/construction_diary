@@ -1,4 +1,5 @@
 ﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.Models;
 @model PersonFinanceVM
 @{
     ViewBag.Title = "Person";
@@ -10,14 +11,19 @@
     decimal? TotalDebitAmount = lstFinance.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
     string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
 
-    decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
-    string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
+    //decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
+    //string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
 
-    decimal? RemainingAmount = TotalCreditAmount - TotalDebitAmount;
+    ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+
+    decimal TotalDebitBillAmount = _db.tbl_BillDebit.Where(x => x.PersonId == Model.PersonId).ToList().Select(x => x.TotalAmount).Sum();
+    string strTotalDebitBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitBillAmount));
+
+    decimal? RemainingAmount = TotalDebitBillAmount - TotalDebitAmount;
     string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
 
 }
- 
+
 <!--main content start-->
 <section class="wrapper site-min-height">
     <!-- page start-->
@@ -37,8 +43,8 @@
                     <i class="fa fa-shopping-cart"></i>
                 </div>
                 <div class="value" style="padding-top: 0px;">
-                    <h2>@strTotalCreditAmount</h2>
-                    <p class="total totalcredit">@Resource.TotalCredit</p>
+                    <h2>@strTotalDebitBillAmount</h2>
+                    <p class="total totalcredit">@Resource.Total @Resource.Bill</p>
                 </div>
             </section>
         </div>
@@ -50,7 +56,7 @@
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strTotalDebitAmount</h2>
-                    <p class="total totaldebit">@Resource.TotalDebit</p>
+                    <p class="total totaldebit">@Resource.TotalGivenAmount</p>
                 </div>
             </section>
         </div>
@@ -62,7 +68,7 @@
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strRemainingAmount</h2>
-                    <p class="total totalremaining">@Resource.TotalBalance</p>
+                    <p class="total totalremaining">@Resource.TotalRemainingAmount</p>
                 </div>
             </section>
         </div>
@@ -317,5 +323,5 @@
         window.location.href = "/admin/person";
     });
 
-    
+
 </script>

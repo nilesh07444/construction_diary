@@ -197,6 +197,9 @@
     <Compile Include="Models\tbl_Attendance.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_BillDebit.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_Clients.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -263,6 +266,7 @@
       <DependentUpon>Resource.gu.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\AttendanceVM.cs" />
+    <Compile Include="ViewModel\BillDebitVM.cs" />
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
     <Compile Include="ViewModel\ClientVM.cs" />
     <Compile Include="ViewModel\CommonClass.cs" />
@@ -276,6 +280,7 @@
     <Compile Include="ViewModel\MyFinanceVM.cs" />
     <Compile Include="ViewModel\PersonFinanceVM.cs" />
     <Compile Include="ViewModel\PersonVM.cs" />
+    <Compile Include="ViewModel\SiteInfoVM.cs" />
     <Compile Include="ViewModel\UserChangePasswordVM.cs" />
     <Compile Include="ViewModel\UserVM.cs" />
   </ItemGroup>
@@ -2277,6 +2282,10 @@
     <Content Include="Areas\Admin\Views\Merchant\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Merchant\Edit.cshtml" />
     <Content Include="fonts\ARIALUNI.TTF" />
+    <Content Include="Areas\Admin\Views\Site\View.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\Bill.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\AddBill.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\EditBill.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

@@ -528,4 +528,37 @@
   <data name="TotalPresentDays" xml:space="preserve">
     <value>Total Present Days</value>
   </data>
+  <data name="BillDate" xml:space="preserve">
+    <value>Bill Date</value>
+  </data>
+  <data name="BillNo" xml:space="preserve">
+    <value>Bill No</value>
+  </data>
+  <data name="BillType" xml:space="preserve">
+    <value>Bill Type</value>
+  </data>
+  <data name="SquareFeet" xml:space="preserve">
+    <value>Square Feet</value>
+  </data>
+  <data name="AddNewBill" xml:space="preserve">
+    <value>Add New Bill</value>
+  </data>
+  <data name="Bill" xml:space="preserve">
+    <value>Bill</value>
+  </data>
+  <data name="BillList" xml:space="preserve">
+    <value>Bill List</value>
+  </data>
+  <data name="EditBill" xml:space="preserve">
+    <value>Edit Bill</value>
+  </data>
+  <data name="TotalGivenAmount" xml:space="preserve">
+    <value>Total Given Amount</value>
+  </data>
+  <data name="TotalRemainingAmount" xml:space="preserve">
+    <value>Total Remaining Amount</value>
+  </data>
+  <data name="TotalTakenAmount" xml:space="preserve">
+    <value>Total Taken Amount</value>
+  </data>
 </root>

@@ -3,6 +3,8 @@
 @model List<tbl_Persons>
 @{
     ViewBag.Title = "Attendance";
+
+    int counter = 1;
 }
 
 <section class="wrapper site-min-height">
@@ -36,10 +38,12 @@
                         <table class="display table table-bordered table-striped table-hover" id="tblPersonsList">
                             <thead>
                                 <tr>
-                                    <th width="5%;">@Resource.Photo</th>
+                                    <th width="5%">#</th>
+                                    @*<th width="5%;">@Resource.Photo</th>*@
                                     <th>@Resource.Name</th>
-                                    <th width="15%;" class="hidden-phone">@Resource.MobileNo</th>
+                                    @*<th width="15%;" class="hidden-phone">@Resource.MobileNo</th>*@
                                     <th width="15%;">@Resource.Attendance</th>
+                                    <th width="10%">@Resource.Active</th>
                                     <th width="15%;">@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -48,25 +52,37 @@
                                 {
                                     foreach (var obj in Model)
                                     {
-                                        <tr class="gradeX"> 
-                                            <td>
-                                                @if (obj.PersonPhoto != "" && obj.PersonPhoto != null)
-                                                {
-                                                    if (File.Exists(Server.MapPath("~/Images/PersonPhoto/" + obj.PersonPhoto)))
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            @*<td>
+                                                    @if (obj.PersonPhoto != "" && obj.PersonPhoto != null)
                                                     {
-                                                        <img src="~/Images/PersonPhoto/@obj.PersonPhoto" style="width:30px; height:30px;" />
+                                                        if (File.Exists(Server.MapPath("~/Images/PersonPhoto/" + obj.PersonPhoto)))
+                                                        {
+                                                            <img src="~/Images/PersonPhoto/@obj.PersonPhoto" style="width:30px; height:30px;" />
+                                                        }
                                                     }
+                                                </td>*@
+                                            <td>@obj.PersonFirstName</td>
+                                            @*<td class="hidden-phone">@obj.MobileNo</td>*@
+                                            <td><button onclick="fnPersonAttandance('@obj.PersonId')" type="button" class="btn btn-primary">@Resource.Attendance</button></td>
+                                            <td>
+                                                @if (obj.IsActive == true)
+                                                {
+                                                    <a onclick="fnInActivePerson('@obj.PersonId', false)" href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a onclick="fnInActivePerson('@obj.PersonId', true)" href="javascript:void(0);"><span class="badge bg-warning">InActive</span></a>
                                                 }
                                             </td>
-                                            <td>@obj.PersonFirstName</td>
-                                            <td class="hidden-phone">@obj.MobileNo</td>
-                                            <td><button onclick="fnPersonAttandance('@obj.PersonId')" type="button" class="btn btn-primary">@Resource.Attendance</button></td>
                                             <td>
                                                 <button title="View" data-id="@obj.PersonId" class="btn btn-success btn-xs clsViewPerson"><i class="fa fa-eye"></i></button>
                                                 <button title="Edit" data-id="@obj.PersonId" class="btn btn-primary btn-xs clsEditPerson"><i class="fa fa-pencil"></i></button>
                                                 <button title="Delete" onclick="fnDeletePerson('@obj.PersonId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
                                         </tr>
+                                        counter++;
                                     }
                                 }
                             </tbody>
@@ -98,7 +114,29 @@
         </div>
     </div>
 </div>
-<!-- Delete modal --> 
+<!-- Delete modal -->
+<!-- InActive Modal -->
+<div class="modal fade" id="inActivePersonModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to InActive ?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnInActivePerson" />
+                <input type="hidden" id="hdnInActivePersonStatus" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnInActivePerson" class="btn btn-danger" type="button">InActive</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Active modal -->
+
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
 <script type="text/javascript" charset="utf-8">
@@ -111,7 +149,7 @@
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': [0,4]
+                    'aTargets': [0,2,3,4]
                 }]
         });
     });
@@ -128,6 +166,69 @@
         jQuery("#hdnDeletePerson").val(person_id);
         $('#deletePersonModal').modal('show');
     }
+
+    function fnInActivePerson(person_id, status) {
+
+        var msgText = "";
+        var buttonText = "";
+        var buttonClass = "";
+        
+        if (status == false) {
+            msgText = "Are you want to InActive ?";
+            buttonText = "InActive";
+            buttonClass = "btn btn-danger";
+        }
+        else {
+            msgText = "Are you want to Active ?";
+            buttonText = "Active";
+            buttonClass = "btn btn-success";
+        }
+         
+        jQuery("#inActivePersonModal .modal-body").text(msgText);
+        jQuery("#inActivePersonModal #btnInActivePerson").text(buttonText);
+        jQuery("#inActivePersonModal #btnInActivePerson").attr("class", buttonClass);
+
+        jQuery("#hdnInActivePerson").val(person_id);
+        jQuery("#hdnInActivePersonStatus").val(status);
+        $('#inActivePersonModal').modal('show');
+    }
+
+    jQuery(document).on("click", "#btnInActivePerson", function () {
+         
+        var person_id = jQuery("#hdnInActivePerson").val();
+        var person_status = jQuery("#hdnInActivePersonStatus").val();
+
+        if (person_id != "" && person_id != null) {
+            $('#inActivePersonModal').modal('hide');
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("ChangePersonStatus", "Attendance")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?PersonId=" + person_id + "&Status=" + person_status,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Person Status Changed successfully");
+                        window.location.reload();
+                        // $(this).attr("onclick", "fnInActivePerson('"+ person_id +"', "+ !person_status +")");
+                    }
+                    else if (result == "notfound") {
+                        alert("Person Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+
+    });
 
     jQuery(document).on("click", "#btnDeletePerson", function () {
 

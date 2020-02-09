@@ -4,6 +4,7 @@
 @model List<SP_GetSitesList_Result>
 @{
     ViewBag.Title = "Site";
+    int counter = 1;
 }
 
 <section class="wrapper site-min-height">
@@ -37,6 +38,7 @@
                         <table class="display table table-bordered table-striped table-hover" id="tblSitesList">
                             <thead>
                                 <tr>
+                                    <th width="5%">#</th>
                                     <th>@Resource.SiteName</th>
                                     <th>@Resource.SiteDetail</th>
                                     <th>@Resource.TotalCredit</th>
@@ -52,6 +54,7 @@
                                     foreach (SP_GetSitesList_Result site in Model)
                                     {
                                         <tr class="gradeX">
+                                            <td>@counter.</td>
                                             <td>@site.SiteName</td>
                                             <td>@site.SiteDescription</td>
                                             <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalCreditAmount)</span></td>
@@ -65,6 +68,7 @@
                                                 <button onclick="fnDeleteSite('@site.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
                                         </tr>
+                                        counter++;
                                     }
                                 }
                             </tbody>

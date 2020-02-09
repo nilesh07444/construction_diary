@@ -34,6 +34,9 @@
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_MaterialPurchaseItems_tbl_MaterialType" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Merchant" Width="1.5" PointX="5.25" PointY="23.375" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillDebit" Width="1.5" PointX="13.25" PointY="5.375" />
+        <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_BillDebit_tbl_Persons" />
+        <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_BillDebit_tbl_Sites" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

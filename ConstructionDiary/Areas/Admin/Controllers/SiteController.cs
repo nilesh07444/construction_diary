@@ -173,6 +173,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
+                decimal? TotalCreditAmount = list.Select(x => x.Amount).Sum();
+                string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
+
                 string[] strColumns = new string[6] { "Date", "Amount", "Type", "Payment Type", "Bank Name", "By Amount" };
                 if (list != null && list.Count() > 0)
                 {
@@ -256,14 +259,16 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             strHTML.Append("</tr>");
                         }
                     }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalCreditAmount + " </th>");
+                    strHTML.Append("<th colspan='5' style='border: 1px solid #ccc;'></th>");
+                    strHTML.Append("</tr>");
+
                     strHTML.Append("</tbody>");
-                    //strHTML.Append("<tfoot>");
-                    //strHTML.Append("<tr>");
-                    //strHTML.Append("<td colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
-                    //strHTML.Append("Confidential: Personally Identifiable Materials");
-                    //strHTML.Append("</td>");
-                    //strHTML.Append("</tr>");
-                    //strHTML.Append("</tfoot>");
+                     
                     strHTML.Append("</table>");
                     StringReader sr = new StringReader(strHTML.ToString());
 
@@ -425,10 +430,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objSiteInfo.SiteName = _db.tbl_Sites.First(x => x.SiteId == id).SiteName;
 
                 // Get Expenses Amount
-                objSiteInfo.TotalExpenseAmount = _db.tbl_Expenses.Where(x => x.SiteId == id).ToList().Select(x => x.Amount).Sum();
+                objSiteInfo.TotalExpenseAmount = _db.tbl_Expenses.Where(x => x.SiteId == id && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum();
 
                 // Get Material Amount
-                objSiteInfo.TotalMaterialAmount = _db.tbl_MaterialPurchase.Where(x => x.SiteId == id).ToList().Select(x => x.Total).Sum();
+                objSiteInfo.TotalMaterialAmount = _db.tbl_MaterialPurchase.Where(x => x.SiteId == id && !x.IsDeleted).ToList().Select(x => x.Total).Sum();
 
                 // Get Attendance Amount
                 List<tbl_PersonAttendance> personAttendance = _db.tbl_PersonAttendance.Where(x => x.SiteId == id).ToList();
@@ -439,7 +444,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objSiteInfo.TotalPersonAttendanceAmount = Convert.ToDecimal(totalPayableAmount);
 
                 // Get Credit
-                List<tbl_ContractorFinance> lstCredit = _db.tbl_ContractorFinance.Where(x => x.SiteId == id).ToList();
+                List<tbl_ContractorFinance> lstCredit = _db.tbl_ContractorFinance.Where(x => x.SiteId == id && x.IsDeleted == false).ToList();
                 decimal? totalCreditReceivedAmount = lstCredit.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
                 decimal? totalCreditGivenAmount = lstCredit.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum(); 
                 decimal totalCreditBalanceAmount = Convert.ToDecimal(totalCreditReceivedAmount) - Convert.ToDecimal(totalCreditGivenAmount);
@@ -447,7 +452,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objSiteInfo.TotalCreditAmount = totalCreditBalanceAmount;
 
                 // Get Debit
-                List<tbl_Finance> lstDebit = _db.tbl_Finance.Where(x => x.SiteId == id).ToList();
+                List<tbl_Finance> lstDebit = _db.tbl_Finance.Where(x => x.SiteId == id && !x.IsDeleted).ToList();
                 decimal? totalDebitReceivedAmount = lstDebit.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
                 decimal? totalDebitGivenAmount = lstDebit.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
                 decimal totalDebitBalanceAmount = Convert.ToDecimal(totalDebitGivenAmount) - Convert.ToDecimal(totalDebitReceivedAmount);

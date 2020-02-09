@@ -426,6 +426,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                             }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
 
 
+                decimal? TotalCreditAmount = list.Select(x => x.Amount).Sum();
+                string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
+
                 string[] strColumns = new string[7] { "Date", "Amount", "Site Name", "Type", "Payment Type", "Bank Name", "By Amount" };
                 if (list != null && list.Count() > 0)
                 {
@@ -514,14 +517,16 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             strHTML.Append("</tr>");
                         }
                     }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalCreditAmount + " </th>");
+                    strHTML.Append("<th colspan='5' style='border: 1px solid #ccc;'></th>");
+                    strHTML.Append("</tr>");
+
                     strHTML.Append("</tbody>");
-                    //strHTML.Append("<tfoot>");
-                    //strHTML.Append("<tr>");
-                    //strHTML.Append("<td colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
-                    //strHTML.Append("Confidential: Personally Identifiable Materials");
-                    //strHTML.Append("</td>");
-                    //strHTML.Append("</tr>");
-                    //strHTML.Append("</tfoot>");
+                     
                     strHTML.Append("</table>");
                     StringReader sr = new StringReader(strHTML.ToString());
 

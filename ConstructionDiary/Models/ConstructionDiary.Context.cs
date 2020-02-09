@@ -46,6 +46,7 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_MaterialPurchase> tbl_MaterialPurchase { get; set; }
         public virtual DbSet<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
         public virtual DbSet<tbl_Merchant> tbl_Merchant { get; set; }
+        public virtual DbSet<tbl_BillDebit> tbl_BillDebit { get; set; }
     
         public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList(Nullable<System.Guid> clientId)
         {

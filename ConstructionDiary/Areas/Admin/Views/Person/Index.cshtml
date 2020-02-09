@@ -1,9 +1,11 @@
 ﻿@using ConstructionDiary.ResourceFiles;
 @using ConstructionDiary.Models;
-@model List<SP_GetPersonsList_Result>
+@model List<PersonDetailVM>
 @{
     ViewBag.Title = "Person";
-} 
+
+    int counter = 1;
+}
 
 <section class="wrapper site-min-height">
     <!-- page start-->
@@ -36,12 +38,12 @@
                         <table class="display table table-bordered table-striped table-hover" id="tblPersonsList">
                             <thead>
                                 <tr>
-                                    <th width="3%;">@Resource.Photo</th>
+                                    <th width="5%">#</th>
                                     <th>@Resource.Name</th>
-                                    <th width="7%;" class="hidden-phone">@Resource.MobileNo</th>
-                                    <th width="12%;">@Resource.TotalCredit</th>
-                                    <th width="12%;">@Resource.TotalDebit</th>
-                                    <th width="13%;">@Resource.TotalBalance</th>
+                                    <th width="10%;">@Resource.Bill</th>
+                                    <th width="12%;">@Resource.Total @Resource.Bill @Resource.Amount</th>
+                                    <th width="12%;">@Resource.TotalGivenAmount</th>
+                                    <th width="13%;">@Resource.TotalRemainingAmount</th>
                                     <th width="8%;">@Resource.Finance</th>
                                     <th width="10%;">@Resource.Action</th>
                                 </tr>
@@ -49,32 +51,42 @@
                             <tbody>
                                 @if (Model != null && Model.Count > 0)
                                 {
-                                    foreach (SP_GetPersonsList_Result obj in Model)
+                                    foreach (PersonDetailVM obj in Model)
                                     {
                                         <tr class="gradeX">
-
-                                            <td>
-                                                @if (obj.PersonPhoto != "" && obj.PersonPhoto != null)
-                                                {
-                                                    if (File.Exists(Server.MapPath("~/Images/PersonPhoto/" + obj.PersonPhoto)))
+                                            <td>@counter.</td>
+                                            @*<td>
+                                                    @if (obj.PersonPhoto != "" && obj.PersonPhoto != null)
                                                     {
-                                                        <img src="~/Images/PersonPhoto/@obj.PersonPhoto" style="width:30px; height:30px;" />
+                                                        if (File.Exists(Server.MapPath("~/Images/PersonPhoto/" + obj.PersonPhoto)))
+                                                        {
+                                                            <img src="~/Images/PersonPhoto/@obj.PersonPhoto" style="width:30px; height:30px;" />
+                                                        }
                                                     }
-                                                }
-                                            </td>
+                                                </td>*@
 
-                                            <td>@obj.PersonFirstName</td>
-                                            <td class="hidden-phone">@obj.MobileNo</td>
-                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalCreditAmount)</span></td>
-                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalDebitAmount)</span></td>
-                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td>
-                                            <td><button onclick="fnFinancePerson('@obj.PersonId')" type="button" class="btn btn-primary">@Resource.Finance</button></td>
+                                            <td>@obj.PersonName</td>
+                                            <td>
+                                                <a href="/admin/person/bill/@obj.PersonId" class="btn btn-primary">@Resource.Bill</a>
+                                            </td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmountWithZero(obj.TotalBillAmount)</span></td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmountWithZero(obj.TotalDebitAmount)</span></td>
+
+                                            @{
+                                                obj.TotalRemainingAmount = (obj.TotalBillAmount ?? 0) - (obj.TotalDebitAmount ?? 0);
+                                            }
+
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmountWithZero(obj.TotalRemainingAmount)</span></td>
+                                            <td>
+                                                <a href="/admin/person/finance/@obj.PersonId" class="btn btn-primary">@Resource.Finance</a>
+                                            </td>
                                             <td>
                                                 <button title="View" data-id="@obj.PersonId" class="btn btn-success btn-xs clsViewPerson"><i class="fa fa-eye"></i></button>
                                                 <button title="Edit" data-id="@obj.PersonId" class="btn btn-primary btn-xs clsEditPerson"><i class="fa fa-pencil"></i></button>
                                                 <button title="Delete" onclick="fnDeletePerson('@obj.PersonId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
                                         </tr>
+                                        counter++;
                                     }
                                 }
                             </tbody>
@@ -120,7 +132,7 @@
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': [0,6,7]
+                    'aTargets': [0,5,6]
                 }]
         });
     });
@@ -129,9 +141,6 @@
         window.location.href = '/admin/person/add';
     });
 
-    function fnFinancePerson(person_id) {
-        window.location.href = '/admin/person/finance/' + person_id;
-    }
     function fnDeletePerson(person_id) {
         jQuery("#hdnDeletePerson").val(person_id);
         $('#deletePersonModal').modal('show');
@@ -174,6 +183,7 @@
         var person_id = $(this).attr("data-id");
         window.location.href = "/admin/person/edit?id=" + person_id;
     });
+
     jQuery(document).on("click", ".clsViewPerson", function () {
         var person_id = $(this).attr("data-id");
         window.location.href = "/admin/person/view/" + person_id;

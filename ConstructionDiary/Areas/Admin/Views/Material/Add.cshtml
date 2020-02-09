@@ -272,11 +272,7 @@
     }
 
     $(document).on("keyup", ".clsWeight, .clsRate, #AdjustmentAmount", function () {
-        //this.value = this.value.replace(/[^0-9\.]/g, '');
-        //if (this.value == '') {
-        //    return false;
-        //}
-
+        
         var field_id = $(this).attr("id").split("_")[1];
         var weight = $("#Weight_" + field_id).val();
         var rate = $("#Rate_" + field_id).val();

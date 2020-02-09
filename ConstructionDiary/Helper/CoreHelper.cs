@@ -10,12 +10,24 @@ namespace ConstructionDiary
     public class CoreHelper
     {
         ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
-        public static string GetFormatterAmount(Decimal? TotalGivenAmount)
+        public static string GetFormatterAmount(Decimal? Amt)
         {
             string ConvertedString = "";
-            if (TotalGivenAmount != null)
+            if (Amt != null)
             {
-                double ammountDouble = Convert.ToDouble(TotalGivenAmount);
+                double ammountDouble = Convert.ToDouble(Amt);
+                CultureInfo cultureInfo = new CultureInfo("en-IN");
+                ConvertedString = string.Format(cultureInfo, "{0:N0}", ammountDouble);
+            }
+            return ConvertedString;
+        }
+
+        public static string GetFormatterAmountWithZero(Decimal? Amt)
+        {
+            string ConvertedString = "0";
+            if (Amt != null)
+            {
+                double ammountDouble = Convert.ToDouble(Amt);
                 CultureInfo cultureInfo = new CultureInfo("en-IN");
                 ConvertedString = string.Format(cultureInfo, "{0:N0}", ammountDouble);
             }
