@@ -10,8 +10,7 @@ using ConstructionDiary.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
-using ConstructionDiary.ResourceFiles;
-using ConstructionDiary.ViewModel;
+using ConstructionDiary.ResourceFiles; 
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {

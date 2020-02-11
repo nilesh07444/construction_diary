@@ -11,8 +11,8 @@ using iTextSharp.tool.xml;
 using System.IO;
 using ConstructionDiary.Helper;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using ConstructionDiary.ViewModel;
+using OfficeOpenXml.Style; 
+using ConstructionDiary.ResourceFiles;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -28,11 +28,21 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         public ActionResult Index()
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
-            var lstSites = (from p in _db.SP_GetSitesList(ClientId)
-                            select p).ToList();
 
-            //List<tbl_Sites> lstSites = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == clsSession.ClientID).ToList();
-            return View(lstSites);
+            List<SiteDetailVM> siteDetail = (from site in _db.tbl_Sites
+                                                 where site.ClientId == ClientId && !site.IsDeleted
+                                                 select new SiteDetailVM
+                                                 {
+                                                     SiteId = site.SiteId,
+                                                     SiteName = site.SiteName,
+                                                     TotalBillAmount = _db.tbl_BillSite.Where(x => x.SiteId == site.SiteId).ToList().Select(x => x.TotalAmount).Sum(),
+                                                     TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum()
+                                                 }).ToList();                
+
+            //var lstSites = (from p in _db.SP_GetSitesList(ClientId)
+            //                select p).ToList();
+             
+            return View(siteDetail);
         }
 
         [HttpPost]
@@ -472,6 +482,253 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(objSiteInfo);
         }
+         
+        public ActionResult Bill(Guid Id) // Id = SiteId
+        {
+            List<BillSiteVM> lstBill = new List<BillSiteVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            tbl_Sites objSite = _db.tbl_Sites.Where(x=>x.SiteId == Id).First();
+
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = objSite.SiteName;
+
+            lstBill = (from dbill in _db.tbl_BillSite
+                       join site in _db.tbl_Sites on dbill.SiteId equals site.SiteId
+                       where dbill.ClientId == ClientId && dbill.SiteId == Id && !dbill.IsDeleted
+                       select new BillSiteVM
+                       {
+                           BillId = dbill.BillId,
+                           dBillDate = dbill.BillDate,
+                           BillNo = dbill.BillNo,
+                           BillType = dbill.BillType,
+                           SiteId = dbill.SiteId,
+                           SiteName = site.SiteName, 
+                           SquareFeet = dbill.SquareFeet,
+                           Rate = dbill.Rate,
+                           TotalAmount = dbill.TotalAmount,
+                           Remarks = dbill.Remarks
+                       }).OrderByDescending(x => x.dBillDate).ToList();
+
+            return View(lstBill);
+        }
+
+
+        public ActionResult AddBill(Guid Id)
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            BillSiteVM objBill = new BillSiteVM(); 
+            objBill.SiteId = Id;
+
+            return View(objBill);
+        }
+
+
+        [HttpPost]
+        public ActionResult AddBill(BillSiteVM billVM)
+        {
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+                  
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                if (ModelState.IsValid)
+                {
+                    // Check validation
+                    if (billVM.BillType == "Other")
+                    {
+                        if (billVM.TotalAmount == null || billVM.TotalAmount <= 0)
+                        {
+                            ModelState.AddModelError("TotalAmount", Resource.Required);
+                            return View(billVM);
+                        }
+                    }
+                    else
+                    {
+                        bool IsFieldNull = false;
+                        if (billVM.SquareFeet == null || billVM.SquareFeet <= 0)
+                        {
+                            ModelState.AddModelError("SquareFeet", Resource.Required);
+                            IsFieldNull = true;
+                        }
+                        if (billVM.Rate == null || billVM.Rate <= 0)
+                        {
+                            ModelState.AddModelError("Rate", Resource.Required);
+                            IsFieldNull = true;
+                        }
+
+                        if (IsFieldNull)
+                        {
+                            return View(billVM);
+                        }
+                        else
+                        {
+                            billVM.TotalAmount = billVM.SquareFeet * billVM.Rate;
+                        }
+                    }
+
+                    DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
+
+                    tbl_BillSite objBill = new tbl_BillSite();
+                    objBill.BillId = Guid.NewGuid();
+                    objBill.BillDate = bill_date;
+                    objBill.BillNo = billVM.BillNo;
+                    objBill.BillType = billVM.BillType;
+                    objBill.SiteId = billVM.SiteId; 
+                    objBill.SquareFeet = billVM.SquareFeet;
+                    objBill.Rate = billVM.Rate;
+                    objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
+                    objBill.Remarks = billVM.Remarks;
+                    objBill.ClientId = ClientId;
+                    objBill.IsActive = true;
+                    objBill.IsDeleted = false;
+                    objBill.CreatedBy = clsSession.UserID;
+                    objBill.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_BillSite.Add(objBill);
+                    _db.SaveChanges();
+
+                    return RedirectToAction("Bill", new { id = billVM.SiteId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(billVM);
+        }
+
+        [HttpPost]
+        public string DeleteBill(string BillId)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                Guid BillIdToDelete = new Guid(BillId);
+                tbl_BillSite objBill = _db.tbl_BillSite.Where(x => x.BillId == BillIdToDelete && x.IsActive == true
+                                                            && x.IsDeleted == false).FirstOrDefault();
+
+                if (objBill == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                { 
+                    _db.tbl_BillSite.Remove(objBill);
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
+
+        public ActionResult EditBill(Guid Id) // id= BillId
+        {
+            BillSiteVM objBill = new BillSiteVM();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+             
+            tbl_BillSite bill = _db.tbl_BillSite.Where(x => x.BillId == Id).FirstOrDefault();
+            if (objBill != null)
+            {
+                objBill.BillId = bill.BillId;
+                objBill.BillDate = Convert.ToDateTime(bill.BillDate).ToString("dd/MM/yyyy");
+                objBill.BillNo = bill.BillNo;
+                objBill.BillType = bill.BillType;
+                objBill.SiteId = bill.SiteId; 
+                objBill.SquareFeet = bill.SquareFeet;
+                objBill.Rate = bill.Rate;
+                objBill.TotalAmount = Convert.ToDecimal(bill.TotalAmount);
+                objBill.Remarks = bill.Remarks;
+            }
+
+            return View(objBill);
+        }
+
+
+        [HttpPost]
+        public ActionResult EditBill(BillSiteVM billVM)
+        {
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+                  
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                if (ModelState.IsValid)
+                {
+                    // Check validation
+                    if (billVM.BillType == "Other")
+                    {
+                        if (billVM.TotalAmount == null || billVM.TotalAmount <= 0)
+                        {
+                            ModelState.AddModelError("TotalAmount", Resource.Required);
+                            return View(billVM);
+                        }
+                    }
+                    else
+                    {
+                        bool IsFieldNull = false;
+                        if (billVM.SquareFeet == null || billVM.SquareFeet <= 0)
+                        {
+                            ModelState.AddModelError("SquareFeet", Resource.Required);
+                            IsFieldNull = true;
+                        }
+                        if (billVM.Rate == null || billVM.Rate <= 0)
+                        {
+                            ModelState.AddModelError("Rate", Resource.Required);
+                            IsFieldNull = true;
+                        }
+
+                        if (IsFieldNull)
+                        {
+                            return View(billVM);
+                        }
+                        else
+                        {
+                            billVM.TotalAmount = billVM.SquareFeet * billVM.Rate;
+                        }
+                    }
+
+                    DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
+
+                    tbl_BillSite objBill = _db.tbl_BillSite.FirstOrDefault(x => x.BillId == billVM.BillId);
+                    if (objBill != null)
+                    {
+                        objBill.BillDate = bill_date;
+                        objBill.BillNo = billVM.BillNo;
+                        objBill.BillType = billVM.BillType;
+                        objBill.SiteId = billVM.SiteId;
+                        objBill.SquareFeet = billVM.SquareFeet;
+                        objBill.Rate = billVM.Rate;
+                        objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
+                        objBill.Remarks = billVM.Remarks;
+                        objBill.ModifiedBy = clsSession.UserID;
+                        objBill.ModifiedDate = DateTime.UtcNow;
+                        _db.SaveChanges();
+                    }
+
+                    return RedirectToAction("Bill", new { id = billVM.SiteId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(billVM);
+        }
+
 
     }
 }

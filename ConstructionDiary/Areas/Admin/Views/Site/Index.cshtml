@@ -1,7 +1,7 @@
 ﻿@using ConstructionDiary.ResourceFiles;
 @using ConstructionDiary.Models;
 
-@model List<SP_GetSitesList_Result>
+@model List<SiteDetailVM>
 @{
     ViewBag.Title = "Site";
     int counter = 1;
@@ -40,10 +40,10 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>@Resource.SiteName</th>
-                                    <th>@Resource.SiteDetail</th>
+                                    <th width="10%;">@Resource.Bill</th>
+                                    <th>@Resource.Total @Resource.Bill @Resource.Amount</th>
                                     <th>@Resource.TotalCredit</th>
-                                    <th>@Resource.TotalDebit</th>
-                                    <th>@Resource.TotalBalance</th>
+                                    <th>@Resource.TotalRemainingAmount</th>
                                     <th>@Resource.Finance</th>
                                     <th>@Resource.Action</th>
                                 </tr>
@@ -51,28 +51,35 @@
                             <tbody>
                                 @if (Model != null && Model.Count > 0)
                                 {
-                                    foreach (SP_GetSitesList_Result site in Model)
+                                    foreach (var obj in Model)
                                     {
+
+                                        obj.TotalBillAmount = obj.TotalBillAmount ?? 0;
+                                        obj.TotalCreditAmount = obj.TotalCreditAmount ?? 0;
+                                        obj.TotalRemainingAmount = (obj.TotalBillAmount ?? 0) - (obj.TotalCreditAmount ?? 0);
+                                         
                                         <tr class="gradeX">
                                             <td>@counter.</td>
-                                            <td>@site.SiteName</td>
-                                            <td>@site.SiteDescription</td>
-                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalCreditAmount)</span></td>
-                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalDebitAmount)</span></td>
-                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(site.TotalRemainingAmount)</span></td>
-                                            <td><button onclick="fnFinanceSite('@site.SiteId')" type="button" class="btn btn-primary">@Resource.Finance</button></td>
+                                            <td>@obj.SiteName</td>
                                             <td>
-                                                <a href="/admin/site/view/@site.SiteId" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
-                                                @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
-                                                <button data-id="@site.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
-                                                <button onclick="fnDeleteSite('@site.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                <a href="/admin/site/bill/@obj.SiteId" class="btn btn-primary">@Resource.Bill</a>
+                                            </td>
+
+                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalBillAmount)</span></td>
+                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalCreditAmount)</span></td>
+
+                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td>
+                                            <td><button onclick="fnFinanceSite('@obj.SiteId')" type="button" class="btn btn-primary">@Resource.Finance</button></td>
+                                            <td>
+                                                <a href="/admin/site/view/@obj.SiteId" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
+                                                <button data-id="@obj.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
+                                                <button onclick="fnDeleteSite('@obj.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
                                         </tr>
                                         counter++;
                                     }
                                 }
                             </tbody>
-
                         </table>
                     </div>
                 </div>

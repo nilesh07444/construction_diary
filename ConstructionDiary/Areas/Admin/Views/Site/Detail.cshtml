@@ -1,4 +1,5 @@
-﻿@using ConstructionDiary.ResourceFiles
+﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.Models;
 @model ConstructionDiary.Models.tbl_Sites
 @{
     ViewBag.Title = "Site";
@@ -7,13 +8,18 @@
 @{
     List<ConstructionDiary.Models.SP_GetSiteDetailById_Result> lstFinance = ViewData["SiteFinanceList"] as List<ConstructionDiary.Models.SP_GetSiteDetailById_Result>;
 
-    decimal? TotalDebitAmount = lstFinance.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
-    string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
+    //decimal? TotalDebitAmount = lstFinance.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
+    //string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
 
     decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
     string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
 
-    decimal? RemainingAmount = TotalCreditAmount - TotalDebitAmount;
+    ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+
+    decimal TotalSiteBillAmount = _db.tbl_BillSite.Where(x => x.SiteId == Model.SiteId).ToList().Select(x => x.TotalAmount).Sum();
+    string strTotalSiteBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalSiteBillAmount));
+
+    decimal? RemainingAmount = TotalSiteBillAmount - TotalCreditAmount;
     string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
 
 }
@@ -31,6 +37,18 @@
                 </div>
             </div>
         </div>
+          
+        <div class="col-lg-3 col-sm-6">
+            <section class="panel">
+                <div class="symbol blue">
+                    <i class="fa fa-bar-chart-o"></i>
+                </div>
+                <div class="value" style="padding-top: 0px;">
+                    <h2>@strTotalSiteBillAmount</h2>
+                    <p class="total totaldebit">@Resource.Total @Resource.Bill</p>
+                </div>
+            </section>
+        </div>
 
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
@@ -39,19 +57,7 @@
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strTotalCreditAmount</h2>
-                    <p class="total totalcredit">@Resource.TotalCredit</p>
-                </div>
-            </section>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol blue">
-                    <i class="fa fa-bar-chart-o"></i>
-                </div>
-                <div class="value" style="padding-top: 0px;">
-                    <h2>@strTotalDebitAmount</h2>
-                    <p class="total totaldebit">@Resource.TotalDebit</p>
+                    <p class="total totalcredit">@Resource.TotalTakenAmount</p>
                 </div>
             </section>
         </div>
@@ -63,7 +69,7 @@
                 </div>
                 <div class="value" style="padding-top: 0px;">
                     <h2>@strRemainingAmount</h2>
-                    <p class="total totalremaining">@Resource.TotalBalance</p>
+                    <p class="total totalremaining">@Resource.TotalRemainingAmount</p>
                 </div>
             </section>
         </div>

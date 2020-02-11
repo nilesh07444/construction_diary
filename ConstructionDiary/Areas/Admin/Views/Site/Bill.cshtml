@@ -1,10 +1,10 @@
 ﻿@using ConstructionDiary.ResourceFiles; 
-@model List<BillDebitVM>
+@model List<BillSiteVM>
 @{
-    ViewBag.Title = "Person";
+    ViewBag.Title = "Site";
 
-    decimal? TotalDebitBillAmount = Model.Select(x => x.TotalAmount).Sum();
-    string strTotalDebitBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitBillAmount));
+    decimal? TotalSiteBillAmount = Model.Select(x => x.TotalAmount).Sum();
+    string strTotalSiteBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalSiteBillAmount));
 
     int counter = 1;
 }
@@ -15,7 +15,7 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>@Resource.BillList - <strong>@ViewBag.PersonName</strong> </strong>
+                    <strong>@Resource.BillList - <strong>@ViewBag.SiteName</strong> </strong>
                 </header>
                 <div class="panel-body">
 
@@ -26,7 +26,7 @@
                                     <i class="fa fa-bar-chart-o"></i>
                                 </div>
                                 <div class="value">
-                                    <h1>@strTotalDebitBillAmount</h1>
+                                    <h1>@strTotalSiteBillAmount</h1>
                                     <p>@Resource.Total</p>
                                 </div>
                             </section>
@@ -41,23 +41,22 @@
                                 </button>
                             </div>
                             @*<div class="btn-group pull-right">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        Tools <i class="fa fa-angle-down"></i>
-                    </button>
-                    <ul class="dropdown-menu pull-right">
-                        <li><a href="#">Print</a></li>
-                        <li><a href="#">Save as PDF</a></li>
-                        <li><a href="#">Export to Excel</a></li>
-                    </ul>
-                </div>*@
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        Tools <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a href="#">Print</a></li>
+                                        <li><a href="#">Save as PDF</a></li>
+                                        <li><a href="#">Export to Excel</a></li>
+                                    </ul>
+                                </div>*@
                         </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped table-hover" id="tblBillList">
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="10%">@Resource.BillDate</th>
-                                    <th>@Resource.SiteName</th>
+                                    <th width="10%">@Resource.BillDate</th> 
                                     <th width="10%;">@Resource.BillType</th>
                                     <th width="13%;">@Resource.SquareFeet</th>
                                     <th width="13%;">@Resource.Rate</th>
@@ -70,19 +69,18 @@
                                 {
                                     foreach (var obj in Model)
                                     {
-                                <tr class="gradeX">
-                                    <td>@counter.</td>
-                                    <td>@Convert.ToDateTime(obj.dBillDate).ToString("dd/MM/yyyy")</td>
-                                    <td>@obj.SiteName</td>
-                                    <td>@obj.BillType</td>
-                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.SquareFeet)</span></td>
-                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Rate)</span></td>
-                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalAmount)</span></td>
-                                    <td>
-                                        <button title="Edit" data-id="@obj.BillId" class="btn btn-primary btn-xs clsEditBill"><i class="fa fa-pencil"></i></button>
-                                        <button title="Delete" onclick="fnDeleteBill('@obj.BillId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@Convert.ToDateTime(obj.dBillDate).ToString("dd/MM/yyyy")</td> 
+                                            <td>@obj.BillType</td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.SquareFeet)</span></td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Rate)</span></td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalAmount)</span></td>
+                                            <td>
+                                                <button title="Edit" data-id="@obj.BillId" class="btn btn-primary btn-xs clsEditBill"><i class="fa fa-pencil"></i></button>
+                                                <button title="Delete" onclick="fnDeleteBill('@obj.BillId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                         counter++;
                                     }
                                 }
@@ -129,13 +127,13 @@
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': [0,1,7]
+                    'aTargets': [0,1,6]
                 }]
         });
     });
 
     jQuery(document).on("click", "#btnAddBill", function () {
-        window.location.href = '/admin/person/addbill/@ViewBag.PersonId';
+        window.location.href = '/admin/site/addbill/@ViewBag.SiteId';
     });
 
     function fnDeleteBill(bill_id) {
@@ -149,7 +147,7 @@
         if (bill_id != "" && bill_id != null) {
             $('#deleteBillModal').modal('hide');
             jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
-            var URL = '@Url.Action("DeleteBill", "Person")';
+            var URL = '@Url.Action("DeleteBill", "Site")';
             $.ajax({
                 type: 'POST',
                 async: true,
@@ -178,7 +176,7 @@
 
     jQuery(document).on("click", ".clsEditBill", function () {
         var bill_id = $(this).attr("data-id");
-        window.location.href = "/admin/person/editbill/" + bill_id;
+        window.location.href = "/admin/site/editbill/" + bill_id;
     });
 
     jQuery(window).on("load", function () {
