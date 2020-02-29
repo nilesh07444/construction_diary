@@ -28,5 +28,7 @@ namespace ConstructionDiary.Models
         public System.Guid CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<System.Guid> ModifiedBy { get; set; }
+        public Nullable<decimal> TotalRokadiya { get; set; }
+        public Nullable<int> PersonTypeId { get; set; }
     }
 }

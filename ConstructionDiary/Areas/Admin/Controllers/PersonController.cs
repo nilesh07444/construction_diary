@@ -312,7 +312,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objFinance.GivenAmountBy = finance.GivenAmountBy;
                     objFinance.Amount = Convert.ToDecimal(finance.Amount);
                     objFinance.SiteId = finance.SiteId;
-                    objFinance.CreditOrDebit = finance.CreditOrDebit;
+                    objFinance.CreditOrDebit = "Debit"; // finance.CreditOrDebit;
                     objFinance.PaymentType = finance.PaymentType;
                     objFinance.ChequeNo = finance.ChequeNo;
                     objFinance.BankName = finance.BankName;
@@ -379,8 +379,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-                ViewBag.PersonName = GetPersonName(id);
+                tbl_Persons objPerson = _db.tbl_Persons.Where(x => x.PersonId == id).FirstOrDefault();
+
+                ViewBag.PersonName = objPerson.PersonFirstName;
                 ViewBag.PersonId = id;
+                ViewBag.PersonTypeId = objPerson.PersonTypeId;
                 ViewBag.Duration = duration;
                 ViewBag.StartDate = start;
                 ViewBag.EndDate = end;
@@ -430,6 +433,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         PersonAttendanceId = attper.PersonAttendanceId,
                         AttendanceDate = att.AttendanceDate,
                         PersonId = attper.PersonId,
+                        PersonTypeId = attper.PersonTypeId,
+                        TotalRokadiya = attper.TotalRokadiya,
                         AttendanceStatus = attper.AttendanceStatus,
                         OvertimeAmount = attper.OvertimeAmount,
                         PersonDailyRate = attper.PersonDailyRate,

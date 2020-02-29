@@ -1,4 +1,5 @@
-﻿@model AttendanceFormVM
+﻿@using ConstructionDiary.ResourceFiles;
+@model AttendanceFormVM
 @{
     ViewBag.Title = "Attendance";
 }
@@ -18,7 +19,7 @@
 
                     @using (Html.BeginForm("Edit", "Attendance", FormMethod.Post, new { @id = "attendanceFormId", @class = "cmxform form-horizontal tasi-form", enctype = "multipart/form-data", role = "form" }))
                     {
-                          
+
                         <div class="form-horizontal">
 
                             <div class="row" style="margin-left: 5px;">
@@ -35,18 +36,19 @@
                             </div>
 
                             <div class="">
-                                    
+
                                 <table class="display table table-bordered table-striped table-hover" id="tblAttendanceForm" style="margin-top: 15px; overflow-y: scroll; display: inline-block;">
                                     <thead>
                                         <tr>
                                             <th style="width:3%;">#</th>
-                                            <th>Name</th>
-                                            <th style="width:10%;">Daily Rate</th>
-                                            <th style="width:13%;">Status</th>
-                                            <th style="width:15%;">Site Name</th>
-                                            <th style="width:7%;">Withdraw</th>
-                                            <th style="width:7%;">Overtime</th>
-                                            <th style="width:15%;">Remarks</th>
+                                            <th>@Resource.Name</th>
+                                            @*<th style="width:10%;">Daily Rate</th>*@
+                                            <th style="width:13%;">@Resource.Status</th>
+                                            <th style="width:13%;">@Resource.Rokadiya</th>
+                                            <th style="width:15%;">@Resource.SiteName</th>
+                                            <th style="width:7%;">@Resource.Withdraw</th>
+                                            <th style="width:7%;">@Resource.Overtime</th>
+                                            <th style="width:15%;">@Resource.Remarks</th>
                                         </tr>
                                     </thead>
 
@@ -59,11 +61,19 @@
                                         <tr class="gradeX">
                                             <td>@counter</td>
                                             <td>@obj.PersonName</td>
-                                            <td><span>@obj.PersonDailyRate</span></td>
+                                            @*<td><span>@obj.PersonDailyRate</span></td>*@
                                             <td>
                                                 @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text", obj.AttendanceStatus.ToString()), "-Select Status-", new { @id = "attendancestatus_" + obj.PersonAttendanceId, @class = "form-control ddlAttendanceStatus" })
                                                 @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
                                             </td>
+
+                                            <td>
+                                                @if (obj.PersonTypeId == 6)
+                                                {
+                                                    @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].TotalRokadiya, new { htmlAttributes = new { @id = "rokadiya_" + obj.PersonAttendanceId, @class = "form-control", maxlength = "100" } })
+                                                }
+                                            </td>
+
                                             <td>
                                                 @{ string strStyle = obj.AttendanceStatus == 0 ? "none" : "blobk"; }
                                                 @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text", obj.SiteId), "-Select Site-", new { @id = "site_" + obj.PersonAttendanceId, @class = "form-control", @style = "display: " + strStyle + " " })
@@ -81,6 +91,7 @@
                                             @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonAttendanceId)
                                             @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonId)
                                             @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate)
+                                            @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonTypeId)
                                         </tr>
                                             }
                                         }
@@ -92,9 +103,9 @@
                             <div style="margin-top: 15px;">
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        @Html.HiddenFor(x=>x.AttendaceId)
-                                        <input id="cmdSubmit" type="submit" value="Save" class="btn btn-success" />
-                                        <button class="btn btn-default" id="btnCancel" type="button">Cancel</button>
+                                        @Html.HiddenFor(x => x.AttendaceId)
+                                        <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
+                                        <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +127,7 @@
 
 <script>
 
-    
+
 
     jQuery(document).ready(function () {
         jQuery('html, body').animate({ scrollTop: 0 }, 1000);
@@ -130,10 +141,12 @@
         var value = $(this).val();
         var per_att_id = id.split("_")[1];
         if (value == "0.0") {
-            $("#site_" + per_att_id).hide()
+            $("#site_" + per_att_id).hide();
+            $("#rokadiya_" + per_att_id).hide();
         }
         else {
             $("#site_" + per_att_id).show();
+            $("#rokadiya_" + per_att_id).show();
         }
     });
 

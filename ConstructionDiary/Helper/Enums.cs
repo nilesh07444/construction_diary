@@ -8,7 +8,9 @@ namespace ConstructionDiary
     public enum PaymentTypes
     {
         Cash, 
-        Cheque
+        Cheque,
+        NEFT,
+        RTGS
     }
     public enum UserRoles
     {

@@ -11,7 +11,7 @@ using iTextSharp.tool.xml;
 using System.IO;
 using ConstructionDiary.Helper;
 using OfficeOpenXml;
-using OfficeOpenXml.Style; 
+using OfficeOpenXml.Style;
 using ConstructionDiary.ResourceFiles;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
@@ -30,18 +30,18 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             List<SiteDetailVM> siteDetail = (from site in _db.tbl_Sites
-                                                 where site.ClientId == ClientId && !site.IsDeleted
-                                                 select new SiteDetailVM
-                                                 {
-                                                     SiteId = site.SiteId,
-                                                     SiteName = site.SiteName,
-                                                     TotalBillAmount = _db.tbl_BillSite.Where(x => x.SiteId == site.SiteId).ToList().Select(x => x.TotalAmount).Sum(),
-                                                     TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum()
-                                                 }).ToList();                
+                                             where site.ClientId == ClientId && !site.IsDeleted
+                                             select new SiteDetailVM
+                                             {
+                                                 SiteId = site.SiteId,
+                                                 SiteName = site.SiteName,
+                                                 TotalBillAmount = _db.tbl_BillSite.Where(x => x.SiteId == site.SiteId).ToList().Select(x => x.TotalAmount).Sum(),
+                                                 TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum()
+                                             }).ToList();
 
             //var lstSites = (from p in _db.SP_GetSitesList(ClientId)
             //                select p).ToList();
-             
+
             return View(siteDetail);
         }
 
@@ -248,7 +248,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         }
                                     case "Bank Name":
                                         {
-                                            strcolval = obj.BankName;
+                                            strcolval = obj.ChequeNo + " " + obj.BankName;
                                             break;
                                         }
                                     case "By Amount":
@@ -278,7 +278,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");
-                     
+
                     strHTML.Append("</table>");
                     StringReader sr = new StringReader(strHTML.ToString());
 
@@ -456,24 +456,24 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 // Get Credit
                 List<tbl_ContractorFinance> lstCredit = _db.tbl_ContractorFinance.Where(x => x.SiteId == id && x.IsDeleted == false).ToList();
                 decimal? totalCreditReceivedAmount = lstCredit.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
-                decimal? totalCreditGivenAmount = lstCredit.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum(); 
-                decimal totalCreditBalanceAmount = Convert.ToDecimal(totalCreditReceivedAmount) - Convert.ToDecimal(totalCreditGivenAmount);
+                //decimal? totalCreditGivenAmount = lstCredit.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
+                //decimal totalCreditBalanceAmount = Convert.ToDecimal(totalCreditReceivedAmount) - Convert.ToDecimal(totalCreditGivenAmount);
 
-                objSiteInfo.TotalCreditAmount = totalCreditBalanceAmount;
+                objSiteInfo.TotalCreditAmount = Convert.ToDecimal(totalCreditReceivedAmount); //totalCreditBalanceAmount;
 
                 // Get Debit
                 List<tbl_Finance> lstDebit = _db.tbl_Finance.Where(x => x.SiteId == id && !x.IsDeleted).ToList();
-                decimal? totalDebitReceivedAmount = lstDebit.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
+                //decimal? totalDebitReceivedAmount = lstDebit.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
                 decimal? totalDebitGivenAmount = lstDebit.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
-                decimal totalDebitBalanceAmount = Convert.ToDecimal(totalDebitGivenAmount) - Convert.ToDecimal(totalDebitReceivedAmount);
+                //decimal totalDebitBalanceAmount = Convert.ToDecimal(totalDebitGivenAmount) - Convert.ToDecimal(totalDebitReceivedAmount);
 
-                objSiteInfo.TotalDebitAmount = totalDebitBalanceAmount;
+                objSiteInfo.TotalDebitAmount = Convert.ToDecimal(totalDebitGivenAmount); // totalDebitBalanceAmount;
 
                 // Calculate Balance
                 objSiteInfo.CalculatedCreditAmount = objSiteInfo.TotalCreditAmount;
                 objSiteInfo.CalculatedDebitAmount = objSiteInfo.TotalDebitAmount + objSiteInfo.TotalMaterialAmount + objSiteInfo.TotalExpenseAmount + objSiteInfo.TotalPersonAttendanceAmount;
                 objSiteInfo.CalculatedBalanceAmount = objSiteInfo.CalculatedCreditAmount - objSiteInfo.CalculatedDebitAmount;
-                 
+
             }
             catch (Exception ex)
             {
@@ -482,13 +482,13 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(objSiteInfo);
         }
-         
+
         public ActionResult Bill(Guid Id) // Id = SiteId
         {
             List<BillSiteVM> lstBill = new List<BillSiteVM>();
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-            tbl_Sites objSite = _db.tbl_Sites.Where(x=>x.SiteId == Id).First();
+            tbl_Sites objSite = _db.tbl_Sites.Where(x => x.SiteId == Id).First();
 
             ViewBag.SiteId = Id;
             ViewBag.SiteName = objSite.SiteName;
@@ -503,7 +503,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                            BillNo = dbill.BillNo,
                            BillType = dbill.BillType,
                            SiteId = dbill.SiteId,
-                           SiteName = site.SiteName, 
+                           SiteName = site.SiteName,
                            SquareFeet = dbill.SquareFeet,
                            Rate = dbill.Rate,
                            TotalAmount = dbill.TotalAmount,
@@ -518,7 +518,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-            BillSiteVM objBill = new BillSiteVM(); 
+            BillSiteVM objBill = new BillSiteVM();
             objBill.SiteId = Id;
 
             return View(objBill);
@@ -532,7 +532,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             try
             {
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
-                  
+
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
                 if (ModelState.IsValid)
@@ -577,7 +577,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objBill.BillDate = bill_date;
                     objBill.BillNo = billVM.BillNo;
                     objBill.BillType = billVM.BillType;
-                    objBill.SiteId = billVM.SiteId; 
+                    objBill.SiteId = billVM.SiteId;
                     objBill.SquareFeet = billVM.SquareFeet;
                     objBill.Rate = billVM.Rate;
                     objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
@@ -617,7 +617,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     ReturnMessage = "notfound";
                 }
                 else
-                { 
+                {
                     _db.tbl_BillSite.Remove(objBill);
                     _db.SaveChanges();
                     ReturnMessage = "success";
@@ -631,12 +631,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
 
-
         public ActionResult EditBill(Guid Id) // id= BillId
         {
             BillSiteVM objBill = new BillSiteVM();
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
-             
+
             tbl_BillSite bill = _db.tbl_BillSite.Where(x => x.BillId == Id).FirstOrDefault();
             if (objBill != null)
             {
@@ -644,7 +643,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objBill.BillDate = Convert.ToDateTime(bill.BillDate).ToString("dd/MM/yyyy");
                 objBill.BillNo = bill.BillNo;
                 objBill.BillType = bill.BillType;
-                objBill.SiteId = bill.SiteId; 
+                objBill.SiteId = bill.SiteId;
                 objBill.SquareFeet = bill.SquareFeet;
                 objBill.Rate = bill.Rate;
                 objBill.TotalAmount = Convert.ToDecimal(bill.TotalAmount);
@@ -654,7 +653,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return View(objBill);
         }
 
-
         [HttpPost]
         public ActionResult EditBill(BillSiteVM billVM)
         {
@@ -662,7 +660,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             try
             {
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
-                  
+
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
                 if (ModelState.IsValid)
@@ -729,6 +727,129 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return View(billVM);
         }
 
+        public ActionResult AllDebitSiteData(Guid Id) // Id=SiteId
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+
+            List<FinanceList> financeList = (from finance in _db.tbl_Finance
+                                             join user in _db.tbl_Users on finance.GivenAmountBy equals user.UserId
+                                             join person in _db.tbl_Persons on finance.PersonId equals person.PersonId
+                                             where finance.SiteId == Id
+                                             select new FinanceList
+                                             {
+                                                 FinanceId = finance.FinanceId,
+                                                 PersonId = finance.PersonId,
+                                                 PersonName = person.PersonFirstName,
+                                                 SelectedDate = finance.SelectedDate,
+                                                 Amount = finance.Amount,
+                                                 SiteId = finance.SiteId,
+                                                 CreditOrDebit = finance.CreditOrDebit,
+                                                 GivenAmountBy = finance.GivenAmountBy,
+                                                 PaymentType = finance.PaymentType,
+                                                 ChequeNo = finance.ChequeNo,
+                                                 BankName = finance.BankName,
+                                                 ChequeFor = finance.ChequeFor,
+                                                 Remarks = finance.Remarks,
+                                                 IsActive = finance.IsActive,
+                                                 IsDeleted = finance.IsDeleted,
+                                                 CreatedBy = finance.CreatedBy,
+                                                 UpdatedBy = finance.UpdatedBy,
+                                                 CreatedDate = finance.CreatedDate,
+                                                 ModifiedDate = finance.ModifiedDate,
+                                                 FirstName = user.FirstName,
+                                             }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
+
+            return View(financeList);
+        }
+
+        public ActionResult AllMaterialSiteData(Guid Id) // Id=SiteId
+        {
+            List<MaterialPurchaseVM> lstMaterial = new List<MaterialPurchaseVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+
+            lstMaterial = (from mat in _db.tbl_MaterialPurchase
+                           join site in _db.tbl_Sites on mat.SiteId equals site.SiteId
+                           join marchant in _db.tbl_Merchant on mat.MerchantId equals marchant.MerchantId into outerJoinMerchant
+                           from marchant in outerJoinMerchant.DefaultIfEmpty()
+                           where !mat.IsDeleted && mat.IsActive && mat.ClientId == ClientId
+                                 && mat.SiteId == Id
+                           select new MaterialPurchaseVM
+                           {
+                               MaterialPurchaseId = mat.MaterialPurchaseId,
+                               dtPurchaseDate = mat.PurchaseDate,
+                               SiteId = mat.SiteId,
+                               Total = mat.Total,
+                               GST_Per = mat.GST_Per,
+                               SiteName = site.SiteName,
+                               MerchantName = marchant.FirmName
+                           }).OrderByDescending(x => x.dtPurchaseDate).ToList();
+
+            return View(lstMaterial);
+        }
+
+        public ActionResult AllExpenseSiteData(Guid Id) // Id=SiteId
+        {
+            List<ExpenseVM> lstExpenses = new List<ExpenseVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+
+            lstExpenses = (from c in _db.tbl_Expenses
+                           join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
+                           join site in _db.tbl_Sites on c.SiteId equals site.SiteId into outerJoinSite
+                           from site in outerJoinSite.DefaultIfEmpty()
+                           where !c.IsDeleted && c.ClientId == ClientId
+                           && c.SiteId == Id
+                           select new ExpenseVM
+                           {
+                               ExpenseId = c.ExpenseId,
+                               dtExpenseDate = c.ExpenseDate,
+                               Amount = c.Amount,
+                               Description = c.Description,
+                               SiteId = c.SiteId,
+                               SiteName = site.SiteName,
+                               ExpenseTypeId = c.ExpenseTypeId,
+                               ExpenseType = exp.ExpenseType,
+                               IsActive = c.IsActive
+                           }).OrderByDescending(x => x.dtExpenseDate).ToList();
+
+            return View(lstExpenses);
+        }
+
+        public ActionResult AllAttendanceSiteData(Guid Id) // Id=SiteId
+        {
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+
+            List<SiteAttendanceVM> lstSiteAttendance = (from pa in _db.tbl_PersonAttendance
+                                                        join p in _db.tbl_Persons on pa.PersonId equals p.PersonId
+                                                        where pa.SiteId == Id
+                                                        select new SiteAttendanceVM
+                                                        {
+                                                            PersonAttendanceId = pa.PersonAttendanceId,
+                                                            AttendaceId = pa.AttendanceId,
+                                                            AttendanceDate = pa.CreatedDate,
+                                                            PersonId = pa.PersonId,
+                                                            PersonTypeId = pa.PersonTypeId,
+                                                            PersonName = p.PersonFirstName,
+                                                            AttendanceStatus = pa.AttendanceStatus,
+                                                            TotalRokadiya = pa.TotalRokadiya,
+                                                            PersonDailyRate = pa.PersonDailyRate,
+                                                            PayableAmount = pa.PayableAmount,
+                                                            WithdrawAmount = pa.WithdrawAmount,
+                                                            OvertimeAmount = pa.OvertimeAmount,
+                                                            Remarks = pa.Remarks
+                                                        }).ToList();
+
+            return View(lstSiteAttendance);
+        }
 
     }
 }

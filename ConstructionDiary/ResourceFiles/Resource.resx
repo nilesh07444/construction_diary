@@ -561,4 +561,46 @@
   <data name="TotalTakenAmount" xml:space="preserve">
     <value>Total Taken Amount</value>
   </data>
+  <data name="AddNewGroup" xml:space="preserve">
+    <value>Add New Group</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>Group Name</value>
+  </data>
+  <data name="GroupPerson" xml:space="preserve">
+    <value>Group Person</value>
+  </data>
+  <data name="PersonGroup" xml:space="preserve">
+    <value>Person Group</value>
+  </data>
+  <data name="PersonGroupList" xml:space="preserve">
+    <value>Person Group List</value>
+  </data>
+  <data name="TotalPersons" xml:space="preserve">
+    <value>Total Persons</value>
+  </data>
+  <data name="TotalAttendanceAmount" xml:space="preserve">
+    <value>Total Attendance Amount</value>
+  </data>
+  <data name="TotalCreditAmount" xml:space="preserve">
+    <value>Total Credit Amount (From Party)</value>
+  </data>
+  <data name="TotalDebitAmount" xml:space="preserve">
+    <value>Total Debit Amount (Person)</value>
+  </data>
+  <data name="TotalExpenseAmount" xml:space="preserve">
+    <value>Total Expense Amount</value>
+  </data>
+  <data name="TotalMaterialAmount" xml:space="preserve">
+    <value>Total Material Amount</value>
+  </data>
+  <data name="Rokadiya" xml:space="preserve">
+    <value>Rokadiya</value>
+  </data>
+  <data name="TotalOvertimeAmount" xml:space="preserve">
+    <value>Total Overtime Amount</value>
+  </data>
+  <data name="TotalWithdrawAmount" xml:space="preserve">
+    <value>Total Withdraw Amount</value>
+  </data>
 </root>

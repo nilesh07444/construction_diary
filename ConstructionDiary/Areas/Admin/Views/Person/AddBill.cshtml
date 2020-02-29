@@ -47,11 +47,11 @@
                                         @Html.LabelFor(model => model.SquareFeet, htmlAttributes: new { @class = "" })
                                         @if (Model.BillType == "Other")
                                         {
-                                            @Html.EditorFor(model => model.SquareFeet, new { htmlAttributes = new { @type = "number", @class = "form-control", @placeholder = Resource.SquareFeet, @disabled = "disabled" } })
+                                            @Html.EditorFor(model => model.SquareFeet, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = Resource.SquareFeet, @disabled = "disabled" } })
                                         }
                                         else
                                         {
-                                            @Html.EditorFor(model => model.SquareFeet, new { htmlAttributes = new { @type = "number", @class = "form-control", @placeholder = Resource.SquareFeet } })
+                                            @Html.EditorFor(model => model.SquareFeet, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = Resource.SquareFeet } })
                                         }
                                         @Html.ValidationMessageFor(model => model.SquareFeet, "", new { @class = "text-danger" })
                                     </div>
@@ -60,11 +60,11 @@
                                         @Html.LabelFor(model => model.Rate, htmlAttributes: new { @class = "" })
                                         @if (Model.BillType == "Other")
                                         {
-                                            @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @type = "number", @class = "form-control", @placeholder = Resource.Rate, @disabled = "disabled" } })
+                                            @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = Resource.Rate, @disabled = "disabled" } })
                                         }
                                         else
                                         {
-                                            @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @type = "number", @class = "form-control", @placeholder = Resource.Rate } })
+                                            @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = Resource.Rate } })
                                         }
                                         @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
                                     </div>
@@ -73,11 +73,11 @@
                                         @Html.LabelFor(model => model.TotalAmount, htmlAttributes: new { @class = "" })
                                         @if (Model.BillType == "Other")
                                         {
-                                            @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @type = "number", @class = "form-control", @placeholder = Resource.Total } })
+                                            @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = Resource.Total } })
                                         }
                                         else
                                         {
-                                            @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @type = "number", @class = "form-control", @placeholder = Resource.Total, @disabled = "disabled" } })
+                                            @Html.EditorFor(model => model.TotalAmount, new { htmlAttributes = new { @type = "text", @class = "form-control", @placeholder = Resource.Total, @disabled = "disabled" } })
                                         }
                                         @Html.ValidationMessageFor(model => model.TotalAmount, "", new { @class = "text-danger" })
                                     </div>

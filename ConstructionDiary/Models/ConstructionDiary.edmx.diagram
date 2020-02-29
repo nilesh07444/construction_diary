@@ -37,6 +37,10 @@
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillDebit" Width="1.5" PointX="13.25" PointY="5.375" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_BillDebit_tbl_Persons" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_BillDebit_tbl_Sites" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillSite" Width="1.5" PointX="5.25" PointY="28" />
+        <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_BillSite_tbl_Sites" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PersonGroup" Width="1.5" PointX="12.75" PointY="12.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PersonGroupMap" Width="1.5" PointX="0.75" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

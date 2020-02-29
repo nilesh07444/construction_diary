@@ -561,4 +561,46 @@
   <data name="TotalTakenAmount" xml:space="preserve">
     <value>કુલ મળેલ  રકમ</value>
   </data>
+  <data name="AddNewGroup" xml:space="preserve">
+    <value>નવું ગ્રુપ ઉમેરો</value>
+  </data>
+  <data name="GroupName" xml:space="preserve">
+    <value>ગ્રુપ નું નામ</value>
+  </data>
+  <data name="GroupPerson" xml:space="preserve">
+    <value>ગ્રુપ ના માણસો</value>
+  </data>
+  <data name="PersonGroup" xml:space="preserve">
+    <value>માણસો નું ગ્રુપ</value>
+  </data>
+  <data name="PersonGroupList" xml:space="preserve">
+    <value>માણસો ગ્રુપ લિસ્ટ</value>
+  </data>
+  <data name="TotalPersons" xml:space="preserve">
+    <value>કુલ માણસો</value>
+  </data>
+  <data name="TotalAttendanceAmount" xml:space="preserve">
+    <value>કુલ હાજરી રકમ</value>
+  </data>
+  <data name="TotalCreditAmount" xml:space="preserve">
+    <value>કુલ જમા રકમ</value>
+  </data>
+  <data name="TotalDebitAmount" xml:space="preserve">
+    <value>કુલ માણસો ને આપેલ રકમ (સેન્ટીંગ / સરિયાં વાળા)</value>
+  </data>
+  <data name="TotalExpenseAmount" xml:space="preserve">
+    <value>કુલ ખર્ચ રકમ</value>
+  </data>
+  <data name="TotalMaterialAmount" xml:space="preserve">
+    <value>કુલ મટીરીયલ રકમ</value>
+  </data>
+  <data name="Rokadiya" xml:space="preserve">
+    <value>રોકડીયા</value>
+  </data>
+  <data name="TotalOvertimeAmount" xml:space="preserve">
+    <value>કુલ ઓવરટાઈમ રકમ</value>
+  </data>
+  <data name="TotalWithdrawAmount" xml:space="preserve">
+    <value>કુલ ઉપાડ રકમ</value>
+  </data>
 </root>

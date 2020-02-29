@@ -1,0 +1,135 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@model PersonGroupVM
+
+@{
+    ViewBag.Title = "Attendance";
+}
+ 
+<style>
+    .multiselect-native-select .multiselect {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+</style>
+ 
+<section class="wrapper site-min-height">
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>@Resource.AddNewGroup</strong>
+                </header>
+                <div class="panel-body">
+                    <div class="col-sm-6">
+                        <div class="form">
+                            <form>
+                                
+                                <div class="form-group">
+                                    <label>@Resource.GroupName</label>
+                                    <input type="text" id="txtGroupName" class="form-control" placeholder="@Resource.GroupName" />
+                                    <span id="spn_GroupName" class="field-validation-valid text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>@Resource.GroupPerson</label>
+                                    <p>
+                                        <select id="ddlGroupPerson" class="form-group" multiple="multiple">
+                                            @if (Model != null && Model.PersonList.Count > 0)
+                                            {
+                                                foreach (var obj in Model.PersonList)
+                                                {
+                                                    <option value="@obj.Value">@obj.Text</option>
+                                                }
+                                            }
+                                        </select>
+                                    </p>
+                                    <span id="spn_GroupPerson" class="field-validation-valid text-danger"></span>
+                                </div>
+
+                                <div>
+                                    <button id="btnSubmitForm" class="btn btn-info" type="button">@Resource.Save</button>
+                                    <a href="/admin/attendance/persongroup" class="btn btn-default">@Resource.Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script>
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        $('#ddlGroupPerson').multiselect({
+            nonSelectedText: '-@Resource.GroupPerson-'
+        });
+
+    });
+
+    jQuery("#btnSubmitForm").click(function () {
+
+        var isvalid = true;
+        var GroupName = $("#txtGroupName").val();
+        var GroupPersons = $("#ddlGroupPerson").val();
+
+        var field_required_msg = '@Resource.Required';
+
+        if (GroupName == "" || GroupName == undefined) {
+            isvalid = false;
+            $("#spn_GroupName").text(field_required_msg);
+            $("#spn_GroupName").show();
+        }
+        else {
+            $("#spn_GroupName").hide();
+        }
+
+        if (GroupPersons == "" || GroupPersons == undefined) {
+            isvalid = false;
+            $("#spn_GroupPerson").text(field_required_msg);
+            $("#spn_GroupPerson").show();
+        }
+        else {
+            $("#spn_GroupPerson").hide();
+        }
+
+        if (isvalid == true) {
+            // Save
+        //StartLoading();
+        var URL = '@Url.Action("SavePersonGroup", "Attendance")';
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: URL,
+            data: {
+                groupName: GroupName,
+                personGroup: GroupPersons 
+            },
+            success: function (response) {
+                if (response.IsError) {
+                alert(response.ErrorMessage);
+                //StopLoading();
+            }
+            else {
+                window.location.href = response.RedirectUrl;
+            }
+
+            },
+            error: function (resultData) {
+                alert("error");
+                //StopLoading();
+            }
+        });
+
+        }
+
+    });
+
+</script>
+
+

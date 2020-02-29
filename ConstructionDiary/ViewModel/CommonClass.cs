@@ -25,7 +25,8 @@ namespace ConstructionDiary
         public Guid CreatedBy { get; set; }
         public Guid? UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; } 
+        public DateTime? ModifiedDate { get; set; }
+        public string PersonName { get; set; }
         public string FirstName { get; set; }
     }
 

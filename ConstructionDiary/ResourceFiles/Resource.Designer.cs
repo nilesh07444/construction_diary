@@ -151,6 +151,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Group.
+        /// </summary>
+        public static string AddNewGroup {
+            get {
+                return ResourceManager.GetString("AddNewGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Material.
         /// </summary>
         public static string AddNewMaterial {
@@ -727,6 +736,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Group Name.
+        /// </summary>
+        public static string GroupName {
+            get {
+                return ResourceManager.GetString("GroupName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group Person.
+        /// </summary>
+        public static string GroupPerson {
+            get {
+                return ResourceManager.GetString("GroupPerson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GST.
         /// </summary>
         public static string GST {
@@ -916,6 +943,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Person Group.
+        /// </summary>
+        public static string PersonGroup {
+            get {
+                return ResourceManager.GetString("PersonGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Person Group List.
+        /// </summary>
+        public static string PersonGroupList {
+            get {
+                return ResourceManager.GetString("PersonGroupList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Person List.
         /// </summary>
         public static string PersonList {
@@ -1002,6 +1047,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Required {
             get {
                 return ResourceManager.GetString("Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rokadiya.
+        /// </summary>
+        public static string Rokadiya {
+            get {
+                return ResourceManager.GetString("Rokadiya", resourceCulture);
             }
         }
         
@@ -1177,6 +1231,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Attendance Amount.
+        /// </summary>
+        public static string TotalAttendanceAmount {
+            get {
+                return ResourceManager.GetString("TotalAttendanceAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Balance.
         /// </summary>
         public static string TotalBalance {
@@ -1204,6 +1267,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Credit Amount (From Party).
+        /// </summary>
+        public static string TotalCreditAmount {
+            get {
+                return ResourceManager.GetString("TotalCreditAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Customers.
         /// </summary>
         public static string TotalCustomers {
@@ -1222,6 +1294,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Debit Amount (Person).
+        /// </summary>
+        public static string TotalDebitAmount {
+            get {
+                return ResourceManager.GetString("TotalDebitAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Expense Amount.
+        /// </summary>
+        public static string TotalExpenseAmount {
+            get {
+                return ResourceManager.GetString("TotalExpenseAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Given Amount.
         /// </summary>
         public static string TotalGivenAmount {
@@ -1231,11 +1321,38 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Material Amount.
+        /// </summary>
+        public static string TotalMaterialAmount {
+            get {
+                return ResourceManager.GetString("TotalMaterialAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Merchant.
         /// </summary>
         public static string TotalMerchant {
             get {
                 return ResourceManager.GetString("TotalMerchant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Overtime Amount.
+        /// </summary>
+        public static string TotalOvertimeAmount {
+            get {
+                return ResourceManager.GetString("TotalOvertimeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Persons.
+        /// </summary>
+        public static string TotalPersons {
+            get {
+                return ResourceManager.GetString("TotalPersons", resourceCulture);
             }
         }
         
@@ -1290,6 +1407,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string TotalTakenAmount {
             get {
                 return ResourceManager.GetString("TotalTakenAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Withdraw Amount.
+        /// </summary>
+        public static string TotalWithdrawAmount {
+            get {
+                return ResourceManager.GetString("TotalWithdrawAmount", resourceCulture);
             }
         }
         

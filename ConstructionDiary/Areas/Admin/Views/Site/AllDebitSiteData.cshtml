@@ -1,0 +1,187 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.Models;
+@model List<FinanceList>
+@{
+    ViewBag.Title = "Site";
+}
+
+@{
+
+    //List<FinanceList> lstFinance = ViewData["FinanceList"] as List<FinanceList>;
+    decimal? TotalDebitAmount = Model.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
+    string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
+
+    //decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
+    //string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
+
+    //ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+
+    //decimal TotalDebitBillAmount = _db.tbl_BillDebit.Where(x => x.PersonId == Model.PersonId).ToList().Select(x => x.TotalAmount).Sum();
+    //string strTotalDebitBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitBillAmount));
+
+    //decimal? RemainingAmount = TotalDebitBillAmount - TotalDebitAmount;
+    //string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
+
+}
+
+<!--main content start-->
+<section class="wrapper site-min-height">
+    <!-- page start-->
+      
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>@Resource.FinanceList - @ViewBag.SiteName</strong>
+
+                    <a href="/admin/site/view/@ViewBag.SiteId" class="btn btn-warning" style="float: right; top: -7px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
+
+                </header>
+                <div class="panel-body">
+
+                    <div class="row state-overview">
+                        <div class="col-lg-3 col-sm-6">
+                            <section class="panel" style="border: 1px solid #ddd;">
+                                <div class="symbol terques">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                </div>
+                                <div class="value">
+                                    <h1>@strTotalDebitAmount</h1>
+                                    <p>@Resource.TotalGivenAmount</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="adv-table">
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped table-hover" id="tblFinanceList">
+                            <thead>
+                                <tr>
+                                    <th style="width:10%;">@Resource.Date</th>
+                                    <th style="width:10%;">@Resource.Amount</th>
+                                    <th style="width:10%;">@Resource.Name</th>
+                                    <th class="hidden-phone">@Resource.Remarks</th>
+                                    <th style="width:10%;">@Resource.Type</th>
+                                    <th style="width:10%;">@Resource.PaymentType</th>
+                                    <th style="width:20%;">@Resource.BankName</th>
+                                    <th style="width:5%;">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count() > 0)
+                                {
+                                    foreach (var obj in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy")</td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Amount)</span></td>
+                                            <td>@obj.PersonName</td>
+                                            <td class="hidden-phone">@obj.Remarks</td>
+                                            <td>
+                                                <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
+                                            </td>
+                                            <td>@obj.PaymentType</td>
+                                            <td>@obj.ChequeNo @obj.BankName</td>
+                                            <td>
+                                                @*<button data-id="@obj.FinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
+                                                @*<button data-id="@obj.FinanceId" class="btn btn-primary btn-xs clsEditFinance"><i class="fa fa-pencil"></i></button>*@
+                                                <button onclick="fnDeleteFinance('@obj.FinanceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteFinanceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+                </div>
+                <div class="modal-body">
+                    @Resource.SureWantToDelete
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="hdnFinancePerson" />
+                    <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                    <button id="btnDeleteFinance" class="btn btn-danger" type="button">@Resource.Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete modal -->
+
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+     
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblFinanceList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0,5]
+                }]
+        });
+    });
+     
+    function fnDeleteFinance(financeid) {
+        jQuery("#hdnFinancePerson").val(financeid);
+        $('#deleteFinanceModal').modal('show');
+    }
+
+    jQuery(document).on("click", "#btnDeleteFinance", function () {
+
+        var financeid = jQuery("#hdnFinancePerson").val();
+        if (financeid != "" && financeid != null) {
+            $('#deletePersonModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteFinance", "Person")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?FinanceId=" + financeid,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Finance Deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Finance Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    jQuery(document).on("click", "#btnCancel", function () {
+        window.location.href = "/admin/person";
+    });
+     
+</script>

@@ -34,6 +34,8 @@
 
     <link href="~/Areas/Admin/Content/assets/bootstrap-fileupload/bootstrap-fileupload.css" rel="stylesheet" />
 
+    <link rel="stylesheet" href="~/Scripts/bootstrap-multiselect.css" type="text/css" />
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 tooltipss and media queries -->
     <!--[if lt IE 9]>
       <script src="~/Areas/Admin/Content//js/html5shiv.js"></script>
@@ -109,6 +111,13 @@
                         </a>
                         <ul class="dropdown-menu extended logout">
                             <div class="log-arrow-up"></div>
+
+                            @if (clsSession.RoleID == (int)UserRoles.Admin)
+                            {
+                                <li><a href="/admin/user"><i class="fa fa-user"></i> @Resource.Users</a></li>
+                            }
+                            <li><a href="/admin/profile"><i class=" fa fa-suitcase"></i> @Resource.MyProfile</a></li>
+                            <li><a href="/admin/setting"><i class="fa fa-cog"></i> @Resource.Setting</a></li>
                             <li><a href="/admin/Login/Signout"><i class="fa fa-key"></i>@Resource.LogOut</a></li>
                         </ul>
                     </li>
@@ -156,12 +165,12 @@
                                     </ul>
                                 </li>*@
 
-                            <li>
+                            @*<li>
                                 <a class="@(ViewBag.Title == "Users" ? "active" : "")" href="/admin/user">
                                     <i class="fa fa-users"></i>
                                     <span>@Resource.Users</span>
                                 </a>
-                            </li>
+                            </li>*@
 
                             <li>
                                 <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site">
@@ -188,12 +197,12 @@
                                     </ul>
                                 </li>*@
 
-                            <li>
-                                <a class="@(ViewBag.Title == "Credit" ? "active" : "")" href="/admin/myaccount">
-                                    <i class="fa fa-search-plus"></i>
-                                    <span>@Resource.Credit</span>
-                                </a>
-                            </li>
+                            @*<li>
+                                    <a class="@(ViewBag.Title == "Credit" ? "active" : "")" href="/admin/myaccount">
+                                        <i class="fa fa-search-plus"></i>
+                                        <span>@Resource.Credit</span>
+                                    </a>
+                                </li>*@
 
                             @*<li class="sub-menu">
                                     <a class="clsMain @(ViewBag.Title == "Credit" ? "active" : "")" href="javascript:;">
@@ -235,12 +244,12 @@
                                     </ul>
                                 </li>*@
 
-                            <li>
-                                <a class="@(ViewBag.Title == "Merchants" ? "active" : "")" href="/admin/merchant">
-                                    <i class="fa fa-user"></i>
-                                    <span>@Resource.Merchants</span>
-                                </a>
-                            </li>
+                            @*<li>
+                                    <a class="@(ViewBag.Title == "Merchants" ? "active" : "")" href="/admin/merchant">
+                                        <i class="fa fa-user"></i>
+                                        <span>@Resource.Merchants</span>
+                                    </a>
+                                </li>*@
 
                             @*<li class="sub-menu">
                                     <a class="clsMain @(ViewBag.Title == "Merchants" ? "active" : "")" href="javascript:;">
@@ -259,9 +268,9 @@
                                     <span>@Resource.Material</span>
                                 </a>
                                 <ul class="sub">
-                                    @*<li><a href="/admin/material/add">@Resource.AddNewMaterial</a></li>*@
                                     <li><a href="/admin/material">@Resource.MaterialList</a></li>
                                     <li><a href="/admin/materialtype">@Resource.MaterialTypeList</a></li>
+                                    <li><a href="/admin/merchant">@Resource.Merchants</a></li>
                                 </ul>
                             </li>
 
@@ -275,26 +284,26 @@
                                 </a>
                                 <ul class="sub">
                                     <li><a href="/admin/attendance/personlist">@Resource.PersonList</a></li>
-                                    @*<li><a href="/admin/attendance/add">@Resource.AddNewAttendance</a></li>*@
                                     <li><a href="/admin/attendance">@Resource.AttendanceList</a></li>
+                                    <li><a href="/admin/attendance/persongroup">@Resource.PersonGroup</a></li>
                                 </ul>
                             </li>
                         }
                     }
 
-                    <li>
+                    @*<li>
                         <a class="@(ViewBag.Title == "MyProfile" ? "active" : "")" href="/admin/profile">
                             <i class="fa fa-align-center"></i>
                             <span>@Resource.MyProfile</span>
                         </a>
-                    </li>
+                    </li>*@
 
-                    <li>
+                    @*<li>
                         <a class="@(ViewBag.Title == "Setting" ? "active" : "")" href="/admin/setting">
                             <i class="fa fa-cog"></i>
                             <span>@Resource.Setting</span>
                         </a>
-                    </li>
+                    </li>*@
 
                 </ul>
                 <!-- sidebar menu end-->
@@ -352,6 +361,9 @@
     <script type="text/javascript" src="~/Areas/Admin/Content/assets/data-tables/DT_bootstrap.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script>
     <script src="~/Scripts/jquery.blockUI.js"></script>
+
+    <script type="text/javascript" src="~/Scripts/bootstrap-multiselect.js"></script>
+
     <script>
 
         //owl carousel

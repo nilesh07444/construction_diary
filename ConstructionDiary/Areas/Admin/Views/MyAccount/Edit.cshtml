@@ -1,7 +1,7 @@
 ﻿@using ConstructionDiary.ResourceFiles;
 @model MyFinanceVM
 @{
-    ViewBag.Title = "Credit";
+    ViewBag.Title = "Site";
 }
 
 <!--main content start-->
@@ -15,10 +15,10 @@
                 {
                     <header class="panel-heading">
                         <strong>@Resource.AddNewCredit</strong>
-                        <span class="pull-right clsRadio">
+                        @*<span class="pull-right clsRadio">
                             <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit", new { @checked = true }) @Resource.Credit</label>
                             <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit") @Resource.Debit</label>
-                        </span>
+                        </span>*@
                     </header>
 
                     <div class="panel-body">
@@ -144,7 +144,7 @@
     });
 
     jQuery("#btnCancel").click(function (event) {
-        window.location.href = "/admin/myaccount"
+        window.location.href = "/admin/site/detail/@TempData["siteId"]";
     });
 
 </script>

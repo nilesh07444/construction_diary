@@ -29,11 +29,47 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                     AttendanceDate = atte.AttendanceDate,
                                                     AttendaceId = atte.AttendaceId,
                                                     TotalPaidAmount = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PayableAmount != null).Select(x => x.PayableAmount).Sum(),
-                                                    TotalPerson = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId).ToList().Count(),
-                                                    TotalFullDay = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1).ToList().Count(),
-                                                    TotalHalfDay = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5).ToList().Count(),
-                                                    TotalAbsent = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0).ToList().Count()
+
+                                                    //TotalPerson = (_db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PersonTypeId != 6).ToList().Count() +
+                                                    //                _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PersonTypeId == 6).ToList().Select(x=>x.TotalRokadiya).Sum()),
+
+                                                    //TotalFullDay = (_db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1 && x.PersonTypeId != 6).ToList().Count() +
+                                                    //                _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum()),
+
+                                                    //TotalHalfDay = (_db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5 && x.PersonTypeId != 6).ToList().Count() +
+                                                    //                _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum()),
+
+                                                    //TotalAbsent = (_db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0 && x.PersonTypeId != 6).ToList().Count() +
+                                                    //                _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum()),
+
                                                 }).OrderByDescending(x => x.AttendanceDate).ToList();
+
+            lstAttendance.ForEach(atte =>
+            {
+
+                decimal? TotalPerson1 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PersonTypeId != 6).ToList().Count();
+                decimal? TotalPerson2 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum();
+
+                decimal? TotalPerson = TotalPerson1 + TotalPerson2;
+
+                decimal? TotalFullDay1 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1 && x.PersonTypeId != 6).ToList().Count();
+                decimal? TotalFullDay2 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 1 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum();
+                decimal? TotalFullDay = TotalFullDay1 + TotalFullDay2;
+
+                decimal? TotalHalfDay1 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5 && x.PersonTypeId != 6).ToList().Count();
+                decimal? TotalHalfDay2 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum();
+                decimal? TotalHalfDay = TotalHalfDay1 + TotalHalfDay2;
+                 
+                decimal? TotalAbsent1 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0 && x.PersonTypeId != 6).ToList().Count();
+                decimal? TotalAbsent2 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum();
+                decimal? TotalAbsent = TotalAbsent1 + TotalAbsent2;
+
+                atte.TotalPerson = TotalPerson;
+                atte.TotalFullDay = TotalFullDay;
+                atte.TotalHalfDay = TotalHalfDay;
+                atte.TotalAbsent = TotalAbsent;
+
+            });
 
             return View(lstAttendance);
         }
@@ -65,6 +101,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objPersonAttendance.PersonId = person.PersonId;
                     objPersonAttendance.PersonName = person.PersonFirstName;
                     objPersonAttendance.PersonDailyRate = person.DailyRate;
+                    objPersonAttendance.PersonTypeId = (person.PersonTypeId == null ? 0 : Convert.ToInt32(person.PersonTypeId));
                     liststPersonAttendance.Add(objPersonAttendance);
                 });
 
@@ -131,15 +168,30 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objPersonAttendance.Remarks = x.Remarks;
                         objPersonAttendance.PersonDailyRate = x.PersonDailyRate;
 
+                        objPersonAttendance.PersonTypeId = x.PersonTypeId;
+
                         if (objPersonAttendance.AttendanceStatus != 0)
-                        { 
-                            objPersonAttendance.PayableAmount = x.PersonDailyRate * objPersonAttendance.AttendanceStatus;
-                            objPersonAttendance.SiteId = x.SiteId;
+                        {
+                            if (x.PersonTypeId == 6)
+                            {
+                                objPersonAttendance.TotalRokadiya = x.TotalRokadiya;
+
+                                objPersonAttendance.PayableAmount = x.TotalRokadiya * objPersonAttendance.PersonDailyRate * objPersonAttendance.AttendanceStatus;
+                                objPersonAttendance.SiteId = x.SiteId;
+                            }
+                            else
+                            {
+                                objPersonAttendance.TotalRokadiya = 0;
+
+                                objPersonAttendance.PayableAmount = x.PersonDailyRate * objPersonAttendance.AttendanceStatus;
+                                objPersonAttendance.SiteId = x.SiteId;
+                            }
                         }
                         else
                         {
                             objPersonAttendance.PayableAmount = null;
                             objPersonAttendance.SiteId = null;
+                            objPersonAttendance.TotalRokadiya = 0;
                         }
 
                         objPersonAttendance.CreatedBy = new Guid(clsSession.UserID.ToString());
@@ -194,6 +246,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                      {
                                                          PersonAttendanceId = personatta.PersonAttendanceId,
                                                          PersonId = personatta.PersonId,
+                                                         PersonTypeId = personatta.PersonTypeId,
+                                                         TotalRokadiya = personatta.TotalRokadiya,
                                                          PersonName = person.PersonFirstName,
                                                          AttendanceStatus = personatta.AttendanceStatus,
                                                          PersonDailyRate = person.DailyRate,
@@ -201,7 +255,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                          WithdrawAmount = personatta.WithdrawAmount,
                                                          OvertimeAmount = personatta.OvertimeAmount,
                                                          Remarks = personatta.Remarks
-                                                     }).OrderBy(x=>x.PersonName).ToList();
+                                                     }).OrderBy(x => x.PersonName).ToList();
 
             }
             catch (Exception ex)
@@ -254,15 +308,30 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objPersonAttendance.WithdrawAmount = personAttendance.WithdrawAmount;
                         objPersonAttendance.OvertimeAmount = personAttendance.OvertimeAmount;
 
-                        if (objPersonAttendance.AttendanceStatus != 0)
+                        if (personAttendance.AttendanceStatus != 0)
                         {
-                            objPersonAttendance.PayableAmount = personAttendance.PersonDailyRate * objPersonAttendance.AttendanceStatus;
-                            objPersonAttendance.SiteId = personAttendance.SiteId;
+                            
+                            if (personAttendance.PersonTypeId == 6)
+                            {
+                                objPersonAttendance.TotalRokadiya = personAttendance.TotalRokadiya;
+
+                                objPersonAttendance.PayableAmount = personAttendance.TotalRokadiya * objPersonAttendance.PersonDailyRate * objPersonAttendance.AttendanceStatus;
+                                objPersonAttendance.SiteId = personAttendance.SiteId;
+                            }
+                            else
+                            {
+                                objPersonAttendance.TotalRokadiya = 0;
+
+                                objPersonAttendance.PayableAmount = personAttendance.PersonDailyRate * personAttendance.AttendanceStatus;
+                                objPersonAttendance.SiteId = personAttendance.SiteId;
+                            }
+
                         }
                         else
                         {
                             objPersonAttendance.PayableAmount = null;
                             objPersonAttendance.SiteId = null;
+                            objPersonAttendance.TotalRokadiya = 0;
                         }
 
                         objPersonAttendance.ModifiedBy = new Guid(clsSession.UserID.ToString());
@@ -383,14 +452,14 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     _db.SaveChanges();
                 }
                 catch (Exception ex)
-                { 
+                {
                 }
                 return RedirectToAction("PersonList");
             }
 
             return View(person);
         }
-         
+
         public ActionResult EditPerson(Guid id)
         {
             PersonVM person = new PersonVM();
@@ -495,6 +564,310 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
 
             return ReturnMessage;
+        }
+
+        public ActionResult PersonGroup()
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            List<PersonGroupVM> objGroup = new List<PersonGroupVM>();
+
+            objGroup = (from grp in _db.tbl_PersonGroup
+                        where grp.ClientId == ClientId
+                        select new PersonGroupVM
+                        {
+                            PersonGroupId = grp.PersonGroupId,
+                            GroupName = grp.GroupName,
+                            TotalGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == grp.PersonGroupId).ToList().Count()
+                        }).ToList();
+
+            return View(objGroup);
+        }
+
+        public ActionResult AddPersonGroup()
+        {
+            PersonGroupVM objGroup = new PersonGroupVM();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            objGroup.PersonList = _db.tbl_Persons.Where(x => x.IsActive == true && x.IsDeleted == false && x.IsAttendancePerson == true && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.PersonId.ToString(), Text = o.PersonFirstName })
+                         .OrderBy(x => x.Text).ToList();
+
+            return View(objGroup);
+        }
+
+        public ActionResult EditPersonGroup(Guid id) // id = PersonGroupId
+        {
+            PersonGroupVM response = new PersonGroupVM();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            response.PersonList = _db.tbl_Persons.Where(x => x.IsActive == true && x.IsDeleted == false && x.IsAttendancePerson == true && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.PersonId.ToString(), Text = o.PersonFirstName })
+                         .OrderBy(x => x.Text).ToList();
+
+            tbl_PersonGroup objPersonGroup = _db.tbl_PersonGroup.Where(x => x.PersonGroupId == id).FirstOrDefault();
+            List<tbl_PersonGroupMap> lstGroupMap = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == id).ToList();
+
+            response.SelectedPersonList = lstGroupMap
+                         .Select(o => new SelectedPersonGroupVM { PersonGroupId = o.PersonGroupId, PersonId = o.PersonId })
+                         .ToList();
+
+            response.PersonGroupId = objPersonGroup.PersonGroupId;
+            response.GroupName = objPersonGroup.GroupName;
+
+            return View(response);
+        }
+
+        [HttpPost]
+        public ActionResult SavePersonGroup(string groupName, Array personGroup)
+        {
+            GeneralResponse response = new GeneralResponse();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Save Group Name
+                    tbl_PersonGroup objGroup = new tbl_PersonGroup();
+                    objGroup.PersonGroupId = Guid.NewGuid();
+                    objGroup.GroupName = groupName;
+                    objGroup.ClientId = ClientId;
+                    objGroup.CreatedBy = new Guid(clsSession.UserID.ToString());
+                    objGroup.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_PersonGroup.Add(objGroup);
+                    _db.SaveChanges();
+
+                    // Save Group in Person
+                    foreach (var item in personGroup)
+                    {
+                        tbl_PersonGroupMap objGroupMap = new tbl_PersonGroupMap();
+                        objGroupMap.PersonGroupMapId = Guid.NewGuid();
+                        objGroupMap.PersonGroupId = objGroup.PersonGroupId;
+                        objGroupMap.PersonId = new Guid(item.ToString());
+                        _db.tbl_PersonGroupMap.Add(objGroupMap);
+                        _db.SaveChanges();
+                    }
+
+                    response.IsError = false;
+                    response.RedirectUrl = Url.Action("PersonGroup", "Attendance");
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    response.IsError = true;
+                    response.ErrorMessage = ex.Message.ToString();
+                }
+
+            }
+            return Json(response);
+        }
+
+        [HttpPost]
+        public string DeletePersonGroup(Guid PersonGroupId)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                tbl_PersonGroup objGroup = _db.tbl_PersonGroup.Where(x => x.PersonGroupId == PersonGroupId).FirstOrDefault();
+
+                if (objGroup == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+
+                    List<tbl_PersonGroupMap> lstGroupMap = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == PersonGroupId).ToList();
+                    if (lstGroupMap.Count > 0)
+                    {
+                        _db.tbl_PersonGroupMap.RemoveRange(lstGroupMap);
+                    }
+                    _db.tbl_PersonGroup.Remove(objGroup);
+                    _db.SaveChanges();
+
+                    ReturnMessage = "success";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message.ToString();
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
+        [HttpPost]
+        public ActionResult UpdatePersonGroup(Guid personGroupId, string groupName, Array personGroup)
+        {
+            GeneralResponse response = new GeneralResponse();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Save Group Name
+                    tbl_PersonGroup objGroup = _db.tbl_PersonGroup.Where(x => x.PersonGroupId == personGroupId).FirstOrDefault();
+                    objGroup.GroupName = groupName;
+                    objGroup.ModifiedBy = new Guid(clsSession.UserID.ToString());
+                    objGroup.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+
+                    //Delete existing before insert
+                    List<tbl_PersonGroupMap> lstGroupMap = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == personGroupId).ToList();
+                    _db.tbl_PersonGroupMap.RemoveRange(lstGroupMap);
+
+                    // Save Group in Person
+                    foreach (var item in personGroup)
+                    {
+                        tbl_PersonGroupMap objGroupMap = new tbl_PersonGroupMap();
+                        objGroupMap.PersonGroupMapId = Guid.NewGuid();
+                        objGroupMap.PersonGroupId = objGroup.PersonGroupId;
+                        objGroupMap.PersonId = new Guid(item.ToString());
+                        _db.tbl_PersonGroupMap.Add(objGroupMap);
+                        _db.SaveChanges();
+                    }
+
+                    response.IsError = false;
+                    response.RedirectUrl = Url.Action("PersonGroup", "Attendance");
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    response.IsError = true;
+                    response.ErrorMessage = ex.Message.ToString();
+                }
+
+            }
+            return Json(response);
+        }
+
+        public ActionResult ViewPersonGroup(Guid Id, string duration, string start, string end)
+        {
+
+            GroupAttendanceStatusVM objGroupStatus = new GroupAttendanceStatusVM();
+
+            if (string.IsNullOrEmpty(duration))
+                duration = "month";
+
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            ViewBag.Duration = duration;
+            ViewBag.StartDate = start;
+            ViewBag.EndDate = end;
+
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today;
+
+            if (duration == "month")
+            {
+                var myDate = DateTime.Now;
+                startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                endDate = lastDay;
+            }
+            else if (duration == "custom")
+            {
+                if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                {
+                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                }
+            }
+
+            objGroupStatus = getGroupAttendanceByFilter(Id, startDate, endDate);
+
+            return View(objGroupStatus);
+        }
+
+        public GroupAttendanceStatusVM getGroupAttendanceByFilter(Guid Id, DateTime startDate, DateTime endDate)
+        {
+            GroupAttendanceStatusVM objGroupStatus = new GroupAttendanceStatusVM();
+
+            // Get Group Info
+            tbl_PersonGroup objGroupInfo = _db.tbl_PersonGroup.Where(x => x.PersonGroupId == Id).FirstOrDefault();
+
+            objGroupStatus.PersonGroupId = objGroupInfo.PersonGroupId;
+            objGroupStatus.GroupName = objGroupInfo.GroupName;
+
+            // Get Group Persons
+            List<tbl_PersonGroupMap> lstGroupMapInfo = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == Id).ToList();
+
+            // Get Attendance of each Person
+            List<GroupPersonPaymentInfoVM> lstGroupPersonPayment = new List<GroupPersonPaymentInfoVM>();
+
+            lstGroupMapInfo.ForEach(person =>
+            {
+
+                // Get Person data
+                tbl_Persons objPerson = _db.tbl_Persons.Where(x => x.PersonId == person.PersonId).FirstOrDefault();
+
+                if (objPerson != null)
+                {
+                    List<ReportPersonAttendanceVM> personReport = GetPersonAttendance(person.PersonId, startDate, endDate);
+
+                    GroupPersonPaymentInfoVM objGroupPersonPayment = new GroupPersonPaymentInfoVM();
+                    objGroupPersonPayment.PersonId = person.PersonId;
+                    objGroupPersonPayment.PersonName = objPerson.PersonFirstName;
+
+                    objGroupPersonPayment.TotalAttendance = personReport.Sum(x => x.AttendanceStatus);
+                    objGroupPersonPayment.TotalPayableAmount = personReport.Sum(x => x.PayableAmount);
+                    objGroupPersonPayment.TotalWithdrawAmount = personReport.Sum(x => x.WithdrawAmount);
+                    objGroupPersonPayment.TotalOvertimeAmount = personReport.Sum(x => x.OvertimeAmount);
+
+                    objGroupPersonPayment.TotalRemainingAmount = (objGroupPersonPayment.TotalPayableAmount + objGroupPersonPayment.TotalOvertimeAmount) - objGroupPersonPayment.TotalWithdrawAmount;
+
+                    lstGroupPersonPayment.Add(objGroupPersonPayment);
+                }
+
+            });
+
+            if (lstGroupPersonPayment.Count > 0)
+            {
+                objGroupStatus.GrandAttendance = lstGroupPersonPayment.Sum(x => x.TotalAttendance);
+                objGroupStatus.GrandPayableAmount = lstGroupPersonPayment.Sum(x => x.TotalPayableAmount);
+                objGroupStatus.GrandWithdrawAmount = lstGroupPersonPayment.Sum(x => x.TotalWithdrawAmount);
+                objGroupStatus.GrandOvertimeAmount = lstGroupPersonPayment.Sum(x => x.TotalOvertimeAmount);
+                objGroupStatus.GrandRemainingAmount = (objGroupStatus.GrandPayableAmount + objGroupStatus.GrandOvertimeAmount) - objGroupStatus.GrandWithdrawAmount;
+            }
+
+            objGroupStatus.GroupPersonPayment = lstGroupPersonPayment;
+
+            return objGroupStatus;
+
+        }
+
+        private List<ReportPersonAttendanceVM> GetPersonAttendance(Guid PersonId, DateTime startDate, DateTime endDate)
+        {
+            List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == PersonId && att.AttendanceDate >= startDate && att.AttendanceDate <= endDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+            return lst;
         }
 
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace ConstructionDiary.ViewModel
+namespace ConstructionDiary
 {
     public class SiteInfoVM
     {
@@ -20,5 +20,14 @@ namespace ConstructionDiary.ViewModel
         public decimal CalculatedBalanceAmount { get; set; }
 
     }
-  
+
+    public class SiteDetailVM
+    {
+        public Guid SiteId { get; set; }
+        public string SiteName { get; set; }
+        public decimal? TotalBillAmount { get; set; } = 0;
+        public decimal? TotalCreditAmount { get; set; } = 0;
+        public decimal? TotalRemainingAmount { get; set; } = 0;
+    }
+
 }

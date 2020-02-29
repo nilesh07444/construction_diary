@@ -180,7 +180,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     finance.UserId = objFinance.UserId;
                     finance.SelectedDate = date;
                     finance.Amount = objFinance.Amount;
-                    finance.CreditOrDebit = objFinance.CreditOrDebit;
+                    finance.CreditOrDebit = "Credit"; //objFinance.CreditOrDebit;
                     finance.PaymentType = objFinance.PaymentType;
 
                     if (objFinance.PaymentType == "Cheque")
@@ -297,7 +297,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         finance.UserId = objFinance.UserId;
                         finance.SelectedDate = date;
                         finance.Amount = objFinance.Amount;
-                        finance.CreditOrDebit = objFinance.CreditOrDebit;
+                        //finance.CreditOrDebit = objFinance.CreditOrDebit;
                         finance.PaymentType = objFinance.PaymentType;
 
                         if (objFinance.PaymentType == "Cheque")

@@ -83,10 +83,10 @@
 
                     <header class="panel-heading">
                         <strong> @Resource.AddNewFinance </strong>
-                        <span class="pull-right clsRadio">
+                        @*<span class="pull-right clsRadio">
                             <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit") @Resource.Credit</label>
                             <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit", new { @checked = true }) @Resource.Debit</label>
-                        </span>
+                        </span>*@
                     </header>
 
                     <div class="panel-body">
@@ -189,7 +189,7 @@
                                     <th class="hidden-phone">@Resource.Remarks</th>
                                     <th style="width:10%;">@Resource.Type</th>
                                     <th style="width:10%;">@Resource.PaymentType</th>
-                                    <th style="width:20%;" class="hidden-phone">@Resource.GivenTakenBy</th>
+                                    <th style="width:20%;">@Resource.BankName</th>
                                     <th style="width:5%;">@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -207,7 +207,7 @@
                                                 <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
                                             </td>
                                             <td>@obj.PaymentType</td>
-                                            <td class="hidden-phone">@obj.FirstName</td>
+                                            <td>@obj.ChequeNo @obj.BankName</td>
                                             <td>
                                                 @*<button data-id="@obj.FinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
                                                 @*<button data-id="@obj.FinanceId" class="btn btn-primary btn-xs clsEditFinance"><i class="fa fa-pencil"></i></button>*@

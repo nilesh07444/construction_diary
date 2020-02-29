@@ -54,10 +54,10 @@
                                         }
                                         <span style="float:right; padding-right: 15px;">@amt</span>
                                     </td> 
-                                    <td>@attendance.TotalFullDay</td>
-                                    <td>@attendance.TotalHalfDay</td>
-                                    <td>@attendance.TotalAbsent</td>
-                                    <td>@attendance.TotalPerson</td>
+                                    <td>@Convert.ToDecimal(attendance.TotalFullDay).ToString("0.##")</td>
+                                    <td>@Convert.ToDecimal(attendance.TotalHalfDay).ToString("0.##")</td>
+                                    <td>@Convert.ToDecimal(attendance.TotalAbsent).ToString("0.##")</td>
+                                    <td>@Convert.ToDecimal(attendance.TotalPerson).ToString("0.##")</td>
                                     <td>
                                         @if (clsSession.RoleID == (int)UserRoles.Admin || (clsSession.RoleID == (int)UserRoles.Staff && attendance.AttendanceDate == today))
                                         {

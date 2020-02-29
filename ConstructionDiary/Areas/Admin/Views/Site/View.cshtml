@@ -1,5 +1,4 @@
 ﻿@using ConstructionDiary.ResourceFiles;
-@using ConstructionDiary.ViewModel;
 @model SiteInfoVM
 @{
     ViewBag.Title = "Site";
@@ -13,6 +12,10 @@
 
                 <header class="panel-heading">
                     <strong>@Model.SiteName</strong>
+
+                    <a href="/admin/site" class="btn btn-warning" style="float: right; top: -7px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
                 </header>
 
                 <div class="panel-body">
@@ -22,41 +25,41 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Credit</th>
-                                    <th>Debit</th>
+                                    <th>@Resource.Credit</th>
+                                    <th>@Resource.Debit</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Total Credit Amount (From Party)</td>
-                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalCreditAmount)</td>
+                                    <td>@Resource.TotalCreditAmount</td>
+                                    <td><a href="/admin/site/detail/@Model.SiteId"> @CoreHelper.GetFormatterAmount(Model.TotalCreditAmount) </a></td>
                                     <td></td>
                                 </tr>
 
                                 <tr>
-                                    <td>Total Debit Amount (Person)</td>
+                                    <td>@Resource.TotalDebitAmount</td>
                                     <td></td>
-                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalDebitAmount)</td>
+                                    <td><a href="/admin/site/alldebitsitedata/@Model.SiteId">@CoreHelper.GetFormatterAmount(Model.TotalDebitAmount)</a></td>
                                 </tr>
 
                                 <tr>
-                                    <td>Total Material Amount</td>
+                                    <td>@Resource.TotalMaterialAmount</td>
                                     <td></td>
-                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalMaterialAmount)</td>
+                                    <td><a href="/admin/site/allmaterialsitedata/@Model.SiteId">@CoreHelper.GetFormatterAmount(Model.TotalMaterialAmount)</a></td>
                                 </tr>
 
                                 <tr>
-                                    <td>Total Expense Amount</td>
+                                    <td>@Resource.TotalExpenseAmount</td>
                                     <td></td>
-                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalExpenseAmount)</td>
+                                    <td><a href="/admin/site/allexpensesitedata/@Model.SiteId">@CoreHelper.GetFormatterAmount(Model.TotalExpenseAmount)</a></td>
                                 </tr>
 
                                 <tr>
-                                    <td>Total Attendance Amount</td>
+                                    <td>@Resource.TotalAttendanceAmount</td>
                                     <td></td>
-                                    <td>@CoreHelper.GetFormatterAmount(Model.TotalPersonAttendanceAmount)</td>
+                                    <td><a href="/admin/site/allattendancesitedata/@Model.SiteId">@CoreHelper.GetFormatterAmount(Model.TotalPersonAttendanceAmount)</a></td>
                                 </tr>
-
+                                 
                                 <tr>
                                     <th>Net Total </th>
                                     <th>@CoreHelper.GetFormatterAmount(Model.CalculatedCreditAmount)</th>

@@ -37,6 +37,27 @@
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="tbl_BillSite">
+          <Key>
+            <PropertyRef Name="BillId" />
+          </Key>
+          <Property Name="BillId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BillDate" Type="datetime" Nullable="false" />
+          <Property Name="BillNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="BillType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SiteId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SquareFeet" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Rate" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="200" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="tbl_Clients">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -227,11 +248,33 @@
           <Property Name="PayableAmount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="WithdrawAmount" Type="int" />
           <Property Name="OvertimeAmount" Type="int" />
+          <Property Name="TotalRokadiya" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PersonTypeId" Type="int" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="100" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="tbl_PersonGroup">
+          <Key>
+            <PropertyRef Name="PersonGroupId" />
+          </Key>
+          <Property Name="PersonGroupId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_PersonGroupMap">
+          <Key>
+            <PropertyRef Name="PersonGroupMapId" />
+          </Key>
+          <Property Name="PersonGroupMapId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PersonGroupId" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_Persons">
           <Key>
@@ -321,6 +364,18 @@
             </Principal>
             <Dependent Role="tbl_BillDebit">
               <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_BillSite_tbl_Sites">
+          <End Role="tbl_Clients" Type="Self.tbl_Clients" Multiplicity="1" />
+          <End Role="tbl_BillSite" Type="Self.tbl_BillSite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Clients">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="tbl_BillSite">
+              <PropertyRef Name="ClientId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -460,6 +515,7 @@
         <EntityContainer Name="ConstructionDiaryModelStoreContainer">
           <EntitySet Name="tbl_Attendance" EntityType="Self.tbl_Attendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BillDebit" EntityType="Self.tbl_BillDebit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_BillSite" EntityType="Self.tbl_BillSite" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Clients" EntityType="Self.tbl_Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ContractorFinance" EntityType="Self.tbl_ContractorFinance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Expenses" EntityType="Self.tbl_Expenses" Schema="dbo" store:Type="Tables" />
@@ -473,6 +529,8 @@
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonAttendance" EntityType="Self.tbl_PersonAttendance" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_PersonGroup" EntityType="Self.tbl_PersonGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_PersonGroupMap" EntityType="Self.tbl_PersonGroupMap" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Persons" EntityType="Self.tbl_Persons" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonType" EntityType="Self.tbl_PersonType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Role" EntityType="Self.tbl_Role" Schema="dbo" store:Type="Tables" />
@@ -485,6 +543,10 @@
           <AssociationSet Name="FK_tbl_BillDebit_tbl_Sites" Association="Self.FK_tbl_BillDebit_tbl_Sites">
             <End Role="tbl_Sites" EntitySet="tbl_Sites" />
             <End Role="tbl_BillDebit" EntitySet="tbl_BillDebit" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_BillSite_tbl_Sites" Association="Self.FK_tbl_BillSite_tbl_Sites">
+            <End Role="tbl_Clients" EntitySet="tbl_Clients" />
+            <End Role="tbl_BillSite" EntitySet="tbl_BillSite" />
           </AssociationSet>
           <AssociationSet Name="FK_tbl_Clients_tbl_PackageType" Association="Self.FK_tbl_Clients_tbl_PackageType">
             <End Role="tbl_PackageType" EntitySet="tbl_PackageType" />
@@ -559,6 +621,7 @@
           <NavigationProperty Name="tbl_Users" Relationship="Self.FK_tbl_Users_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_Users" />
           <NavigationProperty Name="tbl_MaterialType" Relationship="ConstructionDiaryModel.FK_tbl_MaterialType_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_MaterialType" />
           <NavigationProperty Name="tbl_Merchant" Relationship="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_Merchant" />
+          <NavigationProperty Name="tbl_BillSite" Relationship="ConstructionDiaryModel.FK_tbl_BillSite_tbl_Sites" FromRole="tbl_Clients" ToRole="tbl_BillSite" />
         </EntityType>
         <EntityType Name="tbl_ContractorFinance">
           <Key>
@@ -671,6 +734,8 @@
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="TotalRokadiya" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PersonTypeId" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_Persons">
           <Key>
@@ -902,6 +967,13 @@
             <End Role="tbl_Sites" EntitySet="tbl_Sites" />
             <End Role="tbl_BillDebit" EntitySet="tbl_BillDebit" />
           </AssociationSet>
+          <EntitySet Name="tbl_BillSite" EntityType="ConstructionDiaryModel.tbl_BillSite" />
+          <AssociationSet Name="FK_tbl_BillSite_tbl_Sites" Association="ConstructionDiaryModel.FK_tbl_BillSite_tbl_Sites">
+            <End Role="tbl_Clients" EntitySet="tbl_Clients" />
+            <End Role="tbl_BillSite" EntitySet="tbl_BillSite" />
+          </AssociationSet>
+          <EntitySet Name="tbl_PersonGroup" EntityType="ConstructionDiaryModel.tbl_PersonGroup" />
+          <EntitySet Name="tbl_PersonGroupMap" EntityType="ConstructionDiaryModel.tbl_PersonGroupMap" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1142,6 +1214,60 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tbl_BillSite">
+          <Key>
+            <PropertyRef Name="BillId" />
+          </Key>
+          <Property Name="BillId" Type="Guid" Nullable="false" />
+          <Property Name="BillDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BillNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BillType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SiteId" Type="Guid" Nullable="false" />
+          <Property Name="SquareFeet" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Rate" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Remarks" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tbl_Clients" Relationship="ConstructionDiaryModel.FK_tbl_BillSite_tbl_Sites" FromRole="tbl_BillSite" ToRole="tbl_Clients" />
+        </EntityType>
+        <Association Name="FK_tbl_BillSite_tbl_Sites">
+          <End Type="ConstructionDiaryModel.tbl_Clients" Role="tbl_Clients" Multiplicity="1" />
+          <End Type="ConstructionDiaryModel.tbl_BillSite" Role="tbl_BillSite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Clients">
+              <PropertyRef Name="ClientId" />
+            </Principal>
+            <Dependent Role="tbl_BillSite">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_PersonGroup">
+          <Key>
+            <PropertyRef Name="PersonGroupId" />
+          </Key>
+          <Property Name="PersonGroupId" Type="Guid" Nullable="false" />
+          <Property Name="GroupName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_PersonGroupMap">
+          <Key>
+            <PropertyRef Name="PersonGroupMapId" />
+          </Key>
+          <Property Name="PersonGroupMapId" Type="Guid" Nullable="false" />
+          <Property Name="PersonId" Type="Guid" Nullable="false" />
+          <Property Name="PersonGroupId" Type="Guid" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1274,6 +1400,8 @@
           <EntitySetMapping Name="tbl_PersonAttendance">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PersonAttendance">
               <MappingFragment StoreEntitySet="tbl_PersonAttendance">
+                <ScalarProperty Name="PersonTypeId" ColumnName="PersonTypeId" />
+                <ScalarProperty Name="TotalRokadiya" ColumnName="TotalRokadiya" />
                 <ScalarProperty Name="PersonAttendanceId" ColumnName="PersonAttendanceId" />
                 <ScalarProperty Name="AttendanceId" ColumnName="AttendanceId" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
@@ -1545,6 +1673,50 @@
                 <ScalarProperty Name="BillNo" ColumnName="BillNo" />
                 <ScalarProperty Name="BillDate" ColumnName="BillDate" />
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_BillSite">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_BillSite">
+              <MappingFragment StoreEntitySet="tbl_BillSite">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="SquareFeet" ColumnName="SquareFeet" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="BillType" ColumnName="BillType" />
+                <ScalarProperty Name="BillNo" ColumnName="BillNo" />
+                <ScalarProperty Name="BillDate" ColumnName="BillDate" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PersonGroup">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PersonGroup">
+              <MappingFragment StoreEntitySet="tbl_PersonGroup">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="PersonGroupId" ColumnName="PersonGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PersonGroupMap">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PersonGroupMap">
+              <MappingFragment StoreEntitySet="tbl_PersonGroupMap">
+                <ScalarProperty Name="PersonGroupId" ColumnName="PersonGroupId" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="PersonGroupMapId" ColumnName="PersonGroupMapId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

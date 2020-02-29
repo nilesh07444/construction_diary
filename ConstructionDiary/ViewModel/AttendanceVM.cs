@@ -14,20 +14,22 @@ namespace ConstructionDiary
         public DateTime AttendanceDate { get; set; }
         public Guid ClientId { get; set; }
         public decimal? TotalPaidAmount { get; set; }
-        public int TotalPerson { get; set; }
-        public int TotalFullDay { get; set; }
-        public int TotalHalfDay { get; set; }
-        public int TotalAbsent { get; set; }
+        public decimal? TotalPerson { get; set; }
+        public decimal? TotalFullDay { get; set; }
+        public decimal? TotalHalfDay { get; set; }
+        public decimal? TotalAbsent { get; set; }
     }
 
     public class PersonAttendanceVM
     {
         public Guid PersonAttendanceId { get; set; }
         public Guid PersonId { get; set; }
+        public int? PersonTypeId { get; set; }
         public string PersonName { get; set; }
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         public decimal AttendanceStatus { get; set; }
-        public Guid? SiteId { get; set; } 
+        public Guid? SiteId { get; set; }
+        public decimal? TotalRokadiya { get; set; }
         public int? PersonDailyRate { get; set; }
         public int? WithdrawAmount { get; set; }
         public int? OvertimeAmount { get; set; }
@@ -57,5 +59,21 @@ namespace ConstructionDiary
         public string StatusValue { get; set; }
         public string StatusText { get; set; } 
     }
-
+    public class SiteAttendanceVM
+    {
+        public Guid PersonAttendanceId { get; set; }
+        public Guid? AttendaceId { get; set; }
+        public DateTime AttendanceDate { get; set; }
+        public Guid PersonId { get; set; }
+        public int? PersonTypeId { get; set; }
+        public string PersonName { get; set; } 
+        public decimal AttendanceStatus { get; set; } 
+        public decimal? TotalRokadiya { get; set; }
+        public int? PersonDailyRate { get; set; }
+        public decimal? PayableAmount { get; set; }
+        public int? WithdrawAmount { get; set; }
+        public int? OvertimeAmount { get; set; }
+        public string Remarks { get; set; }
+    }
+     
 }
