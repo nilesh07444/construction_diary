@@ -846,7 +846,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                             WithdrawAmount = pa.WithdrawAmount,
                                                             OvertimeAmount = pa.OvertimeAmount,
                                                             Remarks = pa.Remarks
-                                                        }).ToList();
+                                                        }).OrderByDescending(x=>x.AttendanceDate).ToList();
 
             return View(lstSiteAttendance);
         }

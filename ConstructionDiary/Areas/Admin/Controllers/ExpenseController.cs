@@ -91,7 +91,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(ExpenseVM expense)
+        public ActionResult Add(ExpenseVM expense, HttpPostedFileBase ExpenseFile)
         {
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
@@ -116,7 +116,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             return View(expense);
                         }
                     }
-
+                     
                     DateTime exp_date = DateTime.ParseExact(expense.ExpenseDate, "dd/MM/yyyy", null);
 
                     tbl_Expenses objExpense = new tbl_Expenses();
@@ -142,6 +142,25 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objExpense.CreatedDate = DateTime.UtcNow;
                     _db.tbl_Expenses.Add(objExpense);
                     _db.SaveChanges();
+
+                    // Save + Upload Expense File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/ExpenseFile/");
+                    if (ExpenseFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(ExpenseFile.FileName);
+                        ExpenseFile.SaveAs(path + fileName);
+
+                        tbl_Files objFile = new tbl_Files();
+                        objFile.FileId = Guid.NewGuid();
+                        objFile.ParentId = objExpense.ExpenseId;
+                        objFile.FileCategory = (int)FileType.Expense;
+                        objFile.OriginalFileName = ExpenseFile.FileName;
+                        objFile.EncryptFileName = fileName;
+                        _db.tbl_Files.Add(objFile);
+                        _db.SaveChanges(); 
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -183,7 +202,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(ExpenseVM expense)
+        public ActionResult Edit(ExpenseVM expense, HttpPostedFileBase ExpenseFile)
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
             expense.SiteList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
@@ -228,6 +247,32 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objExpense.ModifiedBy = clsSession.UserID;
                     objExpense.ModifiedDate = DateTime.UtcNow;
                     _db.SaveChanges();
+
+                    // Save + Upload Expense File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/ExpenseFile/");
+                    if (ExpenseFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(ExpenseFile.FileName);
+                        ExpenseFile.SaveAs(path + fileName);
+
+                        tbl_Files objFile = _db.tbl_Files.Where(x => x.ParentId == objExpense.ExpenseId).FirstOrDefault();
+
+                        if (objFile == null)
+                        {
+                            objFile = new tbl_Files();
+                            objFile.FileId = Guid.NewGuid();
+                            _db.tbl_Files.Add(objFile);
+                        }
+                         
+                        objFile.ParentId = objExpense.ExpenseId;
+                        objFile.FileCategory = (int)FileType.Expense;
+                        objFile.OriginalFileName = ExpenseFile.FileName;
+                        objFile.EncryptFileName = fileName;
+                        
+                        _db.SaveChanges();
+                    }
+
                 }
                 catch (Exception ex)
                 {
@@ -433,12 +478,13 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                SiteName = site.SiteName,
                                ExpenseTypeId = c.ExpenseTypeId,
                                ExpenseType = exp.ExpenseType,
-                               IsActive = c.IsActive
+                               IsActive = c.IsActive,
+                               ObjExpenseFile = _db.tbl_Files.Where(x=>x.ParentId == c.ExpenseId && x.FileCategory == (int)FileType.Expense).FirstOrDefault()
                            }).OrderByDescending(x => x.dtExpenseDate).ToList();
 
             return lstExpenses;
         }
 
     }
-      
+
 }

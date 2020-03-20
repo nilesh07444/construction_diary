@@ -646,6 +646,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expense File.
+        /// </summary>
+        public static string ExpenseFile {
+            get {
+                return ResourceManager.GetString("ExpenseFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Expense List.
         /// </summary>
         public static string ExpenseList {
@@ -678,6 +687,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string ExpiryDate {
             get {
                 return ResourceManager.GetString("ExpiryDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File.
+        /// </summary>
+        public static string File {
+            get {
+                return ResourceManager.GetString("File", resourceCulture);
             }
         }
         

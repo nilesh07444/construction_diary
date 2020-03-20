@@ -1,4 +1,5 @@
-﻿using ConstructionDiary.ResourceFiles;
+﻿using ConstructionDiary.Models;
+using ConstructionDiary.ResourceFiles;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,8 +37,13 @@ namespace ConstructionDiary
         public string ExpenseType { get; set; }
         public bool IsActive { get; set; }
 
-        
+        public string ExpenseFileName { get; set; }        
+        [Display(Name = "ExpenseFile", ResourceType = typeof(Resource))]
+        public HttpPostedFileBase ExpenseFile { get; set; }
+
         public List<SelectListItem> ExpenseTypeList { get; set; }
         public List<SelectListItem> SiteList { get; set; }
+
+        public tbl_Files ObjExpenseFile { get; set; }
     }
 }

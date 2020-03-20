@@ -5833,7 +5833,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/29/2019 12:37:46</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Material/Add.cshtml">
-      <publishTime>02/08/2020 10:44:08</publishTime>
+      <publishTime>02/29/2020 19:22:20</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Material/Edit.cshtml">
       <publishTime>01/14/2020 23:11:18</publishTime>
@@ -5962,10 +5962,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>02/29/2020 12:37:46</publishTime>
+      <publishTime>02/29/2020 19:51:18</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>02/29/2020 12:37:46</publishTime>
+      <publishTime>02/29/2020 19:51:18</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>06/07/2018 11:03:48</publishTime>
@@ -5977,7 +5977,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2019 23:00:28</publishTime>
     </File>
     <File Include="bin/gu/ConstructionDiary.resources.dll">
-      <publishTime>02/29/2020 12:37:46</publishTime>
+      <publishTime>02/29/2020 19:51:18</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>10/22/2019 23:00:36</publishTime>
@@ -6214,7 +6214,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2019 22:49:51</publishTime>
     </File>
     <File Include="Models/ConstructionDiary.edmx.diagram">
-      <publishTime>01/01/0001 00:00:00</publishTime>
+      <publishTime>02/29/2020 13:56:59</publishTime>
     </File>
     <File Include="Scripts/bootstrap-multiselect.css">
       <publishTime>02/15/2020 18:42:18</publishTime>

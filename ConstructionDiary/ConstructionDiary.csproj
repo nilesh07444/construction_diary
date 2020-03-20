@@ -139,6 +139,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AttendanceController.cs" />
+    <Compile Include="Areas\Admin\Controllers\BillItemController.cs" />
     <Compile Include="Areas\Admin\Controllers\ClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\ExpenseController.cs" />
@@ -200,6 +201,12 @@
     <Compile Include="Models\tbl_BillDebit.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_BillItem.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_BillItemType.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_BillSite.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -213,6 +220,9 @@
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_ExpenseType.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_Files.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Finance.cs">
@@ -275,6 +285,7 @@
       <DependentUpon>Resource.gu.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\AttendanceVM.cs" />
+    <Compile Include="ViewModel\BillItemVM.cs" />
     <Compile Include="ViewModel\BillSiteVM.cs" />
     <Compile Include="ViewModel\BillDebitVM.cs" />
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
@@ -2310,6 +2321,8 @@
     <Content Include="Areas\Admin\Views\Site\AllMaterialSiteData.cshtml" />
     <Content Include="Areas\Admin\Views\Site\AllDebitSiteData.cshtml" />
     <Content Include="Areas\Admin\Views\Site\AllAttendanceSiteData.cshtml" />
+    <Content Include="Areas\Admin\Views\BillItem\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\BillItem\Add.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

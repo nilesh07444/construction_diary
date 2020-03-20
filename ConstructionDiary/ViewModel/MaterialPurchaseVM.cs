@@ -23,5 +23,6 @@ namespace ConstructionDiary
         public List<MaterialPurchaseItemVM> PurchaseItem { get; set; }
         public string SiteName { get; set; }
         public string MerchantName { get; set; }
+        public string MaterialCategory { get; set; }
     }
 }

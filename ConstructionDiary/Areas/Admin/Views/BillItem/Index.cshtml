@@ -1,0 +1,151 @@
+﻿@using ConstructionDiary.Models;
+@using ConstructionDiary.ResourceFiles;
+@model List<BillItemVM>
+@{
+    ViewBag.Title = "BillItem";
+}
+
+@{
+    int counter = 0;
+}
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Bill Item List</strong>
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-success" href="billitem/add"><i class="fa fa-plus"></i> Add New Bill Item</a>
+                            </div>
+                        </div>
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped table-hover" id="tblBillItemList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>Bill Item Name</th>
+                                    <th>Bill Item Type</th>
+                                    <th>Remarks</th>                                    
+                                    <th width="10%">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (BillItemVM bill in Model)
+                                    {
+                                        counter++;
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@bill.BillItemName</td>
+                                            <td>@bill.BillItemType</td>
+                                            <td>@bill.Remarks</td>
+                                             
+                                            <td>
+                                                <a href="client/edit/@bill.BillItemId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                @*<button class="btn btn-success btn-xs"><i class="fa fa-check"></i></button>*@
+                                                @*<button data-id="@client.ClientId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>*@
+                                                <button onclick="fnDeleteBillItem('@bill.BillItemId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteClientModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                @Resource.SureWantToDelete
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteClient" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteClient" class="btn btn-danger" type="button"> @Resource.Delete </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblBillItemList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0,4]
+                }]
+        });
+    });
+
+    jQuery(document).on("click", "#btnDeleteClient", function () {
+
+        var client_id = jQuery("#hdnDeleteClient").val();
+        if (client_id != "" && client_id != null) {
+            $('#deleteClientModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteClient", "Client")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?ClientId=" + client_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Client deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Client Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    function fnDeleteBillItem(client_id) {
+        jQuery("#hdnDeleteClient").val(client_id);
+        $('#deleteClientModal').modal('show');
+    }
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+
+</script>

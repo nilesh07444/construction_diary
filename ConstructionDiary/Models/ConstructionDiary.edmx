@@ -37,6 +37,30 @@
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="tbl_BillItem">
+          <Key>
+            <PropertyRef Name="BillItemId" />
+          </Key>
+          <Property Name="BillItemId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="BillItemName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BillItemTypeId" Type="int" Nullable="false" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="200" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_BillItemType">
+          <Key>
+            <PropertyRef Name="BillItemTypeId" />
+          </Key>
+          <Property Name="BillItemTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BillItemType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BillItemTypeCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_BillSite">
           <Key>
             <PropertyRef Name="BillId" />
@@ -120,6 +144,16 @@
           <Property Name="ExpenseTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ExpenseType" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_Files">
+          <Key>
+            <PropertyRef Name="FileId" />
+          </Key>
+          <Property Name="FileId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ParentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FileCategory" Type="int" Nullable="false" />
+          <Property Name="OriginalFileName" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="EncryptFileName" Type="nvarchar" MaxLength="500" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_Finance">
           <Key>
             <PropertyRef Name="FinanceId" />
@@ -157,12 +191,13 @@
           <Property Name="PurchaseDate" Type="datetime" Nullable="false" />
           <Property Name="MerchantId" Type="uniqueidentifier" />
           <Property Name="SiteId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MaterialCategory" Type="nvarchar" MaxLength="50" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="200" />
           <Property Name="GST_Per" Type="int" />
           <Property Name="CGST_Amount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="SGST_Amount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="AdjustmentAmount" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Total" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -515,11 +550,14 @@
         <EntityContainer Name="ConstructionDiaryModelStoreContainer">
           <EntitySet Name="tbl_Attendance" EntityType="Self.tbl_Attendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BillDebit" EntityType="Self.tbl_BillDebit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_BillItem" EntityType="Self.tbl_BillItem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_BillItemType" EntityType="Self.tbl_BillItemType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BillSite" EntityType="Self.tbl_BillSite" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Clients" EntityType="Self.tbl_Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ContractorFinance" EntityType="Self.tbl_ContractorFinance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Expenses" EntityType="Self.tbl_Expenses" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ExpenseType" EntityType="Self.tbl_ExpenseType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Files" EntityType="Self.tbl_Files" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Finance" EntityType="Self.tbl_Finance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_GeneralSetting" EntityType="Self.tbl_GeneralSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MaterialPurchase" EntityType="Self.tbl_MaterialPurchase" Schema="dbo" store:Type="Tables" />
@@ -974,6 +1012,9 @@
           </AssociationSet>
           <EntitySet Name="tbl_PersonGroup" EntityType="ConstructionDiaryModel.tbl_PersonGroup" />
           <EntitySet Name="tbl_PersonGroupMap" EntityType="ConstructionDiaryModel.tbl_PersonGroupMap" />
+          <EntitySet Name="tbl_Files" EntityType="ConstructionDiaryModel.tbl_Files" />
+          <EntitySet Name="tbl_BillItem" EntityType="ConstructionDiaryModel.tbl_BillItem" />
+          <EntitySet Name="tbl_BillItemType" EntityType="ConstructionDiaryModel.tbl_BillItemType" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1087,7 +1128,7 @@
           <Property Name="CGST_Amount" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="SGST_Amount" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="AdjustmentAmount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="SubTotal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SubTotal" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="ClientId" Type="Guid" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -1098,6 +1139,7 @@
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tbl_MaterialPurchaseItems" Relationship="ConstructionDiaryModel.FK_tbl_MaterialPurchaseItems_tbl_MaterialPurchase" FromRole="tbl_MaterialPurchase" ToRole="tbl_MaterialPurchaseItems" />
           <Property Name="MerchantId" Type="Guid" />
+          <Property Name="MaterialCategory" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tbl_MaterialPurchaseItems">
           <Key>
@@ -1267,6 +1309,40 @@
           <Property Name="PersonGroupMapId" Type="Guid" Nullable="false" />
           <Property Name="PersonId" Type="Guid" Nullable="false" />
           <Property Name="PersonGroupId" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_Files">
+          <Key>
+            <PropertyRef Name="FileId" />
+          </Key>
+          <Property Name="FileId" Type="Guid" Nullable="false" />
+          <Property Name="ParentId" Type="Guid" Nullable="false" />
+          <Property Name="FileCategory" Type="Int32" Nullable="false" />
+          <Property Name="OriginalFileName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="EncryptFileName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_BillItem">
+          <Key>
+            <PropertyRef Name="BillItemId" />
+          </Key>
+          <Property Name="BillItemId" Type="Guid" Nullable="false" />
+          <Property Name="BillItemName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BillItemTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_BillItemType">
+          <Key>
+            <PropertyRef Name="BillItemTypeId" />
+          </Key>
+          <Property Name="BillItemTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BillItemType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BillItemTypeCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1602,6 +1678,7 @@
           <EntitySetMapping Name="tbl_MaterialPurchase">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_MaterialPurchase">
               <MappingFragment StoreEntitySet="tbl_MaterialPurchase">
+                <ScalarProperty Name="MaterialCategory" ColumnName="MaterialCategory" />
                 <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
                 <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
                 <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
@@ -1717,6 +1794,43 @@
                 <ScalarProperty Name="PersonGroupId" ColumnName="PersonGroupId" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="PersonGroupMapId" ColumnName="PersonGroupMapId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Files">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Files">
+              <MappingFragment StoreEntitySet="tbl_Files">
+                <ScalarProperty Name="EncryptFileName" ColumnName="EncryptFileName" />
+                <ScalarProperty Name="OriginalFileName" ColumnName="OriginalFileName" />
+                <ScalarProperty Name="FileCategory" ColumnName="FileCategory" />
+                <ScalarProperty Name="ParentId" ColumnName="ParentId" />
+                <ScalarProperty Name="FileId" ColumnName="FileId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_BillItem">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_BillItem">
+              <MappingFragment StoreEntitySet="tbl_BillItem">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="BillItemTypeId" ColumnName="BillItemTypeId" />
+                <ScalarProperty Name="BillItemName" ColumnName="BillItemName" />
+                <ScalarProperty Name="BillItemId" ColumnName="BillItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_BillItemType">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_BillItemType">
+              <MappingFragment StoreEntitySet="tbl_BillItemType">
+                <ScalarProperty Name="BillItemTypeCode" ColumnName="BillItemTypeCode" />
+                <ScalarProperty Name="BillItemType" ColumnName="BillItemType" />
+                <ScalarProperty Name="BillItemTypeId" ColumnName="BillItemTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

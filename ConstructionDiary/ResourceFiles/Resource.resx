@@ -603,4 +603,10 @@
   <data name="TotalWithdrawAmount" xml:space="preserve">
     <value>Total Withdraw Amount</value>
   </data>
+  <data name="ExpenseFile" xml:space="preserve">
+    <value>Expense File</value>
+  </data>
+  <data name="File" xml:space="preserve">
+    <value>File</value>
+  </data>
 </root>

@@ -29,6 +29,12 @@ namespace ConstructionDiary
         OneTimePackage = 6
     }
 
-    
+    public enum FileType
+    {
+        Credit = 1,
+        Debit = 2,
+        Material = 3,
+        Expense = 4
+    }   
 
 }

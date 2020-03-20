@@ -41,6 +41,9 @@
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_BillSite_tbl_Sites" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PersonGroup" Width="1.5" PointX="12.75" PointY="12.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PersonGroupMap" Width="1.5" PointX="0.75" PointY="14.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Files" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillItem" Width="1.5" PointX="15.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillItemType" Width="1.5" PointX="15.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -10,7 +10,7 @@
 
     int counter = 1;
 }
- 
+
 
 <section class="wrapper site-min-height">
     <!-- page start-->
@@ -51,6 +51,7 @@
                         </div>
 
                     </div>
+
                 </div>
 
             </section>
@@ -98,6 +99,7 @@
                                     <th width="10%">@Resource.ExpenseType</th>
                                     <th>@Resource.SiteName</th>
                                     <th>@Resource.Description</th>
+                                    <th width="10%">@Resource.File</th>
                                     <th width="15%">@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -113,6 +115,20 @@
                                             <td>@expense.ExpenseType</td>
                                             <td>@expense.SiteName</td>
                                             <td>@expense.Description</td>
+                                            <td>
+                                                @if (expense.ObjExpenseFile != null)
+                                                {
+                                                    string fileUrl1 = Server.MapPath("~/DataFiles/ExpenseFile/" + expense.ObjExpenseFile.EncryptFileName);
+
+                                                    string fileUrl = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + Request.ApplicationPath;
+                                                    fileUrl += "/DataFiles/ExpenseFile/" + expense.ObjExpenseFile.EncryptFileName;
+
+                                                    if (File.Exists(fileUrl1))
+                                                    {
+                                                        <button onclick="fnOpenExpenseFile('@fileUrl')" class="btn btn-info btn-xs">@Resource.File</button>
+                                                    }
+                                                }
+                                            </td>
                                             <td>
                                                 <a href="/admin/expense/edit/@expense.ExpenseId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 <button onclick="fnDeleteExpense('@expense.ExpenseId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
@@ -151,6 +167,29 @@
     </div>
 </div>
 <!-- Delete modal -->
+<!-- View File Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Expense File</h4>
+            </div>
+            <div class="modal-body">
+
+                <embed id="embFilePath" src="#" frameborder="0" width="100%" height="600px">
+
+                <div class="modal-footer" style="padding: 10px;">
+                    <a id="btnDownload" href="#" class="btn btn-default" download="">Download</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
@@ -164,7 +203,7 @@
             "aoColumnDefs": [
                 {
                     'bSortable': false,
-                    'aTargets': [0,6]
+                    'aTargets': [0,5,6]
                 }]
         });
     });
@@ -289,6 +328,11 @@
 
     });
 
-
+    function fnOpenExpenseFile(fileUrl)
+    {
+        $("#embFilePath").attr("src", fileUrl);
+        $("#btnDownload").attr("href", fileUrl);
+        $("#myModal").modal("show");
+    }
 
 </script>

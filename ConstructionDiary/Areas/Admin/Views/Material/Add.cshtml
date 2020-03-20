@@ -65,6 +65,15 @@
                     </div>
 
                     <div class="row">
+
+                        <div class="col-sm-4 form-group">
+                            <label class="" for="BillType">Material Category</label>
+                            <p class="clsRadio">
+                                <label style="color:green;"><input id="MaterialCategory" name="MaterialCategory" type="radio" value="Information"> Information</label>
+                                <label style="color:red;"><input id="MaterialCategory" name="MaterialCategory" type="radio" value="File"> File </label>
+                            </p>
+                        </div>
+
                         <div class="col-sm-4 form-group">
                             <label for="GST_Per">@Resource.GST (%)</label><span class="required">*</span>
                             <select class="form-control" id="GST_Per" name="GST_Per">
@@ -482,5 +491,17 @@
         else
             return false;
     }
+
+    $(document).on("change", "#MaterialCategory", function () {
+        var category = $("input[name='MaterialCategory']:checked").val();
+        alert(category);
+        
+        if (category == "File") {
+             
+        }
+        else {
+             
+        }
+    });
 
 </script>

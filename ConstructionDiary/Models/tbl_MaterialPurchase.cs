@@ -28,7 +28,7 @@ namespace ConstructionDiary.Models
         public Nullable<decimal> CGST_Amount { get; set; }
         public Nullable<decimal> SGST_Amount { get; set; }
         public Nullable<decimal> AdjustmentAmount { get; set; }
-        public decimal SubTotal { get; set; }
+        public Nullable<decimal> SubTotal { get; set; }
         public decimal Total { get; set; }
         public System.Guid ClientId { get; set; }
         public bool IsActive { get; set; }
@@ -38,6 +38,7 @@ namespace ConstructionDiary.Models
         public Nullable<System.Guid> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<System.Guid> MerchantId { get; set; }
+        public string MaterialCategory { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
