@@ -10,7 +10,7 @@ using ConstructionDiary.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
-using ConstructionDiary.ResourceFiles; 
+using ConstructionDiary.ResourceFiles;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -33,7 +33,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                      PersonId = person.PersonId,
                                                      PersonName = person.PersonFirstName,
                                                      TotalBillAmount = _db.tbl_BillDebit.Where(x => x.PersonId == person.PersonId).ToList().Select(x => x.TotalAmount).Sum(),
-                                                     TotalDebitAmount = _db.tbl_Finance.Where(x => x.PersonId == person.PersonId && x.CreditOrDebit == "Debit" && !x.IsDeleted).ToList().Select(x => x.Amount).Sum()                                                     
+                                                     TotalDebitAmount = _db.tbl_Finance.Where(x => x.PersonId == person.PersonId && x.CreditOrDebit == "Debit" && !x.IsDeleted).ToList().Select(x => x.Amount).Sum()
                                                  }).ToList();
 
             //var lstPersons = (from p in _db.SP_GetPersonsList(ClientId)
@@ -951,6 +951,355 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
 
             return View(billVM);
+        }
+
+        public string ExportPDFOfSelectedPerson(Guid id)
+        {
+
+            string Result = "";
+
+            try
+            {
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                List<FinanceList> financeList = (from finance in _db.tbl_Finance
+                                                 join user in _db.tbl_Users on finance.GivenAmountBy equals user.UserId
+                                                 join site in _db.tbl_Sites on finance.SiteId equals site.SiteId into outerJoinSite
+                                                 from site in outerJoinSite.DefaultIfEmpty()
+                                                 where finance.PersonId == id
+                                                 select new FinanceList
+                                                 {
+                                                     FinanceId = finance.FinanceId,
+                                                     PersonId = finance.PersonId,
+                                                     SelectedDate = finance.SelectedDate,
+                                                     Amount = finance.Amount,
+                                                     SiteId = finance.SiteId,
+                                                     SiteName = (site != null) ? site.SiteName : "",
+                                                     CreditOrDebit = finance.CreditOrDebit,
+                                                     GivenAmountBy = finance.GivenAmountBy,
+                                                     PaymentType = finance.PaymentType,
+                                                     ChequeNo = finance.ChequeNo,
+                                                     BankName = finance.BankName,
+                                                     ChequeFor = finance.ChequeFor,
+                                                     Remarks = finance.Remarks,
+                                                     IsActive = finance.IsActive,
+                                                     IsDeleted = finance.IsDeleted,
+                                                     CreatedBy = finance.CreatedBy,
+                                                     UpdatedBy = finance.UpdatedBy,
+                                                     CreatedDate = finance.CreatedDate,
+                                                     ModifiedDate = finance.ModifiedDate,
+                                                     FirstName = user.FirstName,
+                                                 }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
+
+                string PersonName = GetPersonName(id);
+
+                decimal? TotalAmount = financeList.Select(x => x.Amount).Sum();
+                string strTotalAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalAmount));
+
+                string[] strColumns = new string[6] { "Date", "Amount", "Site Name", "Remarks", "Payment Type", "Bank Name" };
+                if (financeList != null && financeList.Count() > 0)
+                {
+
+                    List<DateTime> lstDateTemp = new List<DateTime>();
+                    StringBuilder strHTML = new StringBuilder();
+                    strHTML.Append("<!DOCTYPE html>");
+                    strHTML.Append("<style>");
+                    strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
+                    strHTML.Append("</style>");
+
+
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    string Title = "Debit List Of " + PersonName;
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append(Title);
+                    strHTML.Append("</th>");
+                    strHTML.Append("</tr>");
+                    //strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + startDate.ToString("dd/MM/yyyy") + " To " + endDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr>");
+                    for (int idx = 0; idx < strColumns.Length; idx++)
+                    {
+                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append(strColumns[idx]);
+                        strHTML.Append("</th>");
+                    }
+                    strHTML.Append("</tr>");
+                    strHTML.Append("</thead>");
+                    strHTML.Append("<tbody>");
+                    foreach (var obj in financeList)
+                    {
+
+                        if (obj != null)
+                        {
+
+                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            {
+                                string strcolval = "";
+                                switch (strColumns[Col])
+                                {
+
+                                    case "Date":
+                                        {
+                                            strcolval = Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy");
+                                            break;
+                                        }
+                                    case "Amount":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
+                                            break;
+                                        }
+                                    case "Site Name":
+                                        {
+                                            strcolval = obj.SiteName;
+                                            break;
+                                        }
+                                    case "Remarks":
+                                        {
+                                            strcolval = obj.Remarks;
+                                            break;
+                                        }
+                                    case "Payment Type":
+                                        {
+                                            strcolval = obj.PaymentType;
+                                            break;
+                                        }
+                                    case "Bank Name":
+                                        {
+                                            strcolval = obj.BankName;
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+
+                                }
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append(strcolval);
+                                strHTML.Append("</td>");
+                            }
+                            strHTML.Append("</tr>");
+                        }
+                    }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalAmount + " </th>");
+                    strHTML.Append("<th colspan='5' style='border: 1px solid #ccc;'></th>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
+                    StringReader sr = new StringReader(strHTML.ToString());
+
+                    var myString = strHTML.ToString();
+                    var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
+                    var ms = new MemoryStream(myByteArray);
+
+                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+                    writer.PageEvent = new PDFGeneratePageEventHelper();
+                    pdfDoc.Open();
+
+                    XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
+                    objHelp.ParseXHtml(writer, pdfDoc, ms, null, Encoding.UTF8, new UnicodeFontFactory());
+
+                    pdfDoc.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "download;filename=Debit List Of " + PersonName + ".pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(pdfDoc);
+                    Response.End();
+                }
+
+                return Result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+            }
+
+        }
+
+        public ActionResult AddDebitEntry(Guid Id) // id=PersonId
+        {
+            PersonFinanceVM objFinance = new PersonFinanceVM();
+
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            objFinance.PersonId = Id;
+            objFinance.UsersList = _db.tbl_Users.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false)
+                     .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                     .OrderBy(x => x.Text).ToList();
+
+            objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                     .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                     .ToList();
+
+            ViewBag.PersonName = GetPersonName(Id);
+
+            return View(objFinance);
+        }
+
+        [HttpPost]
+        public ActionResult AddDebitEntry(PersonFinanceVM finance)
+        {
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                finance.UsersList = _db.tbl_Users.Where(x => x.ClientId == ClientId)
+                     .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                     .OrderBy(x => x.Text).ToList();
+
+                if (ModelState.IsValid)
+                {
+                    DateTime date = DateTime.ParseExact(finance.SelectedDate, "dd/MM/yyyy", null);
+
+                    tbl_Finance objFinance = new tbl_Finance();
+                    objFinance.FinanceId = Guid.NewGuid();
+                    objFinance.PersonId = finance.PersonId;
+                    objFinance.SelectedDate = date;
+                    objFinance.GivenAmountBy = finance.GivenAmountBy;
+                    objFinance.Amount = Convert.ToDecimal(finance.Amount);
+                    objFinance.SiteId = finance.SiteId;
+                    objFinance.CreditOrDebit = "Debit"; // finance.CreditOrDebit;
+                    objFinance.PaymentType = finance.PaymentType;
+                    if (finance.PaymentType == "Cheque")
+                    {
+                        objFinance.ChequeNo = finance.ChequeNo;
+                        objFinance.BankName = finance.BankName;
+                        objFinance.ChequeFor = finance.ChequeFor;
+                    }
+                    else
+                    {
+                        objFinance.ChequeNo = "";
+                        objFinance.BankName = "";
+                        objFinance.ChequeFor = "";
+                    }
+                    objFinance.Remarks = finance.Remarks;
+                    objFinance.IsActive = true;
+                    objFinance.IsDeleted = false;
+                    objFinance.CreatedBy = clsSession.UserID;
+                    objFinance.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_Finance.Add(objFinance);
+                    _db.SaveChanges();
+
+                    return RedirectToAction("Finance", new { id = finance.PersonId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return View(finance);
+        }
+
+        public ActionResult EditDebitEntry(Guid Id) // id=FinanceId
+        {
+            PersonFinanceVM objFinance = (from f in _db.tbl_Finance
+                                          where f.FinanceId == Id
+                                          select new PersonFinanceVM
+                                          {
+                                              FinanceId = f.FinanceId,
+                                              PersonId = f.PersonId,
+                                              dtSelectedDate = f.SelectedDate,
+                                              Amount = f.Amount,
+                                              SiteId = f.SiteId,
+                                              GivenAmountBy = f.GivenAmountBy,
+                                              PaymentType = f.PaymentType,
+                                              ChequeNo = f.ChequeNo,
+                                              BankName = f.BankName,
+                                              ChequeFor = f.ChequeFor,
+                                              Remarks = f.Remarks
+                                          }).FirstOrDefault();
+
+            objFinance.SelectedDate = Convert.ToDateTime(objFinance.dtSelectedDate).ToString("dd/MM/yyyy");
+
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            objFinance.UsersList = _db.tbl_Users.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false)
+                     .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                     .OrderBy(x => x.Text).ToList();
+
+            objFinance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                     .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                     .ToList();
+
+            ViewBag.PersonName = GetPersonName(Id);
+
+            return View(objFinance);
+        }
+
+        [HttpPost]
+        public ActionResult EditDebitEntry(PersonFinanceVM finance)
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+            try
+            {
+
+                if (ModelState.IsValid)
+                {
+                    DateTime date = DateTime.ParseExact(finance.SelectedDate, "dd/MM/yyyy", null);
+
+                    tbl_Finance objFinance = _db.tbl_Finance.Where(x => x.FinanceId == finance.FinanceId).FirstOrDefault();
+                    objFinance.SelectedDate = date;
+                    objFinance.GivenAmountBy = finance.GivenAmountBy;
+                    objFinance.Amount = Convert.ToDecimal(finance.Amount);
+                    objFinance.SiteId = finance.SiteId;
+                    objFinance.PaymentType = finance.PaymentType;
+
+                    if (finance.PaymentType == "Cheque")
+                    {
+                        objFinance.ChequeNo = finance.ChequeNo;
+                        objFinance.BankName = finance.BankName;
+                        objFinance.ChequeFor = finance.ChequeFor;
+                    }
+                    else
+                    {
+                        objFinance.ChequeNo = "";
+                        objFinance.BankName = "";
+                        objFinance.ChequeFor = "";
+                    }
+
+                    objFinance.Remarks = finance.Remarks;
+                    objFinance.UpdatedBy = clsSession.UserID;
+                    objFinance.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+
+                    return RedirectToAction("Finance", new { id = finance.PersonId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            finance.UsersList = _db.tbl_Users.Where(x => x.ClientId == ClientId)
+                     .Select(o => new SelectListItem { Value = o.UserId.ToString(), Text = o.FirstName })
+                     .OrderBy(x => x.Text).ToList();
+
+            finance.SitesList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                     .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                     .ToList();
+
+            return View(finance);
         }
 
     }

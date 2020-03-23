@@ -1,0 +1,156 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@using ConstructionDiary.Models;
+
+@model PersonFinanceVM
+@{
+    ViewBag.Title = "Person";
+}
+
+
+<!--main content start-->
+<section class="wrapper site-min-height">
+    <!-- page start-->
+
+    <div class="row">
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-primary" style="opacity: 1;">
+                <div class="panel-heading text-center" style="background-color:#785454; border-color: #785454;">
+                    <strong> @ViewBag.PersonName </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                @using (Html.BeginForm("AddDebitEntry", "Person", FormMethod.Post, new { @id = "personFinanceFormId", enctype = "multipart/form-data", role = "form" }))
+                {
+
+                    <header class="panel-heading">
+                        <strong> @Resource.AddNewFinance </strong>
+
+                        <a href="/admin/person/finance/@Model.PersonId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                            <i class="fa fa-backward"></i> Back
+                        </a>
+
+                        @*<span class="pull-right clsRadio">
+                                <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit") @Resource.Credit</label>
+                                <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit", new { @checked = true }) @Resource.Debit</label>
+                            </span>*@
+                    </header>
+
+                    <div class="panel-body">
+
+                        @Html.AntiForgeryToken()
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.Date:</label>
+                                @*@Html.EditorFor(model => model.SelectedDate, new { htmlAttributes = new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY" } })*@
+                                @Html.TextBoxFor(model => model.SelectedDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
+
+                                <span class="input-group-btn add-on">
+                                    <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
+                                </span>
+                                @Html.ValidationMessageFor(model => model.SelectedDate, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.Amount:</label>
+                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.Amount, maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.SiteName:</label>
+                                @Html.DropDownList("SiteId", new SelectList(Model.SitesList, "Value", "Text"), "-Select Site-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.SiteId, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.Remarks:</label>
+                                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.Remarks, maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.GivenTakenBy:</label>
+                                @Html.DropDownList("GivenAmountBy", new SelectList(Model.UsersList, "Value", "Text"), "-Select User-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.GivenAmountBy, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.PaymentType:</label>
+                                @Html.DropDownList("PaymentType", new SelectList(Enum.GetValues(typeof(PaymentTypes))), "-Select Type-", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.PaymentType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row clsPaymentDetails" style="display:none;">
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.ChequeNo:</label>
+                                @Html.EditorFor(model => model.ChequeNo, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.ChequeNo, maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.BankName:</label>
+                                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.BankName, maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4 form-group">
+                                <label>@Resource.ChequeFor:</label>
+                                @Html.EditorFor(model => model.ChequeFor, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.ChequeFor, maxlength = "150" } })
+                                @Html.ValidationMessageFor(model => model.ChequeFor, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                @Html.HiddenFor(model => model.PersonId)
+
+                                <button class="btn btn-success" id="btnSubmit" type="submit">@Resource.Save</button>
+                                <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                }
+            </section>
+        </div>
+    </div>
+
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script>
+
+    var dateObj = new Date();
+    var month = dateObj.getUTCMonth() + 1; //months from 1-12
+    var day = dateObj.getUTCDate();
+    var year = dateObj.getUTCFullYear();
+    var newdate = (day < 10 ? '0' + day : '' + day) + "/" + (month < 10 ? '0' + month : '' + month) + "/" + year;
+
+    jQuery("#SelectedDate").val(newdate);
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+
+    jQuery(document).on("change", "#PaymentType", function () {
+        var value = jQuery(this).val();
+        if (value == "Cheque")
+            jQuery(".clsPaymentDetails").show();
+        else
+            jQuery(".clsPaymentDetails").hide();
+    });
+
+    jQuery(document).on("click", "#btnCancel", function () {
+        window.location.href = "/admin/person/finance/@Model.PersonId";
+    });
+
+</script>

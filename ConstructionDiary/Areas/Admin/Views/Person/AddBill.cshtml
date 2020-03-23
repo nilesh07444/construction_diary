@@ -10,6 +10,11 @@
             <section class="panel">
                 <header class="panel-heading">
                     <strong>@Resource.AddNewBill</strong>
+
+                    <a href="/admin/person/bill/@Model.PersonId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
+
                 </header>
                 <div class="panel-body">
                     <div class="col-sm-12">
@@ -173,7 +178,5 @@
         $("#TotalAmount").val(TotalAmount);
 
     });
-
-
-
+     
 </script>

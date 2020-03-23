@@ -74,111 +74,37 @@
         </div>
 
     </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <section class="panel">
-                @using (Html.BeginForm("Finance", "Person", FormMethod.Post, new { @id = "personFinanceFormId", enctype = "multipart/form-data", role = "form" }))
-                {
-
-                    <header class="panel-heading">
-                        <strong> @Resource.AddNewFinance </strong>
-                        @*<span class="pull-right clsRadio">
-                            <label style="color:green;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Credit") @Resource.Credit</label>
-                            <label style="margin-left:5px; color:red;">@Html.RadioButtonFor(m => m.CreditOrDebit, "Debit", new { @checked = true }) @Resource.Debit</label>
-                        </span>*@
-                    </header>
-
-                    <div class="panel-body">
-
-                        @Html.AntiForgeryToken()
-
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.Date:</label>
-                                @*@Html.EditorFor(model => model.SelectedDate, new { htmlAttributes = new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY" } })*@
-                                @Html.TextBoxFor(model => model.SelectedDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
-
-                                <span class="input-group-btn add-on">
-                                    <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
-                                </span>
-                                @Html.ValidationMessageFor(model => model.SelectedDate, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.Amount:</label>
-                                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.Amount, maxlength = "150" } })
-                                @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.SiteName:</label>
-                                @Html.DropDownList("SiteId", new SelectList(Model.SitesList, "Value", "Text"), "-Select Site-", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.SiteId, "", new { @class = "text-danger" })
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.Remarks:</label>
-                                @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.Remarks, maxlength = "150" } })
-                                @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.GivenTakenBy:</label>
-                                @Html.DropDownList("GivenAmountBy", new SelectList(Model.UsersList, "Value", "Text"), "-Select User-", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(m => m.GivenAmountBy, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.PaymentType:</label>
-                                @Html.DropDownList("PaymentType", new SelectList(Enum.GetValues(typeof(PaymentTypes))), "-Select Type-", new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.PaymentType, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="row clsPaymentDetails" style="display:none;">
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.ChequeNo:</label>
-                                @Html.EditorFor(model => model.ChequeNo, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.ChequeNo, maxlength = "150" } })
-                                @Html.ValidationMessageFor(model => model.ChequeNo, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.BankName:</label>
-                                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.BankName, maxlength = "150" } })
-                                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
-                            </div>
-                            <div class="col-sm-4 form-group">
-                                <label>@Resource.ChequeFor:</label>
-                                @Html.EditorFor(model => model.ChequeFor, new { htmlAttributes = new { @class = "form-control", placeholder = @Resource.ChequeFor, maxlength = "150" } })
-                                @Html.ValidationMessageFor(model => model.ChequeFor, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12 form-group">
-                                @Html.HiddenFor(model => model.PersonId)
-
-                                <button class="btn btn-success" id="btnSubmit" type="submit">@Resource.Save</button>
-                                <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
-                            </div>
-                        </div>
-
-
-                    </div>
-                }
-            </section>
-        </div>
-    </div>
-
+      
     <div class="row">
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
                     <strong>@Resource.FinanceList</strong>
+
+                    <a href="/admin/person" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
+
                 </header>
                 <div class="panel-body">
                     <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-left">
+                                <a class="btn btn-success" href="/admin/person/adddebitentry/@Model.PersonId"><i class="fa fa-plus"></i> @Resource.AddNewFinance</a>
+                            </div>
+                            @if (lstFinance != null && lstFinance.Count() > 0)
+                            {
+                                <div class="btn-group pull-right">
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        @Resource.Download <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                        @*<li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>*@
+                                    </ul>
+                                </div>
+                            }
+                        </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped table-hover" id="tblFinanceList">
                             <thead>
@@ -189,8 +115,8 @@
                                     <th class="hidden-phone">@Resource.Remarks</th>
                                     <th style="width:10%;">@Resource.Type</th>
                                     <th style="width:10%;">@Resource.PaymentType</th>
-                                    <th style="width:20%;">@Resource.BankName</th>
-                                    <th style="width:5%;">@Resource.Action</th>
+                                    <th style="width:10%;">@Resource.BankName</th>
+                                    <th style="width:10%;">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -210,7 +136,7 @@
                                             <td>@obj.ChequeNo @obj.BankName</td>
                                             <td>
                                                 @*<button data-id="@obj.FinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
-                                                @*<button data-id="@obj.FinanceId" class="btn btn-primary btn-xs clsEditFinance"><i class="fa fa-pencil"></i></button>*@
+                                                <a href="/admin/person/editdebitentry/@obj.FinanceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 <button onclick="fnDeleteFinance('@obj.FinanceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
                                         </tr>
@@ -323,5 +249,9 @@
         window.location.href = "/admin/person";
     });
 
+    jQuery(document).on("click", "#btnDownloadPdf", function () {
+        var personId = '@Model.PersonId';
+        window.location.href = "/admin/person/ExportPDFOfSelectedPerson/" + personId;
+    });
 
 </script>

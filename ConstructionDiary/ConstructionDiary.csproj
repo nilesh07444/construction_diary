@@ -1976,6 +1976,10 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="DataFiles\ExpenseFile\0d9d7ce1-99d4-4789-bfd7-d23f6bfe4ca2-73352264_2431701786947363_1959846882003910656_o.jpg" />
+    <Content Include="DataFiles\ExpenseFile\9ce4878d-d9ff-4e36-ab5d-d2ef5fa46f22-wp3329848-desert-wallpaper-1920x1080.jpg" />
+    <Content Include="DataFiles\ExpenseFile\9e7cc80a-1a55-46c7-8b0e-4dd5c40258d8-bn.jpg" />
+    <Content Include="DataFiles\ExpenseFile\e0a20c13-a596-46ee-a76f-5d233f5b46c1-b7ca4fc888bdcd3be58bf7984a3187bd.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -2323,6 +2327,12 @@
     <Content Include="Areas\Admin\Views\Site\AllAttendanceSiteData.cshtml" />
     <Content Include="Areas\Admin\Views\BillItem\Index.cshtml" />
     <Content Include="Areas\Admin\Views\BillItem\Add.cshtml" />
+    <Content Include="DataFiles\ExpenseFile\2897baa9-66aa-4e79-8001-7c591c488d20-Ranchhod Mama - Makan Hisab.pdf" />
+    <Content Include="DataFiles\ExpenseFile\7cfcf2c8-4279-4c6e-96f5-125e6a58bbf7-EAadhaar_xxxxxxxx4967_20032020224752_836025.pdf" />
+    <Content Include="DataFiles\ExpenseFile\b5eb85a2-9467-4deb-ad24-f2bc25e4bde8-Ranchhod Mama - Makan Hisab.pdf" />
+    <Content Include="DataFiles\ExpenseFile\f08896ab-444d-4134-b688-267c33ab62f4-Estimate.pdf" />
+    <Content Include="Areas\Admin\Views\Person\AddDebitEntry.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\EditDebitEntry.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

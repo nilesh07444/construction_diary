@@ -35,6 +35,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                              {
                                                  SiteId = site.SiteId,
                                                  SiteName = site.SiteName,
+                                                 IsActive = site.IsActive,
                                                  TotalBillAmount = _db.tbl_BillSite.Where(x => x.SiteId == site.SiteId).ToList().Select(x => x.TotalAmount).Sum(),
                                                  TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum()
                                              }).ToList();
@@ -850,6 +851,37 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(lstSiteAttendance);
         }
+
+        [HttpPost]
+        public string ChangeSiteStatus(Guid SiteId, bool Status)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                tbl_Sites objSite = _db.tbl_Sites.Where(x => x.SiteId == SiteId && x.IsDeleted == false).FirstOrDefault();
+
+                if (objSite == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+                    objSite.IsActive = Status;
+                    objSite.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message.ToString();
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
 
     }
 }

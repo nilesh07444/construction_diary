@@ -39,6 +39,9 @@ namespace ConstructionDiary
         public Guid? SiteId { get; set; }
         public List<SelectListItem> SitesList { get; set; }
 
+        public Guid FinanceId { get; set; }
+        public DateTime dtSelectedDate { get; set; }
+
     }
 
     public class PersonDetailVM

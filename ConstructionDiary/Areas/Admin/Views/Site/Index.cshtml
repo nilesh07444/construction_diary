@@ -45,6 +45,7 @@
                                     <th>@Resource.TotalCredit</th>
                                     <th>@Resource.TotalRemainingAmount</th>
                                     <th>@Resource.Finance</th>
+                                    <th width="10%">@Resource.Active</th>
                                     <th>@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -57,7 +58,7 @@
                                         obj.TotalBillAmount = obj.TotalBillAmount ?? 0;
                                         obj.TotalCreditAmount = obj.TotalCreditAmount ?? 0;
                                         obj.TotalRemainingAmount = (obj.TotalBillAmount ?? 0) - (obj.TotalCreditAmount ?? 0);
-                                         
+
                                         <tr class="gradeX">
                                             <td>@counter.</td>
                                             <td>@obj.SiteName</td>
@@ -70,6 +71,16 @@
 
                                             <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td>
                                             <td><button onclick="fnFinanceSite('@obj.SiteId')" type="button" class="btn btn-primary">@Resource.Finance</button></td>
+                                            <td>
+                                                @if (obj.IsActive == true)
+                                                {
+                                                    <a onclick="fnInActiveSite('@obj.SiteId', false)" href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a onclick="fnInActiveSite('@obj.SiteId', true)" href="javascript:void(0);"><span class="badge bg-warning">InActive</span></a>
+                                                }
+                                            </td>
                                             <td>
                                                 <a href="/admin/site/view/@obj.SiteId" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
                                                 <button data-id="@obj.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
@@ -154,6 +165,27 @@
     </div>
 </div>
 <!-- Delete modal -->
+<!-- InActive Modal -->
+<div class="modal fade" id="inActiveSiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to InActive ?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnInActiveSite" />
+                <input type="hidden" id="hdnInActiveSiteStatus" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnInActiveSite" class="btn btn-danger" type="button">InActive</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Active modal -->
 
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
@@ -292,6 +324,70 @@
 
     function fnFinanceSite(siteid) {
         window.location.href = "/admin/site/detail/" + siteid;
+        }
+
+    function fnInActiveSite(site_id, status) {
+
+        var msgText = "";
+        var buttonText = "";
+        var buttonClass = "";
+
+        if (status == false) {
+            msgText = "Are you want to InActive ?";
+            buttonText = "InActive";
+            buttonClass = "btn btn-danger";
+        }
+        else {
+            msgText = "Are you want to Active ?";
+            buttonText = "Active";
+            buttonClass = "btn btn-success";
+        }
+
+        jQuery("#inActiveSiteModal .modal-body").text(msgText);
+        jQuery("#inActiveSiteModal #btnInActiveSite").text(buttonText);
+        jQuery("#inActiveSiteModal #btnInActiveSite").attr("class", buttonClass);
+
+        jQuery("#hdnInActiveSite").val(site_id);
+        jQuery("#hdnInActiveSiteStatus").val(status);
+        $('#inActiveSiteModal').modal('show');
     }
+
+    jQuery(document).on("click", "#btnInActiveSite", function () {
+
+        var site_id = jQuery("#hdnInActiveSite").val();
+        var site_status = jQuery("#hdnInActiveSiteStatus").val();
+
+        if (site_id != "" && site_id != null) {
+            $('#inActiveSiteModal').modal('hide');
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("ChangeSiteStatus", "Site")';
+
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?SiteId=" + site_id + "&Status=" + site_status,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Site Status Changed successfully");
+                        window.location.reload();
+                        // $(this).attr("onclick", "fnInActiveSite('"+ person_id +"', "+ !person_status +")");
+                    }
+                    else if (result == "notfound") {
+                        alert("Site Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+
+    });
 
 </script>

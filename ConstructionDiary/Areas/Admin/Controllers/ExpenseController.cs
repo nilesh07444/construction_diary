@@ -149,7 +149,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     if (ExpenseFile != null)
                     {
                         fileName = Guid.NewGuid() + "-" + Path.GetFileName(ExpenseFile.FileName);
-                        ExpenseFile.SaveAs(path + fileName);
+
+                        string full_path = Path.Combine(path, fileName);
+                        ExpenseFile.SaveAs(full_path);
 
                         tbl_Files objFile = new tbl_Files();
                         objFile.FileId = Guid.NewGuid();
@@ -165,6 +167,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 catch (Exception ex)
                 {
                     string msg = ex.Message.ToString();
+                    throw ex;
                 }
                 return RedirectToAction("Index");
             }
@@ -254,7 +257,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     if (ExpenseFile != null)
                     {
                         fileName = Guid.NewGuid() + "-" + Path.GetFileName(ExpenseFile.FileName);
-                        ExpenseFile.SaveAs(path + fileName);
+                        
+                        string full_path = Path.Combine(path, fileName);
+                        ExpenseFile.SaveAs(full_path);
 
                         tbl_Files objFile = _db.tbl_Files.Where(x => x.ParentId == objExpense.ExpenseId).FirstOrDefault();
 
