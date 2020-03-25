@@ -2333,6 +2333,7 @@
     <Content Include="DataFiles\ExpenseFile\f08896ab-444d-4134-b688-267c33ab62f4-Estimate.pdf" />
     <Content Include="Areas\Admin\Views\Person\AddDebitEntry.cshtml" />
     <Content Include="Areas\Admin\Views\Person\EditDebitEntry.cshtml" />
+    <Content Include="Areas\Admin\Views\BillItem\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

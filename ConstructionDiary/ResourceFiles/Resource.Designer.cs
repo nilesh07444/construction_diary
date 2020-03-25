@@ -106,6 +106,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Bill Item.
+        /// </summary>
+        public static string AddNewBillItem {
+            get {
+                return ResourceManager.GetString("AddNewBillItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Client.
         /// </summary>
         public static string AddNewClient {
@@ -318,6 +327,24 @@ namespace ConstructionDiary.ResourceFiles {
         public static string BillDate {
             get {
                 return ResourceManager.GetString("BillDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bill Item.
+        /// </summary>
+        public static string BillItem {
+            get {
+                return ResourceManager.GetString("BillItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bill Item List.
+        /// </summary>
+        public static string BillItemList {
+            get {
+                return ResourceManager.GetString("BillItemList", resourceCulture);
             }
         }
         
@@ -804,6 +831,24 @@ namespace ConstructionDiary.ResourceFiles {
         public static string ItemInfo {
             get {
                 return ResourceManager.GetString("ItemInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Name.
+        /// </summary>
+        public static string ItemName {
+            get {
+                return ResourceManager.GetString("ItemName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Item Type.
+        /// </summary>
+        public static string ItemType {
+            get {
+                return ResourceManager.GetString("ItemType", resourceCulture);
             }
         }
         

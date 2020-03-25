@@ -609,4 +609,19 @@
   <data name="File" xml:space="preserve">
     <value>ફાઈલ</value>
   </data>
+  <data name="AddNewBillItem" xml:space="preserve">
+    <value>નવી આઈટમ ઉમેરો</value>
+  </data>
+  <data name="ItemName" xml:space="preserve">
+    <value>આઈટમ નુ નામ</value>
+  </data>
+  <data name="ItemType" xml:space="preserve">
+    <value>આઈટમ ટાઈપ</value>
+  </data>
+  <data name="BillItem" xml:space="preserve">
+    <value>બિલ આઈટમ</value>
+  </data>
+  <data name="BillItemList" xml:space="preserve">
+    <value>બિલ આઈટમ લિસ્ટ</value>
+  </data>
 </root>

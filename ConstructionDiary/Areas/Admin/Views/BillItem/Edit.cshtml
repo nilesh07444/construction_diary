@@ -9,7 +9,7 @@
         <div class="col-lg-12">
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>@Resource.AddNewBillItem</strong>
+                    <strong>Edit Bill Item</strong>
 
                     <a href="/admin/billitem" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
                         <i class="fa fa-backward"></i> Back
@@ -19,7 +19,7 @@
                 <div class="panel-body">
                     <div class="col-sm-6">
                         <div class="form">
-                            @using (Html.BeginForm("Add", "BillItem", FormMethod.Post, new { @id = "BillItemFormId", @class = "cmxform form-horizontal", enctype = "multipart/form-data", role = "form" }))
+                            @using (Html.BeginForm("Edit", "BillItem", FormMethod.Post, new { @id = "BillItemFormId", @class = "cmxform form-horizontal", enctype = "multipart/form-data", role = "form" }))
                             {
 
                                 @Html.AntiForgeryToken()
@@ -33,7 +33,7 @@
 
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.BillItemTypeId, htmlAttributes: new { @class = "" })
-                                    @Html.DropDownList("BillItemTypeId", new SelectList(Model.BillItemTypeList, "Value", "Text"), "-" + Resource.ItemType + "-", new { @class = "form-control" })
+                                    @Html.DropDownList("BillItemTypeId", new SelectList(Model.BillItemTypeList, "Value", "Text"), "-" + Resource.ItemType + "-", new { @class = "form-control", @disabled="@disabled" })
                                     @Html.ValidationMessageFor(model => model.BillItemTypeId, "", new { @class = "text-danger" })
                                 </div>
 
@@ -44,6 +44,7 @@
                                 </div>
 
                                 <div>
+                                    @Html.HiddenFor(x => x.BillItemId)
                                     <button id="btnSubmit" class="btn btn-info" type="submit">@Resource.Save</button>
                                     <a href="/admin/billitem" class="btn btn-default">@Resource.Cancel</a>
                                 </div>
