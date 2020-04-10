@@ -624,4 +624,28 @@
   <data name="BillItemList" xml:space="preserve">
     <value>બિલ આઈટમ લિસ્ટ</value>
   </data>
+  <data name="BillFile" xml:space="preserve">
+    <value>બિલ  ની ફાઈલ</value>
+  </data>
+  <data name="Area" xml:space="preserve">
+    <value>માપ</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>ઉંચાઈ</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>લંબાઈ</value>
+  </data>
+  <data name="Qty" xml:space="preserve">
+    <value>નંગ</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>પહોળાઈ</value>
+  </data>
+  <data name="New" xml:space="preserve">
+    <value>નવા</value>
+  </data>
+  <data name="Old" xml:space="preserve">
+    <value>જુના</value>
+  </data>
 </root>

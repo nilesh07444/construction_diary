@@ -42,8 +42,10 @@
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PersonGroup" Width="1.5" PointX="12.75" PointY="12.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PersonGroupMap" Width="1.5" PointX="0.75" PointY="14.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Files" Width="1.5" PointX="15.375" PointY="0.75" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillItem" Width="1.5" PointX="15.375" PointY="3.75" />
-        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillItemType" Width="1.5" PointX="15.375" PointY="7.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillSiteItem" Width="1.5" PointX="15.375" PointY="10.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillSiteNew" Width="1.5" PointX="15.375" PointY="15.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillDebitItem" Width="1.5" PointX="15.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillDebitNew" Width="1.5" PointX="10.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

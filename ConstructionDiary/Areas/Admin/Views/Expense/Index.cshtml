@@ -125,7 +125,8 @@
 
                                                     if (File.Exists(fileUrl1))
                                                     {
-                                                        <button onclick="fnOpenExpenseFile('@fileUrl')" class="btn btn-info btn-xs">@Resource.File</button>
+                                                        @*<button onclick="fnOpenExpenseFile('@fileUrl')" class="btn btn-info btn-xs">@Resource.File</button>*@
+                                                        <a download href="@fileUrl" class="btn btn-primary btn-xs">Download</a>
                                                     }
                                                 }
                                             </td>

@@ -40,7 +40,7 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>@Resource.SiteName</th>
-                                    <th width="10%;">@Resource.Bill</th>
+                                    <th width="8%;">@Resource.Bill</th>
                                     <th>@Resource.Total @Resource.Bill @Resource.Amount</th>
                                     <th>@Resource.TotalCredit</th>
                                     <th>@Resource.TotalRemainingAmount</th>
@@ -63,7 +63,8 @@
                                             <td>@counter.</td>
                                             <td>@obj.SiteName</td>
                                             <td>
-                                                <a href="/admin/site/bill/@obj.SiteId" class="btn btn-primary">@Resource.Bill</a>
+                                                @*<a href="/admin/site/bill/@obj.SiteId" class="btn btn-primary">@Resource.Old @Resource.Bill</a>*@
+                                                <a href="/admin/site/newbill/@obj.SiteId" class="btn btn-primary">@Resource.Bill</a>
                                             </td>
 
                                             <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalBillAmount)</span></td>

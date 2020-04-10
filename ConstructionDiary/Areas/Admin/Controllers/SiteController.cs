@@ -514,7 +514,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return View(lstBill);
         }
 
-
         public ActionResult AddBill(Guid Id)
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
@@ -524,7 +523,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(objBill);
         }
-
 
         [HttpPost]
         public ActionResult AddBill(BillSiteVM billVM)
@@ -847,7 +845,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                             WithdrawAmount = pa.WithdrawAmount,
                                                             OvertimeAmount = pa.OvertimeAmount,
                                                             Remarks = pa.Remarks
-                                                        }).OrderByDescending(x=>x.AttendanceDate).ToList();
+                                                        }).OrderByDescending(x => x.AttendanceDate).ToList();
 
             return View(lstSiteAttendance);
         }
@@ -882,6 +880,208 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
 
+        public ActionResult NewBill(Guid Id) // Id = SiteId
+        {
+            List<BillSiteNewVM> lstBill = new List<BillSiteNewVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            tbl_Sites objSite = _db.tbl_Sites.Where(x => x.SiteId == Id).First();
+
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = objSite.SiteName;
+
+            lstBill = (from dbill in _db.tbl_BillSiteNew
+                       join site in _db.tbl_Sites on dbill.SiteId equals site.SiteId
+                       where dbill.ClientId == ClientId && dbill.SiteId == Id && !dbill.IsDeleted
+                       select new BillSiteNewVM
+                       {
+                           BillId = dbill.BillId,
+                           dBillDate = dbill.BillDate,
+                           BillNo = dbill.BillNo,
+                           BillType = dbill.BillType,
+                           SiteId = dbill.SiteId,
+                           SiteName = site.SiteName,
+                           TotalAmount = dbill.TotalAmount,
+                           Remarks = dbill.Remarks,
+                           ObjFile = _db.tbl_Files.Where(x => x.ParentId == dbill.BillId && x.FileCategory == (int)FileType.Credit).FirstOrDefault()
+                       }).OrderByDescending(x => x.dBillDate).ToList();
+
+            return View(lstBill);
+        }
+
+        public ActionResult AddBillByFile(Guid Id)
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            BillSiteNewVM objBill = new BillSiteNewVM();
+            objBill.SiteId = Id;
+
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+
+            return View(objBill);
+        }
+
+        [HttpPost]
+        public ActionResult AddBillByFile(BillSiteNewVM billVM, HttpPostedFileBase BillFile)
+        {
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                if (ModelState.IsValid)
+                {
+                    // Check validation
+
+                    DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
+
+                    tbl_BillSiteNew objBill = new tbl_BillSiteNew();
+                    objBill.BillId = Guid.NewGuid();
+                    objBill.BillDate = bill_date;
+                    objBill.BillNo = billVM.BillNo;
+                    objBill.BillType = "File";
+                    objBill.SiteId = billVM.SiteId;
+                    objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
+                    objBill.Remarks = billVM.Remarks;
+                    objBill.ClientId = ClientId;
+                    objBill.IsActive = true;
+                    objBill.IsDeleted = false;
+                    objBill.CreatedBy = clsSession.UserID;
+                    objBill.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_BillSiteNew.Add(objBill);
+                    _db.SaveChanges();
+
+                    // Save + Upload Expense File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/SiteBillFile/");
+                    if (BillFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(BillFile.FileName);
+
+                        string full_path = Path.Combine(path, fileName);
+                        BillFile.SaveAs(full_path);
+
+                        tbl_Files objFile = new tbl_Files();
+                        objFile.FileId = Guid.NewGuid();
+                        objFile.ParentId = objBill.BillId;
+                        objFile.FileCategory = (int)FileType.Credit;
+                        objFile.OriginalFileName = BillFile.FileName;
+                        objFile.EncryptFileName = fileName;
+                        _db.tbl_Files.Add(objFile);
+                        _db.SaveChanges();
+                    }
+
+                    return RedirectToAction("NewBill", new { id = billVM.SiteId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(billVM);
+        }
+
+        public ActionResult EditBillByFile(Guid Id)
+        {
+            BillSiteNewVM objBill = new BillSiteNewVM();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            tbl_BillSiteNew bill = _db.tbl_BillSiteNew.Where(x => x.BillId == Id).FirstOrDefault();
+            if (objBill != null)
+            {
+                objBill.BillId = bill.BillId;
+                objBill.BillDate = Convert.ToDateTime(bill.BillDate).ToString("dd/MM/yyyy");
+                objBill.BillNo = bill.BillNo;
+                objBill.BillType = bill.BillType;
+                objBill.SiteId = bill.SiteId;
+                objBill.TotalAmount = Convert.ToDecimal(bill.TotalAmount);
+                objBill.Remarks = bill.Remarks;
+            }
+
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == objBill.SiteId).SiteName;
+
+            return View(objBill);
+        }
+
+        [HttpPost]
+        public ActionResult EditBillByFile(BillSiteNewVM billVM, HttpPostedFileBase BillFile)
+        {
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                if (ModelState.IsValid)
+                {
+                    // Check validation
+
+                    DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
+
+                    tbl_BillSiteNew objBill = _db.tbl_BillSiteNew.Where(x => x.BillId == billVM.BillId).FirstOrDefault();
+
+                    objBill.BillDate = bill_date;
+                    objBill.BillNo = billVM.BillNo;
+                    objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
+                    objBill.Remarks = billVM.Remarks;
+                    objBill.ClientId = ClientId;
+                    objBill.ModifiedBy = clsSession.UserID;
+                    objBill.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+
+                    // Save + Upload Credit File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/SiteBillFile/");
+                    if (BillFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(BillFile.FileName);
+
+                        string full_path = Path.Combine(path, fileName);
+                        BillFile.SaveAs(full_path);
+
+                        tbl_Files objFile1 = _db.tbl_Files.Where(x => x.ParentId == objBill.BillId).FirstOrDefault();
+                        if (objFile1 != null)
+                        {
+                            //Edit 
+                            objFile1.OriginalFileName = BillFile.FileName;
+                            objFile1.EncryptFileName = fileName;
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            tbl_Files objFile = new tbl_Files();
+                            objFile.FileId = Guid.NewGuid();
+                            objFile.ParentId = objBill.BillId;
+                            objFile.FileCategory = (int)FileType.Credit;
+                            objFile.OriginalFileName = BillFile.FileName;
+                            objFile.EncryptFileName = fileName;
+                            _db.tbl_Files.Add(objFile);
+                            _db.SaveChanges();
+                        }
+
+                    }
+
+                    return RedirectToAction("NewBill", new { id = billVM.SiteId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(billVM);
+        }
+
+        public ActionResult AddBillByArea(Guid Id)
+        {
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+            return View();
+        }
 
     }
 }

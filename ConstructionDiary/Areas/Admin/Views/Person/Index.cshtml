@@ -40,7 +40,7 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>@Resource.Name</th>
-                                    <th width="10%;">@Resource.Bill</th>
+                                    <th width="8%;">@Resource.Bill</th>
                                     <th width="12%;">@Resource.Total @Resource.Bill @Resource.Amount</th>
                                     <th width="12%;">@Resource.TotalGivenAmount</th>
                                     <th width="13%;">@Resource.TotalRemainingAmount</th>
@@ -67,7 +67,8 @@
 
                                             <td>@obj.PersonName</td>
                                             <td>
-                                                <a href="/admin/person/bill/@obj.PersonId" class="btn btn-primary">@Resource.Bill</a>
+                                                @*<a href="/admin/person/bill/@obj.PersonId" class="btn btn-primary">@Resource.Old @Resource.Bill</a>*@
+                                                <a href="/admin/person/newbill/@obj.PersonId" class="btn btn-primary">@Resource.Bill</a>
                                             </td>
                                             <td><span style="float:right;">@CoreHelper.GetFormatterAmountWithZero(obj.TotalBillAmount)</span></td>
                                             <td><span style="float:right;">@CoreHelper.GetFormatterAmountWithZero(obj.TotalDebitAmount)</span></td>

@@ -139,7 +139,6 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AttendanceController.cs" />
-    <Compile Include="Areas\Admin\Controllers\BillItemController.cs" />
     <Compile Include="Areas\Admin\Controllers\ClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\ExpenseController.cs" />
@@ -201,13 +200,19 @@
     <Compile Include="Models\tbl_BillDebit.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tbl_BillItem.cs">
+    <Compile Include="Models\tbl_BillDebitItem.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tbl_BillItemType.cs">
+    <Compile Include="Models\tbl_BillDebitNew.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_BillSite.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_BillSiteItem.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_BillSiteNew.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Clients.cs">
@@ -285,7 +290,6 @@
       <DependentUpon>Resource.gu.resx</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\AttendanceVM.cs" />
-    <Compile Include="ViewModel\BillItemVM.cs" />
     <Compile Include="ViewModel\BillSiteVM.cs" />
     <Compile Include="ViewModel\BillDebitVM.cs" />
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
@@ -2325,15 +2329,19 @@
     <Content Include="Areas\Admin\Views\Site\AllMaterialSiteData.cshtml" />
     <Content Include="Areas\Admin\Views\Site\AllDebitSiteData.cshtml" />
     <Content Include="Areas\Admin\Views\Site\AllAttendanceSiteData.cshtml" />
-    <Content Include="Areas\Admin\Views\BillItem\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\BillItem\Add.cshtml" />
     <Content Include="DataFiles\ExpenseFile\2897baa9-66aa-4e79-8001-7c591c488d20-Ranchhod Mama - Makan Hisab.pdf" />
     <Content Include="DataFiles\ExpenseFile\7cfcf2c8-4279-4c6e-96f5-125e6a58bbf7-EAadhaar_xxxxxxxx4967_20032020224752_836025.pdf" />
     <Content Include="DataFiles\ExpenseFile\b5eb85a2-9467-4deb-ad24-f2bc25e4bde8-Ranchhod Mama - Makan Hisab.pdf" />
     <Content Include="DataFiles\ExpenseFile\f08896ab-444d-4134-b688-267c33ab62f4-Estimate.pdf" />
     <Content Include="Areas\Admin\Views\Person\AddDebitEntry.cshtml" />
     <Content Include="Areas\Admin\Views\Person\EditDebitEntry.cshtml" />
-    <Content Include="Areas\Admin\Views\BillItem\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\NewBill.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\AddBillByFile.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\EditBillByFile.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\AddBillByArea.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\NewBill.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\AddBillByFile.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\EditBillByFile.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

@@ -12,11 +12,14 @@ namespace ConstructionDiary.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_BillItem
+    public partial class tbl_BillSiteNew
     {
-        public System.Guid BillItemId { get; set; }
-        public string BillItemName { get; set; }
-        public int BillItemTypeId { get; set; }
+        public System.Guid BillId { get; set; }
+        public System.DateTime BillDate { get; set; }
+        public string BillNo { get; set; }
+        public string BillType { get; set; }
+        public System.Guid SiteId { get; set; }
+        public decimal TotalAmount { get; set; }
         public string Remarks { get; set; }
         public System.Guid ClientId { get; set; }
         public bool IsActive { get; set; }

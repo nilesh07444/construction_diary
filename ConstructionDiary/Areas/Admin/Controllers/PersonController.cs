@@ -1301,7 +1301,221 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(finance);
         }
+         
+        public ActionResult NewBill(Guid Id)
+        {
+            List<BillDebitNewVM> lstBill = new List<BillDebitNewVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
+            ViewBag.PersonId = Id;
+            ViewBag.PersonName = GetPersonName(Id);
+
+            lstBill = (from dbill in _db.tbl_BillDebitNew
+                       join site in _db.tbl_Sites on dbill.SiteId equals site.SiteId
+                       where dbill.ClientId == ClientId && dbill.PersonId == Id && !dbill.IsDeleted
+                       select new BillDebitNewVM
+                       {
+                           BillId = dbill.BillId,
+                           dBillDate = dbill.BillDate,
+                           BillNo = dbill.BillNo,
+                           BillType = dbill.BillType,
+                           SiteId = dbill.SiteId,
+                           SiteName = site.SiteName,
+                           PersonId = dbill.PersonId, 
+                           TotalAmount = dbill.TotalAmount,
+                           Remarks = dbill.Remarks,
+                           ObjFile = _db.tbl_Files.Where(x => x.ParentId == dbill.BillId && x.FileCategory == (int)FileType.Debit).FirstOrDefault()
+                       }).OrderByDescending(x => x.dBillDate).ToList();
+
+            return View(lstBill);
+        }
+
+        public ActionResult AddBillByFile(Guid Id)
+        {
+            BillDebitNewVM objBill = new BillDebitNewVM();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            objBill.PersonId = Id;
+
+            objBill.SiteList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+            ViewBag.PersonName = GetPersonName(Id);
+
+            return View(objBill);
+        }
+
+        [HttpPost]
+        public ActionResult AddBillByFile(BillDebitNewVM billVM, HttpPostedFileBase BillFile)
+        {
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                billVM.SiteList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                if (ModelState.IsValid)
+                {
+                     
+
+                    DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
+
+                    tbl_BillDebitNew objBill = new tbl_BillDebitNew();
+                    objBill.BillId = Guid.NewGuid();
+                    objBill.BillDate = bill_date;
+                    objBill.BillNo = billVM.BillNo;
+                    objBill.BillType = "File";
+                    objBill.SiteId = billVM.SiteId;
+                    objBill.PersonId = billVM.PersonId; 
+                    objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
+                    objBill.Remarks = billVM.Remarks;
+                    objBill.ClientId = ClientId;
+                    objBill.IsActive = true;
+                    objBill.IsDeleted = false;
+                    objBill.CreatedBy = clsSession.UserID;
+                    objBill.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_BillDebitNew.Add(objBill);
+                    _db.SaveChanges();
+
+                    // Save + Upload Expense File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/DebitBillFile/");
+                    if (BillFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(BillFile.FileName);
+
+                        string full_path = Path.Combine(path, fileName);
+                        BillFile.SaveAs(full_path);
+
+                        tbl_Files objFile = new tbl_Files();
+                        objFile.FileId = Guid.NewGuid();
+                        objFile.ParentId = objBill.BillId;
+                        objFile.FileCategory = (int)FileType.Debit;
+                        objFile.OriginalFileName = BillFile.FileName;
+                        objFile.EncryptFileName = fileName;
+                        _db.tbl_Files.Add(objFile);
+                        _db.SaveChanges();
+                    }
+
+                    return RedirectToAction("NewBill", new { id = billVM.PersonId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(billVM);
+        }
+
+        public ActionResult EditBillByFile(Guid Id) // id= BillId
+        {
+            BillDebitNewVM objBill = new BillDebitNewVM();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            objBill.SiteList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+            tbl_BillDebitNew bill = _db.tbl_BillDebitNew.Where(x => x.BillId == Id).FirstOrDefault();
+            if (objBill != null)
+            {
+                objBill.BillId = bill.BillId;
+                objBill.BillDate = Convert.ToDateTime(bill.BillDate).ToString("dd/MM/yyyy");
+                objBill.BillNo = bill.BillNo;
+                objBill.BillType = bill.BillType;
+                objBill.SiteId = bill.SiteId;
+                objBill.PersonId = bill.PersonId; 
+                objBill.TotalAmount = Convert.ToDecimal(bill.TotalAmount);
+                objBill.Remarks = bill.Remarks;
+            }
+
+            ViewBag.PersonName = GetPersonName(objBill.PersonId);
+
+            return View(objBill);
+        }
+
+        [HttpPost]
+        public ActionResult EditBillByFile(BillDebitNewVM billVM, HttpPostedFileBase BillFile)
+        {
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                billVM.SiteList = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+
+                IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
+
+                if (ModelState.IsValid)
+                {
+                     
+                    DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
+
+                    tbl_BillDebitNew objBill = _db.tbl_BillDebitNew.FirstOrDefault(x => x.BillId == billVM.BillId);
+                    if (objBill != null)
+                    {
+                        objBill.BillDate = bill_date;
+                        objBill.BillNo = billVM.BillNo; 
+                        objBill.SiteId = billVM.SiteId; 
+                        objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
+                        objBill.Remarks = billVM.Remarks;
+                        objBill.ModifiedBy = clsSession.UserID;
+                        objBill.ModifiedDate = DateTime.UtcNow;
+                        _db.SaveChanges();
+                    }
+
+                    // Save + Upload Debit File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/DebitBillFile/");
+                    if (BillFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(BillFile.FileName);
+
+                        string full_path = Path.Combine(path, fileName);
+                        BillFile.SaveAs(full_path);
+
+                        tbl_Files objFile1 = _db.tbl_Files.Where(x => x.ParentId == objBill.BillId).FirstOrDefault();
+                        if (objFile1 != null)
+                        {
+                            //Edit 
+                            objFile1.OriginalFileName = BillFile.FileName;
+                            objFile1.EncryptFileName = fileName;
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            tbl_Files objFile = new tbl_Files();
+                            objFile.FileId = Guid.NewGuid();
+                            objFile.ParentId = objBill.BillId;
+                            objFile.FileCategory = (int)FileType.Debit;
+                            objFile.OriginalFileName = BillFile.FileName;
+                            objFile.EncryptFileName = fileName;
+                            _db.tbl_Files.Add(objFile);
+                            _db.SaveChanges();
+                        }
+
+                    }
+
+                    return RedirectToAction("NewBill", new { id = billVM.PersonId });
+
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return View(billVM);
+        }
+         
     }
 
     public class UnicodeFontFactory : FontFactoryImp
