@@ -11,6 +11,7 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using ConstructionDiary.ResourceFiles;
+using Newtonsoft.Json;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -32,7 +33,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                  {
                                                      PersonId = person.PersonId,
                                                      PersonName = person.PersonFirstName,
-                                                     TotalBillAmount = _db.tbl_BillDebit.Where(x => x.PersonId == person.PersonId).ToList().Select(x => x.TotalAmount).Sum(),
+                                                     TotalBillAmount = _db.tbl_BillDebitNew.Where(x => x.PersonId == person.PersonId).ToList().Select(x => x.TotalAmount).Sum(),
                                                      TotalDebitAmount = _db.tbl_Finance.Where(x => x.PersonId == person.PersonId && x.CreditOrDebit == "Debit" && !x.IsDeleted).ToList().Select(x => x.Amount).Sum()
                                                  }).ToList();
 
@@ -1301,7 +1302,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(finance);
         }
-         
+
         public ActionResult NewBill(Guid Id)
         {
             List<BillDebitNewVM> lstBill = new List<BillDebitNewVM>();
@@ -1321,7 +1322,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                            BillType = dbill.BillType,
                            SiteId = dbill.SiteId,
                            SiteName = site.SiteName,
-                           PersonId = dbill.PersonId, 
+                           PersonId = dbill.PersonId,
                            TotalAmount = dbill.TotalAmount,
                            Remarks = dbill.Remarks,
                            ObjFile = _db.tbl_Files.Where(x => x.ParentId == dbill.BillId && x.FileCategory == (int)FileType.Debit).FirstOrDefault()
@@ -1362,7 +1363,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 if (ModelState.IsValid)
                 {
-                     
+
 
                     DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
 
@@ -1372,7 +1373,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objBill.BillNo = billVM.BillNo;
                     objBill.BillType = "File";
                     objBill.SiteId = billVM.SiteId;
-                    objBill.PersonId = billVM.PersonId; 
+                    objBill.PersonId = billVM.PersonId;
                     objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
                     objBill.Remarks = billVM.Remarks;
                     objBill.ClientId = ClientId;
@@ -1431,7 +1432,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objBill.BillNo = bill.BillNo;
                 objBill.BillType = bill.BillType;
                 objBill.SiteId = bill.SiteId;
-                objBill.PersonId = bill.PersonId; 
+                objBill.PersonId = bill.PersonId;
                 objBill.TotalAmount = Convert.ToDecimal(bill.TotalAmount);
                 objBill.Remarks = bill.Remarks;
             }
@@ -1457,15 +1458,15 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 if (ModelState.IsValid)
                 {
-                     
+
                     DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
 
                     tbl_BillDebitNew objBill = _db.tbl_BillDebitNew.FirstOrDefault(x => x.BillId == billVM.BillId);
                     if (objBill != null)
                     {
                         objBill.BillDate = bill_date;
-                        objBill.BillNo = billVM.BillNo; 
-                        objBill.SiteId = billVM.SiteId; 
+                        objBill.BillNo = billVM.BillNo;
+                        objBill.SiteId = billVM.SiteId;
                         objBill.TotalAmount = Convert.ToDecimal(billVM.TotalAmount);
                         objBill.Remarks = billVM.Remarks;
                         objBill.ModifiedBy = clsSession.UserID;
@@ -1514,6 +1515,335 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
 
             return View(billVM);
+        }
+
+        public ActionResult AddBillByArea(Guid Id)
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            ViewData["SitesList"] = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                     .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                     .ToList();
+
+            ViewBag.PersonId = Id;
+            ViewBag.PersonName = GetPersonName(Id);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddBillByArea(string BillData)
+        {
+            GeneralResponse response = new GeneralResponse();
+
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                    AreaDebitBillVM objBillInfo = JsonConvert.DeserializeObject<AreaDebitBillVM>(BillData);
+
+                    DateTime bill_date = DateTime.ParseExact(objBillInfo.BillDate, "dd/MM/yyyy", null);
+
+                    decimal GrandTotalAmt = CalculateGrandTotal(objBillInfo.BillDebitItem);
+
+                    // Save data in SiteBill
+                    tbl_BillDebitNew objBill = new tbl_BillDebitNew();
+                    objBill.BillId = Guid.NewGuid();
+                    objBill.BillDate = bill_date;
+                    objBill.BillNo = objBillInfo.BillNo;
+                    objBill.BillType = "Area";
+                    objBill.PersonId = objBillInfo.PersonId;
+                    objBill.SiteId = objBillInfo.SiteId;
+                    objBill.TotalAmount = GrandTotalAmt;
+                    objBill.Remarks = objBillInfo.Remarks;
+                    objBill.ClientId = ClientId;
+                    objBill.IsActive = true;
+                    objBill.IsDeleted = false;
+                    objBill.CreatedBy = clsSession.UserID;
+                    objBill.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_BillDebitNew.Add(objBill);
+                    _db.SaveChanges();
+
+                    // Save data in SiteBillItem
+                    objBillInfo.BillDebitItem.ForEach(item =>
+                    {
+                        decimal? TotalArea = CalculateBillArea(item);
+                        decimal? TotalAmt = TotalArea * item.Rate;
+
+                        tbl_BillDebitItem objItem = new tbl_BillDebitItem();
+                        objItem.BillDebitItemId = Guid.NewGuid();
+                        objItem.BillId = objBill.BillId;
+                        objItem.ItemName = item.ItemName;
+                        objItem.ItemCategory = item.ItemCategory;
+                        objItem.ItemType = item.ItemType;
+                        objItem.Length = item.Length;
+                        objItem.Height = item.Height;
+                        objItem.Width = item.Width;
+                        objItem.Qty = item.Qty;
+                        objItem.Rate = item.Rate;
+                        objItem.Area = TotalArea;
+                        objItem.Amount = Convert.ToDecimal(TotalAmt);
+
+                        _db.tbl_BillDebitItem.Add(objItem);
+                        _db.SaveChanges();
+
+                    });
+
+                    response.IsError = false;
+                    response.RedirectUrl = Url.Action("NewBill", "Person", new { id = objBillInfo.PersonId });
+                    transaction.Commit();
+
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    response.IsError = true;
+                    response.ErrorMessage = ex.Message.ToString();
+                }
+            }
+
+            return Json(response);
+        }
+
+        public ActionResult EditBillByArea(Guid Id)
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            AreaDebitBillVM objBillInfo = (from b in _db.tbl_BillDebitNew
+                                          where b.BillId == Id
+                                          select new AreaDebitBillVM
+                                          {
+                                              BillId = b.BillId,
+                                              dtBillDate = b.BillDate,
+                                              BillNo = b.BillNo,
+                                              Remarks = b.Remarks,
+                                              PersonId = b.PersonId,
+                                              SiteId = b.SiteId,
+                                              GrandTotal = b.TotalAmount,
+                                              BillDebitItem =
+                                                (from i in _db.tbl_BillDebitItem
+                                                 where i.BillId == b.BillId
+                                                 select new AreaDebitBillItemVM
+                                                 {
+                                                     BillDebitItemId = i.BillDebitItemId,
+                                                     ItemCategory = i.ItemCategory,
+                                                     ItemName = i.ItemName,
+                                                     ItemType = i.ItemType,
+                                                     Length = i.Length,
+                                                     Width = i.Width,
+                                                     Height = i.Height,
+                                                     Qty = i.Qty,
+                                                     Rate = i.Rate,
+                                                     Area = i.Area,
+                                                     Amount = i.Amount
+                                                 }).ToList()
+                                          }).FirstOrDefault();
+
+            objBillInfo.BillDate = Convert.ToDateTime(objBillInfo.dtBillDate).ToString("dd/MM/yyyy");
+
+            ViewBag.PersonId = objBillInfo.PersonId;
+            ViewBag.PersonName = GetPersonName(objBillInfo.PersonId);
+
+            ViewData["SitesList"] = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                     .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                     .ToList();
+
+            return View(objBillInfo);
+        }
+
+        [HttpPost]
+        public ActionResult EditBillByArea(string BillData)
+        {
+            GeneralResponse response = new GeneralResponse();
+
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                    AreaDebitBillVM objBillInfo = JsonConvert.DeserializeObject<AreaDebitBillVM>(BillData);
+
+                    DateTime bill_date = DateTime.ParseExact(objBillInfo.BillDate, "dd/MM/yyyy", null);
+
+                    decimal GrandTotalAmt = CalculateGrandTotal(objBillInfo.BillDebitItem);
+
+                    // Save data in SiteBill
+                    tbl_BillDebitNew objBill = _db.tbl_BillDebitNew.Where(x => x.BillId == objBillInfo.BillId).FirstOrDefault();
+                    objBill.BillDate = bill_date;
+                    objBill.BillNo = objBillInfo.BillNo;
+                    objBill.SiteId = objBillInfo.SiteId;
+                    objBill.TotalAmount = GrandTotalAmt;
+                    objBill.Remarks = objBillInfo.Remarks;
+                    objBill.ClientId = ClientId;
+                    objBill.ModifiedBy = clsSession.UserID;
+                    objBill.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+
+                    // Check unselected and exist in table
+                    List<Guid> lstItemIds = objBillInfo.BillDebitItem.Select(x => Guid.Parse(x.BillDebitItemId.ToString())).ToList();
+
+                    List<tbl_BillDebitItem> ToDeleteItems = _db.tbl_BillDebitItem.Where(x => x.BillId == objBillInfo.BillId &&
+                                                                !lstItemIds.Contains(x.BillDebitItemId)
+                                                                ).ToList();
+
+                    if (ToDeleteItems.Count > 0)
+                    {
+                        _db.tbl_BillDebitItem.RemoveRange(ToDeleteItems);
+                        _db.SaveChanges();
+                    }
+
+                    // Save data in SiteBillItem
+                    objBillInfo.BillDebitItem.ForEach(item =>
+                    {
+                        decimal? TotalArea = CalculateBillArea(item);
+                        decimal? TotalAmt = TotalArea * item.Rate;
+
+                        tbl_BillDebitItem objItem = _db.tbl_BillDebitItem.Where(x => x.BillDebitItemId == item.BillDebitItemId).FirstOrDefault();
+
+                        if (objItem == null)
+                        {
+                            tbl_BillDebitItem objItemNew = new tbl_BillDebitItem();
+                            objItemNew.BillDebitItemId = Guid.NewGuid();
+                            objItemNew.BillId = objBill.BillId;
+                            objItemNew.ItemName = item.ItemName;
+                            objItemNew.ItemCategory = item.ItemCategory;
+                            objItemNew.ItemType = item.ItemType;
+                            objItemNew.Length = item.Length;
+                            objItemNew.Height = item.Height;
+                            objItemNew.Width = item.Width;
+                            objItemNew.Qty = item.Qty;
+                            objItemNew.Rate = item.Rate;
+                            objItemNew.Area = TotalArea;
+                            objItemNew.Amount = Convert.ToDecimal(TotalAmt);
+
+                            _db.tbl_BillDebitItem.Add(objItemNew);
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+
+                            objItem.ItemName = item.ItemName;
+                            objItem.ItemCategory = item.ItemCategory;
+                            objItem.ItemType = item.ItemType;
+                            objItem.Length = item.Length;
+                            objItem.Height = item.Height;
+                            objItem.Width = item.Width;
+                            objItem.Qty = item.Qty;
+                            objItem.Rate = item.Rate;
+                            objItem.Area = TotalArea;
+                            objItem.Amount = Convert.ToDecimal(TotalAmt);
+                            _db.SaveChanges();
+                        }
+
+                    });
+
+                    response.IsError = false;
+                    response.RedirectUrl = Url.Action("NewBill", "Person", new { id = objBillInfo.PersonId });
+                    transaction.Commit();
+
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    response.IsError = true;
+                    response.ErrorMessage = ex.Message.ToString();
+                }
+            }
+
+            return Json(response);
+        }
+
+        [HttpPost]
+        public string DeleteNewBill(Guid BillId)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+              
+                tbl_BillDebitNew objBill = _db.tbl_BillDebitNew.Where(x => x.BillId == BillId && x.IsActive == true
+                                                            && x.IsDeleted == false).FirstOrDefault();
+
+                if (objBill == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+                    if (objBill.BillType == "Area")
+                    {
+                        List<tbl_BillDebitItem> lstItems = _db.tbl_BillDebitItem.Where(x => x.BillId == BillId).ToList();
+                        if (lstItems.Count > 0)
+                        {
+                            _db.tbl_BillDebitItem.RemoveRange(lstItems);
+                            _db.SaveChanges();
+                        }
+                    }
+
+                    // hard delete
+                    _db.tbl_BillDebitNew.Remove(objBill);
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
+
+        private decimal CalculateBillArea(AreaDebitBillItemVM item)
+        {
+            decimal areaTotal = 0;
+
+            decimal Length = (item.Length == null ? 0 : Convert.ToDecimal(item.Length));
+            decimal Height = (item.Height == null ? 0 : Convert.ToDecimal(item.Height));
+            decimal Width = (item.Width == null ? 0 : Convert.ToDecimal(item.Width));
+            decimal Qty = (item.Qty == null ? 0 : Convert.ToDecimal(item.Qty));
+
+            if (item.ItemType == "cft")
+            {
+                areaTotal = Length * Height * Width * Qty;
+            }
+            else if (item.ItemType == "sft")
+            {
+                areaTotal = Length * Width * Qty;
+            }
+            else if (item.ItemType == "rft")
+            {
+                areaTotal = Length * Qty;
+            }
+            else if (item.ItemType == "nos")
+            {
+                areaTotal = Qty;
+            }
+
+            return areaTotal;
+        }
+
+        private decimal CalculateGrandTotal(List<AreaDebitBillItemVM> lstItem)
+        {
+            decimal grandTotal = 0;
+
+            lstItem.ForEach(item =>
+            {
+
+                decimal areaTotal = CalculateBillArea(item);
+                decimal totalAmt = areaTotal * Convert.ToDecimal(item.Rate);
+
+                if (item.ItemCategory == "add")
+                    grandTotal += totalAmt;
+                else if (item.ItemCategory == "less")
+                    grandTotal -= totalAmt;
+
+            });
+
+            return grandTotal;
         }
          
     }

@@ -113,7 +113,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <a href="/admin/site/editbill/@obj.BillId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                    <a href="/admin/site/editbillbyarea/@obj.BillId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 }
                                                 <button title="Delete" onclick="fnDeleteBill('@obj.BillId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
@@ -207,7 +207,7 @@
         if (bill_id != "" && bill_id != null) {
             $('#deleteBillModal').modal('hide');
             jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
-            var URL = '@Url.Action("DeleteBill", "Site")';
+            var URL = '@Url.Action("DeleteNewBill", "Site")';
             $.ajax({
                 type: 'POST',
                 async: true,

@@ -2342,6 +2342,9 @@
     <Content Include="Areas\Admin\Views\Person\NewBill.cshtml" />
     <Content Include="Areas\Admin\Views\Person\AddBillByFile.cshtml" />
     <Content Include="Areas\Admin\Views\Person\EditBillByFile.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\EditBillByArea.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\AddBillByArea.cshtml" />
+    <Content Include="Areas\Admin\Views\Person\EditBillByArea.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

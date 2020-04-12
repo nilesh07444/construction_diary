@@ -52,7 +52,7 @@
                                 </button>
                                 <ul class="dropdown-menu pull-right">
                                     <li><a href="/admin/person/addbillbyfile/@ViewBag.PersonId">@Resource.File</a></li>
-                                    @*<li><a href="/admin/person/addbillbyarea/@ViewBag.PersonId">@Resource.Area</a></li>*@
+                                    <li><a href="/admin/person/addbillbyarea/@ViewBag.PersonId">@Resource.Area</a></li>
                                 </ul>
                             </div>
 
@@ -190,7 +190,7 @@
         if (bill_id != "" && bill_id != null) {
             $('#deleteBillModal').modal('hide');
             jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
-            var URL = '@Url.Action("DeleteBill", "Person")';
+            var URL = '@Url.Action("DeleteNewBill", "Person")';
             $.ajax({
                 type: 'POST',
                 async: true,

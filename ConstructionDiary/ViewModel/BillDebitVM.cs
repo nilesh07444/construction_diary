@@ -86,4 +86,33 @@ namespace ConstructionDiary
         public string BillType { get; set; }
     }
 
+    public class AreaDebitBillVM
+    {
+        public Guid? BillId { get; set; }
+        public Guid PersonId { get; set; }
+        public Guid SiteId { get; set; }
+        public DateTime dtBillDate { get; set; }
+        public string BillDate { get; set; }
+        public string BillNo { get; set; }
+        public string Remarks { get; set; }
+        public List<AreaDebitBillItemVM> BillDebitItem { get; set; }
+
+        // Additional fields
+        public decimal? GrandTotal { get; set; }
+    }
+    public class AreaDebitBillItemVM
+    {
+        public Guid? BillDebitItemId { get; set; }
+        public string ItemCategory { get; set; }
+        public string ItemName { get; set; }
+        public string ItemType { get; set; }
+        public decimal? Length { get; set; }
+        public decimal? Width { get; set; }
+        public decimal? Height { get; set; }
+        public decimal? Qty { get; set; }
+        public decimal? Area { get; set; }
+        public decimal? Rate { get; set; }
+        public decimal? Amount { get; set; }
+    }
+
 }

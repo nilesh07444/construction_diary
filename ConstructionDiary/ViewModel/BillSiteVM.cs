@@ -26,7 +26,7 @@ namespace ConstructionDiary
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         [Display(Name = "SiteName", ResourceType = typeof(Resource))]
         public Guid SiteId { get; set; }
-         
+
         [Display(Name = "SquareFeet", ResourceType = typeof(Resource))]
         public decimal? SquareFeet { get; set; }
 
@@ -44,8 +44,8 @@ namespace ConstructionDiary
         public HttpPostedFileBase BillFile { get; set; }
 
         public bool IsActive { get; set; }
-        public string SiteName { get; set; } 
-        public DateTime dBillDate { get; set; } 
+        public string SiteName { get; set; }
+        public DateTime dBillDate { get; set; }
     }
 
     public class BillSiteNewVM
@@ -58,17 +58,17 @@ namespace ConstructionDiary
 
         [Display(Name = "BillNo", ResourceType = typeof(Resource))]
         public string BillNo { get; set; }
-         
+
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         [Display(Name = "SiteName", ResourceType = typeof(Resource))]
         public Guid SiteId { get; set; }
-          
+
         [Display(Name = "Total", ResourceType = typeof(Resource))]
         public decimal? TotalAmount { get; set; }
 
         [Display(Name = "Remarks", ResourceType = typeof(Resource))]
         public string Remarks { get; set; }
-         
+
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         [Display(Name = "BillFile", ResourceType = typeof(Resource))]
         public HttpPostedFileBase BillFile { get; set; }
@@ -80,5 +80,33 @@ namespace ConstructionDiary
         public string BillType { get; set; }
 
         public tbl_Files ObjFile { get; set; }
+    }
+
+    public class AreaSiteBillVM
+    {
+        public Guid? BillId { get; set; }
+        public Guid SiteId { get; set; }
+        public DateTime dtBillDate { get; set; }
+        public string BillDate { get; set; }
+        public string BillNo { get; set; }
+        public string Remarks { get; set; }
+        public List<AreaSiteBillItemVM> BillSiteItem { get; set; }
+
+        // Additional fields
+        public decimal? GrandTotal { get; set; }
+    }
+    public class AreaSiteBillItemVM
+    {
+        public Guid? BillSiteItemId { get; set; }
+        public string ItemCategory { get; set; }
+        public string ItemName { get; set; }
+        public string ItemType { get; set; }
+        public decimal? Length { get; set; }
+        public decimal? Width { get; set; }
+        public decimal? Height { get; set; }
+        public decimal? Qty { get; set; }
+        public decimal? Area { get; set; }
+        public decimal? Rate { get; set; }
+        public decimal? Amount { get; set; }
     }
 }

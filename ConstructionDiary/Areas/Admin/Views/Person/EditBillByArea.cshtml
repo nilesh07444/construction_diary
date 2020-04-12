@@ -1,16 +1,19 @@
 ﻿@using ConstructionDiary.ResourceFiles;
-@using ConstructionDiary.Models;
+@model AreaDebitBillVM
 @{
-    ViewBag.Title = "Site";
+    ViewBag.Title = "Person";
+
+    List<SelectListItem> SitesList = ViewData["SitesList"] as List<SelectListItem>;
+
 }
- 
+
 <section class="wrapper site-min-height">
     <div class="row">
 
         <div class="col-lg-12 col-sm-12">
             <div class="panel panel-primary" style="opacity: 1;">
                 <div class="panel-heading text-center" style="background-color:#3c8bb9; border-color: #3c8bb9;">
-                    <strong> @ViewBag.SiteName </strong>
+                    <strong> @ViewBag.PersonName </strong>
                 </div>
             </div>
         </div>
@@ -19,8 +22,8 @@
 
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>@Resource.AddNewBill </strong>
-                    <a href="/admin/site/newbill/@ViewBag.SiteId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                    <strong>Edit Bill </strong>
+                    <a href="/admin/person/newbill/@ViewBag.PersonId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
                         <i class="fa fa-backward"></i> Back
                     </a>
                 </header>
@@ -28,21 +31,44 @@
                     <div class="row">
                         <div class="col-sm-4 form-group">
                             <label for="BillDate">@Resource.BillDate</label><span class="required">*</span>
-                            <input class="form-control default-date-picker" id="BillDate" name="BillDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            <input class="form-control default-date-picker" id="BillDate" name="BillDate" value="@Model.BillDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
 
                             <span id="spn_BillDate" class="field-validation-valid text-danger"></span>
                         </div>
 
                         <div class="col-sm-4 form-group">
                             <label for="BillNo">@Resource.BillNo</label>
-                            <input class="form-control" id="BillNo" name="BillNo" placeholder="@Resource.BillNo" type="text" value="">
+                            <input class="form-control" id="BillNo" name="BillNo" placeholder="@Resource.BillNo" type="text" value="@Model.BillNo">
                         </div>
 
                         <div class="col-sm-4 form-group">
-                            <label for="Remarks">@Resource.Remarks</label>
-                            <input class="form-control" id="Remarks" name="Remarks" placeholder="@Resource.Remarks" type="text" value="">
+                            <label for="Remarks">@Resource.SiteName</label>
+                            <select class="form-control" id="SiteId">
+                                <option value="">-@Resource.SiteName-</option>
+                                @if (SitesList.Count > 0)
+                                {
+                                    foreach (var obj in SitesList)
+                                    {
+                                        if (obj.Value == Model.SiteId.ToString())
+                                        {
+                                            <option value="@obj.Value" selected>@obj.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@obj.Value">@obj.Text</option>
+                                        }
+                                    }
+                                }
+                            </select>
                         </div>
 
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <label for="Remarks">@Resource.Remarks</label>
+                            <input class="form-control" id="Remarks" name="Remarks" placeholder="@Resource.Remarks" type="text" value="@Model.Remarks">
+                        </div>
                     </div>
 
                 </div>
@@ -73,60 +99,70 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @{ Guid newId = Guid.NewGuid(); }
-                                    <tr id="@newId">
-                                        <td>1</td>
-                                        <td>
-                                            <select class="form-control clsCategory" id="Category_@newId" name="Category_@newId">
-                                                <option value="add">Add</option>
-                                                <option value="less">Less</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <textarea class="form-control clsItemName" id="ItemName_@newId" name="ItemName_@newId" placeholder="@Resource.ItemName"></textarea>
-                                            @*<input class="form-control clsItemName" id="ItemName_@newId" name="ItemName_@newId" placeholder="@Resource.ItemName" type="text">*@
-                                            <span id="spn_ItemName_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <select class="form-control clsItemType" id="ItemType_@newId" name="ItemType_@newId">
-                                                <option value="">-@Resource.Type-</option>
-                                                <option value="cft">CFT</option>
-                                                <option value="sft">SFT</option>
-                                                <option value="rft">RFT</option>
-                                                <option value="nos">NOS</option>
-                                            </select>
-                                            <span id="spn_ItemType_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsQty" id="Qty_@newId" name="Qty_@newId" placeholder="@Resource.Qty" type="text" disabled>
-                                            <span id="spn_Qty_@newId" name="spn_Qty_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsLength" id="Length_@newId" name="Length_@newId" placeholder="@Resource.Length" type="text" disabled>
-                                            <span id="spn_Length_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsHeight" id="Height_@newId" name="Height_@newId" placeholder="@Resource.Height" type="text" disabled>
-                                            <span id="spn_Height_@newId" name="spn_Height_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsWidth" id="Width_@newId" name="Width_@newId" placeholder="@Resource.Width" type="text" disabled>
-                                            <span id="spn_Width_@newId" name="spn_Width_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <span id="Area_@newId">0</span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" placeholder="@Resource.Rate" type="text" disabled>
-                                            <span id="spn_Rate_@newId" name="spn_Rate_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <span id="lblTotalSign_@newId"></span> <span id="ItemAmount_@newId">0</span>
-                                        </td>
-                                        <td>
-                                            <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button" style="display:none;"><i class="fa fa-trash-o"></i></button>
-                                        </td>
-                                    </tr>
+                                    @{ int counter = 1; }
+                                    @foreach (AreaDebitBillItemVM item in Model.BillDebitItem)
+                                    {
+                                        Guid newId = (item.BillDebitItemId == null ? Guid.NewGuid() : Guid.Parse(item.BillDebitItemId.ToString()));
+                                        string strDisableLength = (item.ItemType == "cft" || item.ItemType == "sft" || item.ItemType == "rft" ? "" : "disabled");
+                                        string strDisableHeight = (item.ItemType == "cft" ? "" : "disabled");
+                                        string strDisableWidth = (item.ItemType == "cft" || item.ItemType == "sft" ? "" : "disabled");
+
+                                        <tr id="@newId">
+                                            <td>@counter</td>
+                                            <td>
+                                                <select class="form-control clsCategory" id="Category_@newId" name="Category_@newId">
+                                                    <option value="add" @(item.ItemCategory == "add" ? "selected" : "")>Add</option>
+                                                    <option value="less" @(item.ItemCategory == "less" ? "selected" : "")>Less</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <textarea class="form-control clsItemName" id="ItemName_@newId" name="ItemName_@newId" placeholder="@Resource.ItemName">@item.ItemName</textarea>
+                                                <span id="spn_ItemName_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <select class="form-control clsItemType" id="ItemType_@newId" name="ItemType_@newId">
+                                                    <option value="">-@Resource.Type-</option>
+                                                    <option value="cft" @(item.ItemType == "cft" ? "selected" : "")>CFT</option>
+                                                    <option value="sft" @(item.ItemType == "sft" ? "selected" : "")>SFT</option>
+                                                    <option value="rft" @(item.ItemType == "rft" ? "selected" : "")>RFT</option>
+                                                    <option value="nos" @(item.ItemType == "nos" ? "selected" : "")>NOS</option>
+                                                </select>
+                                                <span id="spn_ItemType_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsQty" id="Qty_@newId" name="Qty_@newId" value="@item.Qty" placeholder="@Resource.Qty" type="text">
+                                                <span id="spn_Qty_@newId" name="spn_Qty_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsLength" id="Length_@newId" name="Length_@newId" value="@item.Length" placeholder="@Resource.Length" type="text" @strDisableLength>
+                                                <span id="spn_Length_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsHeight" id="Height_@newId" name="Height_@newId" value="@item.Height" placeholder="@Resource.Height" type="text" @strDisableHeight>
+                                                <span id="spn_Height_@newId" name="spn_Height_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsWidth" id="Width_@newId" name="Width_@newId" value="@item.Width" placeholder="@Resource.Width" type="text" @strDisableWidth>
+                                                <span id="spn_Width_@newId" name="spn_Width_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <span id="Area_@newId">@item.Area @item.ItemType</span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" value="@item.Rate" placeholder="@Resource.Rate" type="text">
+                                                <span id="spn_Rate_@newId" name="spn_Rate_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <span id="lblTotalSign_@newId">@(item.ItemCategory == "less" ? "(-)" : "") </span> <span id="ItemAmount_@newId">@item.Amount</span>
+                                            </td>
+                                            <td>
+                                                <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button" style="display: @(Model.BillDebitItem.Count > 1 ? "block" : "none")"><i class="fa fa-trash-o"></i></button>
+                                            </td>
+                                        </tr>
+
+                                        counter++;
+                                    }
+
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -143,7 +179,7 @@
                         <div class="col-lg-4 invoice-block pull-right">
                             <ul class="unstyled amounts">
                                 <li>
-                                    <strong>@Resource.GrandTotal : </strong> <span id="lblGrandTotal">0</span>
+                                    <strong>@Resource.GrandTotal : </strong> <span id="lblGrandTotal">@Model.GrandTotal</span>
                                 </li>
                             </ul>
                         </div>
@@ -151,9 +187,11 @@
 
                     <div class="row">
                         <div class="col-sm-12 form-group">
-                            <input type="hidden" id="SiteId" value="@ViewBag.SiteId" />
+                            <input type="hidden" id="PersonId" value="@ViewBag.PersonId" />
+                            <input type="hidden" id="BillId" value="@Model.BillId" />
+
                             <button class="btn btn-success" id="btnSubmitBill" type="button">@Resource.Save</button>
-                            <a href="/admin/site/newbill/@ViewBag.SiteId" class="btn btn-default">@Resource.Cancel</a>
+                            <a href="/admin/person/newbill/@ViewBag.PersonId" class="btn btn-default">@Resource.Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -165,14 +203,7 @@
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 <script>
 
-    var dateObj = new Date();
-    var month = dateObj.getUTCMonth() + 1; //months from 1-12
-    var day = dateObj.getUTCDate();
-    var year = dateObj.getUTCFullYear();
-    var newdate = (day < 10 ? '0' + day : '' + day) + "/" + (month < 10 ? '0' + month : '' + month) + "/" + year;
     var field_required_msg = 'required';
-
-    jQuery("#BillDate").val(newdate);
 
     jQuery(document).ready(function () {
         jQuery('html, body').animate({ scrollTop: 0 }, 1000);
@@ -439,7 +470,7 @@
     });
 
 
-    $(document).on("change", ".clsCategory", function () {
+    $(document).on("change", ".clsCategory, .clsItemType", function () {
         // Get all totals
         UpdateValues();
     });
@@ -447,9 +478,11 @@
     $(document).on("click", "#btnSubmitBill", function () {
         var isvalid = true;
 
+        var BillId = $("#BillId").val();
         var BillDate = $("#BillDate").val();
         var BillNo = $("#BillNo").val();
         var SiteId = $("#SiteId").val();
+        var PersonId = $("#PersonId").val();
         var Remarks = $("#Remarks").val();
 
         if (IsEmptyOrNull(BillDate)) {
@@ -657,7 +690,7 @@
         }
 
         // Create Object
-        var BillSiteItems = [];
+        var BillDebitItems = [];
         $("#tbl_Bill tbody tr").each(function () {
 
             var field_id = $(this).attr("id");
@@ -671,8 +704,8 @@
             var qty_value = $("#Qty_" + field_id).val();
             var rate_value = $("#Rate_" + field_id).val();
 
-            BillSiteItems.push({
-                "BillSiteItemId": null,
+            BillDebitItems.push({
+                "BillDebitItemId": field_id,
                 "ItemCategory": category_value,
                 "ItemType": itemtype_value,
                 "ItemName": itemname_value,
@@ -680,23 +713,24 @@
                 "Height": height_value,
                 "Width": width_value,
                 "Qty": qty_value,
-                "Rate": rate_value 
+                "Rate": rate_value
             });
 
         });
-         
+
         var BillVM = {
-            "BillId": null,
+            "BillId": BillId,
             "BillDate": BillDate,
             "BillNo": BillNo,
+            "PersonId" : PersonId,
             "SiteId" : SiteId,
             "Remarks": Remarks,
-            "BillSiteItem": BillSiteItems,
+            "BillDebitItem": BillDebitItems,
         };
 
         // Save
         //StartLoading();
-        var URL = '@Url.Action("AddBillByArea", "Site")';
+        var URL = '@Url.Action("EditBillByArea", "Person")';
         $.ajax({
             type: 'POST',
             async: true,

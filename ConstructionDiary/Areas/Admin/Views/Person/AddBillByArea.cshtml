@@ -2,15 +2,17 @@
 @using ConstructionDiary.Models;
 @{
     ViewBag.Title = "Site";
+
+    List<SelectListItem> SitesList = ViewData["SitesList"] as List<SelectListItem>;
 }
- 
+
 <section class="wrapper site-min-height">
     <div class="row">
 
         <div class="col-lg-12 col-sm-12">
             <div class="panel panel-primary" style="opacity: 1;">
                 <div class="panel-heading text-center" style="background-color:#3c8bb9; border-color: #3c8bb9;">
-                    <strong> @ViewBag.SiteName </strong>
+                    <strong> @ViewBag.PersonName </strong>
                 </div>
             </div>
         </div>
@@ -20,7 +22,7 @@
             <section class="panel">
                 <header class="panel-heading">
                     <strong>@Resource.AddNewBill </strong>
-                    <a href="/admin/site/newbill/@ViewBag.SiteId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                    <a href="/admin/person/newbill/@ViewBag.PersonId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
                         <i class="fa fa-backward"></i> Back
                     </a>
                 </header>
@@ -39,10 +41,26 @@
                         </div>
 
                         <div class="col-sm-4 form-group">
+                            <label for="Remarks">@Resource.SiteName</label>
+                            <select class="form-control" id="SiteId">
+                                <option value="">-@Resource.SiteName-</option>
+                                @if (SitesList.Count > 0)
+                                {
+                                    foreach (var obj in SitesList)
+                                    {
+                                        <option value="@obj.Value">@obj.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
                             <label for="Remarks">@Resource.Remarks</label>
                             <input class="form-control" id="Remarks" name="Remarks" placeholder="@Resource.Remarks" type="text" value="">
                         </div>
-
                     </div>
 
                 </div>
@@ -151,9 +169,9 @@
 
                     <div class="row">
                         <div class="col-sm-12 form-group">
-                            <input type="hidden" id="SiteId" value="@ViewBag.SiteId" />
+                            <input type="hidden" id="PersonId" value="@ViewBag.PersonId" />
                             <button class="btn btn-success" id="btnSubmitBill" type="button">@Resource.Save</button>
-                            <a href="/admin/site/newbill/@ViewBag.SiteId" class="btn btn-default">@Resource.Cancel</a>
+                            <a href="/admin/person/newbill/@ViewBag.PersonId" class="btn btn-default">@Resource.Cancel</a>
                         </div>
                     </div>
                 </div>
@@ -450,6 +468,7 @@
         var BillDate = $("#BillDate").val();
         var BillNo = $("#BillNo").val();
         var SiteId = $("#SiteId").val();
+        var PersonId = $("#PersonId").val();
         var Remarks = $("#Remarks").val();
 
         if (IsEmptyOrNull(BillDate)) {
@@ -657,7 +676,7 @@
         }
 
         // Create Object
-        var BillSiteItems = [];
+        var BillDebitItems = [];
         $("#tbl_Bill tbody tr").each(function () {
 
             var field_id = $(this).attr("id");
@@ -671,8 +690,8 @@
             var qty_value = $("#Qty_" + field_id).val();
             var rate_value = $("#Rate_" + field_id).val();
 
-            BillSiteItems.push({
-                "BillSiteItemId": null,
+            BillDebitItems.push({
+                "BillDebitItemId": null,
                 "ItemCategory": category_value,
                 "ItemType": itemtype_value,
                 "ItemName": itemname_value,
@@ -680,23 +699,24 @@
                 "Height": height_value,
                 "Width": width_value,
                 "Qty": qty_value,
-                "Rate": rate_value 
+                "Rate": rate_value
             });
 
         });
-         
+
         var BillVM = {
             "BillId": null,
             "BillDate": BillDate,
             "BillNo": BillNo,
+            "PersonId" : PersonId,
             "SiteId" : SiteId,
             "Remarks": Remarks,
-            "BillSiteItem": BillSiteItems,
+            "BillDebitItem": BillDebitItems,
         };
 
         // Save
         //StartLoading();
-        var URL = '@Url.Action("AddBillByArea", "Site")';
+        var URL = '@Url.Action("AddBillByArea", "Person")';
         $.ajax({
             type: 'POST',
             async: true,
