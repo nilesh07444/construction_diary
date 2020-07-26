@@ -40,6 +40,7 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>@Resource.SiteName</th>
+                                    <th style="display:none;">@Resource.Description</th>
                                     <th width="8%;">@Resource.Bill</th>
                                     <th>@Resource.Total @Resource.Bill @Resource.Amount</th>
                                     <th>@Resource.TotalCredit</th>
@@ -59,35 +60,36 @@
                                         obj.TotalCreditAmount = obj.TotalCreditAmount ?? 0;
                                         obj.TotalRemainingAmount = (obj.TotalBillAmount ?? 0) - (obj.TotalCreditAmount ?? 0);
 
-                                        <tr class="gradeX">
-                                            <td>@counter.</td>
-                                            <td>@obj.SiteName</td>
-                                            <td>
-                                                @*<a href="/admin/site/bill/@obj.SiteId" class="btn btn-primary">@Resource.Old @Resource.Bill</a>*@
-                                                <a href="/admin/site/newbill/@obj.SiteId" class="btn btn-primary">@Resource.Bill</a>
-                                            </td>
+                                <tr class="gradeX">
+                                    <td>@counter.</td>
+                                    <td>@obj.SiteName</td>
+                                    <td style="display:none;">@obj.SiteDescription</td>
+                                    <td>
+                                        @*<a href="/admin/site/bill/@obj.SiteId" class="btn btn-primary">@Resource.Old @Resource.Bill</a>*@
+                                        <a href="/admin/site/newbill/@obj.SiteId" class="btn btn-primary">@Resource.Bill</a>
+                                    </td>
 
-                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalBillAmount)</span></td>
-                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalCreditAmount)</span></td>
+                                    <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalBillAmount)</span></td>
+                                    <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalCreditAmount)</span></td>
 
-                                            <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td>
-                                            <td><button onclick="fnFinanceSite('@obj.SiteId')" type="button" class="btn btn-primary">@Resource.Finance</button></td>
-                                            <td>
-                                                @if (obj.IsActive == true)
-                                                {
-                                                    <a onclick="fnInActiveSite('@obj.SiteId', false)" href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
-                                                }
-                                                else
-                                                {
-                                                    <a onclick="fnInActiveSite('@obj.SiteId', true)" href="javascript:void(0);"><span class="badge bg-warning">InActive</span></a>
-                                                }
-                                            </td>
-                                            <td>
-                                                <a href="/admin/site/view/@obj.SiteId" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
-                                                <button data-id="@obj.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
-                                                <button onclick="fnDeleteSite('@obj.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                            </td>
-                                        </tr>
+                                    <td><span style="float: right; padding-right:10px;">@CoreHelper.GetFormatterAmount(obj.TotalRemainingAmount)</span></td>
+                                    <td><button onclick="fnFinanceSite('@obj.SiteId')" type="button" class="btn btn-primary">@Resource.Finance</button></td>
+                                    <td>
+                                        @if (obj.IsActive == true)
+                                        {
+                                            <a onclick="fnInActiveSite('@obj.SiteId', false)" href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
+                                        }
+                                        else
+                                        {
+                                            <a onclick="fnInActiveSite('@obj.SiteId', true)" href="javascript:void(0);"><span class="badge bg-warning">InActive</span></a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="/admin/site/view/@obj.SiteId" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
+                                        <button data-id="@obj.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
+                                        <button onclick="fnDeleteSite('@obj.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
                                         counter++;
                                     }
                                 }
@@ -303,8 +305,8 @@
 
     jQuery(document).on("click", ".clsEditSite", function () {
         var site_id = $(this).attr("data-id");
-        var site_name = $(this).parent().parent().find("td:eq(0)").text();
-        var site_desc = $(this).parent().parent().find("td:eq(1)").text();
+        var site_name = $(this).parent().parent().find("td:eq(1)").text();
+        var site_desc = $(this).parent().parent().find("td:eq(2)").text();
         $('#txtSitename').val(site_name);
         $('#txtSiteDescription').val(site_desc);
         $('#addNewSiteModal h4').text("Update Site Details");

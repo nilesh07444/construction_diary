@@ -34,7 +34,8 @@ namespace ConstructionDiary
         Credit = 1,
         Debit = 2,
         Material = 3,
-        Expense = 4
+        Expense = 4,
+        Challan = 5
     }   
 
 }

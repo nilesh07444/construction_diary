@@ -46,6 +46,7 @@
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillSiteNew" Width="1.5" PointX="15.375" PointY="15.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillDebitItem" Width="1.5" PointX="15.375" PointY="3.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_BillDebitNew" Width="1.5" PointX="10.375" PointY="16.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Challan" Width="1.5" PointX="12.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

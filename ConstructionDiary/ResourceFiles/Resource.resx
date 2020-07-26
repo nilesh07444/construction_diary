@@ -648,4 +648,28 @@
   <data name="Old" xml:space="preserve">
     <value>Old</value>
   </data>
+  <data name="AddNewChallan" xml:space="preserve">
+    <value>Add New Challan</value>
+  </data>
+  <data name="CarNo" xml:space="preserve">
+    <value>Car No</value>
+  </data>
+  <data name="Challan" xml:space="preserve">
+    <value>Challan</value>
+  </data>
+  <data name="ChallanDate" xml:space="preserve">
+    <value>Challan Date</value>
+  </data>
+  <data name="ChallanList" xml:space="preserve">
+    <value>Challan List</value>
+  </data>
+  <data name="ChallanNo" xml:space="preserve">
+    <value>Challan No</value>
+  </data>
+  <data name="ChallanPhotoFile" xml:space="preserve">
+    <value>Challan Photo</value>
+  </data>
+  <data name="EditChallan" xml:space="preserve">
+    <value>Edit Challan</value>
+  </data>
 </root>

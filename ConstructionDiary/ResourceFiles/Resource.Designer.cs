@@ -115,6 +115,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Challan.
+        /// </summary>
+        public static string AddNewChallan {
+            get {
+                return ResourceManager.GetString("AddNewChallan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Client.
         /// </summary>
         public static string AddNewClient {
@@ -403,11 +412,65 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Car No.
+        /// </summary>
+        public static string CarNo {
+            get {
+                return ResourceManager.GetString("CarNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to CGST.
         /// </summary>
         public static string CGST {
             get {
                 return ResourceManager.GetString("CGST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Challan.
+        /// </summary>
+        public static string Challan {
+            get {
+                return ResourceManager.GetString("Challan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Challan Date.
+        /// </summary>
+        public static string ChallanDate {
+            get {
+                return ResourceManager.GetString("ChallanDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Challan List.
+        /// </summary>
+        public static string ChallanList {
+            get {
+                return ResourceManager.GetString("ChallanList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Challan No.
+        /// </summary>
+        public static string ChallanNo {
+            get {
+                return ResourceManager.GetString("ChallanNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Challan Photo.
+        /// </summary>
+        public static string ChallanPhotoFile {
+            get {
+                return ResourceManager.GetString("ChallanPhotoFile", resourceCulture);
             }
         }
         
@@ -642,6 +705,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string EditBill {
             get {
                 return ResourceManager.GetString("EditBill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Challan.
+        /// </summary>
+        public static string EditChallan {
+            get {
+                return ResourceManager.GetString("EditChallan", resourceCulture);
             }
         }
         

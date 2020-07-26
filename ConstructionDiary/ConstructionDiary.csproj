@@ -139,6 +139,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\AttendanceController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ChallanController.cs" />
     <Compile Include="Areas\Admin\Controllers\ClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\DashboardController.cs" />
     <Compile Include="Areas\Admin\Controllers\ExpenseController.cs" />
@@ -213,6 +214,9 @@
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_BillSiteNew.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_Challan.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Clients.cs">
@@ -292,6 +296,7 @@
     <Compile Include="ViewModel\AttendanceVM.cs" />
     <Compile Include="ViewModel\BillSiteVM.cs" />
     <Compile Include="ViewModel\BillDebitVM.cs" />
+    <Compile Include="ViewModel\ChallanVM.cs" />
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
     <Compile Include="ViewModel\ClientVM.cs" />
     <Compile Include="ViewModel\CommonClass.cs" />
@@ -2345,6 +2350,9 @@
     <Content Include="Areas\Admin\Views\Site\EditBillByArea.cshtml" />
     <Content Include="Areas\Admin\Views\Person\AddBillByArea.cshtml" />
     <Content Include="Areas\Admin\Views\Person\EditBillByArea.cshtml" />
+    <Content Include="Areas\Admin\Views\Challan\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Challan\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Challan\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

@@ -36,6 +36,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                              {
                                                  SiteId = site.SiteId,
                                                  SiteName = site.SiteName,
+                                                 SiteDescription = site.SiteDescription,
                                                  IsActive = site.IsActive,
                                                  TotalBillAmount = _db.tbl_BillSiteNew.Where(x => x.SiteId == site.SiteId).ToList().Select(x => x.TotalAmount).Sum(),
                                                  TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum()
@@ -188,7 +189,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 decimal? TotalCreditAmount = list.Select(x => x.Amount).Sum();
                 string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
 
-                string[] strColumns = new string[6] { "Date", "Amount", "Type", "Payment Type", "Bank Name", "By Amount" };
+                string[] strColumns = new string[6] { "Date", "Amount", "Type", "Payment Type", "Bank Name", "Remarks" };
                 if (list != null && list.Count() > 0)
                 {
 
@@ -253,9 +254,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                             strcolval = obj.ChequeNo + " " + obj.BankName;
                                             break;
                                         }
-                                    case "By Amount":
+                                    case "Remarks":
                                         {
-                                            strcolval = obj.UserName;
+                                            strcolval = obj.Remarks;
                                             break;
                                         }
                                     default:

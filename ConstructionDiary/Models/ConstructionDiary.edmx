@@ -131,6 +131,26 @@
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="tbl_Challan">
+          <Key>
+            <PropertyRef Name="ChallanId" />
+          </Key>
+          <Property Name="ChallanId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChallanDate" Type="datetime" Nullable="false" />
+          <Property Name="ChallanNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SiteId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="MerchantId" Type="uniqueidentifier" />
+          <Property Name="CarNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="ChallanPhoto" Type="nvarchar" MaxLength="500" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
         <EntityType Name="tbl_Clients">
           <Key>
             <PropertyRef Name="ClientId" />
@@ -604,6 +624,7 @@
           <EntitySet Name="tbl_BillSite" EntityType="Self.tbl_BillSite" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BillSiteItem" EntityType="Self.tbl_BillSiteItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BillSiteNew" EntityType="Self.tbl_BillSiteNew" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Challan" EntityType="Self.tbl_Challan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Clients" EntityType="Self.tbl_Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ContractorFinance" EntityType="Self.tbl_ContractorFinance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Expenses" EntityType="Self.tbl_Expenses" Schema="dbo" store:Type="Tables" />
@@ -1068,6 +1089,7 @@
           <EntitySet Name="tbl_BillSiteNew" EntityType="ConstructionDiaryModel.tbl_BillSiteNew" />
           <EntitySet Name="tbl_BillDebitItem" EntityType="ConstructionDiaryModel.tbl_BillDebitItem" />
           <EntitySet Name="tbl_BillDebitNew" EntityType="ConstructionDiaryModel.tbl_BillDebitNew" />
+          <EntitySet Name="tbl_Challan" EntityType="ConstructionDiaryModel.tbl_Challan" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1445,6 +1467,26 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedBy" Type="Guid" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_Challan">
+          <Key>
+            <PropertyRef Name="ChallanId" />
+          </Key>
+          <Property Name="ChallanId" Type="Guid" Nullable="false" />
+          <Property Name="ChallanDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ChallanNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SiteId" Type="Guid" Nullable="false" />
+          <Property Name="MerchantId" Type="Guid" />
+          <Property Name="CarNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChallanPhoto" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1984,6 +2026,27 @@
                 <ScalarProperty Name="BillNo" ColumnName="BillNo" />
                 <ScalarProperty Name="BillDate" ColumnName="BillDate" />
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Challan">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Challan">
+              <MappingFragment StoreEntitySet="tbl_Challan">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="ChallanPhoto" ColumnName="ChallanPhoto" />
+                <ScalarProperty Name="CarNo" ColumnName="CarNo" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="ChallanNo" ColumnName="ChallanNo" />
+                <ScalarProperty Name="ChallanDate" ColumnName="ChallanDate" />
+                <ScalarProperty Name="ChallanId" ColumnName="ChallanId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

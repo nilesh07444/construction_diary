@@ -16,7 +16,7 @@
 
     ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
 
-    decimal TotalSiteBillAmount = _db.tbl_BillSite.Where(x => x.SiteId == Model.SiteId).ToList().Select(x => x.TotalAmount).Sum();
+    decimal TotalSiteBillAmount = _db.tbl_BillSiteNew.Where(x => x.SiteId == Model.SiteId).ToList().Select(x => x.TotalAmount).Sum();
     string strTotalSiteBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalSiteBillAmount));
 
     decimal? RemainingAmount = TotalSiteBillAmount - TotalCreditAmount;
