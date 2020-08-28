@@ -29,5 +29,6 @@ namespace ConstructionDiary.Models
         public int ExpenseTypeId { get; set; }
     
         public virtual tbl_Sites tbl_Sites { get; set; }
+        public virtual tbl_ExpenseType tbl_ExpenseType { get; set; }
     }
 }

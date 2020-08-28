@@ -14,6 +14,12 @@ namespace ConstructionDiary.Models
     
     public partial class tbl_Merchant
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tbl_Merchant()
+        {
+            this.tbl_MaterialPurchase = new HashSet<tbl_MaterialPurchase>();
+        }
+    
         public System.Guid MerchantId { get; set; }
         public string MerchantName { get; set; }
         public string FirmName { get; set; }
@@ -28,5 +34,7 @@ namespace ConstructionDiary.Models
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     
         public virtual tbl_Clients tbl_Clients { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_MaterialPurchase> tbl_MaterialPurchase { get; set; }
     }
 }

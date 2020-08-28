@@ -1138,7 +1138,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objItem.Rate = item.Rate;
                         objItem.Area = TotalArea;
                         objItem.Amount = Convert.ToDecimal(TotalAmt);
-
+                        objItem.CreatedDate = DateTime.UtcNow;
                         _db.tbl_BillSiteItem.Add(objItem);
                         _db.SaveChanges();
 
@@ -1163,33 +1163,34 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         public ActionResult EditBillByArea(Guid Id)
         {
             AreaSiteBillVM objBillInfo = (from b in _db.tbl_BillSiteNew
-                                      where b.BillId == Id
-                                      select new AreaSiteBillVM
-                                      {
-                                          BillId = b.BillId,
-                                          dtBillDate = b.BillDate,
-                                          BillNo = b.BillNo,
-                                          Remarks = b.Remarks,
-                                          SiteId = b.SiteId,
-                                          GrandTotal = b.TotalAmount,
-                                          BillSiteItem =
-                                            (from i in _db.tbl_BillSiteItem
-                                             where i.BillId == b.BillId
-                                             select new AreaSiteBillItemVM
-                                             {
-                                                 BillSiteItemId = i.BillSiteItemId,
-                                                 ItemCategory = i.ItemCategory,
-                                                 ItemName = i.ItemName,
-                                                 ItemType = i.ItemType,
-                                                 Length = i.Length,
-                                                 Width = i.Width,
-                                                 Height = i.Height,
-                                                 Qty = i.Qty,
-                                                 Rate = i.Rate,
-                                                 Area = i.Area,
-                                                 Amount = i.Amount
-                                             }).ToList()
-                                      }).FirstOrDefault();
+                                          where b.BillId == Id
+                                          select new AreaSiteBillVM
+                                          {
+                                              BillId = b.BillId,
+                                              dtBillDate = b.BillDate,
+                                              BillNo = b.BillNo,
+                                              Remarks = b.Remarks,
+                                              SiteId = b.SiteId,
+                                              GrandTotal = b.TotalAmount,
+                                              BillSiteItem =
+                                                (from i in _db.tbl_BillSiteItem
+                                                 where i.BillId == b.BillId
+                                                 select new AreaSiteBillItemVM
+                                                 {
+                                                     BillSiteItemId = i.BillSiteItemId,
+                                                     ItemCategory = i.ItemCategory,
+                                                     ItemName = i.ItemName,
+                                                     ItemType = i.ItemType,
+                                                     Length = i.Length,
+                                                     Width = i.Width,
+                                                     Height = i.Height,
+                                                     Qty = i.Qty,
+                                                     Rate = i.Rate,
+                                                     Area = i.Area,
+                                                     Amount = i.Amount,
+                                                     SeqNo = i.SeqNo
+                                                 }).OrderBy(x => x.SeqNo).ToList()
+                                          }).FirstOrDefault();
 
             objBillInfo.BillDate = Convert.ToDateTime(objBillInfo.dtBillDate).ToString("dd/MM/yyyy");
 
@@ -1263,7 +1264,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             objItemNew.Rate = item.Rate;
                             objItemNew.Area = TotalArea;
                             objItemNew.Amount = Convert.ToDecimal(TotalAmt);
-
+                            objItem.CreatedDate = DateTime.UtcNow;
                             _db.tbl_BillSiteItem.Add(objItemNew);
                             _db.SaveChanges();
                         }
@@ -1308,7 +1309,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             try
             {
-                 
+
                 tbl_BillSiteNew objBill = _db.tbl_BillSiteNew.Where(x => x.BillId == BillId && x.IsActive == true
                                                             && x.IsDeleted == false).FirstOrDefault();
 
@@ -1389,6 +1390,176 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return grandTotal;
         }
+
+        public string ExportPDFOfSelectedSiteBill(Guid id)
+        {
+            tbl_Sites objSite = new tbl_Sites();
+            string Result = "";
+
+            try
+            {
+                tbl_BillSiteNew objSiteBill = _db.tbl_BillSiteNew.Where(x => x.BillId == id).FirstOrDefault();
+                List<tbl_BillSiteItem> objSiteBillItems = _db.tbl_BillSiteItem.Where(x => x.BillId == id).OrderBy(x => x.SeqNo).ToList();
+
+                objSite = _db.tbl_Sites.Where(x => x.SiteId == id).FirstOrDefault();
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                decimal? SubTotalAmount = objSiteBillItems.Select(x => x.Amount).Sum();
+                string strSubTotalAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(SubTotalAmount));
+
+                string[] strColumns = new string[9] { "SNo", "Particulars", "Nos", "Length", "Width", "Height", "Area", "Rate", "Amount" };
+                if (objSiteBillItems != null && objSiteBillItems.Count() > 0)
+                {
+
+                    List<DateTime> lstDateTemp = new List<DateTime>();
+                    StringBuilder strHTML = new StringBuilder();
+                    strHTML.Append("<!DOCTYPE html>");
+                    strHTML.Append("<style>");
+                    strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
+                    strHTML.Append("</style>");
+
+                    strHTML.Append("<table border='0' cellspacing='0' cellpadding='5' style='width:100%; text-align:center; margin-bottom: 5px;'><tr><td> <h3>Labour with Material Bill</h3> </td></tr></table>");
+
+                    strHTML.Append("<table border='1' cellspacing='0' cellpadding='5' style='width:45%; text-align:center; margin-bottom: 5px; display: inline-block;'><tr><td> To, Divyaa Construnction </td></tr></table>");
+                    strHTML.Append("<table border='1' cellspacing='0' cellpadding='5' style='width:45%; text-align:center; margin-bottom: 5px; display: inline-block;'><tr><td> Invoice No. : 12 </td></tr></table>");
+                    
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #000000;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    strHTML.Append("<tr>");
+
+                    for (int idx = 0; idx < strColumns.Length; idx++)
+                    {
+                        strHTML.Append("<th style=\"border: 1px solid #000000; text-align:center; \">");
+                        strHTML.Append(strColumns[idx]);
+                        strHTML.Append("</th>");
+                    }
+
+                    strHTML.Append("</tr>");
+                    strHTML.Append("</thead>");
+                    strHTML.Append("<tbody>");
+
+                    int counter = 1;
+
+                    foreach (var obj in objSiteBillItems)
+                    {
+
+                        if (obj != null)
+                        {
+
+                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            {
+
+                                string strcolval = "";
+                                switch (strColumns[Col])
+                                {
+                                    case "SNo":
+                                        {
+                                            strcolval = counter.ToString();
+                                            break;
+                                        }
+                                    case "Particulars":
+                                        {
+                                            strcolval = obj.ItemName;
+                                            break;
+                                        }
+                                    case "Nos":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Qty);
+                                            break;
+                                        }
+                                    case "Length":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Length);
+                                            break;
+                                        }
+                                    case "Width":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Width);
+                                            break;
+                                        }
+                                    case "Height":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Height);
+                                            break;
+                                        }
+                                    case "Area":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Area) + " " + obj.ItemType;
+                                            break;
+                                        }
+                                    case "Rate":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Rate);
+                                            break;
+                                        }
+                                    case "Amount":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+
+                                }
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">");
+                                strHTML.Append(strcolval);
+                                strHTML.Append("</td>");
+                            }
+                            strHTML.Append("</tr>");
+                        }
+
+                        counter++;
+                    }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'></th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;'>Sub Total</th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'></th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'></th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'></th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'></th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'></th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'></th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;'> " + strSubTotalAmount + " </th>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+
+                    strHTML.Append("</table>");
+                    StringReader sr = new StringReader(strHTML.ToString());
+
+                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+                    writer.PageEvent = new PDFGeneratePageEventHelper();
+                    pdfDoc.Open();
+
+                    XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
+                    objHelp.ParseXHtml(writer, pdfDoc, sr);
+                    pdfDoc.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "download;filename=Site Bill.pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(pdfDoc);
+                    Response.End();
+                }
+
+                return Result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+            }
+
+        }
+
 
     }
 }

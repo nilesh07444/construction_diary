@@ -75,6 +75,7 @@
                                     <th width="10%">@Resource.BillDate</th>
                                     <th width="10%;">@Resource.BillType</th>
                                     <th width="13%;">@Resource.Total</th>
+                                    <th width="20%;">@Resource.Remarks</th>
                                     <th width="10%">@Resource.File</th>
                                     <th width="10%;">@Resource.Action</th>
                                 </tr>
@@ -84,40 +85,43 @@
                                 {
                                     foreach (var obj in Model)
                                     {
-                                        <tr class="gradeX">
-                                            <td>@counter.</td>
-                                            <td>@Convert.ToDateTime(obj.dBillDate).ToString("dd/MM/yyyy")</td>
-                                            <td>@obj.BillType</td>
-                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalAmount)</span></td>
-                                            <td>
-                                                @if (obj.ObjFile != null)
-                                                {
-                                                    string fileUrl1 = Server.MapPath("~/DataFiles/SiteBillFile/" + obj.ObjFile.EncryptFileName);
+                                <tr class="gradeX">
+                                    <td>@counter.</td>
+                                    <td>@Convert.ToDateTime(obj.dBillDate).ToString("dd/MM/yyyy")</td>
+                                    <td>@obj.BillType</td>
+                                    <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.TotalAmount)</span></td>
+                                    <td>@obj.Remarks</td>
+                                    <td>
+                                        @if (obj.ObjFile != null)
+                                        {
+                                            string fileUrl1 = Server.MapPath("~/DataFiles/SiteBillFile/" + obj.ObjFile.EncryptFileName);
 
-                                                    string fileUrl = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + Request.ApplicationPath;
-                                                    fileUrl += "/DataFiles/SiteBillFile/" + obj.ObjFile.EncryptFileName;
+                                            string fileUrl = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + Request.ApplicationPath;
+                                            fileUrl += "/DataFiles/SiteBillFile/" + obj.ObjFile.EncryptFileName;
 
-                                                    if (File.Exists(fileUrl1))
-                                                    {
-                                                        @*<button onclick="fnOpenFile('@fileUrl')" class="btn btn-info btn-xs">@Resource.File</button>*@
-                                                        <a download href="@fileUrl" class="btn btn-primary btn-xs">Download</a>
+                                            if (File.Exists(fileUrl1))
+                                            {
+                                                @*<button onclick="fnOpenFile('@fileUrl')" class="btn btn-info btn-xs">@Resource.File</button>*@
+                                                <a download href="@fileUrl" class="btn btn-primary btn-xs">Download</a>
 
-                                                    }
-                                                }
-                                            </td>
-                                            <td>
-                                                @if (obj.BillType == "File")
-                                                {
-                                                    @*<button title="Edit" data-id="@obj.BillId" class="btn btn-primary btn-xs clsEditBill"><i class="fa fa-pencil"></i></button>*@
-                                                    <a href="/admin/site/editbillbyfile/@obj.BillId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                                }
-                                                else
-                                                {
-                                                    <a href="/admin/site/editbillbyarea/@obj.BillId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                                }
-                                                <button title="Delete" onclick="fnDeleteBill('@obj.BillId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                            </td>
-                                        </tr>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        <a title="Download Bill" target="_blank" href="/admin/site/ExportPDFOfSelectedSiteBill/@obj.BillId" class="btn btn-danger btn-xs"><i class="fa fa-download"></i></a>
+
+                                        @if (obj.BillType == "File")
+                                        {
+                                            @*<button title="Edit" data-id="@obj.BillId" class="btn btn-primary btn-xs clsEditBill"><i class="fa fa-pencil"></i></button>*@
+                                            <a href="/admin/site/editbillbyfile/@obj.BillId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="/admin/site/editbillbyarea/@obj.BillId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                        }
+                                        <button title="Delete" onclick="fnDeleteBill('@obj.BillId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
                                         counter++;
                                     }
                                 }
@@ -248,6 +252,11 @@
         $("#embFilePath").attr("src", fileUrl);
         $("#btnDownload").attr("href", fileUrl);
         $("#myModal").modal("show");
+    }
+
+    function fnDownloadBill(billId)
+    {        
+        window.location.href = "/admin/Site/ExportPDFOfSelectedSiteBill/" + billId;
     }
 
 </script>

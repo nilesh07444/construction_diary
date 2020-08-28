@@ -16,7 +16,7 @@
 
     ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
 
-    decimal TotalDebitBillAmount = _db.tbl_BillDebit.Where(x => x.PersonId == Model.PersonId).ToList().Select(x => x.TotalAmount).Sum();
+    decimal TotalDebitBillAmount = _db.tbl_BillDebitNew.Where(x => x.PersonId == Model.PersonId).ToList().Select(x => x.TotalAmount).Sum();
     string strTotalDebitBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitBillAmount));
 
     decimal? RemainingAmount = TotalDebitBillAmount - TotalDebitAmount;

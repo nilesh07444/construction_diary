@@ -26,5 +26,7 @@ namespace ConstructionDiary.Models
         public Nullable<decimal> Area { get; set; }
         public Nullable<decimal> Rate { get; set; }
         public decimal Amount { get; set; }
+        public Nullable<System.DateTime> CreatedDate { get; set; }
+        public int SeqNo { get; set; }
     }
 }

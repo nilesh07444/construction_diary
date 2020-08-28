@@ -108,5 +108,6 @@ namespace ConstructionDiary
         public decimal? Area { get; set; }
         public decimal? Rate { get; set; }
         public decimal? Amount { get; set; }
+        public int SeqNo { get; set; }
     }
 }

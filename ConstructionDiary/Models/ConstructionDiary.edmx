@@ -53,6 +53,8 @@
           <Property Name="Area" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Rate" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="SeqNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_BillDebitNew">
           <Key>
@@ -111,6 +113,8 @@
           <Property Name="Area" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Rate" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="SeqNo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_BillSiteNew">
           <Key>
@@ -612,9 +616,6 @@
         <Function Name="SP_GetSitesList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ClientId" Type="uniqueidentifier" Mode="In" />
         </Function>
-        <Function Name="SP_GetTodayPartyFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="ClientId" Type="uniqueidentifier" Mode="In" />
-        </Function>
         <Function Name="SP_GetTodayPersonFinance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="ConstructionDiaryModelStoreContainer">
           <EntitySet Name="tbl_Attendance" EntityType="Self.tbl_Attendance" Schema="dbo" store:Type="Tables" />
@@ -774,6 +775,7 @@
           <NavigationProperty Name="tbl_Sites" Relationship="Self.FK_tbl_Expenses_tbl_Sites" FromRole="tbl_Expenses" ToRole="tbl_Sites" />
           <Property Name="ClientId" Type="Guid" Nullable="false" />
           <Property Name="ExpenseTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="tbl_ExpenseType" Relationship="ConstructionDiaryModel.FK_tbl_Expenses_tbl_ExpenseType" FromRole="tbl_Expenses" ToRole="tbl_ExpenseType" />
         </EntityType>
         <EntityType Name="tbl_Finance">
           <Key>
@@ -1090,6 +1092,14 @@
           <EntitySet Name="tbl_BillDebitItem" EntityType="ConstructionDiaryModel.tbl_BillDebitItem" />
           <EntitySet Name="tbl_BillDebitNew" EntityType="ConstructionDiaryModel.tbl_BillDebitNew" />
           <EntitySet Name="tbl_Challan" EntityType="ConstructionDiaryModel.tbl_Challan" />
+          <AssociationSet Name="FK_tbl_Expenses_tbl_ExpenseType" Association="ConstructionDiaryModel.FK_tbl_Expenses_tbl_ExpenseType">
+            <End Role="tbl_ExpenseType" EntitySet="tbl_ExpenseType" />
+            <End Role="tbl_Expenses" EntitySet="tbl_Expenses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_MaterialPurchase_tbl_Merchant" Association="ConstructionDiaryModel.FK_tbl_MaterialPurchase_tbl_Merchant">
+            <End Role="tbl_Merchant" EntitySet="tbl_Merchant" />
+            <End Role="tbl_MaterialPurchase" EntitySet="tbl_MaterialPurchase" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1162,6 +1172,7 @@
           </Key>
           <Property Name="ExpenseTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ExpenseType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_Expenses" Relationship="ConstructionDiaryModel.FK_tbl_Expenses_tbl_ExpenseType" FromRole="tbl_ExpenseType" ToRole="tbl_Expenses" />
         </EntityType>
         <EntityType Name="tbl_MaterialType">
           <Key>
@@ -1215,6 +1226,7 @@
           <NavigationProperty Name="tbl_MaterialPurchaseItems" Relationship="ConstructionDiaryModel.FK_tbl_MaterialPurchaseItems_tbl_MaterialPurchase" FromRole="tbl_MaterialPurchase" ToRole="tbl_MaterialPurchaseItems" />
           <Property Name="MerchantId" Type="Guid" />
           <Property Name="MaterialCategory" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_Merchant" Relationship="ConstructionDiaryModel.FK_tbl_MaterialPurchase_tbl_Merchant" FromRole="tbl_MaterialPurchase" ToRole="tbl_Merchant" />
         </EntityType>
         <EntityType Name="tbl_MaterialPurchaseItems">
           <Key>
@@ -1270,6 +1282,7 @@
           <Property Name="ModifiedBy" Type="Guid" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tbl_Clients" Relationship="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients" FromRole="tbl_Merchant" ToRole="tbl_Clients" />
+          <NavigationProperty Name="tbl_MaterialPurchase" Relationship="ConstructionDiaryModel.FK_tbl_MaterialPurchase_tbl_Merchant" FromRole="tbl_Merchant" ToRole="tbl_MaterialPurchase" />
         </EntityType>
         <Association Name="FK_tbl_Merchant_tbl_Clients">
           <End Type="ConstructionDiaryModel.tbl_Clients" Role="tbl_Clients" Multiplicity="1" />
@@ -1411,6 +1424,8 @@
           <Property Name="Area" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Rate" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="SeqNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="tbl_BillSiteNew">
           <Key>
@@ -1447,6 +1462,8 @@
           <Property Name="Area" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Rate" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="SeqNo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="tbl_BillDebitNew">
           <Key>
@@ -1488,6 +1505,30 @@
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
+        <Association Name="FK_tbl_Expenses_tbl_ExpenseType">
+          <End Type="ConstructionDiaryModel.tbl_ExpenseType" Role="tbl_ExpenseType" Multiplicity="1" />
+          <End Type="ConstructionDiaryModel.tbl_Expenses" Role="tbl_Expenses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_ExpenseType">
+              <PropertyRef Name="ExpenseTypeId" />
+            </Principal>
+            <Dependent Role="tbl_Expenses">
+              <PropertyRef Name="ExpenseTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_MaterialPurchase_tbl_Merchant">
+          <End Type="ConstructionDiaryModel.tbl_Merchant" Role="tbl_Merchant" Multiplicity="0..1" />
+          <End Type="ConstructionDiaryModel.tbl_MaterialPurchase" Role="tbl_MaterialPurchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Merchant">
+              <PropertyRef Name="MerchantId" />
+            </Principal>
+            <Dependent Role="tbl_MaterialPurchase">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1758,25 +1799,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="SP_GetTodayPartyFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPartyFinance">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetTodayPartyFinance_Result">
-                <ScalarProperty Name="ContractorFinanceId" ColumnName="ContractorFinanceId" />
-                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
-                <ScalarProperty Name="SiteName" ColumnName="SiteName" />
-                <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="CreditOrDebit" ColumnName="CreditOrDebit" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
-                <ScalarProperty Name="ChequeNo" ColumnName="ChequeNo" />
-                <ScalarProperty Name="BankName" ColumnName="BankName" />
-                <ScalarProperty Name="ChequeFor" ColumnName="ChequeFor" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="SP_GetTodayPersonFinance" FunctionName="ConstructionDiaryModel.Store.SP_GetTodayPersonFinance">
             <ResultMapping>
               <ComplexTypeMapping TypeName="ConstructionDiaryModel.SP_GetTodayPersonFinance_Result">
@@ -1955,6 +1977,8 @@
           <EntitySetMapping Name="tbl_BillSiteItem">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_BillSiteItem">
               <MappingFragment StoreEntitySet="tbl_BillSiteItem">
+                <ScalarProperty Name="SeqNo" ColumnName="SeqNo" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="Rate" ColumnName="Rate" />
                 <ScalarProperty Name="Area" ColumnName="Area" />
@@ -1993,6 +2017,8 @@
           <EntitySetMapping Name="tbl_BillDebitItem">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_BillDebitItem">
               <MappingFragment StoreEntitySet="tbl_BillDebitItem">
+                <ScalarProperty Name="SeqNo" ColumnName="SeqNo" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="Rate" ColumnName="Rate" />
                 <ScalarProperty Name="Area" ColumnName="Area" />

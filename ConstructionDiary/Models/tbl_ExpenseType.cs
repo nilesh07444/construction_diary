@@ -14,7 +14,16 @@ namespace ConstructionDiary.Models
     
     public partial class tbl_ExpenseType
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tbl_ExpenseType()
+        {
+            this.tbl_Expenses = new HashSet<tbl_Expenses>();
+        }
+    
         public int ExpenseTypeId { get; set; }
         public string ExpenseType { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_Expenses> tbl_Expenses { get; set; }
     }
 }

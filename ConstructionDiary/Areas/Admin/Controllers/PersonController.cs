@@ -1584,6 +1584,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objItem.Rate = item.Rate;
                         objItem.Area = TotalArea;
                         objItem.Amount = Convert.ToDecimal(TotalAmt);
+                        objItem.CreatedDate = DateTime.UtcNow;
 
                         _db.tbl_BillDebitItem.Add(objItem);
                         _db.SaveChanges();
@@ -1717,6 +1718,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             objItemNew.Rate = item.Rate;
                             objItemNew.Area = TotalArea;
                             objItemNew.Amount = Convert.ToDecimal(TotalAmt);
+                            objItemNew.CreatedDate = DateTime.UtcNow;
 
                             _db.tbl_BillDebitItem.Add(objItemNew);
                             _db.SaveChanges();

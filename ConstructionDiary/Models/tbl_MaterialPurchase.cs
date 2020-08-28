@@ -42,5 +42,6 @@ namespace ConstructionDiary.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
+        public virtual tbl_Merchant tbl_Merchant { get; set; }
     }
 }
