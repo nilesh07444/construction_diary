@@ -1857,7 +1857,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         public UnicodeFontFactory()
         {
-            _baseFont = BaseFont.CreateFont(fontpath + "ARIALUNI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            _baseFont = BaseFont.CreateFont(fontpath + "ARIALUNI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);            
         }
 
         public override Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,

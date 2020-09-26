@@ -285,13 +285,18 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("</table>");
                     StringReader sr = new StringReader(strHTML.ToString());
 
+                    var myString = strHTML.ToString();
+                    var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
+                    var ms = new MemoryStream(myByteArray);
+
                     Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
                     PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
                     writer.PageEvent = new PDFGeneratePageEventHelper();
                     pdfDoc.Open();
-
+                     
                     XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
-                    objHelp.ParseXHtml(writer, pdfDoc, sr);
+                    objHelp.ParseXHtml(writer, pdfDoc, ms, null, Encoding.UTF8, new UnicodeFontFactory());
+
                     pdfDoc.Close();
                     Response.ContentType = "application/pdf";
                     Response.AddHeader("content-disposition", "download;filename=Credit List Of " + objSite.SiteName + ".pdf");

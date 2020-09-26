@@ -329,6 +329,41 @@
           <Property Name="PackageTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="PackageType" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_Pagar">
+          <Key>
+            <PropertyRef Name="PagarId" />
+          </Key>
+          <Property Name="PagarId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PersonId" Type="uniqueidentifier" />
+          <Property Name="GroupId" Type="uniqueidentifier" />
+          <Property Name="PagarStartDate" Type="datetime" Nullable="false" />
+          <Property Name="PagarEndDate" Type="datetime" Nullable="false" />
+          <Property Name="PagarAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalUpadAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalOvertimeAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="AmountPay" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PrevPagarRemainingAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="RemainingAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PagarPaidToPerson" Type="uniqueidentifier" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_PagarPersonDetail">
+          <Key>
+            <PropertyRef Name="PagarPersonDetailId" />
+          </Key>
+          <Property Name="PagarPersonDetailId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PagarId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PersonId" Type="uniqueidentifier" />
+          <Property Name="GroupId" Type="uniqueidentifier" />
+          <Property Name="PagarPersonId" Type="uniqueidentifier" />
+          <Property Name="TotalAttendanceDays" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TotalPagarAmount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_PaymentTransaction">
           <Key>
             <PropertyRef Name="PaymentTransactionId" />
@@ -638,6 +673,8 @@
           <EntitySet Name="tbl_MaterialType" EntityType="Self.tbl_MaterialType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Merchant" EntityType="Self.tbl_Merchant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Pagar" EntityType="Self.tbl_Pagar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_PagarPersonDetail" EntityType="Self.tbl_PagarPersonDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonAttendance" EntityType="Self.tbl_PersonAttendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonGroup" EntityType="Self.tbl_PersonGroup" Schema="dbo" store:Type="Tables" />
@@ -1100,6 +1137,8 @@
             <End Role="tbl_Merchant" EntitySet="tbl_Merchant" />
             <End Role="tbl_MaterialPurchase" EntitySet="tbl_MaterialPurchase" />
           </AssociationSet>
+          <EntitySet Name="tbl_PagarPersonDetail" EntityType="ConstructionDiaryModel.tbl_PagarPersonDetail" />
+          <EntitySet Name="tbl_Pagar" EntityType="ConstructionDiaryModel.tbl_Pagar" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1529,6 +1568,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tbl_PagarPersonDetail">
+          <Key>
+            <PropertyRef Name="PagarPersonDetailId" />
+          </Key>
+          <Property Name="PagarPersonDetailId" Type="Guid" Nullable="false" />
+          <Property Name="PagarId" Type="Guid" Nullable="false" />
+          <Property Name="PersonId" Type="Guid" />
+          <Property Name="GroupId" Type="Guid" />
+          <Property Name="PagarPersonId" Type="Guid" />
+          <Property Name="TotalAttendanceDays" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalPagarAmount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_Pagar">
+          <Key>
+            <PropertyRef Name="PagarId" />
+          </Key>
+          <Property Name="PagarId" Type="Guid" Nullable="false" />
+          <Property Name="PersonId" Type="Guid" />
+          <Property Name="GroupId" Type="Guid" />
+          <Property Name="PagarStartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PagarEndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PagarAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalUpadAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalOvertimeAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AmountPay" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PrevPagarRemainingAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RemainingAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PagarPaidToPerson" Type="Guid" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2073,6 +2147,43 @@
                 <ScalarProperty Name="ChallanNo" ColumnName="ChallanNo" />
                 <ScalarProperty Name="ChallanDate" ColumnName="ChallanDate" />
                 <ScalarProperty Name="ChallanId" ColumnName="ChallanId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PagarPersonDetail">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PagarPersonDetail">
+              <MappingFragment StoreEntitySet="tbl_PagarPersonDetail">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="TotalPagarAmount" ColumnName="TotalPagarAmount" />
+                <ScalarProperty Name="TotalAttendanceDays" ColumnName="TotalAttendanceDays" />
+                <ScalarProperty Name="PagarPersonId" ColumnName="PagarPersonId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="PagarId" ColumnName="PagarId" />
+                <ScalarProperty Name="PagarPersonDetailId" ColumnName="PagarPersonDetailId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Pagar">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Pagar">
+              <MappingFragment StoreEntitySet="tbl_Pagar">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PagarPaidToPerson" ColumnName="PagarPaidToPerson" />
+                <ScalarProperty Name="RemainingAmount" ColumnName="RemainingAmount" />
+                <ScalarProperty Name="PrevPagarRemainingAmount" ColumnName="PrevPagarRemainingAmount" />
+                <ScalarProperty Name="AmountPay" ColumnName="AmountPay" />
+                <ScalarProperty Name="TotalOvertimeAmount" ColumnName="TotalOvertimeAmount" />
+                <ScalarProperty Name="TotalUpadAmount" ColumnName="TotalUpadAmount" />
+                <ScalarProperty Name="PagarAmount" ColumnName="PagarAmount" />
+                <ScalarProperty Name="PagarEndDate" ColumnName="PagarEndDate" />
+                <ScalarProperty Name="PagarStartDate" ColumnName="PagarStartDate" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="PagarId" ColumnName="PagarId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

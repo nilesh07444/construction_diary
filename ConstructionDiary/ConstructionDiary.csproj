@@ -255,6 +255,12 @@
     <Compile Include="Models\tbl_PackageType.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_Pagar.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_PagarPersonDetail.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_PaymentTransaction.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -308,6 +314,7 @@
     <Compile Include="ViewModel\MaterialTypeVM.cs" />
     <Compile Include="ViewModel\MerchantVM.cs" />
     <Compile Include="ViewModel\MyFinanceVM.cs" />
+    <Compile Include="ViewModel\PagarVM.cs" />
     <Compile Include="ViewModel\PersonFinanceVM.cs" />
     <Compile Include="ViewModel\PersonGroupVM.cs" />
     <Compile Include="ViewModel\PersonVM.cs" />
@@ -2353,6 +2360,8 @@
     <Content Include="Areas\Admin\Views\Challan\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Challan\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Challan\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Attendance\ViewGroupPagar.cshtml" />
+    <Content Include="Areas\Admin\Views\Attendance\ViewPersonPagar.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

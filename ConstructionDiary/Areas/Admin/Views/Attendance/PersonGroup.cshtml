@@ -30,9 +30,10 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>@Resource.GroupName</th>
-                                    <th width="20%;">@Resource.TotalPersons</th>
-                                    <th width="20%;">@Resource.Attendance</th>
-                                    <th width="20%;">@Resource.Action</th>
+                                    <th width="15%;">@Resource.TotalPersons</th>
+                                    <th width="15%;">@Resource.Attendance</th>
+                                    <th width="15%;">Pagar</th>
+                                    <th width="10%;">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,18 +41,21 @@
                                 {
                                     foreach (var obj in Model)
                                     {
-                                <tr class="gradeX">
-                                    <td>@counter.</td>
-                                    <td>@obj.GroupName</td>
-                                    <td>@obj.TotalGroupPerson</td>
-                                    <td>
-                                        <a href="/admin/attendance/viewpersongroup/@obj.PersonGroupId" class="btn btn-primary btn-xs">@Resource.Attendance</a>
-                                    </td>
-                                    <td>
-                                        <button title="Edit" data-id="@obj.PersonGroupId" class="btn btn-primary btn-xs clsEditPersonGroup"><i class="fa fa-pencil"></i></button>
-                                        <button title="Delete" onclick="fnDeletePersonGroup('@obj.PersonGroupId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@obj.GroupName</td>
+                                            <td>@obj.TotalGroupPerson</td>
+                                            <td>
+                                                <a href="/admin/attendance/viewpersongroup/@obj.PersonGroupId" class="btn btn-primary btn-xs">@Resource.Attendance</a>
+                                            </td>
+                                            <td>
+                                                <a href="/admin/attendance/viewgrouppagar/@obj.PersonGroupId" class="btn btn-primary btn-xs">Pagar</a>
+                                            </td>
+                                            <td>
+                                                <button title="Edit" data-id="@obj.PersonGroupId" class="btn btn-primary btn-xs clsEditPersonGroup"><i class="fa fa-pencil"></i></button>
+                                                <button title="Delete" onclick="fnDeletePersonGroup('@obj.PersonGroupId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                         counter++;
                                     }
                                 }
@@ -114,7 +118,7 @@
         jQuery("#hdnDeletePersonGroup").val(persongroup_id);
         $('#deletePersonModal').modal('show');
     }
-
+        
     jQuery(document).on("click", "#btnDeletePersonGroup", function () {
 
         var persongroup_id = jQuery("#hdnDeletePersonGroup").val();
@@ -131,8 +135,11 @@
                         alert("Group Deleted successfully");
                         window.location.reload();
                     }
+                    else if (result == "cannotdelete") {
+                        alert("This Group can not delete due to data already exist in pagar.");
+                    }
                     else if (result == "notfound") {
-                        alert("Person Not Found");
+                        alert("Group Not Found");
                     }
                     else {
                         alert("Something went wrong. Please try again");

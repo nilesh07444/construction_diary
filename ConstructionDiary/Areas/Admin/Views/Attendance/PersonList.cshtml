@@ -1,6 +1,5 @@
-﻿@using ConstructionDiary.ResourceFiles;
-@using ConstructionDiary.Models;
-@model List<tbl_Persons>
+﻿@using ConstructionDiary.ResourceFiles; 
+@model List<AttendancePersonVM>
 @{
     ViewBag.Title = "Attendance";
 
@@ -43,6 +42,7 @@
                                     <th>@Resource.Name</th>
                                     @*<th width="15%;" class="hidden-phone">@Resource.MobileNo</th>*@
                                     <th width="15%;">@Resource.Attendance</th>
+                                    <th width="15%;">Pagar</th>
                                     <th width="10%">@Resource.Active</th>
                                     <th width="15%;">@Resource.Action</th>
                                 </tr>
@@ -54,18 +54,18 @@
                                     {
                                         <tr class="gradeX">
                                             <td>@counter.</td>
-                                            @*<td>
-                                                    @if (obj.PersonPhoto != "" && obj.PersonPhoto != null)
-                                                    {
-                                                        if (File.Exists(Server.MapPath("~/Images/PersonPhoto/" + obj.PersonPhoto)))
-                                                        {
-                                                            <img src="~/Images/PersonPhoto/@obj.PersonPhoto" style="width:30px; height:30px;" />
-                                                        }
-                                                    }
-                                                </td>*@
                                             <td>@obj.PersonFirstName</td>
-                                            @*<td class="hidden-phone">@obj.MobileNo</td>*@
                                             <td><button onclick="fnPersonAttandance('@obj.PersonId')" type="button" class="btn btn-primary">@Resource.Attendance</button></td>
+                                            <td>
+                                                @if (obj.IsGroupPerson)
+                                                {
+                                                    <a href="/admin/attendance/viewgrouppagar/@obj.PersonGroupId" class="btn btn-primary">Pagar</a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="/admin/attendance/viewpersonpagar/@obj.PersonId" class="btn btn-primary">Pagar</a>
+                                                }
+                                            </td>
                                             <td>
                                                 @if (obj.IsActive == true)
                                                 {
@@ -140,6 +140,7 @@
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
 <script type="text/javascript" charset="utf-8">
+
     jQuery(document).ready(function () {
         jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
         jQuery('html, body').animate({ scrollTop: 0 }, 1000);
@@ -172,7 +173,7 @@
         var msgText = "";
         var buttonText = "";
         var buttonClass = "";
-        
+
         if (status == false) {
             msgText = "Are you want to InActive ?";
             buttonText = "InActive";
@@ -183,7 +184,7 @@
             buttonText = "Active";
             buttonClass = "btn btn-success";
         }
-         
+
         jQuery("#inActivePersonModal .modal-body").text(msgText);
         jQuery("#inActivePersonModal #btnInActivePerson").text(buttonText);
         jQuery("#inActivePersonModal #btnInActivePerson").attr("class", buttonClass);
@@ -194,7 +195,7 @@
     }
 
     jQuery(document).on("click", "#btnInActivePerson", function () {
-         
+
         var person_id = jQuery("#hdnInActivePerson").val();
         var person_status = jQuery("#hdnInActivePersonStatus").val();
 

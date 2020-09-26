@@ -37,5 +37,14 @@ namespace ConstructionDiary
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
     }
-    
+
+    public class AttendancePersonVM
+    {
+        public Guid PersonId { get; set; }
+        public string PersonFirstName { get; set; }
+        public bool IsGroupPerson { get; set; }
+        public Guid? PersonGroupId { get; set; }
+        public bool? IsActive { get; set; }
+    }
+
 }

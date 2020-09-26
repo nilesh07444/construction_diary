@@ -5791,13 +5791,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/22/2020 15:40:26</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/PersonGroup.cshtml">
-      <publishTime>02/16/2020 21:56:13</publishTime>
+      <publishTime>09/13/2020 12:47:35</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/PersonList.cshtml">
-      <publishTime>02/06/2020 00:05:34</publishTime>
+      <publishTime>09/17/2020 00:05:47</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Attendance/ViewGroupPagar.cshtml">
+      <publishTime>09/17/2020 00:30:32</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/ViewPersonGroup.cshtml">
-      <publishTime>02/16/2020 19:37:52</publishTime>
+      <publishTime>09/13/2020 14:22:26</publishTime>
+    </File>
+    <File Include="Areas/Admin/Views/Attendance/ViewPersonPagar.cshtml">
+      <publishTime>09/17/2020 00:30:06</publishTime>
     </File>
     <File Include="Areas/Admin/Views/BillItem/Add.cshtml">
       <publishTime>03/26/2020 00:08:48</publishTime>
@@ -5926,13 +5932,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/23/2020 23:50:52</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Finance.cshtml">
-      <publishTime>03/23/2020 22:42:07</publishTime>
+      <publishTime>07/26/2020 10:09:26</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Index.cshtml">
       <publishTime>04/10/2020 16:44:20</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/NewBill.cshtml">
-      <publishTime>04/12/2020 20:28:37</publishTime>
+      <publishTime>07/26/2020 10:51:20</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/View.cshtml">
       <publishTime>12/29/2019 23:41:11</publishTime>
@@ -5986,7 +5992,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/03/2020 14:35:57</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Site/NewBill.cshtml">
-      <publishTime>04/11/2020 21:06:59</publishTime>
+      <publishTime>07/26/2020 11:10:06</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Site/View.cshtml">
       <publishTime>02/29/2020 12:36:59</publishTime>
@@ -6016,10 +6022,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>07/19/2020 23:50:18</publishTime>
+      <publishTime>09/17/2020 00:35:00</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>07/19/2020 23:50:18</publishTime>
+      <publishTime>09/17/2020 00:35:00</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>06/07/2018 11:03:48</publishTime>
@@ -6031,7 +6037,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/22/2019 23:00:28</publishTime>
     </File>
     <File Include="bin/gu/ConstructionDiary.resources.dll">
-      <publishTime>07/19/2020 23:50:21</publishTime>
+      <publishTime>09/17/2020 00:35:01</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>10/22/2019 23:00:36</publishTime>
@@ -6292,7 +6298,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2019 22:49:51</publishTime>
     </File>
     <File Include="Models/ConstructionDiary.edmx.diagram">
-      <publishTime>07/19/2020 18:46:55</publishTime>
+      <publishTime>09/10/2020 22:53:23</publishTime>
     </File>
     <File Include="Scripts/bootstrap-multiselect.css">
       <publishTime>02/15/2020 18:42:18</publishTime>
@@ -6367,7 +6373,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2019 23:48:10</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>07/19/2020 23:50:28</publishTime>
+      <publishTime>09/17/2020 00:35:09</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ConstructionDiary.Models;
+using Newtonsoft.Json;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -59,7 +60,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 decimal? TotalHalfDay1 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5 && x.PersonTypeId != 6).ToList().Count();
                 decimal? TotalHalfDay2 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == (decimal)0.5 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum();
                 decimal? TotalHalfDay = TotalHalfDay1 + TotalHalfDay2;
-                 
+
                 decimal? TotalAbsent1 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0 && x.PersonTypeId != 6).ToList().Count();
                 decimal? TotalAbsent2 = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.AttendanceStatus == 0 && x.PersonTypeId == 6).ToList().Select(x => x.TotalRokadiya).Sum();
                 decimal? TotalAbsent = TotalAbsent1 + TotalAbsent2;
@@ -310,7 +311,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                         if (personAttendance.AttendanceStatus != 0)
                         {
-                            
+
                             if (personAttendance.PersonTypeId == 6)
                             {
                                 objPersonAttendance.TotalRokadiya = personAttendance.TotalRokadiya;
@@ -397,9 +398,25 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-            List<tbl_Persons> lstPersons = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsAttendancePerson == true && x.IsDeleted == false).ToList();
+            //List<tbl_Persons> lstPersonsOLD = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsAttendancePerson == true && x.IsDeleted == false).ToList();
 
-            return View(lstPersons);
+            List<AttendancePersonVM> lstPersonsNew = (from p in _db.tbl_Persons
+                                                      where p.ClientId == ClientId && p.IsAttendancePerson == true && p.IsDeleted == false
+                                                      select new AttendancePersonVM
+                                                      {
+                                                          PersonId = p.PersonId,
+                                                          PersonFirstName = p.PersonFirstName,
+                                                          IsActive = p.IsActive,
+                                                          IsGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonId == p.PersonId).Any()
+                                                      }).ToList();
+
+            lstPersonsNew.ForEach(item =>
+            {
+                if (item.IsGroupPerson)
+                    item.PersonGroupId = _db.tbl_PersonGroupMap.Where(x => x.PersonId == item.PersonId).FirstOrDefault().PersonGroupId;
+            });
+
+            return View(lstPersonsNew);
         }
 
         public ActionResult AddPerson()
@@ -678,16 +695,23 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 }
                 else
                 {
-
-                    List<tbl_PersonGroupMap> lstGroupMap = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == PersonGroupId).ToList();
-                    if (lstGroupMap.Count > 0)
+                    List<tbl_Pagar> lstGroupPagar = _db.tbl_Pagar.Where(x => x.GroupId == PersonGroupId).ToList();
+                    if (lstGroupPagar != null && lstGroupPagar.Count > 0)
                     {
-                        _db.tbl_PersonGroupMap.RemoveRange(lstGroupMap);
+                        ReturnMessage = "cannotdelete";
                     }
-                    _db.tbl_PersonGroup.Remove(objGroup);
-                    _db.SaveChanges();
+                    else
+                    {
+                        List<tbl_PersonGroupMap> lstGroupMap = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == PersonGroupId).ToList();
+                        if (lstGroupMap.Count > 0)
+                        {
+                            _db.tbl_PersonGroupMap.RemoveRange(lstGroupMap);
+                        }
+                        _db.tbl_PersonGroup.Remove(objGroup);
+                        _db.SaveChanges();
 
-                    ReturnMessage = "success";
+                        ReturnMessage = "success";
+                    }
                 }
 
             }
@@ -870,5 +894,546 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return lst;
         }
 
+        public ActionResult ViewGroupPagar(Guid Id) // Id = PersonGroupId
+        {
+
+            // Get Group Info
+            tbl_PersonGroup objGroupInfo = _db.tbl_PersonGroup.Where(x => x.PersonGroupId == Id).FirstOrDefault();
+
+            List<PagarVM> lstPagar = (from p in _db.tbl_Pagar
+                                      where p.GroupId == Id
+                                      select new PagarVM
+                                      {
+                                          PagarId = p.PagarId,
+                                          PagarAmount = p.PagarAmount,
+                                          AmountPay = p.AmountPay,
+                                          PrevPagarRemainingAmount = p.PrevPagarRemainingAmount,
+                                          TotalUpadAmount = p.TotalUpadAmount,
+                                          TotalOvertimeAmount = p.TotalOvertimeAmount,
+                                          dtPagarStartDate = p.PagarStartDate,
+                                          dtPagarEndDate = p.PagarEndDate,
+                                          RemainingAmount = p.RemainingAmount
+                                      }).OrderByDescending(x => x.dtPagarStartDate).ToList();
+
+            ViewBag.PersonGroupId = Id;
+            ViewBag.GroupName = objGroupInfo != null ? objGroupInfo.GroupName : "";
+
+            return View(lstPagar);
+        }
+
+        [HttpPost]
+        public JsonResult GetNextPagarInfoOfGroup(Guid GroupId)
+        {
+
+            PagarVM obj = new PagarVM();
+            obj.GroupId = GroupId;
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                // Get Group Persons
+                List<tbl_PersonGroupMap> lstGropPersons = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == GroupId).ToList();
+                List<Guid> lstPersonsIds = lstGropPersons.Select(x => x.PersonId).ToList();
+
+                tbl_Pagar objLastPagar = _db.tbl_Pagar.Where(x => x.GroupId == GroupId).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
+                if (objLastPagar != null)
+                {
+                    obj.dtPagarStartDate = objLastPagar.PagarEndDate.AddDays(1);
+                    obj.dtPagarEndDate = DateTime.Today;
+                    obj.PrevPagarRemainingAmount = objLastPagar.RemainingAmount;
+                }
+                else
+                {
+                    // Get minimum StartDate from all persons
+                    tbl_Attendance objMinStartAttendanceDate = (from a in _db.tbl_Attendance
+                                                                join pa in _db.tbl_PersonAttendance on a.AttendaceId equals pa.AttendanceId
+                                                                where lstPersonsIds.Contains(pa.PersonId)
+                                                                select a
+                                                    ).OrderBy(x => x.AttendanceDate).FirstOrDefault();
+
+                    if (objMinStartAttendanceDate == null)
+                        obj.dtPagarStartDate = DateTime.Today;
+                    else
+                        obj.dtPagarStartDate = objMinStartAttendanceDate.AttendanceDate;
+
+                    obj.dtPagarEndDate = DateTime.Today;
+                }
+
+                if (obj.dtPagarStartDate.Date > DateTime.UtcNow.Date)
+                    obj.dtPagarStartDate = DateTime.UtcNow;
+
+                obj.PagarStartDate = Convert.ToDateTime(obj.dtPagarStartDate).ToString("dd/MM/yyyy");
+                obj.PagarEndDate = Convert.ToDateTime(obj.dtPagarEndDate).ToString("dd/MM/yyyy");
+
+                GroupAttendanceStatusVM GroupAttendanceStatus = getGroupAttendanceByFilter(GroupId, obj.dtPagarStartDate, obj.dtPagarEndDate);
+
+                List<PagarPersonDetailVM> lstPagarPersonDetail = new List<PagarPersonDetailVM>();
+
+                lstGropPersons.ForEach(item =>
+                {
+                    PagarPersonDetailVM objPagarPersonDetailVM = new PagarPersonDetailVM();
+                    objPagarPersonDetailVM.PagarPersonId = item.PersonId;
+                    objPagarPersonDetailVM.GroupId = GroupId;
+
+
+                    List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == item.PersonId && att.AttendanceDate >= obj.dtPagarStartDate && att.AttendanceDate <= obj.dtPagarEndDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        PersonTypeId = attper.PersonTypeId,
+                        TotalRokadiya = attper.TotalRokadiya,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+                    if (lst != null)
+                    {
+                        objPagarPersonDetailVM.TotalAttendanceDays = lst.Sum(x => x.AttendanceStatus);
+                        objPagarPersonDetailVM.TotalPagarAmount = lst.Sum(x => x.PayableAmount);
+                        objPagarPersonDetailVM.TotalWithdrawAmount = (decimal)lst.Sum(x => x.WithdrawAmount);
+                        objPagarPersonDetailVM.TotalOvertimeAmount = (decimal)lst.Sum(x => x.OvertimeAmount);
+                    }
+
+                    lstPagarPersonDetail.Add(objPagarPersonDetailVM);
+
+                });
+
+                if (lstPagarPersonDetail != null && lstPagarPersonDetail.Count > 0)
+                {
+                    obj.PagarAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalPagarAmount));
+                    obj.TotalUpadAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalWithdrawAmount));
+                    obj.TotalOvertimeAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalOvertimeAmount));
+                }
+
+                obj.RemainingAmount = (obj.PagarAmount + obj.TotalOvertimeAmount + obj.PrevPagarRemainingAmount) - obj.TotalUpadAmount;
+                obj.GroupAttendanceData = GroupAttendanceStatus;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SaveGroupPagar(string pagardetail)
+        {
+            string message = "";
+            try
+            {
+                PagarVM pagarVM = JsonConvert.DeserializeObject<PagarVM>(pagardetail);
+                pagarVM.dtPagarStartDate = DateTime.ParseExact(pagarVM.PagarStartDate, "dd/MM/yyyy", null);
+                pagarVM.dtPagarEndDate = DateTime.ParseExact(pagarVM.PagarEndDate, "dd/MM/yyyy", null);
+
+                List<tbl_PersonGroupMap> lstGropPersons = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == pagarVM.GroupId).ToList();
+                List<Guid> lstPersonsIds = lstGropPersons.Select(x => x.PersonId).ToList();
+
+                // Save in tbl_Pagar
+                tbl_Pagar objPagar = new tbl_Pagar();
+                objPagar.PagarId = Guid.NewGuid();
+                objPagar.GroupId = pagarVM.GroupId;
+                objPagar.PagarStartDate = pagarVM.dtPagarStartDate;
+                objPagar.PagarEndDate = pagarVM.dtPagarEndDate;
+                objPagar.PagarAmount = pagarVM.PagarAmount;
+
+                objPagar.TotalUpadAmount = pagarVM.TotalUpadAmount;
+                objPagar.TotalOvertimeAmount = pagarVM.TotalOvertimeAmount;
+                objPagar.AmountPay = pagarVM.AmountPay;
+                objPagar.PrevPagarRemainingAmount = pagarVM.PrevPagarRemainingAmount;
+                objPagar.RemainingAmount = pagarVM.RemainingAmount;
+
+                objPagar.RemainingAmount = (objPagar.PagarAmount + objPagar.TotalOvertimeAmount + objPagar.PrevPagarRemainingAmount) - (objPagar.AmountPay + objPagar.TotalUpadAmount);
+
+                objPagar.PagarPaidToPerson = null;
+                objPagar.Remarks = pagarVM.Remarks;
+
+                objPagar.CreatedBy = clsSession.UserID;
+                objPagar.CreatedDate = DateTime.UtcNow;
+                objPagar.ModifiedBy = clsSession.UserID;
+                objPagar.ModifiedDate = DateTime.UtcNow;
+
+                _db.tbl_Pagar.Add(objPagar);
+                _db.SaveChanges();
+
+                lstGropPersons.ForEach(item =>
+                {
+
+                    List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == item.PersonId && att.AttendanceDate >= pagarVM.dtPagarStartDate && att.AttendanceDate <= pagarVM.dtPagarEndDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        PersonTypeId = attper.PersonTypeId,
+                        TotalRokadiya = attper.TotalRokadiya,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+                    tbl_PagarPersonDetail objPagarDetail = new tbl_PagarPersonDetail();
+                    objPagarDetail.PagarPersonDetailId = Guid.NewGuid();
+                    objPagarDetail.PagarId = objPagar.PagarId;
+                    objPagarDetail.PagarPersonId = item.PersonId;
+                    objPagarDetail.TotalAttendanceDays = lst.Sum(x => x.AttendanceStatus);
+                    objPagarDetail.TotalPagarAmount = lst.Sum(x => x.PayableAmount);
+                    objPagarDetail.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_PagarPersonDetail.Add(objPagarDetail);
+                    _db.SaveChanges();
+
+                });
+
+                message = "SUCCESS";
+
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return Json(message, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public string DeletePagar(Guid PagarId)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                tbl_Pagar objGroupPagar = _db.tbl_Pagar.Where(x => x.PagarId == PagarId).FirstOrDefault();
+
+                if (objGroupPagar == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+
+                    List<tbl_PagarPersonDetail> lstPagarDetails = _db.tbl_PagarPersonDetail.Where(x => x.PagarId == PagarId).ToList();
+                    if (lstPagarDetails.Count > 0)
+                    {
+                        _db.tbl_PagarPersonDetail.RemoveRange(lstPagarDetails);
+                    }
+                    _db.tbl_Pagar.Remove(objGroupPagar);
+                    _db.SaveChanges();
+
+                    ReturnMessage = "success";
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message.ToString();
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
+        public ActionResult ViewPersonPagar(Guid Id) // Id = PersonId
+        {
+
+            // Get Group Info
+            tbl_Persons objPersonInfo = _db.tbl_Persons.Where(x => x.PersonId == Id).FirstOrDefault();
+
+            List<PagarVM> lstPagar = (from p in _db.tbl_Pagar
+                                      where p.PersonId == Id
+                                      select new PagarVM
+                                      {
+                                          PagarId = p.PagarId,
+                                          PagarAmount = p.PagarAmount,
+                                          AmountPay = p.AmountPay,
+                                          PrevPagarRemainingAmount = p.PrevPagarRemainingAmount,
+                                          TotalUpadAmount = p.TotalUpadAmount,
+                                          TotalOvertimeAmount = p.TotalOvertimeAmount,
+                                          dtPagarStartDate = p.PagarStartDate,
+                                          dtPagarEndDate = p.PagarEndDate,
+                                          RemainingAmount = p.RemainingAmount
+                                      }).OrderByDescending(x => x.dtPagarStartDate).ToList();
+
+            ViewBag.PersonId = Id;
+            ViewBag.PersonName = objPersonInfo != null ? objPersonInfo.PersonFirstName : "";
+
+            return View(lstPagar);
+        }
+         
+        [HttpPost]
+        public JsonResult GetNextPagarInfoOfPerson(Guid PersonId)
+        {
+
+            PagarVM obj = new PagarVM();
+            obj.PersonId = PersonId;
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                // Get Group Persons 
+                List<Guid> lstPersonsIds = new List<Guid>();
+                lstPersonsIds.Add(PersonId);
+
+                tbl_Pagar objLastPagar = _db.tbl_Pagar.Where(x => x.PersonId == PersonId).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
+                if (objLastPagar != null)
+                {
+                    obj.dtPagarStartDate = objLastPagar.PagarEndDate.AddDays(1);
+                    obj.dtPagarEndDate = DateTime.Today;
+                    obj.PrevPagarRemainingAmount = objLastPagar.RemainingAmount;
+                }
+                else
+                {
+                    // Get minimum StartDate from all persons
+                    tbl_Attendance objMinStartAttendanceDate = (from a in _db.tbl_Attendance
+                                                                join pa in _db.tbl_PersonAttendance on a.AttendaceId equals pa.AttendanceId
+                                                                where lstPersonsIds.Contains(pa.PersonId)
+                                                                select a
+                                                    ).OrderBy(x => x.AttendanceDate).FirstOrDefault();
+
+                    if (objMinStartAttendanceDate == null)
+                        obj.dtPagarStartDate = DateTime.Today;
+                    else
+                        obj.dtPagarStartDate = objMinStartAttendanceDate.AttendanceDate;
+
+                    obj.dtPagarEndDate = DateTime.Today;
+                }
+
+                if (obj.dtPagarStartDate.Date > DateTime.UtcNow.Date)
+                    obj.dtPagarStartDate = DateTime.UtcNow;
+
+                obj.PagarStartDate = Convert.ToDateTime(obj.dtPagarStartDate).ToString("dd/MM/yyyy");
+                obj.PagarEndDate = Convert.ToDateTime(obj.dtPagarEndDate).ToString("dd/MM/yyyy");
+
+                GroupAttendanceStatusVM GroupAttendanceStatus = getPersonAttendanceByFilter(PersonId, obj.dtPagarStartDate, obj.dtPagarEndDate);
+
+                List<PagarPersonDetailVM> lstPagarPersonDetail = new List<PagarPersonDetailVM>();
+
+                lstPersonsIds.ForEach(personId =>
+                {
+                    PagarPersonDetailVM objPagarPersonDetailVM = new PagarPersonDetailVM();
+                    objPagarPersonDetailVM.PagarPersonId = personId;
+                      
+                    List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == personId && att.AttendanceDate >= obj.dtPagarStartDate && att.AttendanceDate <= obj.dtPagarEndDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        PersonTypeId = attper.PersonTypeId,
+                        TotalRokadiya = attper.TotalRokadiya,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+                    if (lst != null)
+                    {
+                        objPagarPersonDetailVM.TotalAttendanceDays = lst.Sum(x => x.AttendanceStatus);
+                        objPagarPersonDetailVM.TotalPagarAmount = lst.Sum(x => x.PayableAmount);
+                        objPagarPersonDetailVM.TotalWithdrawAmount = (decimal)lst.Sum(x => x.WithdrawAmount);
+                        objPagarPersonDetailVM.TotalOvertimeAmount = (decimal)lst.Sum(x => x.OvertimeAmount);
+                    }
+
+                    lstPagarPersonDetail.Add(objPagarPersonDetailVM);
+
+                });
+
+                if (lstPagarPersonDetail != null && lstPagarPersonDetail.Count > 0)
+                {
+                    obj.PagarAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalPagarAmount));
+                    obj.TotalUpadAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalWithdrawAmount));
+                    obj.TotalOvertimeAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalOvertimeAmount));
+                }
+
+                obj.RemainingAmount = (obj.PagarAmount + obj.TotalOvertimeAmount + obj.PrevPagarRemainingAmount) - obj.TotalUpadAmount;
+                obj.GroupAttendanceData = GroupAttendanceStatus;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+        public GroupAttendanceStatusVM getPersonAttendanceByFilter(Guid Id, DateTime startDate, DateTime endDate)
+        {
+            GroupAttendanceStatusVM objGroupStatus = new GroupAttendanceStatusVM();
+             
+            tbl_Persons objPersonInfo = _db.tbl_Persons.Where(x => x.PersonId == Id).FirstOrDefault();
+
+            objGroupStatus.PersonGroupId = Id;
+            objGroupStatus.GroupName = objPersonInfo.PersonFirstName;
+             
+            List<Guid> lstPersons = new List<Guid>();
+            lstPersons.Add(Id);
+             
+            // Get Attendance of each Person
+            List<GroupPersonPaymentInfoVM> lstGroupPersonPayment = new List<GroupPersonPaymentInfoVM>();
+
+            lstPersons.ForEach(personId =>
+            {
+
+                // Get Person data
+                tbl_Persons objPerson = _db.tbl_Persons.Where(x => x.PersonId == personId).FirstOrDefault();
+
+                if (objPerson != null)
+                {
+                    List<ReportPersonAttendanceVM> personReport = GetPersonAttendance(personId, startDate, endDate);
+
+                    GroupPersonPaymentInfoVM objGroupPersonPayment = new GroupPersonPaymentInfoVM();
+                    objGroupPersonPayment.PersonId = personId;
+                    objGroupPersonPayment.PersonName = objPerson.PersonFirstName;
+
+                    objGroupPersonPayment.TotalAttendance = personReport.Sum(x => x.AttendanceStatus);
+                    objGroupPersonPayment.TotalPayableAmount = personReport.Sum(x => x.PayableAmount);
+                    objGroupPersonPayment.TotalWithdrawAmount = personReport.Sum(x => x.WithdrawAmount);
+                    objGroupPersonPayment.TotalOvertimeAmount = personReport.Sum(x => x.OvertimeAmount);
+
+                    objGroupPersonPayment.TotalRemainingAmount = (objGroupPersonPayment.TotalPayableAmount + objGroupPersonPayment.TotalOvertimeAmount) - objGroupPersonPayment.TotalWithdrawAmount;
+
+                    lstGroupPersonPayment.Add(objGroupPersonPayment);
+                }
+
+            });
+
+            if (lstGroupPersonPayment.Count > 0)
+            {
+                objGroupStatus.GrandAttendance = lstGroupPersonPayment.Sum(x => x.TotalAttendance);
+                objGroupStatus.GrandPayableAmount = lstGroupPersonPayment.Sum(x => x.TotalPayableAmount);
+                objGroupStatus.GrandWithdrawAmount = lstGroupPersonPayment.Sum(x => x.TotalWithdrawAmount);
+                objGroupStatus.GrandOvertimeAmount = lstGroupPersonPayment.Sum(x => x.TotalOvertimeAmount);
+                objGroupStatus.GrandRemainingAmount = (objGroupStatus.GrandPayableAmount + objGroupStatus.GrandOvertimeAmount) - objGroupStatus.GrandWithdrawAmount;
+            }
+
+            objGroupStatus.GroupPersonPayment = lstGroupPersonPayment;
+
+            return objGroupStatus;
+
+        }
+         
+        [HttpPost]
+        public JsonResult SavePersonPagar(string pagardetail)
+        {
+            string message = "";
+            try
+            {
+                PagarVM pagarVM = JsonConvert.DeserializeObject<PagarVM>(pagardetail);
+                pagarVM.dtPagarStartDate = DateTime.ParseExact(pagarVM.PagarStartDate, "dd/MM/yyyy", null);
+                pagarVM.dtPagarEndDate = DateTime.ParseExact(pagarVM.PagarEndDate, "dd/MM/yyyy", null);
+                 
+                List<Guid> lstPersonsIds = new List<Guid>();
+                lstPersonsIds.Add((Guid)pagarVM.PersonId);
+
+                // Save in tbl_Pagar
+                tbl_Pagar objPagar = new tbl_Pagar();
+                objPagar.PagarId = Guid.NewGuid();
+                objPagar.PersonId = pagarVM.PersonId;
+                objPagar.PagarStartDate = pagarVM.dtPagarStartDate;
+                objPagar.PagarEndDate = pagarVM.dtPagarEndDate;
+                objPagar.PagarAmount = pagarVM.PagarAmount;
+
+                objPagar.TotalUpadAmount = pagarVM.TotalUpadAmount;
+                objPagar.TotalOvertimeAmount = pagarVM.TotalOvertimeAmount;
+                objPagar.AmountPay = pagarVM.AmountPay;
+                objPagar.PrevPagarRemainingAmount = pagarVM.PrevPagarRemainingAmount;
+                objPagar.RemainingAmount = pagarVM.RemainingAmount;
+
+                objPagar.RemainingAmount = (objPagar.PagarAmount + objPagar.TotalOvertimeAmount + objPagar.PrevPagarRemainingAmount) - (objPagar.AmountPay + objPagar.TotalUpadAmount);
+
+                objPagar.PagarPaidToPerson = null;
+                objPagar.Remarks = pagarVM.Remarks;
+
+                objPagar.CreatedBy = clsSession.UserID;
+                objPagar.CreatedDate = DateTime.UtcNow;
+                objPagar.ModifiedBy = clsSession.UserID;
+                objPagar.ModifiedDate = DateTime.UtcNow;
+
+                _db.tbl_Pagar.Add(objPagar);
+                _db.SaveChanges();
+
+                lstPersonsIds.ForEach(personId =>
+                {
+
+                    List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == personId && att.AttendanceDate >= pagarVM.dtPagarStartDate && att.AttendanceDate <= pagarVM.dtPagarEndDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        PersonTypeId = attper.PersonTypeId,
+                        TotalRokadiya = attper.TotalRokadiya,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+                    tbl_PagarPersonDetail objPagarDetail = new tbl_PagarPersonDetail();
+                    objPagarDetail.PagarPersonDetailId = Guid.NewGuid();
+                    objPagarDetail.PagarId = objPagar.PagarId;
+                    objPagarDetail.PagarPersonId = personId;
+                    objPagarDetail.TotalAttendanceDays = lst.Sum(x => x.AttendanceStatus);
+                    objPagarDetail.TotalPagarAmount = lst.Sum(x => x.PayableAmount);
+                    objPagarDetail.CreatedDate = DateTime.UtcNow;
+                    _db.tbl_PagarPersonDetail.Add(objPagarDetail);
+                    _db.SaveChanges();
+
+                });
+
+                message = "SUCCESS";
+
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return Json(message, JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }

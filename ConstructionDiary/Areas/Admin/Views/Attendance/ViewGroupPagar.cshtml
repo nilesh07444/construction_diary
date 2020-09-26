@@ -1,0 +1,438 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@model List<PagarVM>
+@{
+    ViewBag.Title = "Pagar";
+
+    int counter = 1;
+}
+
+<section class="wrapper site-min-height">
+
+    <div class="row state-overview">
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-primary" style="opacity: 1;">
+                <div class="panel-heading text-center" style="background-color:darkcyan; border-color: darkcyan;">
+                    <strong> @ViewBag.GroupName </strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Pagar List</strong>
+
+                    <a href="/admin/attendance/persongroup" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
+
+                </header>
+                <div class="panel-body">
+                    <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <button id="btnAddPagar" class="btn green">
+                                    <i class="fa fa-plus"></i> Add New Pagar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped table-hover" id="tblPagarList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th>Pagar Date</th>
+                                    <th>Pagar Amount</th>
+                                    <th>Upad</th>
+                                    <th>Overtime</th>
+                                    <th>Previous Pagar</th>
+                                    <th>Paid Amount</th>
+                                    <th>Remaining Amount</th>
+                                    <th width="10%;">@Resource.Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (var obj in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@Convert.ToDateTime(obj.dtPagarStartDate).ToString("dd/MM/yyyy") - @Convert.ToDateTime(obj.dtPagarEndDate).ToString("dd/MM/yyyy")</td>
+                                            <td>@obj.PagarAmount</td>
+                                            <td>@obj.TotalUpadAmount</td>
+                                            <td>@obj.TotalOvertimeAmount</td>
+                                            <td>@obj.PrevPagarRemainingAmount</td>
+                                            <td>@obj.AmountPay</td>
+                                            <td>@obj.RemainingAmount</td>
+                                            <td>
+                                                @if (counter == 1)
+                                                {
+                                                    @*<button title="View" data-id="@obj.PagarId" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></button>*@
+                                                    <button title="Delete" onclick="fnDeleteGroupPagar('@obj.PagarId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                }
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deletePagarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                @Resource.SureWantToDelete
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteGroupPagar" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeletePersonGroup" class="btn btn-danger" type="button">@Resource.Delete</button>
+            </div>
+        </div>/
+    </div>
+</div>
+<!-- Delete modal -->
+<!-- Save Modal -->
+<div class="modal fade" id="addNewPagarModal" tabindex="-1" role="dialog" aria-labelledby="addNewPagarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add New Pagar</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <div class="table-responsive" tabindex="1">
+                            <table id="tblGroupPagarAttendance" class="table table-bordered table-responsive table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th>@Resource.Name</th>
+                                        <th width="15%">@Resource.TotalPresentDays</th>
+                                        <th width="20%">@Resource.Amount</th>
+                                        <th width="10%">@Resource.Overtime</th>
+                                        <th width="10%">@Resource.Withdraw</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <section class="panel" style="margin-bottom:0px;">
+                            <div class="panel-body">
+                                <div class=" form">
+                                    <form class="cmxform form-horizontal tasi-form" id="pagarForm">
+                                        <div class="form-group ">
+                                            <label for="txtPagarDate" class="control-label col-lg-5">Pagar Date</label>
+                                            <div class="col-lg-7">
+                                                <span><strong id="txtPagarDate" data-startdate="" data-enddate=""></strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="display: none;">
+                                            <label class="control-label col-lg-5">Total Pagar Amount</label>
+                                            <div class="col-lg-7">
+                                                <span><strong id="txtTotalPagarAmount"></strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="display: none;">
+                                            <label class="control-label col-lg-5">Total Overtime Amount</label>
+                                            <div class="col-lg-7">
+                                                <span><strong id="txtTotalOvertimeAmount">0</strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="display: none;">
+                                            <label class="control-label col-lg-5">Total Upad Amount</label>
+                                            <div class="col-lg-7">
+                                                <span><strong id="txtTotalUpadAmount">0</strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label class="control-label col-lg-5">Previous Pagar Amount</label>
+                                            <div class="col-lg-7">
+                                                <span><strong id="txtTotalPrevPagarAmount">0</strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label class="control-label col-lg-5">Pagar Pay Amount</label>
+                                            <div class="col-lg-7">
+                                                <input class="form-control" id="txtPayAmount" name="txtPayAmount" type="number" onkeyup="return updateRemainingAmount()" required />
+                                                <span id="spn_PayAmount" class="clserror">@Resource.Required</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-lg-5">Remaining Amount</label>
+                                            <div class="col-lg-7">
+                                                <span><strong id="txtRemainingAmount">0</strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="txtRemarks" class="control-label col-lg-5">Remarks</label>
+                                            <div class="col-lg-7">
+                                                <textarea class="form-control " id="txtRemarks" name="txtRemarks"></textarea>
+                                            </div>
+                                        </div>
+                                        <div id="dvMessage" class="form-group"></div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top:0px;">
+                <input type="hidden" id="hdnGroupId" value="@ViewBag.PersonGroupId" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnSavePagar" class="btn btn-success" type="button">@Resource.Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Save modal -->
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblPagarList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0,3]
+                }]
+        });
+    });
+
+    function fnDeleteGroupPagar(grouppagar_id) {
+        jQuery("#hdnDeleteGroupPagar").val(grouppagar_id);
+        $('#deletePagarModal').modal('show');
+    }
+
+    jQuery(document).on("click", "#btnDeletePersonGroup", function () {
+
+        var grouppagar_id = jQuery("#hdnDeleteGroupPagar").val();
+        if (grouppagar_id != "" && grouppagar_id != null) {
+            $('#deletePagarModal').modal('hide');
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeletePagar", "Attendance")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?PagarId=" + grouppagar_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Pagar Deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Pagar Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    jQuery(document).on("click", ".clsEditPersonGroup", function () {
+        var grouppagar_id = $(this).attr("data-id");
+        window.location.href = "/admin/attendance/editpersongroup/" + grouppagar_id;
+    });
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+    jQuery(document).on("click", "#btnAddPagar", function () {
+
+        var hdnGroupId = $("#hdnGroupId").val();
+        if (hdnGroupId != "") {
+
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("GetNextPagarInfoOfGroup", "Attendance")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?GroupId=" + hdnGroupId,
+                success: function (data) {
+                    console.log(data);
+                    $("#addNewPagarModal .modal-title").text("Add New Pagar - (" + data.PagarStartDate + " to " + data.PagarEndDate + ")");
+                    $("#txtPagarDate").text(data.PagarStartDate + " to " + data.PagarEndDate);
+                    $("#txtPagarDate").attr("data-startdate", data.PagarStartDate);
+                    $("#txtPagarDate").attr("data-enddate", data.PagarEndDate);
+
+                    $("#txtTotalPagarAmount").text(data.PagarAmount);
+                    $("#txtTotalUpadAmount").text(data.TotalUpadAmount);
+                    $("#txtTotalOvertimeAmount").text(data.TotalOvertimeAmount);
+                    $("#txtTotalPrevPagarAmount").text(data.PrevPagarRemainingAmount);
+                    $("#txtRemainingAmount").text(data.RemainingAmount);
+
+                    PagarPersonWiseAttendaceHtml(data);
+
+                    $('#addNewPagarModal').modal('show');
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+
+        }
+
+    });
+
+    jQuery(document).on("click", "#btnSavePagar", function () {
+
+        $("#spn_PayAmount").hide();
+
+        var GroupId = $("#hdnGroupId").val();
+        var PagarStartDate = $("#txtPagarDate").attr("data-startdate");
+        var PagarEndDate = $("#txtPagarDate").attr("data-enddate");
+        var PagarAmount = $("#txtTotalPagarAmount").text();
+        var TotalUpadAmount = $("#txtTotalUpadAmount").text();
+        var TotalOvertimeAmount = $("#txtTotalOvertimeAmount").text();
+        var PrevPagarRemainingAmount = $("#txtTotalPrevPagarAmount").text();
+        var AmountPay = $("#txtPayAmount").val();
+        var RemainingAmount = $("#txtRemainingAmount").text();
+        var Remarks = $("#txtRemarks").val();
+
+        if (AmountPay == "") {
+            $("#spn_PayAmount").show();
+            return false;
+        }
+
+
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+
+        var PagarData = {
+            "GroupId": GroupId,
+            "PagarStartDate": PagarStartDate,
+            "PagarEndDate": PagarEndDate,
+            "PagarAmount": PagarAmount,
+            "TotalUpadAmount": TotalUpadAmount,
+            "TotalOvertimeAmount": TotalOvertimeAmount,
+            "PrevPagarRemainingAmount": PrevPagarRemainingAmount,
+            "AmountPay": AmountPay,
+            "RemainingAmount": RemainingAmount,
+            "Remarks": Remarks,
+        };
+
+        var URL = '@Url.Action("SaveGroupPagar", "Attendance")';
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: URL,
+            data: {
+                pagardetail : JSON.stringify(PagarData)
+            },
+            success: function (data) {
+
+                if (data == "SUCCESS") {
+                    alert("Pagar saved successfully..");
+                    window.location.reload();
+                }
+                else {
+                    alert("Something went wrong");
+                }
+
+                $.unblockUI();
+            },
+            error: function (resultData) {
+                alert("ERRO: Something went wrong");
+                $.unblockUI();
+            }
+        });
+
+    });
+
+    function updateRemainingAmount() {
+
+        var PagarAmount = $("#txtTotalPagarAmount").text();
+        var TotalUpadAmount = $("#txtTotalUpadAmount").text();
+        var TotalOvertimeAmount = $("#txtTotalOvertimeAmount").text();
+        var PrevPagarRemainingAmount = $("#txtTotalPrevPagarAmount").text();
+        var AmountPay = $("#txtPayAmount").val();
+
+        if (AmountPay == "" || isNaN(AmountPay)) {
+            AmountPay = 0;
+        }
+        else {
+            $("#spn_PayAmount").hide();
+        }
+
+        var RemainingAmount = (parseFloat(PagarAmount)  + parseFloat(TotalOvertimeAmount) + parseFloat(PrevPagarRemainingAmount)) - (parseFloat(TotalUpadAmount) + parseFloat(AmountPay));
+
+        if (RemainingAmount == "" || RemainingAmount == undefined || RemainingAmount == null || isNaN(RemainingAmount))
+            RemainingAmount = 0;
+
+        $("#txtRemainingAmount").text(RemainingAmount);
+    }
+
+    function PagarPersonWiseAttendaceHtml(pagarObj) {
+
+        var htmlData = "";
+
+        var GroupPersonPayment = pagarObj.GroupAttendanceData.GroupPersonPayment;
+        if (GroupPersonPayment && GroupPersonPayment.length > 0) {
+            var counter = 1;
+            GroupPersonPayment.forEach(function (personAttendance) {
+                htmlData += '<tr>';
+                htmlData += '<td scope="row">'+ counter +'</td>';
+                htmlData += '<td>'+ personAttendance.PersonName +'</td>';
+                htmlData += '<td>'+ personAttendance.TotalAttendance +'</td>';
+                htmlData += '<td>'+ personAttendance.TotalPayableAmount +'</td>';
+                htmlData += '<td>'+ personAttendance.TotalOvertimeAmount +'</td>';
+                htmlData += '<td>'+ personAttendance.TotalWithdrawAmount +'</td>';
+                htmlData += "</tr>";
+                counter++;
+            });
+
+            htmlData += '<tr>';
+                htmlData += '<th colspan="2">Total</th>';
+                htmlData += '<th>'+ pagarObj.GroupAttendanceData.GrandAttendance +'</th>';
+                htmlData += '<th>'+ pagarObj.GroupAttendanceData.GrandPayableAmount +'</th>';
+                htmlData += '<th>'+ pagarObj.GroupAttendanceData.GrandOvertimeAmount +'</th>';
+                htmlData += '<th>'+ pagarObj.GroupAttendanceData.GrandWithdrawAmount +'</th>';
+            htmlData += '</tr>';
+        }
+
+        $("#tblGroupPagarAttendance tbody").html(htmlData);
+        console.log(htmlData);
+
+    }
+     
+</script>
