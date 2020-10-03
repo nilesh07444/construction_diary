@@ -26,6 +26,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         public ActionResult Index(string duration, string start, string end)
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            int RoleID = clsSession.RoleID;
+
             List<ExpenseVM> lstExpense = new List<ExpenseVM>();
 
             try
@@ -42,21 +44,24 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 DateTime startDate = DateTime.Today;
                 DateTime endDate = DateTime.Today;
-
-                if (duration == "month")
+                 
+                if (RoleID != (int)UserRoles.Staff)
                 {
-                    var myDate = DateTime.Now;
-                    startDate = new DateTime(myDate.Year, myDate.Month, 1);
-
-                    DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
-                    endDate = lastDay;
-                }
-                else if (duration == "custom")
-                {
-                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                    if (duration == "month")
                     {
-                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
-                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                        var myDate = DateTime.Now;
+                        startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                        DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                        endDate = lastDay;
+                    }
+                    else if (duration == "custom")
+                    {
+                        if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                        {
+                            startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                            endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                        }
                     }
                 }
 
@@ -116,7 +121,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             return View(expense);
                         }
                     }
-                     
+
                     DateTime exp_date = DateTime.ParseExact(expense.ExpenseDate, "dd/MM/yyyy", null);
 
                     tbl_Expenses objExpense = new tbl_Expenses();
@@ -160,7 +165,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objFile.OriginalFileName = ExpenseFile.FileName;
                         objFile.EncryptFileName = fileName;
                         _db.tbl_Files.Add(objFile);
-                        _db.SaveChanges(); 
+                        _db.SaveChanges();
                     }
 
                 }
@@ -257,7 +262,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     if (ExpenseFile != null)
                     {
                         fileName = Guid.NewGuid() + "-" + Path.GetFileName(ExpenseFile.FileName);
-                        
+
                         string full_path = Path.Combine(path, fileName);
                         ExpenseFile.SaveAs(full_path);
 
@@ -269,12 +274,12 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             objFile.FileId = Guid.NewGuid();
                             _db.tbl_Files.Add(objFile);
                         }
-                         
+
                         objFile.ParentId = objExpense.ExpenseId;
                         objFile.FileCategory = (int)FileType.Expense;
                         objFile.OriginalFileName = ExpenseFile.FileName;
                         objFile.EncryptFileName = fileName;
-                        
+
                         _db.SaveChanges();
                     }
 
@@ -466,12 +471,14 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             List<ExpenseVM> lstExpenses = new List<ExpenseVM>();
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            int RoleID = clsSession.RoleID;
 
             lstExpenses = (from c in _db.tbl_Expenses
                            join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
                            join site in _db.tbl_Sites on c.SiteId equals site.SiteId into outerJoinSite
                            from site in outerJoinSite.DefaultIfEmpty()
                            where !c.IsDeleted && c.ClientId == ClientId
+                                 && (RoleID != (int)UserRoles.Staff || c.CreatedBy == clsSession.UserID)
                                  && c.ExpenseDate >= startDate && c.ExpenseDate <= endDate
                            select new ExpenseVM
                            {
@@ -484,7 +491,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                ExpenseTypeId = c.ExpenseTypeId,
                                ExpenseType = exp.ExpenseType,
                                IsActive = c.IsActive,
-                               ObjExpenseFile = _db.tbl_Files.Where(x=>x.ParentId == c.ExpenseId && x.FileCategory == (int)FileType.Expense).FirstOrDefault()
+                               ObjExpenseFile = _db.tbl_Files.Where(x => x.ParentId == c.ExpenseId && x.FileCategory == (int)FileType.Expense).FirstOrDefault()
                            }).OrderByDescending(x => x.dtExpenseDate).ToList();
 
             return lstExpenses;
