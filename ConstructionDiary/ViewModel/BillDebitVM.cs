@@ -74,7 +74,7 @@ namespace ConstructionDiary
         [Display(Name = "Remarks", ResourceType = typeof(Resource))]
         public string Remarks { get; set; }
 
-        [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
+        //[Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
         [Display(Name = "BillFile", ResourceType = typeof(Resource))]
         public HttpPostedFileBase BillFile { get; set; }
         public bool IsActive { get; set; }

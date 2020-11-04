@@ -1361,10 +1361,15 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
+                if (BillFile == null)
+                {
+                    ModelState.AddModelError("BillFile", Resource.Required);
+                    return View(billVM);
+                }
+
                 if (ModelState.IsValid)
                 {
-
-
+                     
                     DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
 
                     tbl_BillDebitNew objBill = new tbl_BillDebitNew();

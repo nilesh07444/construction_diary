@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using ConstructionDiary.Helper;
 using ConstructionDiary.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
 using Newtonsoft.Json;
+using ConstructionDiary.ResourceFiles;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -1183,7 +1189,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(lstPagar);
         }
-         
+
         [HttpPost]
         public JsonResult GetNextPagarInfoOfPerson(Guid PersonId)
         {
@@ -1237,7 +1243,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 {
                     PagarPersonDetailVM objPagarPersonDetailVM = new PagarPersonDetailVM();
                     objPagarPersonDetailVM.PagarPersonId = personId;
-                      
+
                     List<ReportPersonAttendanceVM> lst = (
                     from attper in _db.tbl_PersonAttendance
                     join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
@@ -1293,15 +1299,15 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         public GroupAttendanceStatusVM getPersonAttendanceByFilter(Guid Id, DateTime startDate, DateTime endDate)
         {
             GroupAttendanceStatusVM objGroupStatus = new GroupAttendanceStatusVM();
-             
+
             tbl_Persons objPersonInfo = _db.tbl_Persons.Where(x => x.PersonId == Id).FirstOrDefault();
 
             objGroupStatus.PersonGroupId = Id;
             objGroupStatus.GroupName = objPersonInfo.PersonFirstName;
-             
+
             List<Guid> lstPersons = new List<Guid>();
             lstPersons.Add(Id);
-             
+
             // Get Attendance of each Person
             List<GroupPersonPaymentInfoVM> lstGroupPersonPayment = new List<GroupPersonPaymentInfoVM>();
 
@@ -1345,7 +1351,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return objGroupStatus;
 
         }
-         
+
         [HttpPost]
         public JsonResult SavePersonPagar(string pagardetail)
         {
@@ -1355,7 +1361,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 PagarVM pagarVM = JsonConvert.DeserializeObject<PagarVM>(pagardetail);
                 pagarVM.dtPagarStartDate = DateTime.ParseExact(pagarVM.PagarStartDate, "dd/MM/yyyy", null);
                 pagarVM.dtPagarEndDate = DateTime.ParseExact(pagarVM.PagarEndDate, "dd/MM/yyyy", null);
-                 
+
                 List<Guid> lstPersonsIds = new List<Guid>();
                 lstPersonsIds.Add((Guid)pagarVM.PersonId);
 
@@ -1434,6 +1440,236 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return Json(message, JsonRequestBehavior.AllowGet);
         }
-        
+
+        public string ExportPDFOfGroupPagar(Guid id) // id = pagarid
+        {
+            PagarVM objPagar = new PagarVM();
+
+            string Result = "";
+
+            try
+            {
+                tbl_Pagar personGroup = _db.tbl_Pagar.Where(x => x.PagarId == id).FirstOrDefault();
+
+                objPagar.PagarId = id;
+                objPagar.dtPagarStartDate = personGroup.PagarStartDate;
+                objPagar.dtPagarEndDate = personGroup.PagarEndDate;
+                objPagar.GroupId = personGroup.GroupId;
+                objPagar.PagarAmount = personGroup.PagarAmount;
+                objPagar.TotalUpadAmount = personGroup.TotalUpadAmount;
+                objPagar.TotalOvertimeAmount = personGroup.TotalOvertimeAmount;
+                objPagar.AmountPay = personGroup.AmountPay;
+                objPagar.PrevPagarRemainingAmount = personGroup.PrevPagarRemainingAmount;
+                objPagar.RemainingAmount = personGroup.RemainingAmount;
+                objPagar.Remarks = personGroup.Remarks;
+
+                List<PagarPersonDetailVM> lstPagarPersonDetail = (from detail in _db.tbl_PagarPersonDetail
+                                                                  join person in _db.tbl_Persons on detail.PagarPersonId equals person.PersonId
+                                                                  where detail.PagarId == id
+                                                                  select new PagarPersonDetailVM
+                                                                  {
+                                                                      PagarPersonDetailId = detail.PagarPersonDetailId,
+                                                                      PagarId = detail.PagarId,
+                                                                      PagarPersonId = detail.PagarPersonId,
+                                                                      TotalAttendanceDays = detail.TotalAttendanceDays,
+                                                                      TotalPagarAmount = detail.TotalPagarAmount,
+                                                                      PersonName = person.PersonFirstName
+                                                                  }).ToList();
+
+                tbl_PersonGroup objPersonGroup = _db.tbl_PersonGroup.Where(x => x.PersonGroupId == objPagar.GroupId).FirstOrDefault();
+                string GroupName = objPersonGroup.GroupName;
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                decimal? TotalDays = lstPagarPersonDetail.Select(x => x.TotalAttendanceDays).Sum();
+                string strTotalDays = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDays));
+
+                decimal? TotalPagarAmount = lstPagarPersonDetail.Select(x => x.TotalPagarAmount).Sum();
+                string strTotalPagarAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalPagarAmount));
+
+                string[] strColumns = new string[3] { "Person Name", "Total Days", "Amount" };
+
+                if (lstPagarPersonDetail != null && lstPagarPersonDetail.Count() > 0)
+                {
+
+                    List<DateTime> lstDateTemp = new List<DateTime>();
+                    StringBuilder strHTML = new StringBuilder();
+                    strHTML.Append("<!DOCTYPE html>");
+                    strHTML.Append("<style>");
+                    strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
+                    strHTML.Append("</style>");
+
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:50%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    string Title = "Pagar Of " + GroupName;
+
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append(Title);
+                    strHTML.Append("</th>");
+                    strHTML.Append("</tr>");
+                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + objPagar.dtPagarStartDate.ToString("dd/MM/yyyy") + " To " + objPagar.dtPagarEndDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr>");
+
+                    for (int idx = 0; idx < strColumns.Length; idx++)
+                    {
+                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append(strColumns[idx]);
+                        strHTML.Append("</th>");
+                    }
+
+                    strHTML.Append("</tr>");
+                    strHTML.Append("</thead>");
+                    strHTML.Append("<tbody>");
+                    foreach (var obj in lstPagarPersonDetail)
+                    {
+
+                        if (obj != null)
+                        {
+
+                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            {
+                                string strcolval = "";
+                                switch (strColumns[Col])
+                                {
+
+                                    case "Person Name":
+                                        {
+                                            strcolval = obj.PersonName;
+                                            break;
+                                        }
+                                    case "Total Days":
+                                        {
+                                            strcolval = Convert.ToDecimal(obj.TotalAttendanceDays).ToString("0.##");
+                                            break;
+                                        }
+                                    case "Amount":
+                                        {
+                                            strcolval = CoreHelper.GetFormatterAmount(obj.TotalPagarAmount);
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            break;
+                                        }
+
+                                }
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append(strcolval);
+                                strHTML.Append("</td>");
+                            }
+                            strHTML.Append("</tr>");
+                        }
+                    }
+
+                    // Total
+                    strHTML.Append("<tr>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalDays + " </th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalPagarAmount + " </th>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
+                    // Calculation table
+
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='margin-top:20px; width:50%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<tbody>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.TotalPagar + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + objPagar.PagarAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.Withdraw + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.TotalUpadAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("</tr>");
+
+                    decimal AfterWithdrawLessAmt = objPagar.PagarAmount - objPagar.TotalUpadAmount;
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.TotalPagar + "
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> <strong>" + AfterWithdrawLessAmt.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.Overtime + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.TotalOvertimeAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("</tr>");
+
+                    decimal AfterOvertimeLessAmt = AfterWithdrawLessAmt + objPagar.TotalOvertimeAmount;
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.TotalPagar + "
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + AfterOvertimeLessAmt.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.PreviousPagarAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.PrevPagarRemainingAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("</tr>");
+
+                    decimal CreditDebitAmount = AfterOvertimeLessAmt + objPagar.PrevPagarRemainingAmount;
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.PrevCreditDebit + "
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> <strong>" + CreditDebitAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.TotalGivenAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.AmountPay.ToString("0.##") + "</td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.RemainingAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + objPagar.RemainingAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.Remarks + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.Remarks + "</td>");
+                    strHTML.Append("</tr>");
+
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
+                    StringReader sr = new StringReader(strHTML.ToString());
+
+                    var myString = strHTML.ToString();
+                    var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
+                    var ms = new MemoryStream(myByteArray);
+
+                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+                    writer.PageEvent = new PDFGeneratePageEventHelper();
+                    pdfDoc.Open();
+
+                    XMLWorkerHelper objHelp = XMLWorkerHelper.GetInstance();
+                    objHelp.ParseXHtml(writer, pdfDoc, ms, null, Encoding.UTF8, new UnicodeFontFactory());
+
+                    pdfDoc.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "download;filename=Pagar Of " + GroupName + ".pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(pdfDoc);
+                    Response.End();
+                }
+
+                return Result;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+            }
+
+        }
+
     }
 }

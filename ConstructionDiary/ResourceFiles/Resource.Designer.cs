@@ -277,6 +277,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remaining Amount.
+        /// </summary>
+        public static string AfterWithdrawLessAmt {
+            get {
+                return ResourceManager.GetString("AfterWithdrawLessAmt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Amount.
         /// </summary>
         public static string Amount {
@@ -1114,6 +1123,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pagar.
+        /// </summary>
+        public static string Pagar {
+            get {
+                return ResourceManager.GetString("Pagar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Password {
@@ -1173,6 +1191,24 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Photo {
             get {
                 return ResourceManager.GetString("Photo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Credit/Debit.
+        /// </summary>
+        public static string PrevCreditDebit {
+            get {
+                return ResourceManager.GetString("PrevCreditDebit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous Pagar Amount.
+        /// </summary>
+        public static string PreviousPagarAmount {
+            get {
+                return ResourceManager.GetString("PreviousPagarAmount", resourceCulture);
             }
         }
         
@@ -1542,6 +1578,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string TotalOvertimeAmount {
             get {
                 return ResourceManager.GetString("TotalOvertimeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Pagar.
+        /// </summary>
+        public static string TotalPagar {
+            get {
+                return ResourceManager.GetString("TotalPagar", resourceCulture);
             }
         }
         

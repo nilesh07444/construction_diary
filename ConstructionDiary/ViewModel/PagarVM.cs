@@ -43,6 +43,9 @@ namespace ConstructionDiary
         public DateTime CreatedDate { get; set; }
         public decimal TotalWithdrawAmount { get; set; }
         public decimal TotalOvertimeAmount { get; set; }
+
+        //
+        public string PersonName { get; set; }
     }
 
 }

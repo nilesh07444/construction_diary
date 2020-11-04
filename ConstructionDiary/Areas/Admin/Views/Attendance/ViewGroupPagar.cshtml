@@ -51,6 +51,7 @@
                                     <th>Previous Pagar</th>
                                     <th>Paid Amount</th>
                                     <th>Remaining Amount</th>
+                                    <th>Download</th>
                                     <th width="10%;">@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -70,6 +71,7 @@
                                             <td>@obj.PrevPagarRemainingAmount</td>
                                             <td>@obj.AmountPay</td>
                                             <td>@obj.RemainingAmount</td>
+                                            <td><a href="javascript:void(0);" class="btn btn-primary" onclick="fnDownloadPagarPDF('@obj.PagarId')">Download</a></td>
                                             <td>
                                                 @if (counter == 1)
                                                 {
@@ -216,7 +218,7 @@
 
 <script type="text/javascript" charset="utf-8">
     jQuery(document).ready(function () {
-        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        //jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
         jQuery('html, body').animate({ scrollTop: 0 }, 1000);
 
         jQuery('#tblPagarList').dataTable({
@@ -434,5 +436,13 @@
         console.log(htmlData);
 
     }
-     
+
+    function fnDownloadPagarPDF(grouppagar_id)
+    {
+        var downloadUrl = "/admin/attendance/ExportPDFOfGroupPagar/"+ grouppagar_id;
+        window.location.href = downloadUrl;
+    }
+
 </script>
+
+

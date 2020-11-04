@@ -672,4 +672,19 @@
   <data name="EditChallan" xml:space="preserve">
     <value>ચલણ સુધારો</value>
   </data>
+  <data name="AfterWithdrawLessAmt" xml:space="preserve">
+    <value>નીકળતો પગાર</value>
+  </data>
+  <data name="Pagar" xml:space="preserve">
+    <value>પગાર</value>
+  </data>
+  <data name="PrevCreditDebit" xml:space="preserve">
+    <value>આગળનો ઉપાડ/જમા</value>
+  </data>
+  <data name="PreviousPagarAmount" xml:space="preserve">
+    <value>આગળ નો પગાર (ઉપાડ/જમા)</value>
+  </data>
+  <data name="TotalPagar" xml:space="preserve">
+    <value>કુલ પગાર</value>
+  </data>
 </root>
