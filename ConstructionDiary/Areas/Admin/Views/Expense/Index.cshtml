@@ -6,6 +6,8 @@
 }
 
 @{
+    List<SelectListItem> lstSites = ViewData["SiteList"] as List<SelectListItem>;
+
     decimal? TotalExpenseAmount = Model.Select(x => x.Amount).Sum();
     string strTotalExpenseAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalExpenseAmount));
 
@@ -25,7 +27,7 @@
                     </header>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-2 form-group">
                                 <label for="Duration">@Resource.Duration</label>
                                 <select class="form-control" id="Duration" name="Duration">
                                     <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
@@ -33,21 +35,49 @@
                                 </select>
                             </div>
 
-                            <div class="col-sm-3 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="col-sm-2 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
                                 <div class="">
                                     <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
                                     <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
                                 </div>
                                 <span id="spn_StartDate" class="formerror">@Resource.Required</span>
                             </div>
-                            <div class="col-sm-3 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
                                 <div class="">
                                     <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
                                     <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
                                 </div>
                                 <span id="spn_EndDate" class="formerror">@Resource.Required</span>
                             </div>
-                            <div class="col-sm-3 form-group">
+                            <div class="col-sm-2 form-group clsExpenseType">
+                                <div class="">
+                                    <label for="ddlExpenseType">@Resource.ExpenseType</label><span class="required">*</span>
+                                    <select class="form-control" id="ddlExpenseType">
+                                        <option value="">-All Types-</option>
+                                        <option value="1" @(ViewBag.ExpenseType == "1" ? "selected" : "")>Site</option>
+                                        <option value="2" @(ViewBag.ExpenseType == "2" ? "selected" : "")>Home</option>
+                                        <option value="3" @(ViewBag.ExpenseType == "3" ? "selected" : "")>Personal</option>
+                                    </select>
+                                </div>
+                                <span id="spn_SiteId" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group clsSite @(ViewBag.ExpenseType == "1" ? "clsShow" : "clsHide")">
+                                <div class="">
+                                    <label for="dllSite">@Resource.SiteName</label><span class="required">*</span>
+                                    <select class="form-control" id="ddlSite">
+                                        <option value="">-All Sites-</option>
+                                        @if (lstSites != null && lstSites.Count > 0)
+                                        {
+                                            foreach (SelectListItem site in lstSites)
+                                            {
+                                                <option value="@site.Value" @(ViewBag.Site == site.Value ? "selected" : "")>@site.Text</option>
+                                            }
+                                        }
+                                    </select> 
+                                </div>
+                                <span id="spn_SiteId" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group">
                                 <label></label>
                                 <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
                             </div>
@@ -265,8 +295,9 @@
         //var duration = "";
         var start = '@ViewBag.reportStartDate';
         var end  = '@ViewBag.reportEndDate';
-
-        window.location.href = "/admin/expense/ExportPDFOfExpense?start=" + start+ "&end=" + end;
+        var type = '@ViewBag.ExpenseType';
+        var site = '@ViewBag.Site';
+        window.location.href = "/admin/expense/ExportPDFOfExpense?start=" + start + "&end=" + end + "&type=" + type + "&site=" + site;
     });
 
     $(document).on("click", "#btnSearchReport", function () {
@@ -275,6 +306,9 @@
         var startDate = $("#StartDate").val();
         var endDate = $("#EndDate").val();
 
+        var ddlExpenseType = $("#ddlExpenseType").val();
+        var ddlSite = $("#ddlSite").val();
+          
         var flag = true;
         $(".formerror").hide();
 
@@ -296,14 +330,14 @@
 
         if (flag == true) {
             jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
-            reloadFilterUrl(duration, startDate, endDate);
+            reloadFilterUrl(duration, startDate, endDate, ddlExpenseType, ddlSite);
         }
 
     });
 
-    function reloadFilterUrl(duration, startDate, endDate) {
+    function reloadFilterUrl(duration, startDate, endDate, expenseType, site) {
 
-        var url = "/admin/expense?duration=" + duration;
+        var url = "/admin/expense?duration=" + duration + "&type=" + expenseType + "&site=" + site;
 
         if (duration == "custom") {
             if (!isNullOrUndefinedCustom(startDate))
@@ -334,6 +368,19 @@
 
     });
 
+    $(document).on("change", "#ddlExpenseType", function () {
+        debugger;
+        var seletedType = $(this).val();
+
+        if (seletedType == "1") {
+            $(".clsSite").addClass("clsShow").removeClass("clsHide");
+        }
+        else {
+            $(".clsSite").addClass("clsHide").removeClass("clsShow");
+        }
+
+    });
+     
     function fnOpenExpenseFile(fileUrl)
     {
         $("#embFilePath").attr("src", fileUrl);

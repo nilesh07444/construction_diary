@@ -2327,12 +2327,6 @@
     <Content Include="Areas\Admin\Views\Merchant\Edit.cshtml" />
     <Content Include="fonts\ARIALUNI.TTF" />
     <Content Include="Areas\Admin\Views\Site\View.cshtml" />
-    <Content Include="Areas\Admin\Views\Person\Bill.cshtml" />
-    <Content Include="Areas\Admin\Views\Person\AddBill.cshtml" />
-    <Content Include="Areas\Admin\Views\Person\EditBill.cshtml" />
-    <Content Include="Areas\Admin\Views\Site\Bill.cshtml" />
-    <Content Include="Areas\Admin\Views\Site\AddBill.cshtml" />
-    <Content Include="Areas\Admin\Views\Site\EditBill.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\PersonGroup.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\AddPersonGroup.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\EditPersonGroup.cshtml" />

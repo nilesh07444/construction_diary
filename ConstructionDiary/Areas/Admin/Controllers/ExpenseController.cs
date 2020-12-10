@@ -23,7 +23,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             _db = new ConstructionDiaryEntities();
         }
 
-        public ActionResult Index(string duration, string start, string end)
+        public ActionResult Index(string duration, string start, string end, string type, string site)
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
             int RoleID = clsSession.RoleID;
@@ -42,9 +42,12 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 ViewBag.StartDate = start;
                 ViewBag.EndDate = end;
 
+                ViewBag.ExpenseType = type;
+                ViewBag.Site = site;
+
                 DateTime startDate = DateTime.Today;
                 DateTime endDate = DateTime.Today;
-                 
+
                 if (RoleID != (int)UserRoles.Staff)
                 {
                     if (duration == "month")
@@ -68,7 +71,12 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 ViewBag.reportStartDate = startDate.ToString("dd/MM/yyyy");
                 ViewBag.reportEndDate = endDate.ToString("dd/MM/yyyy");
 
-                lstExpense = GetExpenseListByFilter("", startDate, endDate);
+                lstExpense = GetExpenseListByFilter("", startDate, endDate, type, site);
+
+                List<SelectListItem> lstSites = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
+                         .ToList();
+                ViewBag.SiteList = lstSites;
 
             }
             catch (Exception ex)
@@ -327,7 +335,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
 
-        public string ExportPDFOfExpense(string start, string end)
+        public string ExportPDFOfExpense(string start, string end, string type, string site)
         {
 
             string Result = "";
@@ -336,7 +344,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 DateTime start_date = DateTime.ParseExact(start, "dd/MM/yyyy", null);
                 DateTime end_date = DateTime.ParseExact(end, "dd/MM/yyyy", null);
 
-                List<ExpenseVM> lstExpense = GetExpenseListByFilter("", start_date, end_date);
+                List<ExpenseVM> lstExpense = GetExpenseListByFilter("", start_date, end_date, type, site);
 
                 decimal? TotalExpenseAmount = lstExpense.Select(x => x.Amount).Sum();
                 string strTotalExpenseAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalExpenseAmount));
@@ -467,18 +475,23 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         }
 
-        public List<ExpenseVM> GetExpenseListByFilter(string expensetype, DateTime startDate, DateTime endDate)
+        public List<ExpenseVM> GetExpenseListByFilter(string expensetype, DateTime startDate, DateTime endDate, string type, string site)
         {
             List<ExpenseVM> lstExpenses = new List<ExpenseVM>();
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
             int RoleID = clsSession.RoleID;
 
+            int selectedExpenseType = (type != null && !string.IsNullOrEmpty(type) ? Int32.Parse(type) : 0);
+            Guid selectedSite = (site != null && !string.IsNullOrEmpty(site) ? new Guid(site) : Guid.Empty);
+
             lstExpenses = (from c in _db.tbl_Expenses
                            join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
-                           join site in _db.tbl_Sites on c.SiteId equals site.SiteId into outerJoinSite
-                           from site in outerJoinSite.DefaultIfEmpty()
+                           join st in _db.tbl_Sites on c.SiteId equals st.SiteId into outerJoinSite
+                           from st in outerJoinSite.DefaultIfEmpty()
                            where !c.IsDeleted && c.ClientId == ClientId
                                  && (RoleID != (int)UserRoles.Staff || c.CreatedBy == clsSession.UserID)
+                                 && (selectedExpenseType == 0 || c.ExpenseTypeId == selectedExpenseType)
+                                 && (selectedSite == Guid.Empty || c.SiteId == selectedSite)
                                  && c.ExpenseDate >= startDate && c.ExpenseDate <= endDate
                            select new ExpenseVM
                            {
@@ -487,7 +500,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                Amount = c.Amount,
                                Description = c.Description,
                                SiteId = c.SiteId,
-                               SiteName = site.SiteName,
+                               SiteName = st.SiteName,
                                ExpenseTypeId = c.ExpenseTypeId,
                                ExpenseType = exp.ExpenseType,
                                IsActive = c.IsActive,

@@ -7,21 +7,9 @@
 
 @{
 
-    //List<FinanceList> lstFinance = ViewData["FinanceList"] as List<FinanceList>;
     decimal? TotalDebitAmount = Model.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
     string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
-
-    //decimal? TotalCreditAmount = lstFinance.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
-    //string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
-
-    //ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
-
-    //decimal TotalDebitBillAmount = _db.tbl_BillDebit.Where(x => x.PersonId == Model.PersonId).ToList().Select(x => x.TotalAmount).Sum();
-    //string strTotalDebitBillAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitBillAmount));
-
-    //decimal? RemainingAmount = TotalDebitBillAmount - TotalDebitAmount;
-    //string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
-
+     
 }
 
 <!--main content start-->
