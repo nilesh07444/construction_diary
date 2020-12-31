@@ -14,12 +14,6 @@ namespace ConstructionDiary.Models
     
     public partial class tbl_Persons
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tbl_Persons()
-        {
-            this.tbl_BillDebit = new HashSet<tbl_BillDebit>();
-        }
-    
         public System.Guid PersonId { get; set; }
         public string PersonFirstName { get; set; }
         public string PersonAddress { get; set; }
@@ -37,7 +31,5 @@ namespace ConstructionDiary.Models
         public Nullable<System.DateTime> ModifiedDate { get; set; }
     
         public virtual tbl_PersonType tbl_PersonType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_BillDebit> tbl_BillDebit { get; set; }
     }
 }

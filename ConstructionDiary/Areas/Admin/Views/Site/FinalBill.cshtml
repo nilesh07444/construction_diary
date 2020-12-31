@@ -1,0 +1,388 @@
+﻿@using ConstructionDiary.Models;
+@using ConstructionDiary.ResourceFiles;
+@model AreaSiteBillVM
+@{
+    ViewBag.Title = "Final Bill";
+
+    IEnumerable<BillSiteFinalVM> lstFinalBill = ViewData["FinalBillList"] as IEnumerable<BillSiteFinalVM>;
+    List<tbl_BillSiteFinal> lstSavedBillData = ViewData["SavedBillData"] as List<tbl_BillSiteFinal>;
+
+}
+
+<section class="wrapper site-min-height">
+    <div class="row">
+
+        <div class="col-lg-12 col-sm-12">
+            <div class="panel panel-primary" style="opacity: 1;">
+                <div class="panel-heading text-center" style="background-color:#3c8bb9; border-color: #3c8bb9;">
+                    <strong> @ViewBag.SiteName </strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Final Bill </strong>
+                    <a href="/admin/site/newbill/@ViewBag.SiteId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
+
+                    <div class="btn-group pull-right" style="float: right; top: -5px; position: relative; margin-right: 5px;">
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            Report <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="/admin/site/abstractbill/@Model.BillId">Abstract</a></li>
+                            <li><a href="/admin/site/finalbill/@Model.BillId">Final report</a></li>
+                        </ul>
+                    </div>
+                </header>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            <label for="BillDate">@Resource.BillDate</label><span class="required">*</span>
+                            <input class="form-control default-date-picker" id="BillDate" name="BillDate" value="@Model.BillDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+
+                            <span id="spn_BillDate" class="field-validation-valid text-danger"></span>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label for="BillNo">@Resource.BillNo</label>
+                            <input class="form-control" id="BillNo" name="BillNo" placeholder="@Resource.BillNo" type="text" value="@Model.BillNo" readonly="readonly">
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label for="Remarks">@Resource.Remarks</label>
+                            <input class="form-control" id="Remarks" name="Remarks" placeholder="@Resource.Remarks" type="text" value="@Model.Remarks" readonly="readonly">
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong> @Resource.ItemInfo </strong>
+                    @if (lstSavedBillData != null)
+                    {
+                        <button id="btnExportExcel" class="btn btn-success" style="float: right; top: -5px; position: relative;">Export Excel</button>
+                        <button onclick="fnDeleteFinalBill('@Model.BillId')" class="btn btn-danger" style="float: right; top: -5px; position: relative;"><i class="fa fa-trash-o"></i> Delete Bill</button>
+                    }
+                </header>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <table class="table table-striped table-hover" id="tbl_Bill">
+
+                                <thead>
+                                    <tr>
+                                        <th width="5%">#</th>
+                                        <th>@Resource.ItemName</th>
+                                        <th width="15%">@Resource.Area</th>
+                                        <th width="15%">@Resource.Rate</th>
+                                        <th width="15%">@Resource.Amount</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @if (lstSavedBillData != null && lstSavedBillData.Count() > 0)
+                                    {
+                                        int counter = 1;
+                                        foreach (tbl_BillSiteFinal item in lstSavedBillData)
+                                        {
+                                            <tr>
+                                                <td>@counter</td>
+                                                <td>@item.ItemName</td>
+                                                <td>@item.Area</td>
+                                                <td>@item.Rate</td>
+                                                <td>@item.TotalAmount</td>
+                                            </tr>
+                                            counter++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (lstFinalBill != null && lstFinalBill.Count() > 0)
+                                        {
+                                            int counter = 1;
+                                            var AddFianlItemList = lstFinalBill.Where(x => x.ItemCategory.ToLower() == "add").ToList();
+
+                                            foreach (BillSiteFinalVM item in AddFianlItemList)
+                                            {
+                                                Guid newId = Guid.NewGuid();
+                                                decimal? totalArea = item.Area;
+
+                                                var lessItem = lstFinalBill.Where(x => x.ItemName == item.ItemName && x.ItemType == item.ItemType && x.ItemCategory.ToLower() == "less").FirstOrDefault();
+                                                if (lessItem != null)
+                                                {
+                                                    totalArea = totalArea - lessItem.Area;
+                                                }
+
+                                                <tr id="@newId">
+                                                    <td>@counter</td>
+                                                    <td>
+                                                        <span id="spn_ItemName_@newId">@item.ItemName</span>
+                                                    </td>
+                                                    <td>
+                                                        <span id="spn_Area_@newId">@totalArea</span>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" value="@item.Rate" placeholder="@Resource.Rate" type="text">
+                                                        <span id="spn_Rate_@newId" name="spn_Rate_@newId" class="field-validation-valid text-danger"></span>
+
+                                                        <input type="hidden" id="hdnItemType_@newId" value="@item.ItemType" />
+                                                    </td>
+                                                    <td>
+                                                        <span id="ItemAmount_@newId">@item.Amount</span>
+                                                    </td>
+                                                </tr>
+
+                                                counter++;
+                                            }
+
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 invoice-block pull-right">
+                            <ul class="unstyled amounts">
+                                <li>
+                                    @{
+                                        decimal grandTotal = (lstSavedBillData == null ? 0 : lstSavedBillData.Select(x => x.TotalAmount).Sum());
+                                    }
+                                    <strong>@Resource.GrandTotal : </strong> <span id="lblGrandTotal">@grandTotal</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    @if (lstSavedBillData == null)
+                    {
+                        <div class="row">
+                            <div class="col-sm-12 form-group">
+                                <input type="hidden" id="SiteId" value="@ViewBag.SiteId" />
+                                <input type="hidden" id="BillId" value="@Model.BillId" />
+
+                                <button class="btn btn-success" id="btnSubmitBill" type="button">@Resource.Save</button>
+                                <a href="/admin/site/newbill/@ViewBag.SiteId" class="btn btn-default">@Resource.Cancel</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteBillModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                @Resource.SureWantToDelete
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteBill" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteBill" class="btn btn-danger" type="button"> @Resource.Delete </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script>
+
+    var field_required_msg = 'required';
+
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+
+    function UpdateValues() {
+
+        var grandTotal = 0;
+
+        $("#tbl_Bill tbody tr").each(function () {
+
+            var id = $(this).attr("id");
+            var totalValue = $("#ItemAmount_" + id).text();
+
+            if (totalValue && totalValue != undefined) {
+                //$("#lblTotalSign_" + id).text("");
+                grandTotal += parseFloat(totalValue);
+            }
+        });
+
+        $("#lblGrandTotal").text(grandTotal);
+    }
+
+    function IsEmptyOrNull(value) {
+        if (value == "" || value == undefined || value == NaN)
+            return true;
+        else
+            return false;
+    }
+
+    $(document).on("keyup", ".clsRate", function () {
+
+        var id = $(this).attr("id").split("_")[1];
+        var area = $("#spn_Area_" + id).text();
+        var rate = $("#Rate_" + id).val();
+
+        /* validate start */
+
+        if (IsEmptyOrNull(rate))
+            rate = 0;
+        else
+            rate = parseFloat(rate);
+
+        /* validate end */
+
+        var amount = area * rate;
+
+        $("#ItemAmount_" + id).text(parseFloat(amount));
+
+        // Get all totals
+        UpdateValues();
+
+        //return this.value;
+    });
+
+    $(document).on("click", "#btnSubmitBill", function () {
+        var isvalid = true;
+
+        var BillId = $("#BillId").val();
+
+        // Validations for Items
+        $("#tbl_Bill tbody tr").each(function () {
+
+            var field_id = $(this).attr("id");
+            var rate_value = $("#Rate_" + field_id).val();
+
+            // Rate
+            if (IsEmptyOrNull(rate_value)) {
+                $("#spn_Rate_" + field_id).text(field_required_msg);
+                $("#spn_Rate_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_Rate_" + field_id).hide();
+            }
+
+        });
+
+        if (!isvalid) {
+            jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+            return false;
+        }
+
+        // Create Object
+        var BillSiteItems = [];
+        $("#tbl_Bill tbody tr").each(function () {
+
+            var field_id = $(this).attr("id");
+
+            var itemname_value = $("#spn_ItemName_" + field_id).text();
+            var area_value = $("#spn_Area_" + field_id).text();
+            var rate_value = $("#Rate_" + field_id).val();
+            var itemtype_value = $("#hdnItemType_" + field_id).val();
+
+            BillSiteItems.push({
+                "ItemName": itemname_value,
+                "ItemType": itemtype_value,
+                "Area": area_value,
+                "Rate": rate_value,
+            });
+
+        });
+
+        var BillVM = {
+            "BillId": BillId,
+            "FinalBillItemVM": BillSiteItems
+        };
+
+        // Save
+        //StartLoading();
+        var URL = '@Url.Action("SaveFinalSiteBill", "Site")';
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: URL,
+            data: {
+                BillData : JSON.stringify(BillVM)
+            },
+            success: function (response) {
+
+                if (response.IsError) {
+                    alert(response.ErrorMessage);
+                    //StopLoading();
+                }
+                else {
+                    alert("Bill Saved Successfully.");
+                    window.location.reload();
+                }
+
+            },
+            error: function (resultData) {
+                alert("error");
+                //StopLoading();
+            }
+        });
+
+    });
+
+    jQuery(document).on("click", "#btnDeleteBill", function () {
+
+        var bill_id = jQuery("#hdnDeleteBill").val();
+        if (bill_id != "" && bill_id != null) {
+            $('#deleteBillModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteFinalBill", "Site")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?BillId=" + bill_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Bill deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Bill Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    function fnDeleteFinalBill(bill_id) {
+        jQuery("#hdnDeleteBill").val(bill_id);
+        $('#deleteBillModal').modal('show');
+    }
+
+    $(document).on("click", "#btnExportExcel", function () {
+        exportexcel("tbl_Bill", "Final Bill");
+    });
+
+</script>

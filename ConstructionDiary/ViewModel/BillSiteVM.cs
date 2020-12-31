@@ -106,8 +106,42 @@ namespace ConstructionDiary
         public decimal? Height { get; set; }
         public decimal? Qty { get; set; }
         public decimal? Area { get; set; }
-        public decimal? Rate { get; set; }
-        public decimal? Amount { get; set; }
+        //public decimal? Rate { get; set; }
+        //public decimal? Amount { get; set; }
         public int SeqNo { get; set; }
     }
+
+    public class BillSiteAbstractVM
+    {
+        public string ItemName { get; set; }
+        public string ItemType { get; set; }
+        public string ItemCategory { get; set; }
+        public IEnumerable<AreaSiteBillItemVM> BillSiteItem { get; set; }
+    }
+
+    public class BillSiteFinalVM
+    {
+        public string ItemName { get; set; }
+        public string ItemType { get; set; }
+        public string ItemCategory { get; set; }
+        public decimal? Area { get; set; } = 0;
+        public decimal? Rate { get; set; } = 0;
+        public decimal? Amount { get; set; } = 0;
+    }
+
+    public class SaveFinalBillVM
+    {
+        public Guid BillId { get; set; }
+        public List<SaveFinalBillItemVM> FinalBillItemVM { get; set; }
+    }
+
+    public class SaveFinalBillItemVM
+    {
+        public string ItemName { get; set; }
+        public string ItemType { get; set; }
+        public decimal? Area { get; set; } = 0;
+        public decimal? Rate { get; set; } = 0;
+        public decimal? Amount { get; set; } = 0;
+    }
+
 }

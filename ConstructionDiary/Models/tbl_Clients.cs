@@ -20,7 +20,6 @@ namespace ConstructionDiary.Models
             this.tbl_Users = new HashSet<tbl_Users>();
             this.tbl_MaterialType = new HashSet<tbl_MaterialType>();
             this.tbl_Merchant = new HashSet<tbl_Merchant>();
-            this.tbl_BillSite = new HashSet<tbl_BillSite>();
         }
     
         public System.Guid ClientId { get; set; }
@@ -41,7 +40,5 @@ namespace ConstructionDiary.Models
         public virtual ICollection<tbl_MaterialType> tbl_MaterialType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_Merchant> tbl_Merchant { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_BillSite> tbl_BillSite { get; set; }
     }
 }

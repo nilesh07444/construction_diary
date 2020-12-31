@@ -46,8 +46,6 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_MaterialPurchase> tbl_MaterialPurchase { get; set; }
         public virtual DbSet<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
         public virtual DbSet<tbl_Merchant> tbl_Merchant { get; set; }
-        public virtual DbSet<tbl_BillDebit> tbl_BillDebit { get; set; }
-        public virtual DbSet<tbl_BillSite> tbl_BillSite { get; set; }
         public virtual DbSet<tbl_PersonGroup> tbl_PersonGroup { get; set; }
         public virtual DbSet<tbl_PersonGroupMap> tbl_PersonGroupMap { get; set; }
         public virtual DbSet<tbl_Files> tbl_Files { get; set; }
@@ -58,6 +56,7 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_Challan> tbl_Challan { get; set; }
         public virtual DbSet<tbl_PagarPersonDetail> tbl_PagarPersonDetail { get; set; }
         public virtual DbSet<tbl_Pagar> tbl_Pagar { get; set; }
+        public virtual DbSet<tbl_BillSiteFinal> tbl_BillSiteFinal { get; set; }
     
         public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList(Nullable<System.Guid> clientId)
         {
@@ -98,6 +97,15 @@ namespace ConstructionDiary.Models
         public virtual ObjectResult<SP_GetTodayPersonFinance_Result> SP_GetTodayPersonFinance()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPersonFinance_Result>("SP_GetTodayPersonFinance");
+        }
+    
+        public virtual ObjectResult<SP_GetTodayPartyFinance1_Result> SP_GetTodayPartyFinance1(Nullable<System.Guid> clientId)
+        {
+            var clientIdParameter = clientId.HasValue ?
+                new ObjectParameter("ClientId", clientId) :
+                new ObjectParameter("ClientId", typeof(System.Guid));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPartyFinance1_Result>("SP_GetTodayPartyFinance1", clientIdParameter);
         }
     }
 }

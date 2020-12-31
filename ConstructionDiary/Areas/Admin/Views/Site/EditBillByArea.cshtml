@@ -23,6 +23,16 @@
                     <a href="/admin/site/newbill/@ViewBag.SiteId" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
                         <i class="fa fa-backward"></i> Back
                     </a>
+                    
+                    <div class="btn-group pull-right" style="float: right; top: -5px; position: relative; margin-right: 5px;">
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                              Report <i class="fa fa-angle-down"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+                            <li><a href="/admin/site/abstractbill/@Model.BillId">Abstract</a></li>
+                            <li><a href="/admin/site/finalbill/@Model.BillId">Final report</a></li>
+                        </ul>
+                    </div>
                 </header>
                 <div class="panel-body">
                     <div class="row">
@@ -67,8 +77,8 @@
                                         <th width="8%">@Resource.Height</th>
                                         <th width="8%">@Resource.Width</th>
                                         <th width="10%">@Resource.Area</th>
-                                        <th width="8%">@Resource.Rate</th>
-                                        <th width="10%">@Resource.Amount</th>
+                                        @*<th width="8%">@Resource.Rate</th>
+                                        <th width="10%">@Resource.Amount</th>*@
                                         <th width="3%"></th>
                                     </tr>
                                 </thead>
@@ -122,13 +132,13 @@
                                         <td>
                                             <span id="Area_@newId">@item.Area @item.ItemType</span>
                                         </td>
-                                        <td>
+                                        @*<td>
                                             <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" value="@item.Rate" placeholder="@Resource.Rate" type="text">
                                             <span id="spn_Rate_@newId" name="spn_Rate_@newId" class="field-validation-valid text-danger"></span>
                                         </td>
                                         <td>
                                             <span id="lblTotalSign_@newId"></span> <span id="ItemAmount_@newId">@item.Amount</span>
-                                        </td>
+                                        </td>*@
                                         <td>
                                             <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button" style="display: @(Model.BillSiteItem.Count > 1 ? "block" : "none")"><i class="fa fa-trash-o"></i></button>
                                         </td>
@@ -140,7 +150,7 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="11">
+                                        <td colspan="9">
                                             <button id="btnAddItem" class="btn btn-round btn-success pull-right" type="button"><i class="fa fa-plus"></i> Add Item</button>
                                         </td>
                                     </tr>
@@ -149,7 +159,7 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    @*<div class="row">
                         <div class="col-lg-4 invoice-block pull-right">
                             <ul class="unstyled amounts">
                                 <li>
@@ -157,7 +167,7 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="row">
                         <div class="col-sm-12 form-group">
@@ -217,9 +227,9 @@
 
         htmlData += "<td> <span id='Area_" + newGuid + "'>0</span> </td>";
 
-        htmlData += "<td><input class='form-control clsRate' id='Rate_" + newGuid + "' placeholder='@Resource.Rate' type='text' disabled> <span id='spn_Rate_" + newGuid + "' class='field-validation-valid text-danger'></span></td>";
+        //htmlData += "<td><input class='form-control clsRate' id='Rate_" + newGuid + "' placeholder='@Resource.Rate' type='text' disabled> <span id='spn_Rate_" + newGuid + "' class='field-validation-valid text-danger'></span></td>";
 
-        htmlData += "<td><span id='lblTotalSign_" + newGuid + "'></span> <span id='ItemAmount_" + newGuid + "'>0</span></td>";
+        //htmlData += "<td><span id='lblTotalSign_" + newGuid + "'></span> <span id='ItemAmount_" + newGuid + "'>0</span></td>";
 
         htmlData += "<td><button title='Delete' delete-id='" + newGuid + "' class='btn btn-round btn-danger clsDelete' type='button'><i class='fa fa-trash-o'></i></button></td>";
 
@@ -241,35 +251,35 @@
         });
     }
 
-    function UpdateValues() {
+    //function UpdateValues() {
 
-        var grandTotal = 0;
+    //    var grandTotal = 0;
 
-        $("#tbl_Bill tbody tr").each(function () {
+    //    $("#tbl_Bill tbody tr").each(function () {
 
-            var id = $(this).attr("id");
-            var category = $("#Category_" + id).val();
-            var totalValue = $("#ItemAmount_" + id).text();
+    //        var id = $(this).attr("id");
+    //        var category = $("#Category_" + id).val();
+    //        var totalValue = $("#ItemAmount_" + id).text();
 
-            if (totalValue && totalValue != undefined) {
-                if (category == "add") {
+    //        if (totalValue && totalValue != undefined) {
+    //            if (category == "add") {
 
-                    $("#lblTotalSign_" + id).text("");
+    //                $("#lblTotalSign_" + id).text("");
 
-                    grandTotal += parseFloat(totalValue);
-                }
-                else if (category == "less") {
-                    $("#lblTotalSign_" + id).text("(-)");
+    //                grandTotal += parseFloat(totalValue);
+    //            }
+    //            else if (category == "less") {
+    //                $("#lblTotalSign_" + id).text("(-)");
 
-                    grandTotal -= parseFloat(totalValue);
-                }
-                else {
-                }
-            }
-        });
+    //                grandTotal -= parseFloat(totalValue);
+    //            }
+    //            else {
+    //            }
+    //        }
+    //    });
 
-        $("#lblGrandTotal").text(grandTotal);
-    }
+    //    $("#lblGrandTotal").text(grandTotal);
+    //}
 
     $(document).on("click", ".clsDelete", function () {
         var itemId = $(this).attr("delete-id");
@@ -282,7 +292,7 @@
         ReArrangeIndex();
 
         // Get all totals
-        UpdateValues();
+        //UpdateValues();
     });
 
     function IsEmptyOrNull(value) {
@@ -298,18 +308,18 @@
         $("#Width_" + id).val('');
         $("#Height_" + id).val('');
         $("#Qty_" + id).val('');
-        $("#Rate_" + id).val('');
+        //$("#Rate_" + id).val('');
 
         // Hide validation messages
         $("#spn_Length_" + id).hide();
         $("#spn_Width_" + id).hide();
         $("#spn_Height_" + id).hide();
         $("#spn_Qty_" + id).hide();
-        $("#spn_Rate_" + id).hide();
+        //$("#spn_Rate_" + id).hide();
 
         // set total to 0
         $("#Area_" + id).text('0 ' + value);
-        $("#ItemAmount_" + id).text('0');
+       // $("#ItemAmount_" + id).text('0');
     }
 
     $(document).on("change", ".clsItemType", function () {
@@ -326,7 +336,7 @@
             $("#Width_" + id).prop("disabled", true);
             $("#Height_" + id).prop("disabled", true);
             $("#Qty_" + id).prop("disabled", true);
-            $("#Rate_" + id).prop("disabled", true);
+            //$("#Rate_" + id).prop("disabled", true);
 
         }
         else if (value == "cft") {
@@ -337,7 +347,7 @@
             $("#Height_" + id).removeAttr("disabled");
 
             $("#Qty_" + id).removeAttr("disabled");
-            $("#Rate_" + id).removeAttr("disabled");
+            //$("#Rate_" + id).removeAttr("disabled");
 
         }
         else if (value == "sft") {
@@ -348,7 +358,7 @@
             $("#Height_" + id).prop("disabled", true);
 
             $("#Qty_" + id).removeAttr("disabled");
-            $("#Rate_" + id).removeAttr("disabled");
+            //$("#Rate_" + id).removeAttr("disabled");
 
         }
         else if (value == "rft") {
@@ -359,7 +369,7 @@
             $("#Height_" + id).prop("disabled", true);
 
             $("#Qty_" + id).removeAttr("disabled");
-            $("#Rate_" + id).removeAttr("disabled");
+            //$("#Rate_" + id).removeAttr("disabled");
         }
         else if (value == "nos") {
             // Nos = Qty = Area X Rate = Amount
@@ -369,7 +379,7 @@
             $("#Height_" + id).prop("disabled", true);
 
             $("#Qty_" + id).removeAttr("disabled");
-            $("#Rate_" + id).removeAttr("disabled");
+            //$("#Rate_" + id).removeAttr("disabled");
         }
         else {
         }
@@ -384,7 +394,7 @@
         var height = $("#Height_" + id).val();
         var width = $("#Width_" + id).val();
         var qty = $("#Qty_" + id).val();
-        var rate = $("#Rate_" + id).val();
+        //var rate = $("#Rate_" + id).val();
         var category = $("#Category_" + id).val();
 
         /* validate start */
@@ -408,15 +418,15 @@
         else
             qty = parseFloat(qty);
 
-        if (IsEmptyOrNull(rate))
-            rate = 0;
-        else
-            rate = parseFloat(rate);
+        //if (IsEmptyOrNull(rate))
+        //    rate = 0;
+        //else
+        //    rate = parseFloat(rate);
 
         /* validate end */
 
         var area = 0;
-        var amount = 0;
+        //var amount = 0;
 
         if (type == "cft") {
             area = length * height * width * qty;
@@ -432,22 +442,21 @@
         }
         else {
         }
-        amount = area * rate;
+        //amount = area * rate;
 
         $("#Area_" + id).text(parseFloat(area) + " " + type);
-        $("#ItemAmount_" + id).text(parseFloat(amount));
+        //$("#ItemAmount_" + id).text(parseFloat(amount));
 
         // Get all totals
-        UpdateValues();
+        //UpdateValues();
 
         //return this.value;
     });
-
-
-    $(document).on("change", ".clsCategory, .clsItemType", function () {
-        // Get all totals
-        UpdateValues();
-    });
+     
+    //$(document).on("change", ".clsCategory, .clsItemType", function () {
+    //    // Get all totals
+    //    UpdateValues();
+    //});
 
     $(document).on("click", "#btnSubmitBill", function () {
         var isvalid = true;
@@ -497,7 +506,7 @@
                 var height_value = $("#Height_" + field_id).val();
                 var width_value = $("#Width_" + field_id).val();
                 var qty_value = $("#Qty_" + field_id).val();
-                var rate_value = $("#Rate_" + field_id).val();
+                //var rate_value = $("#Rate_" + field_id).val();
 
                 if (type == "cft") {
 
@@ -542,14 +551,14 @@
                     }
 
                     // Rate
-                    if (IsEmptyOrNull(rate_value)) {
-                        $("#spn_Rate_" + field_id).text(field_required_msg);
-                        $("#spn_Rate_" + field_id).show();
-                        isvalid = false;
-                    }
-                    else {
-                        $("#spn_Rate_" + field_id).hide();
-                    }
+                    //if (IsEmptyOrNull(rate_value)) {
+                    //    $("#spn_Rate_" + field_id).text(field_required_msg);
+                    //    $("#spn_Rate_" + field_id).show();
+                    //    isvalid = false;
+                    //}
+                    //else {
+                    //    $("#spn_Rate_" + field_id).hide();
+                    //}
 
                 }
                 else if (type == "sft") {
@@ -585,14 +594,14 @@
                     }
 
                     // Rate
-                    if (IsEmptyOrNull(rate_value)) {
-                        $("#spn_Rate_" + field_id).text(field_required_msg);
-                        $("#spn_Rate_" + field_id).show();
-                        isvalid = false;
-                    }
-                    else {
-                        $("#spn_Rate_" + field_id).hide();
-                    }
+                    //if (IsEmptyOrNull(rate_value)) {
+                    //    $("#spn_Rate_" + field_id).text(field_required_msg);
+                    //    $("#spn_Rate_" + field_id).show();
+                    //    isvalid = false;
+                    //}
+                    //else {
+                    //    $("#spn_Rate_" + field_id).hide();
+                    //}
 
                 }
                 else if (type == "rft") {
@@ -618,14 +627,14 @@
                     }
 
                     // Rate
-                    if (IsEmptyOrNull(rate_value)) {
-                        $("#spn_Rate_" + field_id).text(field_required_msg);
-                        $("#spn_Rate_" + field_id).show();
-                        isvalid = false;
-                    }
-                    else {
-                        $("#spn_Rate_" + field_id).hide();
-                    }
+                    //if (IsEmptyOrNull(rate_value)) {
+                    //    $("#spn_Rate_" + field_id).text(field_required_msg);
+                    //    $("#spn_Rate_" + field_id).show();
+                    //    isvalid = false;
+                    //}
+                    //else {
+                    //    $("#spn_Rate_" + field_id).hide();
+                    //}
 
                 }
                 else if (type == "nos") {
@@ -641,14 +650,14 @@
                     }
 
                     // Rate
-                    if (IsEmptyOrNull(rate_value)) {
-                        $("#spn_Rate_" + field_id).text(field_required_msg);
-                        $("#spn_Rate_" + field_id).show();
-                        isvalid = false;
-                    }
-                    else {
-                        $("#spn_Rate_" + field_id).hide();
-                    }
+                    //if (IsEmptyOrNull(rate_value)) {
+                    //    $("#spn_Rate_" + field_id).text(field_required_msg);
+                    //    $("#spn_Rate_" + field_id).show();
+                    //    isvalid = false;
+                    //}
+                    //else {
+                    //    $("#spn_Rate_" + field_id).hide();
+                    //}
 
                 }
                 else {
@@ -675,7 +684,7 @@
             var height_value = $("#Height_" + field_id).val();
             var width_value = $("#Width_" + field_id).val();
             var qty_value = $("#Qty_" + field_id).val();
-            var rate_value = $("#Rate_" + field_id).val();
+            //var rate_value = $("#Rate_" + field_id).val();
 
             BillSiteItems.push({
                 "BillSiteItemId": field_id,
@@ -686,7 +695,7 @@
                 "Height": height_value,
                 "Width": width_value,
                 "Qty": qty_value,
-                "Rate": rate_value
+                //"Rate": rate_value
             });
 
         });

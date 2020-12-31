@@ -189,6 +189,9 @@
     <Compile Include="Models\SP_GetSitesList_Result.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SP_GetTodayPartyFinance1_Result.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SP_GetTodayPartyFinance_Result.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -198,16 +201,13 @@
     <Compile Include="Models\tbl_Attendance.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tbl_BillDebit.cs">
-      <DependentUpon>ConstructionDiary.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\tbl_BillDebitItem.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_BillDebitNew.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\tbl_BillSite.cs">
+    <Compile Include="Models\tbl_BillSiteFinal.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_BillSiteItem.cs">
@@ -2356,6 +2356,8 @@
     <Content Include="Areas\Admin\Views\Challan\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\ViewGroupPagar.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\ViewPersonPagar.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\AbstractBill.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\FinalBill.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -2364,6 +2366,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery.blockUI.js" />
+    <Content Include="Scripts\jquery.table2excel.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />

@@ -12,21 +12,16 @@ namespace ConstructionDiary.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_BillSiteItem
+    public partial class tbl_BillSiteFinal
     {
-        public System.Guid BillSiteItemId { get; set; }
+        public System.Guid BillSiteFinalId { get; set; }
         public System.Guid BillId { get; set; }
-        public string ItemCategory { get; set; }
         public string ItemName { get; set; }
         public string ItemType { get; set; }
-        public Nullable<decimal> Length { get; set; }
-        public Nullable<decimal> Width { get; set; }
-        public Nullable<decimal> Height { get; set; }
-        public Nullable<decimal> Qty { get; set; }
-        public Nullable<decimal> Area { get; set; }
-        public Nullable<decimal> Rate { get; set; }
-        public Nullable<decimal> Amount { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public int SeqNo { get; set; }
+        public decimal Area { get; set; }
+        public decimal Rate { get; set; }
+        public decimal TotalAmount { get; set; }
+        public System.DateTime CreatedDate { get; set; }
+        public System.Guid CreatedBy { get; set; }
     }
 }
