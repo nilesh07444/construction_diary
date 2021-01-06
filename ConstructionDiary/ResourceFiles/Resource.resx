@@ -687,4 +687,7 @@
   <data name="TotalPagar" xml:space="preserve">
     <value>Total Pagar</value>
   </data>
+  <data name="Hindi" xml:space="preserve">
+    <value>Hindi</value>
+  </data>
 </root>

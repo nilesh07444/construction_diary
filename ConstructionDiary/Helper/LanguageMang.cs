@@ -15,7 +15,10 @@ namespace ConstructionDiary
             },
             new Languages {
                 LanguageFullName = "Gujarati", LanguageCultureName = "gu"
-            } 
+            },
+            new Languages {
+                LanguageFullName = "Hindi", LanguageCultureName = "hi"
+            }
         };
         public static bool IsLanguageAvailable(string lang)
         {

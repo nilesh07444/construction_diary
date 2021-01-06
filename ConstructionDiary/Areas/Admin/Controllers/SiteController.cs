@@ -1551,5 +1551,12 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return ReturnMessage;
         }
 
+        public ActionResult AddNewBillByArea(Guid Id)
+        {
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+            return View();
+        }
+
     }
 }
