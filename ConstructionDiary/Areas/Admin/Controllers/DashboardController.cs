@@ -19,6 +19,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         // GET: Dashboard 
         public ActionResult Index()
         {
+             
             DashboardCount objDashboard = new DashboardCount();
 
             if (clsSession.RoleID == (int)UserRoles.SiteOwner)

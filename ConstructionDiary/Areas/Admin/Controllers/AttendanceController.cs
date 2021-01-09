@@ -400,14 +400,29 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         }
 
-        public ActionResult PersonList()
+        public ActionResult PersonList(string ftraction)
         {
+            bool IsActiveFilter = true;
+
+            if (!string.IsNullOrEmpty(ftraction))
+            {
+                if (ftraction == "active")
+                {
+                    IsActiveFilter = true;
+                }
+                else
+                {
+                    IsActiveFilter = false;
+                }
+            }
+
+            ViewBag.ftrAction = ftraction;
+
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
-
-            //List<tbl_Persons> lstPersonsOLD = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsAttendancePerson == true && x.IsDeleted == false).ToList();
-
+             
             List<AttendancePersonVM> lstPersonsNew = (from p in _db.tbl_Persons
                                                       where p.ClientId == ClientId && p.IsAttendancePerson == true && p.IsDeleted == false
+                                                      && (string.IsNullOrEmpty(ftraction) || p.IsActive == IsActiveFilter)
                                                       select new AttendancePersonVM
                                                       {
                                                           PersonId = p.PersonId,

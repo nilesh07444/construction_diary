@@ -175,7 +175,7 @@
 
 
                             <li>
-                                <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site">
+                                <a class="@(ViewBag.Title == "Site" ? "active" : "")" href="/admin/site?ftraction=active">
                                     <i class="fa fa-list"></i>
                                     <span>@Resource.Sites</span>
                                 </a>
@@ -292,7 +292,7 @@
                                     <span>@Resource.Attendance</span>
                                 </a>
                                 <ul class="sub">
-                                    <li><a href="/admin/attendance/personlist">@Resource.PersonList</a></li>
+                                    <li><a href="/admin/attendance/personlist?ftraction=active">@Resource.PersonList</a></li>
                                     <li><a href="/admin/attendance">@Resource.AttendanceList</a></li>
                                     <li><a href="/admin/attendance/persongroup">@Resource.PersonGroup</a></li>
                                 </ul>

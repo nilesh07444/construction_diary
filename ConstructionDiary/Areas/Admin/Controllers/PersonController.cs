@@ -712,7 +712,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                      Amount = finance.Amount,
                                                      SiteId = finance.SiteId,
                                                      SiteName = (site != null) ? site.SiteName : "",
-                                                     CreditOrDebit = finance.CreditOrDebit,
+                                                     CreditOrDebit = "Debit",
                                                      GivenAmountBy = finance.GivenAmountBy,
                                                      PaymentType = finance.PaymentType,
                                                      ChequeNo = finance.ChequeNo,
@@ -728,13 +728,46 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                      FirstName = user.FirstName,
                                                  }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
 
+                List<FinanceList> billList = (from bill in _db.tbl_BillDebitNew
+                                                 join user in _db.tbl_Users on bill.CreatedBy equals user.UserId
+                                                 join site in _db.tbl_Sites on bill.SiteId equals site.SiteId into outerJoinSite
+                                                 from site in outerJoinSite.DefaultIfEmpty()
+                                                 where bill.PersonId == id
+                                                 select new FinanceList
+                                                 {
+                                                     FinanceId = bill.BillId,
+                                                     PersonId = bill.PersonId,
+                                                     SelectedDate = bill.BillDate,
+                                                     Amount = bill.TotalAmount,
+                                                     SiteId = bill.SiteId,
+                                                     SiteName = (site != null) ? site.SiteName : "",
+                                                     CreditOrDebit = "Credit", 
+                                                     Remarks = bill.Remarks,
+                                                     IsActive = bill.IsActive,
+                                                     IsDeleted = bill.IsDeleted,
+                                                     CreatedBy = bill.CreatedBy, 
+                                                     CreatedDate = bill.CreatedDate,
+                                                     ModifiedDate = bill.ModifiedDate,
+                                                     FirstName = user.FirstName,
+                                                 }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
+
                 string PersonName = GetPersonName(id);
 
-                decimal? TotalAmount = financeList.Select(x => x.Amount).Sum();
-                string strTotalAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalAmount));
+                var MyCombinedList = financeList.Concat(billList);
 
-                string[] strColumns = new string[6] { "Date", "Amount", "Site Name", "Remarks", "Payment Type", "Bank Name" };
-                if (financeList != null && financeList.Count() > 0)
+                var list = MyCombinedList.OrderByDescending(x => x.CreatedDate).ToList();
+
+                decimal? TotalDebitAmount = financeList.Select(x => x.Amount).Sum();
+                string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
+
+                decimal? TotalCreditAmount = billList.Select(x => x.Amount).Sum();
+                string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
+
+                decimal? TotalRemainingAmount = TotalDebitAmount - TotalCreditAmount;
+                string strTotalRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalRemainingAmount));
+
+                string[] strColumns = new string[7] { "Date", "Debit", "Credit", "Site Name", "Payment Type", "Bank Name", "Remarks" };
+                if (list != null && list.Count() > 0)
                 {
 
                     List<DateTime> lstDateTemp = new List<DateTime>();
@@ -764,7 +797,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("</tr>");
                     strHTML.Append("</thead>");
                     strHTML.Append("<tbody>");
-                    foreach (var obj in financeList)
+                    foreach (var obj in list)
                     {
 
                         if (obj != null)
@@ -782,21 +815,21 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                             strcolval = Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy");
                                             break;
                                         }
-                                    case "Amount":
+                                    case "Debit":
                                         {
-                                            strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
+                                            strcolval = obj.CreditOrDebit == "Debit" ? CoreHelper.GetFormatterAmount(obj.Amount) : "";
+                                            break;
+                                        }
+                                    case "Credit":
+                                        {
+                                            strcolval = obj.CreditOrDebit == "Credit" ? CoreHelper.GetFormatterAmount(obj.Amount) : "";
                                             break;
                                         }
                                     case "Site Name":
                                         {
                                             strcolval = obj.SiteName;
                                             break;
-                                        }
-                                    case "Remarks":
-                                        {
-                                            strcolval = obj.Remarks;
-                                            break;
-                                        }
+                                        } 
                                     case "Payment Type":
                                         {
                                             strcolval = obj.PaymentType;
@@ -805,6 +838,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                     case "Bank Name":
                                         {
                                             strcolval = obj.BankName;
+                                            break;
+                                        }
+                                    case "Remarks":
+                                        {
+                                            strcolval = obj.Remarks;
                                             break;
                                         }
                                     default:
@@ -824,8 +862,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     // Total
                     strHTML.Append("<tr>");
                     strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
-                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalAmount + " </th>");
-                    strHTML.Append("<th colspan='5' style='border: 1px solid #ccc;'></th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalDebitAmount + " </th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalCreditAmount + " </th>");
+                    strHTML.Append("<th colspan='4' style='border: 1px solid #ccc;'> = " + strTotalRemainingAmount + " </th>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");

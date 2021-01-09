@@ -33,11 +33,11 @@
         <div class="col-lg-12 col-sm-12">
             <div class="panel panel-primary" style="opacity: 1;">
                 <div class="panel-heading text-center" style="background-color:#3c8bb9; border-color: #3c8bb9;">
-                    <strong> @Model.SiteName </strong> 
+                    <strong> @Model.SiteName </strong>
                 </div>
             </div>
         </div>
-          
+
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
                 <div class="symbol blue">
@@ -82,7 +82,7 @@
                 <header class="panel-heading">
                     <strong>Finance List - @Model.SiteName</strong>
 
-                    <a href="/admin/site" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                    <a href="/admin/site?ftraction=active" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
                         <i class="fa fa-backward"></i> Back
                     </a>
 
@@ -93,15 +93,18 @@
                             <div class="btn-group pull-left">
                                 <a class="btn btn-default" href="/admin/myaccount/add?id=@Model.SiteId" style="color:#000000;"><i class="fa fa-plus"></i> @Resource.AddNewCredit</a>
                             </div>
-                            <div class="btn-group pull-right">
-                                <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                    @Resource.Download <i class="fa fa-angle-down"></i>
-                                </button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
-                                    <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
-                                </ul>
-                            </div>
+                            @if (lstFinance != null && lstFinance.Count() > 0)
+                            {
+                                <div class="btn-group pull-right">
+                                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                        @Resource.Download <i class="fa fa-angle-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                        <li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>
+                                    </ul>
+                                </div>
+                            }
                         </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped table-hover" id="tblFinanceList">

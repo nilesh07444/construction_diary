@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -45,27 +46,38 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.6.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\BouncyCastle.1.8.6.1\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="EPPlus">
-      <HintPath>C:\Users\lappy\Desktop\export krutik\EPPlus.dll</HintPath>
+    <Reference Include="EPPlus, Version=5.5.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.5.5.0\lib\net45\EPPlus.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp">
-      <HintPath>C:\Users\lappy\Desktop\export krutik\itextsharp.dll</HintPath>
+    <Reference Include="itextsharp, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.2\lib\itextsharp.dll</HintPath>
     </Reference>
-    <Reference Include="itextsharp.xmlworker">
-      <HintPath>C:\Users\lappy\Desktop\export krutik\itextsharp.xmlworker.dll</HintPath>
+    <Reference Include="itextsharp.xmlworker, Version=5.5.13.2, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\itextsharp.xmlworker.5.5.13.2\lib\itextsharp.xmlworker.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IO.RecyclableMemoryStream, Version=1.3.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IO.RecyclableMemoryStream.1.3.6\lib\net46\Microsoft.IO.RecyclableMemoryStream.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ComponentModel.Annotations.4.7.0\lib\net461\System.ComponentModel.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Tasks" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -306,6 +318,7 @@
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
     <Compile Include="ViewModel\ClientVM.cs" />
     <Compile Include="ViewModel\CommonClass.cs" />
+    <Compile Include="ViewModel\ContractorFinanceVM.cs" />
     <Compile Include="ViewModel\ExpenseVM.cs" />
     <Compile Include="ViewModel\GeneralResponse.cs" />
     <Compile Include="ViewModel\LoginVM.cs" />
@@ -2025,8 +2038,6 @@
     <Content Include="Areas\Admin\Views\Person\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Site\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Profile\Index.cshtml" />
-    <Content Include="Areas\Admin\Content\assets\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\advanced-datatable\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\component.json" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\docs\media\license\Syntax Highlighter" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\examples\examples_support\syntax\license\Syntax Highlighter" />
@@ -2050,16 +2061,12 @@
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\extras\TableTools\media\images\psd\file_types.psd" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\extras\TableTools\media\images\psd\printer.psd" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\extras\TableTools\media\js\TableTools.min.js.gz" />
-    <Content Include="Areas\Admin\Content\assets\advanced-datatable\media\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\advanced-datatable\media\images\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\media\images\Sorting icons.psd" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\package.json" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\scripts\jshint.config" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\scripts\make.sh" />
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\scripts\unit_tests.sh" />
-    <Content Include="Areas\Admin\Content\assets\bootstrap-colorpicker\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\bootstrap-colorpicker\less\colorpicker.less" />
-    <Content Include="Areas\Admin\Content\assets\bootstrap-datepicker\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\bootstrap-datepicker\less\datepicker.less" />
     <Content Include="Areas\Admin\Content\assets\bootstrap-daterangepicker\README.md" />
     <Content Include="Areas\Admin\Content\assets\bootstrap-datetimepicker\.travis.yml" />
@@ -2083,66 +2090,30 @@
     <Content Include="Areas\Admin\Content\assets\bootstrap-timepicker\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\bootstrap-timepicker\less\timepicker.less" />
     <Content Include="Areas\Admin\Content\assets\bootstrap-timepicker\README.md" />
-    <Content Include="Areas\Admin\Content\assets\chart-master\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\chart-master\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\chart-master\component.json" />
     <Content Include="Areas\Admin\Content\assets\chart-master\docs\prettify.less" />
     <Content Include="Areas\Admin\Content\assets\chart-master\docs\styles.less" />
     <Content Include="Areas\Admin\Content\assets\chart-master\LICENSE.md" />
     <Content Include="Areas\Admin\Content\assets\chart-master\readme.md" />
-    <Content Include="Areas\Admin\Content\assets\chart-master\site\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\CHANGES.md" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\LICENSE.md" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\a11yhelp\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\a11yhelp\dialogs\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\about\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\clipboard\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\fakeobjects\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\image\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\link\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\magicline\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\pastefromword\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\scayt\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\scayt\LICENSE.md" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\scayt\README.md" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\specialchar\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\specialchar\dialogs\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\tabletools\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\table\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\wsc\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\wsc\LICENSE.md" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\plugins\wsc\README.md" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\README.md" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\samples\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\samples\assets\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\samples\plugins\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\samples\plugins\dialog\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\samples\plugins\htmlwriter\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\samples\plugins\htmlwriter\assets\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\samples\plugins\htmlwriter\assets\outputforflash\outputforflash.fla" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\skins\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\ckeditor\skins\moono\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\ckeditor\skins\moono\readme.md" />
-    <Content Include="Areas\Admin\Content\assets\data-tables\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\dropzone\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\dropzone\css\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\dropzone\css\stylus\basic.styl" />
     <Content Include="Areas\Admin\Content\assets\dropzone\css\stylus\dropzone.styl" />
-    <Content Include="Areas\Admin\Content\assets\fancybox\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\fancybox\.gitattributes" />
     <Content Include="Areas\Admin\Content\assets\fancybox\CHANGELOG.md" />
     <Content Include="Areas\Admin\Content\assets\fancybox\README.md" />
-    <Content Include="Areas\Admin\Content\assets\fancybox\source\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\file-uploader\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\blueimp-file-upload.jquery.json" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\bower.json" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\CONTRIBUTING.md" />
-    <Content Include="Areas\Admin\Content\assets\file-uploader\cors\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\package.json" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\README.md" />
-    <Content Include="Areas\Admin\Content\assets\file-uploader\server\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\gae-go\app.yaml" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\gae-go\app\main.go" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\gae-python\app.yaml" />
@@ -2150,10 +2121,8 @@
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\node\package.json" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\node\public\files\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\node\tmp\.gitignore" />
-    <Content Include="Areas\Admin\Content\assets\file-uploader\server\php\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\php\files\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\file-uploader\server\php\files\.htaccess" />
-    <Content Include="Areas\Admin\Content\assets\flot\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\flot\examples\data-eu-gdp-growth-1.json" />
     <Content Include="Areas\Admin\Content\assets\flot\examples\data-eu-gdp-growth-2.json" />
     <Content Include="Areas\Admin\Content\assets\flot\examples\data-eu-gdp-growth-3.json" />
@@ -2195,36 +2164,24 @@
     <Content Include="Areas\Admin\Content\assets\font-awesome\scss\_variables.scss" />
     <Content Include="Areas\Admin\Content\assets\fuelux\COPYING" />
     <Content Include="Areas\Admin\Content\assets\fuelux\README.md" />
-    <Content Include="Areas\Admin\Content\assets\fullcalendar\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\fullcalendar\demos\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\fullcalendar\demos\cupertino\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\gritter\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\gritter\README.markdown" />
     <Content Include="Areas\Admin\Content\assets\jcrop\README.md" />
-    <Content Include="Areas\Admin\Content\assets\jquery-easy-pie-chart\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\jquery-easy-pie-chart\jquery.easy-pie-chart.coffee" />
     <Content Include="Areas\Admin\Content\assets\jquery-easy-pie-chart\Makefile" />
     <Content Include="Areas\Admin\Content\assets\jquery-easy-pie-chart\Readme.md" />
-    <Content Include="Areas\Admin\Content\assets\jquery-file-upload\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\blueimp-file-upload.jquery.json" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\CONTRIBUTING.md" />
-    <Content Include="Areas\Admin\Content\assets\jquery-file-upload\js\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\package.json" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\README.md" />
-    <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\gae-go\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\gae-go\app.yaml" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\gae-go\app\main.go" />
-    <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\gae-python\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\gae-python\app.yaml" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\node\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\node\package.json" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\node\public\files\thumbnail\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\node\tmp\.gitignore" />
-    <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\php\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\jquery-file-upload\server\php\files\.htaccess" />
-    <Content Include="Areas\Admin\Content\assets\jquery-knob\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\jquery-knob\README.md" />
     <Content Include="Areas\Admin\Content\assets\jquery-multi-select\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\jquery-multi-select\bower.json" />
@@ -2232,12 +2189,9 @@
     <Content Include="Areas\Admin\Content\assets\jquery-multi-select\README.markdown" />
     <Content Include="Areas\Admin\Content\assets\jquery-multi-select\test\lib\jasmine-1.2.0\MIT.LICENSE" />
     <Content Include="Areas\Admin\Content\assets\jquery-tags-input\README.md" />
-    <Content Include="Areas\Admin\Content\assets\jquery-ui\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\.gitignore" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\.travis.yml" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\component.json" />
-    <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\examples\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\less\morris.core.less" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\lib\morris.area.coffee" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\lib\morris.bar.coffee" />
@@ -2248,8 +2202,6 @@
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\lib\morris.line.coffee" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\package.json" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\README.md" />
-    <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\.DS_Store" />
-    <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\lib\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\lib\area\area_spec.coffee" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\lib\bar\bar_spec.coffee" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\lib\bar\colours.coffee" />
@@ -2264,7 +2216,6 @@
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\lib\pad_spec.coffee" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\lib\parse_time_spec.coffee" />
     <Content Include="Areas\Admin\Content\assets\morris.js-0.4.3\spec\support\placeholder.coffee" />
-    <Content Include="Areas\Admin\Content\assets\nestable\.DS_Store" />
     <Content Include="Areas\Admin\Content\assets\nestable\README.md" />
     <Content Include="Areas\Admin\Content\assets\xchart\LICENSE" />
     <Content Include="Areas\Admin\Content\assets\xchart\README.md" />
@@ -2272,14 +2223,9 @@
     <Content Include="Areas\Admin\Content\bootstrap-theme.min.css.map" />
     <Content Include="Areas\Admin\Content\bootstrap.css.map" />
     <Content Include="Areas\Admin\Content\bootstrap.min.css.map" />
-    <Content Include="Areas\Admin\Content\css\.DS_Store" />
     <Content Include="Areas\Admin\Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Areas\Admin\Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Areas\Admin\Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Areas\Admin\Content\img\.DS_Store" />
-    <Content Include="Areas\Admin\Content\img\email-img\.DS_Store" />
-    <Content Include="Areas\Admin\Content\img\file-search\.DS_Store" />
-    <Content Include="Areas\Admin\Content\img\gallery\.DS_Store" />
     <Content Include="Areas\Admin\Views\Client\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Client\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Client\Users.cshtml" />
@@ -2457,7 +2403,10 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

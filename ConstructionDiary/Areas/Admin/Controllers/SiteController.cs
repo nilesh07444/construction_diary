@@ -26,12 +26,29 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             _db = new ConstructionDiaryEntities();
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string ftraction)
         {
+            bool IsActiveFilter = true;
+
+            if (!string.IsNullOrEmpty(ftraction))
+            {
+                if (ftraction == "active")
+                {
+                    IsActiveFilter = true;
+                }
+                else
+                {
+                    IsActiveFilter = false;
+                }
+            }
+
+            ViewBag.ftrAction = ftraction;
+
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             List<SiteDetailVM> siteDetail = (from site in _db.tbl_Sites
                                              where site.ClientId == ClientId && !site.IsDeleted
+                                             && (string.IsNullOrEmpty(ftraction) || site.IsActive == IsActiveFilter)
                                              select new SiteDetailVM
                                              {
                                                  SiteId = site.SiteId,
@@ -174,6 +191,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         public string ExportPDFOfSelectedSite(Guid id)
         {
+            List<ContractorFinanceVM> listFinance = new List<ContractorFinanceVM>();
+            List<ContractorFinanceVM> listBill = new List<ContractorFinanceVM>();
+
             tbl_Sites objSite = new tbl_Sites();
             string Result = "";
 
@@ -181,15 +201,59 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
                 objSite = _db.tbl_Sites.Where(x => x.SiteId == id).FirstOrDefault();
 
-                var list = (from p in _db.SP_GetSiteDetailById(id)
-                            select p).ToList();
+                listFinance = (from c in _db.tbl_ContractorFinance
+                               join u in _db.tbl_Users on c.UserId equals u.UserId
+                               where c.SiteId == id && c.IsActive == true && c.IsDeleted == false
+                               select new ContractorFinanceVM
+                               {
+                                   Id = c.ContractorFinanceId,
+                                   SelectedDate = c.SelectedDate,
+                                   Amount = c.Amount,
+                                   BankName = c.BankName,
+                                   ChequeFor = c.ChequeFor,
+                                   ChequeNo = c.ChequeNo,
+                                   CreditOrDebit = "Credit",
+                                   PaymentType = c.PaymentType,
+                                   Remarks = c.Remarks,
+                                   SiteId = c.SiteId,
+                                   CreatedDate = c.CreatedDate,
+                                   UserName = u.FirstName
+                               }).OrderByDescending(x => x.CreatedDate).ToList();
+
+                listBill = (from c in _db.tbl_BillSiteNew
+                            join u in _db.tbl_Users on c.CreatedBy equals u.UserId
+                            where c.SiteId == id && c.IsActive == true && c.IsDeleted == false
+                            select new ContractorFinanceVM
+                            {
+                                Id = c.BillId,
+                                SelectedDate = c.BillDate,
+                                Amount = c.TotalAmount,
+                                CreditOrDebit = "Debit",
+                                Remarks = c.Remarks,
+                                SiteId = c.SiteId,
+                                CreatedDate = c.CreatedDate,
+                                UserName = u.FirstName
+                            }).OrderByDescending(x => x.CreatedDate).ToList();
+
+                var MyCombinedList = listFinance.Concat(listBill);
+
+                var list = MyCombinedList.OrderByDescending(x => x.CreatedDate).ToList();
+
+                //var list = (from p in _db.SP_GetSiteDetailById(id)
+                //            select p).ToList();
 
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
-                decimal? TotalCreditAmount = list.Select(x => x.Amount).Sum();
+                decimal? TotalCreditAmount = list.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
                 string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
 
-                string[] strColumns = new string[6] { "Date", "Amount", "Type", "Payment Type", "Bank Name", "Remarks" };
+                decimal? TotalDebitAmount = list.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum(); 
+                string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
+
+                decimal? RemainingAmount = TotalCreditAmount - TotalDebitAmount;
+                string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
+
+                string[] strColumns = new string[6] { "Date", "Credit", "Debit", "Payment Type", "Bank Name", "Remarks" };
                 if (list != null && list.Count() > 0)
                 {
 
@@ -234,16 +298,16 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                             strcolval = Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy");
                                             break;
                                         }
-                                    case "Amount":
+                                    case "Credit":
                                         {
-                                            strcolval = CoreHelper.GetFormatterAmount(obj.Amount);
+                                            strcolval = obj.CreditOrDebit == "Credit" ? CoreHelper.GetFormatterAmount(obj.Amount) : "";
                                             break;
                                         }
-                                    case "Type":
+                                    case "Debit":
                                         {
-                                            strcolval = obj.CreditOrDebit;
+                                            strcolval = obj.CreditOrDebit == "Debit" ? CoreHelper.GetFormatterAmount(obj.Amount) : "";
                                             break;
-                                        }
+                                        } 
                                     case "Payment Type":
                                         {
                                             strcolval = obj.PaymentType;
@@ -277,7 +341,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("<tr>");
                     strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
                     strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalCreditAmount + " </th>");
-                    strHTML.Append("<th colspan='5' style='border: 1px solid #ccc;'></th>");
+                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalDebitAmount + " </th>");
+                    strHTML.Append("<th colspan='3' style='border: 1px solid #ccc;'>=  " + strRemainingAmount + " </th>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");
@@ -1211,7 +1276,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     ViewData["FinalBillList"] = billItemWiseGroupFinalList;
                 }
-                 
+
                 objBillInfo = (from b in _db.tbl_BillSiteNew
                                where b.BillId == Id
                                select new AreaSiteBillVM
@@ -1531,7 +1596,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             try
             {
                 List<tbl_BillSiteFinal> lstItems = _db.tbl_BillSiteFinal.Where(x => x.BillId == BillId).ToList();
-                 
+
                 if (lstItems == null || lstItems.Count == 0)
                 {
                     ReturnMessage = "notfound";
