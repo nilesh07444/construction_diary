@@ -6046,7 +6046,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/18/2020 14:17:16</publishTime>
     </File>
     <File Include="bin/gu/ConstructionDiary.resources.dll">
-      <publishTime>01/09/2021 23:19:38</publishTime>
+      <publishTime>12/31/2020 22:59:08</publishTime>
+    </File>
+    <File Include="bin/hi/ConstructionDiary.resources.dll">
+      <publishTime>12/31/2020 22:59:08</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>08/27/2020 11:20:20</publishTime>

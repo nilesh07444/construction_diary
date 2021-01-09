@@ -311,6 +311,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.gu.resx</DependentUpon>
     </Compile>
+    <Compile Include="ResourceFiles\Resource.hi.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.hi.resx</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\AttendanceVM.cs" />
     <Compile Include="ViewModel\BillSiteVM.cs" />
     <Compile Include="ViewModel\BillDebitVM.cs" />
@@ -2304,6 +2309,7 @@
     <Content Include="Areas\Admin\Views\Attendance\ViewPersonPagar.cshtml" />
     <Content Include="Areas\Admin\Views\Site\AbstractBill.cshtml" />
     <Content Include="Areas\Admin\Views\Site\FinalBill.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\AddNewBillByArea.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -2368,6 +2374,10 @@
     <EmbeddedResource Include="ResourceFiles\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResourceFiles\Resource.hi.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.hi.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

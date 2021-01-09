@@ -321,8 +321,8 @@
     });
 
     jQuery(document).on("click", "#btnAddSite", function () {
-        $('#addNewSiteModal h4').text("Add New Site");
-        $('#addNewSiteModal #btnSaveSite').text("Save");
+        $('#addNewSiteModal h4').text('@Resource.AddNewSite');
+        $('#addNewSiteModal #btnSaveSite').text('@Resource.Save');
         $(".clserror").hide();
         $('#txtSitename').val('');
         $('#txtSiteDescription').val('');
@@ -338,7 +338,7 @@
         $('#txtSitename').val(site_name);
         $('#txtSiteDescription').val(site_desc);
         $('#addNewSiteModal h4').text("Update Site Details");
-        $('#addNewSiteModal #btnSaveSite').text("Update");
+        $('#addNewSiteModal #btnSaveSite').text('@Resource.Save');
         $('#hdnSiteIdToEdit').val(site_id);
         $(".clserror").hide();
         $('#addNewSiteModal').modal('show');
