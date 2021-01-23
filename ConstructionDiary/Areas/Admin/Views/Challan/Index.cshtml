@@ -1,19 +1,79 @@
-﻿@using ConstructionDiary.ResourceFiles;
+﻿@using ConstructionDiary.Models
+@using ConstructionDiary.ResourceFiles;
 @model List<ChallanVM>
 @{
     ViewBag.Title = "Challan";
 
     int counter = 1;
+
+    List<SelectListItem> lstSites = ViewData["SiteList"] as List<SelectListItem>;
+
 }
 
 <section class="wrapper site-min-height">
     <!-- page start-->
     <div class="row">
         <div class="col-lg-12">
+
+            @if (clsSession.RoleID != (int)UserRoles.Staff)
+            {
+                <section class="panel">
+                    <header class="panel-heading">
+                        <strong>@Resource.ChallanList</strong>
+                    </header>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-2 form-group">
+                                <label for="Duration">@Resource.Duration</label>
+                                <select class="form-control" id="Duration" name="Duration">
+                                    <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
+                                    <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                                <div class="">
+                                    <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
+                                    <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                                </div>
+                                <span id="spn_StartDate" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                                <div class="">
+                                    <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
+                                    <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                                </div>
+                                <span id="spn_EndDate" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group clsSite">
+                                <div class="">
+                                    <label for="dllSite">@Resource.SiteName</label><span class="required">*</span>
+                                    <select class="form-control" id="ddlSite">
+                                        <option value="">-All Sites-</option>
+                                        @if (lstSites != null && lstSites.Count > 0)
+                                        {
+                                            foreach (SelectListItem site in lstSites)
+                                            {
+                                                <option value="@site.Value" @(ViewBag.Site == site.Value ? "selected" : "")>@site.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <span id="spn_SiteId" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <label></label>
+                                <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+            }
+
             <section class="panel">
-                <header class="panel-heading">
-                    <strong>@Resource.ChallanList</strong>
-                </header>
+
                 <div class="panel-body">
 
                     <div class="adv-table">
@@ -23,16 +83,18 @@
                                 <a class="btn btn-success" href="/admin/challan/add"><i class="fa fa-plus"></i> @Resource.AddNewChallan</a>
                             </div>
 
-                            @*<div class="btn-group pull-right">
+                            @if (clsSession.RoleID != (int)UserRoles.Staff && Model != null && Model.Count > 0)
+                            {
+                                <div class="btn-group pull-right">
                                     <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                        Tools <i class="fa fa-angle-down"></i>
+                                        @Resource.Download <i class="fa fa-angle-down"></i>
                                     </button>
                                     <ul class="dropdown-menu pull-right">
-                                        <li><a href="#">Print</a></li>
-                                        <li><a href="#">Save as PDF</a></li>
-                                        <li><a href="#">Export to Excel</a></li>
+                                        <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                        @*<li><a id="btnDownloadExcel" href="javascript:void(0);">Excel</a></li>*@
                                     </ul>
-                                </div>*@
+                                </div>
+                            }
                         </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped table-hover" id="tblChallanList">
@@ -40,12 +102,12 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th width="10%">@Resource.ChallanDate</th>
-                                    <th width="10%;">@Resource.ChallanNo</th>
-                                    <th width="13%;">@Resource.SiteName</th>
-                                    <th width="13%;">@Resource.MerchantName</th>
-                                    <th width="13%;">@Resource.CarNo</th>
+                                    <th width="10%">@Resource.ChallanNo</th>
+                                    <th width="13%">@Resource.SiteName</th>
+                                    <th width="13%">@Resource.MerchantName</th>
+                                    <th width="13%">@Resource.CarNo</th>
                                     <th width="10%">@Resource.File</th>
-                                    <th width="10%;">@Resource.Action</th>
+                                    <th width="10%">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -141,7 +203,7 @@
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
 <script type="text/javascript" charset="utf-8">
-    jQuery(document).ready(function () { 
+    jQuery(document).ready(function () {
         jQuery('html, body').animate({ scrollTop: 0 }, 1000);
 
         jQuery('#tblChallanList').dataTable({
@@ -188,7 +250,7 @@
 
                     $.unblockUI();
                 },
-                error: function (resultData) { 
+                error: function (resultData) {
                     $.unblockUI();
                 }
             });
@@ -199,5 +261,83 @@
         var bill_id = $(this).attr("data-id");
         window.location.href = "/admin/site/editbill/" + bill_id;
     });
-     
+
+    function isNullOrUndefinedCustom(str) {
+        if (str == "" || str == undefined || str == null)
+            return true;
+        else
+            return false;
+    }
+
+    $(document).on("change", "#Duration", function () {
+        var seletedType = $(this).val();
+
+        if (seletedType == "custom") {
+            $(".clsFilterdate").addClass("clsShow").removeClass("clsHide");
+        }
+        else {
+            $(".clsFilterdate").addClass("clsHide").removeClass("clsShow");
+        }
+
+    });
+
+    $(document).on("click", "#btnSearchReport", function () {
+
+        var duration = $("#Duration").val();
+        var startDate = $("#StartDate").val();
+        var endDate = $("#EndDate").val();
+
+        var ddlSite = $("#ddlSite").val();
+
+        var flag = true;
+        $(".formerror").hide();
+
+        if (duration == "") {
+            $("#spn_Duration").show();
+            flag = false;
+        }
+
+        if (duration == "custom") {
+            if (isNullOrUndefinedCustom(startDate)) {
+                $("#spn_StartDate").show();
+                flag = false;
+            }
+            if (isNullOrUndefinedCustom(endDate)) {
+                $("#spn_EndDate").show();
+                flag = false;
+            }
+        }
+
+        if (flag == true) {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            reloadFilterUrl(duration, startDate, endDate, ddlSite);
+        }
+
+    });
+
+    function reloadFilterUrl(duration, startDate, endDate, site) {
+
+        var url = "/admin/challan?duration=" + duration + "&site=" + site;
+
+        if (duration == "custom") {
+            if (!isNullOrUndefinedCustom(startDate))
+                url += "&start=" + startDate;
+
+            if (!isNullOrUndefinedCustom(endDate))
+                url += "&end=" + endDate;
+        }
+        window.location.href = url;
+    }
+
+    jQuery(document).on("click", "#btnDownloadPdf", function () {
+
+        StartLoading();
+        setTimeout(function(){ StopLoading() }, 3000);
+
+        var start = '@ViewBag.reportStartDate';
+        var end  = '@ViewBag.reportEndDate';
+        var site = '@ViewBag.Site';
+        window.location.href = "/admin/challan/ExportPDFOfChallan?start=" + start + "&end=" + end + "&site=" + site;
+    });
+
 </script>

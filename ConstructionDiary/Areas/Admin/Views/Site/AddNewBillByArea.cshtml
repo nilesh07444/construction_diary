@@ -77,75 +77,76 @@
                                 </thead>
                                 <tbody>
                                     @{ Guid newId = Guid.NewGuid(); }
-                                    <tr id="@newId">
-                                        <td>1</td>
-                                        <td>
-                                            <select class="form-control clsCategory" id="Category_@newId" name="Category_@newId">
-                                                <option value="add">Add</option>
-                                                <option value="less">Less</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <textarea class="form-control clsItemName" id="Heading_@newId" name="Heading_@newId" placeholder="Enter Heading"></textarea>
-                                            <span id="spn_Heading_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <select class="form-control clsItemType" id="ItemType_@newId" name="ItemType_@newId">
-                                                <option value="">-@Resource.Type-</option>
-                                                <option value="cft">CFT</option>
-                                                <option value="sft">SFT</option>
-                                                <option value="rft">RFT</option>
-                                                <option value="nos">NOS</option>
-                                            </select>
-                                            <span id="spn_ItemType_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><button id="btnAddItem" class="btn btn-round btn-success pull-right" type="button"><i class="fa fa-plus"></i> Add</button></td>
-                                        <td>
-                                            <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button" ><i class="fa fa-trash-o"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr id="@newId">
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td style="text-align: center; vertical-align: inherit;">1.</td>
-                                        <td>
-                                            <textarea class="form-control clsItemName" id="ItemName_@newId" name="ItemName_@newId" placeholder="@Resource.ItemName"></textarea>
-                                            <span id="spn_ItemName_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsQty" id="Qty_@newId" name="Qty_@newId" placeholder="@Resource.Qty" type="text" disabled>
-                                            <span id="spn_Qty_@newId" name="spn_Qty_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsLength" id="Length_@newId" name="Length_@newId" placeholder="@Resource.Length" type="text" disabled>
-                                            <span id="spn_Length_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsHeight" id="Height_@newId" name="Height_@newId" placeholder="@Resource.Height" type="text" disabled>
-                                            <span id="spn_Height_@newId" name="spn_Height_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <input class="form-control clsWidth" id="Width_@newId" name="Width_@newId" placeholder="@Resource.Width" type="text" disabled>
-                                            <span id="spn_Width_@newId" name="spn_Width_@newId" class="field-validation-valid text-danger"></span>
-                                        </td>
-                                        <td>
-                                            <span id="Area_@newId">0</span>
-                                        </td>
-                                        <td>
-                                            <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button" style="display:none;"><i class="fa fa-trash-o"></i></button>
-                                        </td>
-                                    </tr>
-
+                                    <div>
+                                        <tr class="mainItem" id="mainItem_@newId">
+                                            <td>1</td>
+                                            <td>
+                                                <select class="form-control clsCategory" id="Category_@newId" name="Category_@newId">
+                                                    <option value="add">Add</option>
+                                                    <option value="less">Less</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <textarea class="form-control clsItemName" id="Heading_@newId" name="Heading_@newId" placeholder="Enter Heading"></textarea>
+                                                <span id="spn_Heading_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <select class="form-control clsItemType" id="ItemType_@newId" name="ItemType_@newId">
+                                                    <option value="">-@Resource.Type-</option>
+                                                    <option value="cft">CFT</option>
+                                                    <option value="sft">SFT</option>
+                                                    <option value="rft">RFT</option>
+                                                    <option value="nos">NOS</option>
+                                                </select>
+                                                <span id="spn_ItemType_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td><button id="btnAddSubItem" data-id="@newId" class="btn btn-round btn-success pull-right" type="button"><i class="fa fa-plus"></i> Add</button></td>
+                                            <td>
+                                                <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button"><i class="fa fa-trash-o"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr class="subItem" data-id="@newId">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td style="text-align: center; vertical-align: inherit;">1.</td>
+                                            <td>
+                                                <textarea class="form-control clsItemName" id="ItemName_@newId" name="ItemName_@newId" placeholder="@Resource.ItemName"></textarea>
+                                                <span id="spn_ItemName_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsQty" id="Qty_@newId" name="Qty_@newId" placeholder="@Resource.Qty" type="text" disabled>
+                                                <span id="spn_Qty_@newId" name="spn_Qty_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsLength" id="Length_@newId" name="Length_@newId" placeholder="@Resource.Length" type="text" disabled>
+                                                <span id="spn_Length_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsHeight" id="Height_@newId" name="Height_@newId" placeholder="@Resource.Height" type="text" disabled>
+                                                <span id="spn_Height_@newId" name="spn_Height_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <input class="form-control clsWidth" id="Width_@newId" name="Width_@newId" placeholder="@Resource.Width" type="text" disabled>
+                                                <span id="spn_Width_@newId" name="spn_Width_@newId" class="field-validation-valid text-danger"></span>
+                                            </td>
+                                            <td>
+                                                <span id="Area_@newId">0</span>
+                                            </td>
+                                            <td>
+                                                <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button" style="display:none;"><i class="fa fa-trash-o"></i></button>
+                                            </td>
+                                        </tr>
+                                    </div>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="9">
+                                        <td colspan="11">
                                             <button id="btnAddItem" class="btn btn-round btn-default pull-right" type="button"><i class="fa fa-plus"></i> Add Main Item</button>
                                         </td>
                                     </tr>
@@ -732,6 +733,50 @@
                 //StopLoading();
             }
         });
+
+    });
+
+    $(document).on("click", "#btnAddSubItem", function () {
+
+        var dataid = $(this).attr("data-id");
+        alert(dataid);
+
+        var htmlData = "";
+
+        htmlData += '<tr class="subItem" data-id="' + dataid +'">';
+        htmlData += '<td></td>';
+        htmlData += '<td></td>';
+        htmlData += '<td></td>';
+        htmlData += '<td style="text-align: center; vertical-align: inherit;">1.</td>';
+        htmlData += '<td>';
+        htmlData += '<textarea class="form-control clsItemName" id="ItemName_"' + dataid +'"" name="ItemName_"' + dataid +'"" placeholder="@Resource.ItemName"></textarea>';
+        htmlData += '<span id="spn_ItemName_"' + dataid +'"" class="field-validation-valid text-danger"></span>';
+        htmlData += '</td>';
+        htmlData += '<td>';
+        htmlData += '<input class="form-control clsQty" id="Qty_"' + dataid +'"" name="Qty_"' + dataid +'"" placeholder="@Resource.Qty" type="text" disabled>';
+        htmlData += '<span id="spn_Qty_"' + dataid +'"" name="spn_Qty_"' + dataid +'"" class="field-validation-valid text-danger"></span>';
+        htmlData += '</td>';
+        htmlData += '<td>';
+        htmlData += '<input class="form-control clsLength" id="Length_"' + dataid +'"" name="Length_"' + dataid +'"" placeholder="@Resource.Length" type="text" disabled>';
+        htmlData += '<span id="spn_Length_"' + dataid +'"" class="field-validation-valid text-danger"></span>';
+        htmlData += '</td>';
+        htmlData += '<td>';
+        htmlData += '<input class="form-control clsHeight" id="Height_"' + dataid +'"" name="Height_"' + dataid +'"" placeholder="@Resource.Height" type="text" disabled>';
+        htmlData += '<span id="spn_Height_"' + dataid +'"" name="spn_Height_"' + dataid +'"" class="field-validation-valid text-danger"></span>';
+        htmlData += '</td>';
+        htmlData += '<td>';
+        htmlData += '<input class="form-control clsWidth" id="Width_"' + dataid +'"" name="Width_"' + dataid +'"" placeholder="@Resource.Width" type="text" disabled>';
+        htmlData += '<span id="spn_Width_"' + dataid +'"" name="spn_Width_"' + dataid +'"" class="field-validation-valid text-danger"></span>';
+        htmlData += '</td>';
+        htmlData += '<td>';
+        htmlData += '<span id="Area_"' + dataid +'"">0</span>';
+        htmlData += '</td>';
+        htmlData += '<td>';
+        htmlData += '<button title="Delete" delete-id=""' + dataid +'"" class="btn btn-round btn-danger clsDelete" type="button" style="display:none;"><i class="fa fa-trash-o"></i></button>';
+        htmlData += '</td>';
+        htmlData += '</tr>';
+
+        $(".mainItem").append(htmlData);
 
     });
 
