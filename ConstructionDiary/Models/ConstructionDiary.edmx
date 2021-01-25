@@ -293,6 +293,26 @@
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="tbl_MerchantPayment">
+          <Key>
+            <PropertyRef Name="MerchantPaymentId" />
+          </Key>
+          <Property Name="MerchantPaymentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PaymentDate" Type="datetime" Nullable="false" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SiteId" Type="uniqueidentifier" />
+          <Property Name="MerchantId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PaymentType" Type="nvarchar" MaxLength="50" />
+          <Property Name="ChequeNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="BankName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ChequeFor" Type="nvarchar" MaxLength="50" />
+          <Property Name="Remarks" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+        </EntityType>
         <EntityType Name="tbl_PackageType">
           <Key>
             <PropertyRef Name="PackageTypeId" />
@@ -609,6 +629,7 @@
           <EntitySet Name="tbl_MaterialPurchaseItems" EntityType="Self.tbl_MaterialPurchaseItems" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MaterialType" EntityType="Self.tbl_MaterialType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Merchant" EntityType="Self.tbl_Merchant" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_MerchantPayment" EntityType="Self.tbl_MerchantPayment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Pagar" EntityType="Self.tbl_Pagar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PagarPersonDetail" EntityType="Self.tbl_PagarPersonDetail" Schema="dbo" store:Type="Tables" />
@@ -1051,6 +1072,7 @@
           <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
           <EntitySet Name="tbl_BillSiteFinal" EntityType="ConstructionDiaryModel.tbl_BillSiteFinal" />
+          <EntitySet Name="tbl_MerchantPayment" EntityType="ConstructionDiaryModel.tbl_MerchantPayment" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1461,6 +1483,26 @@
           <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_MerchantPayment">
+          <Key>
+            <PropertyRef Name="MerchantPaymentId" />
+          </Key>
+          <Property Name="MerchantPaymentId" Type="Guid" Nullable="false" />
+          <Property Name="SiteId" Type="Guid" />
+          <Property Name="MerchantId" Type="Guid" Nullable="false" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PaymentType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChequeNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChequeFor" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="PaymentDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2032,6 +2074,27 @@
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
                 <ScalarProperty Name="BillSiteFinalId" ColumnName="BillSiteFinalId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_MerchantPayment">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_MerchantPayment">
+              <MappingFragment StoreEntitySet="tbl_MerchantPayment">
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="ChequeFor" ColumnName="ChequeFor" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
+                <ScalarProperty Name="ChequeNo" ColumnName="ChequeNo" />
+                <ScalarProperty Name="PaymentType" ColumnName="PaymentType" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="MerchantPaymentId" ColumnName="MerchantPaymentId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

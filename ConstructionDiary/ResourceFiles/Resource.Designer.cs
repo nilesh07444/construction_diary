@@ -205,6 +205,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Merchant Payment.
+        /// </summary>
+        public static string AddNewMerchantPayment {
+            get {
+                return ResourceManager.GetString("AddNewMerchantPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Person.
         /// </summary>
         public static string AddNewPerson {
@@ -745,6 +754,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Merchant Payment.
+        /// </summary>
+        public static string EditMerchantPayment {
+            get {
+                return ResourceManager.GetString("EditMerchantPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email Id.
         /// </summary>
         public static string EmailId {
@@ -1042,6 +1060,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Merchant Payment.
+        /// </summary>
+        public static string MerchantPayment {
+            get {
+                return ResourceManager.GetString("MerchantPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merchant Payment List.
+        /// </summary>
+        public static string MerchantPaymentList {
+            get {
+                return ResourceManager.GetString("MerchantPaymentList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Merchants.
         /// </summary>
         public static string Merchants {
@@ -1146,6 +1182,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment Date.
+        /// </summary>
+        public static string PaymentDate {
+            get {
+                return ResourceManager.GetString("PaymentDate", resourceCulture);
             }
         }
         

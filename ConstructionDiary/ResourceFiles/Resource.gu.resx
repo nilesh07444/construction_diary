@@ -690,4 +690,19 @@
   <data name="Hindi" xml:space="preserve">
     <value>હિન્દી</value>
   </data>
+  <data name="AddNewMerchantPayment" xml:space="preserve">
+    <value>નવી વેપારી ચુકવણી ઉમેરો</value>
+  </data>
+  <data name="EditMerchantPayment" xml:space="preserve">
+    <value>વેપારી ચુકવણી સુધારો</value>
+  </data>
+  <data name="MerchantPayment" xml:space="preserve">
+    <value>વેપારી પેમેન્ટ</value>
+  </data>
+  <data name="MerchantPaymentList" xml:space="preserve">
+    <value>વેપારી ચુકવણી લિસ્ટ</value>
+  </data>
+  <data name="PaymentDate" xml:space="preserve">
+    <value>ચુકવણીની તારીખ</value>
+  </data>
 </root>
