@@ -2,6 +2,7 @@
 using ConstructionDiary.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.languages;
 using iTextSharp.tool.xml;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ using System.Web.Mvc;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
-    [filters]
+    //[filters]
     public class SettingController : MyBaseController
     {
         // GET: Admin/Setting
@@ -42,13 +43,14 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             string Result = "";
             try
             {
+
                 string filePath = string.Empty;
                 OleDbConnection con = new OleDbConnection();
                 OleDbDataAdapter da;
                 DataSet ds = new DataSet();
 
                 string ext = Path.GetExtension(ChallanPhotoFile.FileName);
-                  
+
                 string path = Server.MapPath("~/DataFiles/UploadsExcel/");
                 if (!Directory.Exists(path))
                 {
@@ -106,7 +108,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 {
                 }
 
-                string[] strColumns = new string[4] { "અનુ નં.", "નામ", "સંપર્ક સૂત્ર", "સરનામું" };
+                string[] strColumns = new string[4] { "અનુ નં.", "નામ", "નંબર", "સરનામું" };
                 if (lstExcelData != null && lstExcelData.Count() > 0)
                 {
 
@@ -117,19 +119,27 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
                     strHTML.Append("</style>");
 
+                    strHTML.Append("<table cellspacing='0' border='0' cellpadding='5' style='width:100%;font-size: 30pt; margin-bottom:25px;'>");
+                    strHTML.Append("<tbody>");
+                    strHTML.Append("<tr><td style='text-align:center;'>આડીસરા પરિવાર ના નામ નંબર</td></tr>");
+                    strHTML.Append("</tbody>");
+                    strHTML.Append("</table>");
+
                     strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
                     strHTML.Append("<thead style=\"display:table-header-group;\">");
-                    string Title = "Adisara Parivar";
+                    //string Title = "Adisara Parivar";
                     strHTML.Append("<tr>");
-                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
-                    strHTML.Append(Title);
-                    strHTML.Append("</th>");
-                    strHTML.Append("</tr>");
-                    //strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + start_date.ToString("dd/MM/yyyy") + " To " + end_date.ToString("dd/MM/yyyy") + " </th></tr>");
-                    strHTML.Append("<tr>");
+
+                    //strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #000000\">");
+                    //strHTML.Append(Title);
+                    //strHTML.Append("</th>");
+                    //strHTML.Append("</tr>");
+                    //strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #000000\">From " + start_date.ToString("dd/MM/yyyy") + " To " + end_date.ToString("dd/MM/yyyy") + " </th></tr>");
+                    //strHTML.Append("<tr>");
+
                     for (int idx = 0; idx < strColumns.Length; idx++)
                     {
-                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append("<th style=\"border: 1px solid #000000\">");
                         strHTML.Append(strColumns[idx]);
                         strHTML.Append("</th>");
                     }
@@ -141,59 +151,64 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                         if (obj != null)
                         {
-
-                            strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                            for (int Col = 0; Col < strColumns.Length; Col++)
+                            if (!string.IsNullOrEmpty(obj.City))
                             {
-                                string strcolval = "";
-                                switch (strColumns[Col])
-                                {
-
-                                    case "અનુ નં.":
-                                        {
-                                            strcolval = obj.Sr;
-                                            break;
-                                        }
-                                    case "નામ":
-                                        {
-                                            strcolval = obj.Name;
-                                            break;
-                                        }
-                                    case "સંપર્ક સૂત્ર":
-                                        {
-                                            strcolval = obj.Contact;
-                                            break;
-                                        }
-                                    case "સરનામું":
-                                        {
-                                            strcolval = obj.Address;
-                                            break;
-                                        }
-                                    default:
-                                        {
-                                            break;
-                                        }
-
-                                }
-                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
-                                strHTML.Append(strcolval);
-                                strHTML.Append("</td>");
+                                strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;font-weight:bold;font-size:20px;text-align:center;'> <td colspan='4'>" + obj.City + " </td></tr>");
                             }
-                            strHTML.Append("</tr>");
+                            else
+                            {
+                                
+                                strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
+                                for (int Col = 0; Col < strColumns.Length; Col++)
+                                {
+                                    string strcolval = "";
+                                    switch (strColumns[Col])
+                                    {
+
+                                        case "અનુ નં.":
+                                            {
+                                                strcolval = obj.Sr;
+                                                break;
+                                            }
+                                        case "નામ":
+                                            {
+                                                strcolval = obj.Name;
+                                                break;
+                                            }
+                                        case "નંબર":
+                                            {
+                                                strcolval = "<a href='tel:" + obj.Contact + "' style='color:#000000;'>" + obj.Contact + "</a>";
+                                                break;
+                                            }
+                                        case "સરનામું":
+                                            {
+                                                strcolval = obj.Address;
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                break;
+                                            }
+
+                                    }
+                                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">");
+                                    strHTML.Append(strcolval);
+                                    strHTML.Append("</td>");
+                                }
+                                strHTML.Append("</tr>");
+                                
+                            }
                         }
                     }
-
-                    // Total
-                    strHTML.Append("<tr>");
-                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'></th>");
-                    //strHTML.Append("<th style='border: 1px solid #ccc;'> </th>");
-                    strHTML.Append("<th colspan='4' style='border: 1px solid #ccc;'></th>");
-                    strHTML.Append("</tr>");
-
+                     
                     strHTML.Append("</tbody>");
                     strHTML.Append("</table>");
 
                     var myString = strHTML.ToString();
+
+                    IndicLigaturizer g = new GujaratiLigaturizer();
+                    myString = g.Process(myString);
+
                     var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
                     var ms = new MemoryStream(myByteArray);
 
