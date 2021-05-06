@@ -31,6 +31,7 @@
                                 <tr>
                                     <th width="5%">#</th>
                                     <th>@Resource.Name</th>
+                                    <th>Peticase Balance</th>
                                     <th>@Resource.Role</th>
                                     <th>@Resource.EmailId</th>
                                     <th>@Resource.MobileNo</th>
@@ -46,29 +47,30 @@
                                     foreach (UserVM user in Model)
                                     {
                                         counter++;
-                                        <tr class="gradeX">
-                                            <td>@counter.</td>
-                                            <td>@user.Firstname</td>
-                                            <td>@user.RoleName</td>
-                                            <td>@user.EmailId</td>
-                                            <td>@user.MobileNo</td>
-                                            <td>@user.UserName</td>
-                                            <td>@user.Password</td>
-                                            <td>
-                                                @if (user.IsActive)
-                                                {
-                                                    <a href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
-                                                }
-                                                else
-                                                {
-                                                    <a href="javascript:void(0);"><span class="badge bg-important">InActive</span></a>
-                                                }
-                                            </td>
-                                            <td>
-                                                <a href="/admin/user/edit/@user.UserId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                                <button onclick="fnDeleteUser('@user.UserId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                            </td>
-                                        </tr>
+                                <tr class="gradeX">
+                                    <td>@counter.</td>
+                                    <td>@user.Firstname</td>
+                                    <td>@user.PeticashBalance</td>
+                                    <td>@user.RoleName</td>
+                                    <td>@user.EmailId</td>
+                                    <td>@user.MobileNo</td>
+                                    <td>@user.UserName</td>
+                                    <td>@user.Password</td>
+                                    <td>
+                                        @if (user.IsActive)
+                                        {
+                                            <a href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:void(0);"><span class="badge bg-important">InActive</span></a>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a href="/admin/user/edit/@user.UserId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                        <button onclick="fnDeleteUser('@user.UserId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                    </td>
+                                </tr>
                                     }
                                 }
                             </tbody>

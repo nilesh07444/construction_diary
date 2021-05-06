@@ -35,9 +35,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 if (string.IsNullOrEmpty(duration))
                     duration = "month";
 
-
-                //ViewBag.PersonName = GetPersonName(id);
-                //ViewBag.PersonId = id;
                 ViewBag.Duration = duration;
                 ViewBag.StartDate = start;
                 ViewBag.EndDate = end;
@@ -71,7 +68,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 ViewBag.reportStartDate = startDate.ToString("dd/MM/yyyy");
                 ViewBag.reportEndDate = endDate.ToString("dd/MM/yyyy");
 
-                lstExpense = GetExpenseListByFilter("", startDate, endDate, type, site);
+                lstExpense = GetExpenseListByFilter(startDate, endDate, type, site);
 
                 List<SelectListItem> lstSites = _db.tbl_Sites.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
                          .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
@@ -155,6 +152,27 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objExpense.CreatedDate = DateTime.UtcNow;
                     _db.tbl_Expenses.Add(objExpense);
                     _db.SaveChanges();
+
+                    // Save peticash of Debit
+                    if (clsSession.RoleID == (int)UserRoles.Staff)
+                    {
+                        tbl_Peticase objPeticase = new tbl_Peticase();
+                        objPeticase.PeticashId = Guid.NewGuid();
+                        objPeticase.UserId = clsSession.UserID;
+                        objPeticase.SelectedDate = exp_date;
+                        objPeticase.Amount = Convert.ToDecimal(expense.Amount);
+                        objPeticase.Remarks = "Expense of " + Convert.ToDecimal(expense.Amount) + " on " + exp_date.ToString("dd/MM/yyyy");
+                        objPeticase.TableId = objExpense.ExpenseId;
+                        objPeticase.AmountWhereUsed = (int)PeticaseAmountWhereUsed.Expense;
+                        objPeticase.CreditDebit = "Debit";
+                        objPeticase.ClientId = ClientId;
+                        objPeticase.IsActive = true;
+                        objPeticase.IsDeleted = false;
+                        objPeticase.CreatedBy = clsSession.UserID;
+                        objPeticase.CreatedDate = DateTime.UtcNow;
+                        _db.tbl_Peticase.Add(objPeticase);
+                        _db.SaveChanges();
+                    }
 
                     // Save + Upload Expense File
                     string fileName = string.Empty;
@@ -264,6 +282,20 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objExpense.ModifiedDate = DateTime.UtcNow;
                     _db.SaveChanges();
 
+                    // Update peticash of Debit
+                    
+                        tbl_Peticase objPeticase = _db.tbl_Peticase.Where(x => x.TableId == objExpense.ExpenseId).FirstOrDefault();
+                        if (objPeticase != null)
+                        {
+                            objPeticase.Amount = Convert.ToDecimal(expense.Amount);
+                            objPeticase.Remarks = "Expense of " + Convert.ToDecimal(expense.Amount) + " on " + objPeticase.SelectedDate.ToString("dd/MM/yyyy");
+                            objPeticase.TableId = objExpense.ExpenseId;
+                            objPeticase.ModifiedBy = clsSession.UserID;
+                            objPeticase.ModifiedDate = DateTime.UtcNow;
+                            _db.SaveChanges();
+                        }
+                   
+
                     // Save + Upload Expense File
                     string fileName = string.Empty;
                     string path = Server.MapPath("~/DataFiles/ExpenseFile/");
@@ -344,7 +376,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 DateTime start_date = DateTime.ParseExact(start, "dd/MM/yyyy", null);
                 DateTime end_date = DateTime.ParseExact(end, "dd/MM/yyyy", null);
 
-                List<ExpenseVM> lstExpense = GetExpenseListByFilter("", start_date, end_date, type, site);
+                List<ExpenseVM> lstExpense = GetExpenseListByFilter(start_date, end_date, type, site);
 
                 decimal? TotalExpenseAmount = lstExpense.Select(x => x.Amount).Sum();
                 string strTotalExpenseAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalExpenseAmount));
@@ -475,7 +507,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         }
 
-        public List<ExpenseVM> GetExpenseListByFilter(string expensetype, DateTime startDate, DateTime endDate, string type, string site)
+        public List<ExpenseVM> GetExpenseListByFilter(DateTime startDate, DateTime endDate, string type, string site)
         {
             List<ExpenseVM> lstExpenses = new List<ExpenseVM>();
             Guid ClientId = new Guid(clsSession.ClientID.ToString());

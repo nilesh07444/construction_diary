@@ -234,41 +234,51 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return View(person);
         }
 
-        public ActionResult Finance(Guid id)
+        public ActionResult Finance(Guid id, string duration, string start, string end, string site)
         {
             PersonFinanceVM objFinance = new PersonFinanceVM();
             try
             {
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
+                int RoleID = clsSession.RoleID;
 
-                List<FinanceList> financeList = (from finance in _db.tbl_Finance
-                                                 join user in _db.tbl_Users on finance.GivenAmountBy equals user.UserId
-                                                 join site in _db.tbl_Sites on finance.SiteId equals site.SiteId into outerJoinSite
-                                                 from site in outerJoinSite.DefaultIfEmpty()
-                                                 where finance.PersonId == id
-                                                 select new FinanceList
-                                                 {
-                                                     FinanceId = finance.FinanceId,
-                                                     PersonId = finance.PersonId,
-                                                     SelectedDate = finance.SelectedDate,
-                                                     Amount = finance.Amount,
-                                                     SiteId = finance.SiteId,
-                                                     SiteName = (site != null) ? site.SiteName : "",
-                                                     CreditOrDebit = finance.CreditOrDebit,
-                                                     GivenAmountBy = finance.GivenAmountBy,
-                                                     PaymentType = finance.PaymentType,
-                                                     ChequeNo = finance.ChequeNo,
-                                                     BankName = finance.BankName,
-                                                     ChequeFor = finance.ChequeFor,
-                                                     Remarks = finance.Remarks,
-                                                     IsActive = finance.IsActive,
-                                                     IsDeleted = finance.IsDeleted,
-                                                     CreatedBy = finance.CreatedBy,
-                                                     UpdatedBy = finance.UpdatedBy,
-                                                     CreatedDate = finance.CreatedDate,
-                                                     ModifiedDate = finance.ModifiedDate,
-                                                     FirstName = user.FirstName,
-                                                 }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
+                if (string.IsNullOrEmpty(duration))
+                    duration = "month";
+
+                ViewBag.Duration = duration;
+                ViewBag.StartDate = start;
+                ViewBag.EndDate = end;
+
+                ViewBag.Site = site;
+
+                DateTime startDate = DateTime.Today;
+                DateTime endDate = DateTime.Today;
+
+                if (RoleID != (int)UserRoles.Staff)
+                {
+                    if (duration == "month")
+                    {
+                        var myDate = DateTime.Now;
+                        startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                        DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                        endDate = lastDay;
+                    }
+                    else if (duration == "custom")
+                    {
+                        if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                        {
+                            startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                            endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                        }
+                    }
+                }
+
+                ViewBag.reportStartDate = startDate.ToString("dd/MM/yyyy");
+                ViewBag.reportEndDate = endDate.ToString("dd/MM/yyyy");
+
+                List<FinanceList> financeList = GetFinanceListByFilter(startDate, endDate, site, id);
+
                 ViewData["FinanceList"] = financeList;
 
                 objFinance.PersonId = id;
@@ -280,6 +290,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                          .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.SiteName }).OrderBy(o => o.Text)
                          .ToList();
 
+                List<SelectListItem> lstSites = objFinance.SitesList;
+                ViewBag.SiteList = lstSites;
+
                 ViewBag.PersonName = GetPersonName(id);
 
             }
@@ -287,6 +300,50 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
             }
             return View(objFinance);
+        }
+
+        public List<FinanceList> GetFinanceListByFilter(DateTime startDate, DateTime endDate, string site, Guid personId)
+        {
+
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+            int RoleID = clsSession.RoleID;
+
+            Guid selectedSite = (site != null && !string.IsNullOrEmpty(site) ? new Guid(site) : Guid.Empty);
+
+            List<FinanceList> financeList = (from finance in _db.tbl_Finance
+                                             join user in _db.tbl_Users on finance.GivenAmountBy equals user.UserId
+                                             join st in _db.tbl_Sites on finance.SiteId equals st.SiteId into outerJoinSite
+                                             from st in outerJoinSite.DefaultIfEmpty()
+                                             where finance.PersonId == personId
+                                             && (selectedSite == Guid.Empty || finance.SiteId == selectedSite)
+                                             && finance.SelectedDate >= startDate && finance.SelectedDate <= endDate
+                                             && finance.IsActive && !finance.IsDeleted
+                                             select new FinanceList
+                                             {
+                                                 FinanceId = finance.FinanceId,
+                                                 PersonId = finance.PersonId,
+                                                 SelectedDate = finance.SelectedDate,
+                                                 Amount = finance.Amount,
+                                                 SiteId = finance.SiteId,
+                                                 SiteName = (st != null) ? st.SiteName : "",
+                                                 CreditOrDebit = finance.CreditOrDebit,
+                                                 GivenAmountBy = finance.GivenAmountBy,
+                                                 PaymentType = finance.PaymentType,
+                                                 ChequeNo = finance.ChequeNo,
+                                                 BankName = finance.BankName,
+                                                 ChequeFor = finance.ChequeFor,
+                                                 Remarks = finance.Remarks,
+                                                 IsActive = finance.IsActive,
+                                                 IsDeleted = finance.IsDeleted,
+                                                 CreatedBy = finance.CreatedBy,
+                                                 UpdatedBy = finance.UpdatedBy,
+                                                 CreatedDate = finance.CreatedDate,
+                                                 ModifiedDate = finance.ModifiedDate,
+                                                 FirstName = user.FirstName,
+                                                 ObjFile = _db.tbl_Files.Where(x => x.ParentId == finance.FinanceId && x.FileCategory == (int)FileType.Debit).FirstOrDefault()
+                                             }).OrderByDescending(x => x.SelectedDate).ToList();
+
+            return financeList;
         }
 
         [HttpPost]
@@ -688,7 +745,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
 
         }
-         
+
         public string ExportPDFOfSelectedPerson(Guid id)
         {
 
@@ -729,27 +786,27 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                  }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
 
                 List<FinanceList> billList = (from bill in _db.tbl_BillDebitNew
-                                                 join user in _db.tbl_Users on bill.CreatedBy equals user.UserId
-                                                 join site in _db.tbl_Sites on bill.SiteId equals site.SiteId into outerJoinSite
-                                                 from site in outerJoinSite.DefaultIfEmpty()
-                                                 where bill.PersonId == id
-                                                 select new FinanceList
-                                                 {
-                                                     FinanceId = bill.BillId,
-                                                     PersonId = bill.PersonId,
-                                                     SelectedDate = bill.BillDate,
-                                                     Amount = bill.TotalAmount,
-                                                     SiteId = bill.SiteId,
-                                                     SiteName = (site != null) ? site.SiteName : "",
-                                                     CreditOrDebit = "Credit", 
-                                                     Remarks = bill.Remarks,
-                                                     IsActive = bill.IsActive,
-                                                     IsDeleted = bill.IsDeleted,
-                                                     CreatedBy = bill.CreatedBy, 
-                                                     CreatedDate = bill.CreatedDate,
-                                                     ModifiedDate = bill.ModifiedDate,
-                                                     FirstName = user.FirstName,
-                                                 }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
+                                              join user in _db.tbl_Users on bill.CreatedBy equals user.UserId
+                                              join site in _db.tbl_Sites on bill.SiteId equals site.SiteId into outerJoinSite
+                                              from site in outerJoinSite.DefaultIfEmpty()
+                                              where bill.PersonId == id
+                                              select new FinanceList
+                                              {
+                                                  FinanceId = bill.BillId,
+                                                  PersonId = bill.PersonId,
+                                                  SelectedDate = bill.BillDate,
+                                                  Amount = bill.TotalAmount,
+                                                  SiteId = bill.SiteId,
+                                                  SiteName = (site != null) ? site.SiteName : "",
+                                                  CreditOrDebit = "Credit",
+                                                  Remarks = bill.Remarks,
+                                                  IsActive = bill.IsActive,
+                                                  IsDeleted = bill.IsDeleted,
+                                                  CreatedBy = bill.CreatedBy,
+                                                  CreatedDate = bill.CreatedDate,
+                                                  ModifiedDate = bill.ModifiedDate,
+                                                  FirstName = user.FirstName,
+                                              }).Where(x => x.IsActive == true && x.IsDeleted == false).OrderByDescending(x => x.SelectedDate).ToList();
 
                 string PersonName = GetPersonName(id);
 
@@ -829,7 +886,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         {
                                             strcolval = obj.SiteName;
                                             break;
-                                        } 
+                                        }
                                     case "Payment Type":
                                         {
                                             strcolval = obj.PaymentType;
@@ -925,7 +982,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddDebitEntry(PersonFinanceVM finance)
+        public ActionResult AddDebitEntry(PersonFinanceVM finance, HttpPostedFileBase FinanceFile)
         {
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
 
@@ -969,6 +1026,26 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objFinance.CreatedDate = DateTime.UtcNow;
                     _db.tbl_Finance.Add(objFinance);
                     _db.SaveChanges();
+
+                    // Save + Upload Finance File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/DebitFinanceFile/");
+                    if (FinanceFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(FinanceFile.FileName);
+
+                        string full_path = Path.Combine(path, fileName);
+                        FinanceFile.SaveAs(full_path);
+
+                        tbl_Files objFile = new tbl_Files();
+                        objFile.FileId = Guid.NewGuid();
+                        objFile.ParentId = objFinance.FinanceId;
+                        objFile.FileCategory = (int)FileType.Debit;
+                        objFile.OriginalFileName = FinanceFile.FileName;
+                        objFile.EncryptFileName = fileName;
+                        _db.tbl_Files.Add(objFile);
+                        _db.SaveChanges();
+                    }
 
                     return RedirectToAction("Finance", new { id = finance.PersonId });
 
@@ -1019,7 +1096,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditDebitEntry(PersonFinanceVM finance)
+        public ActionResult EditDebitEntry(PersonFinanceVM finance, HttpPostedFileBase FinanceFile)
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
@@ -1056,6 +1133,38 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objFinance.UpdatedBy = clsSession.UserID;
                     objFinance.ModifiedDate = DateTime.UtcNow;
                     _db.SaveChanges();
+
+                    // Save + Upload Debit File
+                    string fileName = string.Empty;
+                    string path = Server.MapPath("~/DataFiles/DebitFinanceFile/");
+                    if (FinanceFile != null)
+                    {
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(FinanceFile.FileName);
+
+                        string full_path = Path.Combine(path, fileName);
+                        FinanceFile.SaveAs(full_path);
+
+                        tbl_Files objFile1 = _db.tbl_Files.Where(x => x.ParentId == objFinance.FinanceId).FirstOrDefault();
+                        if (objFile1 != null)
+                        {
+                            //Edit 
+                            objFile1.OriginalFileName = FinanceFile.FileName;
+                            objFile1.EncryptFileName = fileName;
+                            _db.SaveChanges();
+                        }
+                        else
+                        {
+                            tbl_Files objFile = new tbl_Files();
+                            objFile.FileId = Guid.NewGuid();
+                            objFile.ParentId = objFinance.FinanceId;
+                            objFile.FileCategory = (int)FileType.Debit;
+                            objFile.OriginalFileName = FinanceFile.FileName;
+                            objFile.EncryptFileName = fileName;
+                            _db.tbl_Files.Add(objFile);
+                            _db.SaveChanges();
+                        }
+
+                    }
 
                     return RedirectToAction("Finance", new { id = finance.PersonId });
 
@@ -1143,7 +1252,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 if (ModelState.IsValid)
                 {
-                     
+
                     DateTime bill_date = DateTime.ParseExact(billVM.BillDate, "dd/MM/yyyy", null);
 
                     tbl_BillDebitNew objBill = new tbl_BillDebitNew();
@@ -1391,34 +1500,34 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             AreaDebitBillVM objBillInfo = (from b in _db.tbl_BillDebitNew
-                                          where b.BillId == Id
-                                          select new AreaDebitBillVM
-                                          {
-                                              BillId = b.BillId,
-                                              dtBillDate = b.BillDate,
-                                              BillNo = b.BillNo,
-                                              Remarks = b.Remarks,
-                                              PersonId = b.PersonId,
-                                              SiteId = b.SiteId,
-                                              GrandTotal = b.TotalAmount,
-                                              BillDebitItem =
-                                                (from i in _db.tbl_BillDebitItem
-                                                 where i.BillId == b.BillId
-                                                 select new AreaDebitBillItemVM
-                                                 {
-                                                     BillDebitItemId = i.BillDebitItemId,
-                                                     ItemCategory = i.ItemCategory,
-                                                     ItemName = i.ItemName,
-                                                     ItemType = i.ItemType,
-                                                     Length = i.Length,
-                                                     Width = i.Width,
-                                                     Height = i.Height,
-                                                     Qty = i.Qty,
-                                                     Rate = i.Rate,
-                                                     Area = i.Area,
-                                                     Amount = i.Amount
-                                                 }).ToList()
-                                          }).FirstOrDefault();
+                                           where b.BillId == Id
+                                           select new AreaDebitBillVM
+                                           {
+                                               BillId = b.BillId,
+                                               dtBillDate = b.BillDate,
+                                               BillNo = b.BillNo,
+                                               Remarks = b.Remarks,
+                                               PersonId = b.PersonId,
+                                               SiteId = b.SiteId,
+                                               GrandTotal = b.TotalAmount,
+                                               BillDebitItem =
+                                                 (from i in _db.tbl_BillDebitItem
+                                                  where i.BillId == b.BillId
+                                                  select new AreaDebitBillItemVM
+                                                  {
+                                                      BillDebitItemId = i.BillDebitItemId,
+                                                      ItemCategory = i.ItemCategory,
+                                                      ItemName = i.ItemName,
+                                                      ItemType = i.ItemType,
+                                                      Length = i.Length,
+                                                      Width = i.Width,
+                                                      Height = i.Height,
+                                                      Qty = i.Qty,
+                                                      Rate = i.Rate,
+                                                      Area = i.Area,
+                                                      Amount = i.Amount
+                                                  }).ToList()
+                                           }).FirstOrDefault();
 
             objBillInfo.BillDate = Convert.ToDateTime(objBillInfo.dtBillDate).ToString("dd/MM/yyyy");
 
@@ -1543,7 +1652,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             try
             {
-              
+
                 tbl_BillDebitNew objBill = _db.tbl_BillDebitNew.Where(x => x.BillId == BillId && x.IsActive == true
                                                             && x.IsDeleted == false).FirstOrDefault();
 
@@ -1626,7 +1735,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return grandTotal;
         }
-         
+
     }
 
     public class UnicodeFontFactory : FontFactoryImp
@@ -1636,7 +1745,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         public UnicodeFontFactory()
         {
-            _baseFont = BaseFont.CreateFont(fontpath + "ARIALUNI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);            
+            _baseFont = BaseFont.CreateFont(fontpath + "ARIALUNI.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         }
 
         public override Font GetFont(string fontname, string encoding, bool embedded, float size, int style, BaseColor color,

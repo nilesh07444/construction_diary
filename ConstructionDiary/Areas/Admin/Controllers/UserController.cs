@@ -37,6 +37,24 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                          IsActive = user.IsActive
                                      }).ToList();
 
+            if (lstUsers != null && lstUsers.Count > 0)
+            {
+                lstUsers.ForEach(usr =>
+                {
+                    List<tbl_Peticase> lstPeticash = _db.tbl_Peticase.Where(x => x.UserId == usr.UserId).ToList();
+                    if (lstPeticash != null && lstPeticash.Count > 0)
+                    {
+                        decimal TotalCredit = lstPeticash.Where(x => x.CreditDebit == "Credit").ToList().Sum(x => x.Amount);
+                        decimal TotalDebit = lstPeticash.Where(x => x.CreditDebit == "Debit").ToList().Sum(x => x.Amount);
+                        decimal Balance = TotalCredit - TotalDebit;
+
+                        usr.PeticashBalance = Balance;
+
+                    }
+
+                });
+            }
+
             return View(lstUsers);
         }
 
@@ -152,7 +170,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     user.UserPhoto = objUser.UserPhoto;
                 }
 
-                
+
             }
             catch (Exception ex)
             {

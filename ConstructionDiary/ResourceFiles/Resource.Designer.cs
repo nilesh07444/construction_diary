@@ -223,6 +223,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Peticash.
+        /// </summary>
+        public static string AddNewPeticash {
+            get {
+                return ResourceManager.GetString("AddNewPeticash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Purchase.
         /// </summary>
         public static string AddNewPurchase {
@@ -300,6 +309,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Amount {
             get {
                 return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amount Where Used.
+        /// </summary>
+        public static string AmountWhereUsed {
+            get {
+                return ResourceManager.GetString("AmountWhereUsed", resourceCulture);
             }
         }
         
@@ -1240,6 +1258,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Peticash.
+        /// </summary>
+        public static string Peticash {
+            get {
+                return ResourceManager.GetString("Peticash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Peticash List.
+        /// </summary>
+        public static string PeticashList {
+            get {
+                return ResourceManager.GetString("PeticashList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Photo.
         /// </summary>
         public static string Photo {
@@ -1470,6 +1506,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string SquareFeet {
             get {
                 return ResourceManager.GetString("SquareFeet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Staff.
+        /// </summary>
+        public static string Staff {
+            get {
+                return ResourceManager.GetString("Staff", resourceCulture);
             }
         }
         

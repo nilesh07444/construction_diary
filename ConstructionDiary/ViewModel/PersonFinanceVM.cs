@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using ConstructionDiary.Models;
 
 namespace ConstructionDiary
 {
@@ -41,6 +42,8 @@ namespace ConstructionDiary
 
         public Guid FinanceId { get; set; }
         public DateTime dtSelectedDate { get; set; }
+
+        public HttpPostedFileBase FinanceFile { get; set; }
 
     }
 

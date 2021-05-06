@@ -705,4 +705,19 @@
   <data name="MerchantPaymentList" xml:space="preserve">
     <value>Merchant Payment List</value>
   </data>
+  <data name="Peticash" xml:space="preserve">
+    <value>Peticash</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>Staff</value>
+  </data>
+  <data name="AmountWhereUsed" xml:space="preserve">
+    <value>Amount Where Used</value>
+  </data>
+  <data name="AddNewPeticash" xml:space="preserve">
+    <value>Add New Peticash</value>
+  </data>
+  <data name="PeticashList" xml:space="preserve">
+    <value>Peticash List</value>
+  </data>
 </root>

@@ -705,4 +705,19 @@
   <data name="PaymentDate" xml:space="preserve">
     <value>ચુકવણીની તારીખ</value>
   </data>
+  <data name="Peticash" xml:space="preserve">
+    <value>પેટીકેશ</value>
+  </data>
+  <data name="Staff" xml:space="preserve">
+    <value>સ્ટાફ</value>
+  </data>
+  <data name="AmountWhereUsed" xml:space="preserve">
+    <value>રકમ ક્યાં વાપર્યા</value>
+  </data>
+  <data name="AddNewPeticash" xml:space="preserve">
+    <value>રકમ જમા કરો</value>
+  </data>
+  <data name="PeticashList" xml:space="preserve">
+    <value>પેટીકેશ લિસ્ટ</value>
+  </data>
 </root>

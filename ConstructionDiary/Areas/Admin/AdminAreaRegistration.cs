@@ -20,6 +20,12 @@ namespace ConstructionDiary.Areas.Admin
                 new { action = "Index", id = UrlParameter.Optional }
             );
 
+            context.MapRoute(
+                "Admin_peticash",
+                "admin/peticash",
+                new { controller = "Peticash", action = "Index", id = UrlParameter.Optional }
+            );
+
             // Dashboard Routes
 
             context.MapRoute(
@@ -188,6 +194,8 @@ namespace ConstructionDiary.Areas.Admin
                 "admin/attendance/editperson",
                 new { controller = "Attendance", action = "EditPerson", id = UrlParameter.Optional }
             );
+
+            
 
         }
     }

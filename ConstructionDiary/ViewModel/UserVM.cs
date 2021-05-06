@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ConstructionDiary
 {
-      
+
     public class UserVM
     {
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
@@ -46,7 +46,8 @@ namespace ConstructionDiary
 
         public string RoleName { get; set; }
         public List<SelectListItem> UserRoleList { get; set; }
+        public decimal? PeticashBalance { get; set; }
+
     }
      
-
 }

@@ -107,6 +107,14 @@
                         </div>
 
                         <div class="row">
+                            <div class="col-sm-4 form-group">
+                                @Html.LabelFor(model => model.FinanceFile, htmlAttributes: new { @class = "" })
+                                @Html.TextBoxFor(model => model.FinanceFile, new { type = "file", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.FinanceFile, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-sm-12 form-group">
                                 @Html.HiddenFor(model => model.PersonId)
 

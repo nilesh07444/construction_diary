@@ -15,5 +15,7 @@ namespace ConstructionDiary.Models
     public partial class tbl_GeneralSetting
     {
         public System.Guid GeneralSettingId { get; set; }
+        public string AllShayari2021app_PlayStoreUrl { get; set; }
+        public string AllShayari2021app_PrivacyUrl { get; set; }
     }
 }

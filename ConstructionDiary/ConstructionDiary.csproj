@@ -163,6 +163,7 @@
     <Compile Include="Areas\Admin\Controllers\MerchantPaymentController.cs" />
     <Compile Include="Areas\Admin\Controllers\MyAccountController.cs" />
     <Compile Include="Areas\Admin\Controllers\PersonController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PeticashController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
     <Compile Include="Areas\Admin\Controllers\SettingController.cs" />
     <Compile Include="Areas\Admin\Controllers\SiteController.cs" />
@@ -296,6 +297,9 @@
     <Compile Include="Models\tbl_PersonType.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_Peticase.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_Role.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -342,6 +346,7 @@
     <Compile Include="ViewModel\PersonFinanceVM.cs" />
     <Compile Include="ViewModel\PersonGroupVM.cs" />
     <Compile Include="ViewModel\PersonVM.cs" />
+    <Compile Include="ViewModel\PeticashVM.cs" />
     <Compile Include="ViewModel\SiteInfoVM.cs" />
     <Compile Include="ViewModel\UserChangePasswordVM.cs" />
     <Compile Include="ViewModel\UserVM.cs" />
@@ -2320,6 +2325,8 @@
     <Content Include="Areas\Admin\Views\MerchantPayment\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\MerchantPayment\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Setting\Test.cshtml" />
+    <Content Include="Areas\Admin\Views\Peticash\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Peticash\Add.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

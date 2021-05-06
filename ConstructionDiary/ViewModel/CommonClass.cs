@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ConstructionDiary.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -28,6 +29,7 @@ namespace ConstructionDiary
         public DateTime? ModifiedDate { get; set; }
         public string PersonName { get; set; }
         public string FirstName { get; set; }
+        public tbl_Files ObjFile { get; set; }
     }
 
     public class MyFinanceList

@@ -3,6 +3,8 @@
 @model PersonFinanceVM
 @{
     ViewBag.Title = "Person";
+
+    List<SelectListItem> lstSites = ViewData["SiteList"] as List<SelectListItem>;
 }
 
 @{
@@ -37,17 +39,17 @@
             </div>
         </div>
 
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol yellow">
-                    <i class="fa fa-shopping-cart"></i>
-                </div>
-                <div class="value" style="padding-top: 0px;">
-                    <h2>@strTotalDebitBillAmount</h2>
-                    <p class="total totalcredit">@Resource.Total @Resource.Bill</p>
-                </div>
-            </section>
-        </div>
+        @*<div class="col-lg-3 col-sm-6">
+                <section class="panel">
+                    <div class="symbol yellow">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <div class="value" style="padding-top: 0px;">
+                        <h2>@strTotalDebitBillAmount</h2>
+                        <p class="total totalcredit">@Resource.Total @Resource.Bill</p>
+                    </div>
+                </section>
+            </div>*@
 
         <div class="col-lg-3 col-sm-6">
             <section class="panel">
@@ -61,31 +63,86 @@
             </section>
         </div>
 
-        <div class="col-lg-3 col-sm-6">
-            <section class="panel">
-                <div class="symbol red">
-                    <i class="fa fa-money"></i>
-                </div>
-                <div class="value" style="padding-top: 0px;">
-                    <h2>@strRemainingAmount</h2>
-                    <p class="total totalremaining">@Resource.TotalRemainingAmount</p>
-                </div>
-            </section>
-        </div>
+        @*<div class="col-lg-3 col-sm-6">
+                <section class="panel">
+                    <div class="symbol red">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <div class="value" style="padding-top: 0px;">
+                        <h2>@strRemainingAmount</h2>
+                        <p class="total totalremaining">@Resource.TotalRemainingAmount</p>
+                    </div>
+                </section>
+            </div>*@
 
     </div>
 
     <div class="row">
         <div class="col-lg-12">
+            @if (clsSession.RoleID != (int)UserRoles.Staff)
+            {
+                <section class="panel">
+                    <header class="panel-heading">
+                        <strong>@Resource.FinanceList</strong>
+
+                        <a href="/admin/person" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                            <i class="fa fa-backward"></i> Back
+                        </a>
+
+                    </header>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-2 form-group">
+                                <label for="Duration">@Resource.Duration</label>
+                                <select class="form-control" id="Duration" name="Duration">
+                                    <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
+                                    <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                                <div class="">
+                                    <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
+                                    <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                                </div>
+                                <span id="spn_StartDate" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                                <div class="">
+                                    <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
+                                    <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                                </div>
+                                <span id="spn_EndDate" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group clsSite">
+                                <div class="">
+                                    <label for="dllSite">@Resource.SiteName</label><span class="required">*</span>
+                                    <select class="form-control" id="ddlSite">
+                                        <option value="">-All Sites-</option>
+                                        @if (lstSites != null && lstSites.Count > 0)
+                                        {
+                                            foreach (SelectListItem site in lstSites)
+                                            {
+                                                <option value="@site.Value" @(ViewBag.Site == site.Value ? "selected" : "")>@site.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                                <span id="spn_SiteId" class="formerror">@Resource.Required</span>
+                            </div>
+                            <div class="col-sm-2 form-group">
+                                <label></label>
+                                <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </section>
+            }
+
             <section class="panel">
-                <header class="panel-heading">
-                    <strong>@Resource.FinanceList</strong>
 
-                    <a href="/admin/person" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
-                        <i class="fa fa-backward"></i> Back
-                    </a>
-
-                </header>
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
@@ -116,6 +173,7 @@
                                     <th style="width:10%;">@Resource.PaymentType</th>
                                     <th style="width:10%;">@Resource.BankName</th>
                                     <th class="hidden-phone">@Resource.Remarks</th>
+                                    <th width="10%">@Resource.File</th>
                                     <th style="width:10%;">@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -129,11 +187,25 @@
                                             <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Amount)</span></td>
                                             <td>@obj.SiteName</td>
                                             @*<td>
-                                                <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
-                                            </td>*@
+                                                    <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
+                                                </td>*@
                                             <td>@obj.PaymentType</td>
                                             <td>@obj.ChequeNo @obj.BankName</td>
                                             <td class="hidden-phone">@obj.Remarks</td>
+                                            <td>
+                                                @if (obj.ObjFile != null)
+                                                {
+                                                    string fileUrl1 = Server.MapPath("~/DataFiles/DebitFinanceFile/" + obj.ObjFile.EncryptFileName);
+
+                                                    string fileUrl = Request.Url.OriginalString.Replace(Request.Url.PathAndQuery, "") + Request.ApplicationPath;
+                                                    fileUrl += "/DataFiles/DebitFinanceFile/" + obj.ObjFile.EncryptFileName;
+
+                                                    if (File.Exists(fileUrl1))
+                                                    {
+                                                        <a download href="@fileUrl" class="btn btn-primary btn-xs">Download</a>
+                                                    }
+                                                }
+                                            </td>
                                             <td>
                                                 @*<button data-id="@obj.FinanceId" class="btn btn-success btn-xs clsViewFinance"><i class="fa fa-eye"></i></button>*@
                                                 <a href="/admin/person/editdebitentry/@obj.FinanceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
@@ -251,7 +323,83 @@
 
     jQuery(document).on("click", "#btnDownloadPdf", function () {
         var personId = '@Model.PersonId';
-        window.location.href = "/admin/person/ExportPDFOfSelectedPerson/" + personId;
+        var start = '@ViewBag.reportStartDate';
+        var end  = '@ViewBag.reportEndDate';
+        var site = '@ViewBag.Site';
+
+        StartLoading();
+        setTimeout(function () { StopLoading() }, 3000);
+
+        window.location.href = "/admin/person/ExportPDFOfSelectedPerson/" + personId + "?start=" + start + "&end=" + end + "&site=" + site;
     });
+
+
+    $(document).on("click", "#btnSearchReport", function () {
+
+        var duration = $("#Duration").val();
+        var startDate = $("#StartDate").val();
+        var endDate = $("#EndDate").val();
+
+        var ddlSite = $("#ddlSite").val();
+
+        var flag = true;
+        $(".formerror").hide();
+
+        if (duration == "") {
+            $("#spn_Duration").show();
+            flag = false;
+        }
+
+        if (duration == "custom") {
+            if (isNullOrUndefinedCustom(startDate)) {
+                $("#spn_StartDate").show();
+                flag = false;
+            }
+            if (isNullOrUndefinedCustom(endDate)) {
+                $("#spn_EndDate").show();
+                flag = false;
+            }
+        }
+
+        if (flag == true) {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            reloadFilterUrl(duration, startDate, endDate, ddlSite);
+        }
+
+    });
+
+    function reloadFilterUrl(duration, startDate, endDate, site) {
+        var personId = "@Model.PersonId";
+        var url = "/admin/person/finance/" + personId + "?duration=" + duration + "&site=" + site;
+
+        if (duration == "custom") {
+            if (!isNullOrUndefinedCustom(startDate))
+                url += "&start=" + startDate;
+
+            if (!isNullOrUndefinedCustom(endDate))
+                url += "&end=" + endDate;
+        }
+        window.location.href = url;
+    }
+
+    function isNullOrUndefinedCustom(str) {
+        if (str == "" || str == undefined || str == null)
+            return true;
+        else
+            return false;
+    }
+
+    $(document).on("change", "#Duration", function () {
+        var seletedType = $(this).val();
+
+        if (seletedType == "custom") {
+            $(".clsFilterdate").addClass("clsShow").removeClass("clsHide");
+        }
+        else {
+            $(".clsFilterdate").addClass("clsHide").removeClass("clsShow");
+        }
+
+    });
+
 
 </script>

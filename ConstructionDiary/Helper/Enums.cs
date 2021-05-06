@@ -36,6 +36,15 @@ namespace ConstructionDiary
         Material = 3,
         Expense = 4,
         Challan = 5
-    }   
+    }
+
+    public enum PeticaseAmountWhereUsed
+    {
+        Credit = 1,
+        Debit = 2,
+        Material = 3,
+        Expense = 4,
+        Challan = 5
+    }
 
 }
