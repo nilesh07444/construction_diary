@@ -8,8 +8,8 @@
 @{
     List<SelectListItem> lstStaff = ViewData["StaffList"] as List<SelectListItem>;
 
-    decimal? TotalAmount = Model.Select(x => x.Amount).Sum();
-    string strTotalAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalAmount));
+    //decimal? TotalAmount = Model.Select(x => x.Amount).Sum();
+    //string strTotalAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalAmount));
 
     int counter = 1;
 }
@@ -79,7 +79,7 @@
 
                 <div class="panel-body">
 
-                    <div class="row state-overview">
+                    @*<div class="row state-overview">
                         <div class="col-lg-3 col-sm-6">
                             <section class="panel" style="border: 1px solid #ddd;">
                                 <div class="symbol terques">
@@ -91,11 +91,11 @@
                                 </div>
                             </section>
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="adv-table">
                         <div class="clearfix">
-                            <div class="btn-group pull-left">
+                            <div class="btn-group pull-right">
                                 <a class="btn btn-success" href="/admin/peticash/add"><i class="fa fa-plus"></i> @Resource.AddNewPeticash</a>
                             </div>
                             @*@if (clsSession.RoleID != (int)UserRoles.Staff)

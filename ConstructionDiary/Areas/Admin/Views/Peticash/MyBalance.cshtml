@@ -1,0 +1,119 @@
+﻿@using ConstructionDiary.Models
+@using ConstructionDiary.ResourceFiles
+@model List<PeticashVM>
+@{
+    ViewBag.Title = "Peticash";
+}
+
+@{
+
+    decimal TotalCredit = Model.Where(x => x.CreditDebit == "Credit").ToList().Sum(x => x.Amount);
+    decimal TotalDebit = Model.Where(x => x.CreditDebit == "Debit").ToList().Sum(x => x.Amount);
+    decimal Balance = TotalCredit - TotalDebit;
+    string strTotalBalanceAmount = CoreHelper.GetFormatterAmount(Balance);
+
+    int counter = 1;
+}
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+
+            <section class="panel">
+                <div class="panel-body">
+
+                    <div class="row state-overview">
+                        <div class="col-lg-3 col-sm-6">
+                            <section class="panel" style="border: 1px solid #ddd;">
+                                <div class="symbol terques">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                </div>
+                                <div class="value">
+                                    <h1>@strTotalBalanceAmount</h1>
+                                    <p>@Resource.TotalBalance</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="adv-table">
+
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped table-hover" id="tblPeticashList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="10%">@Resource.Date</th>
+                                    <th width="10%">@Resource.Amount</th>
+                                    <th width="10%">@Resource.PaymentType</th>
+                                    <th>@Resource.AmountWhereUsed</th>
+                                    <th width="15%">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (PeticashVM obj in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@Convert.ToDateTime(obj.dtSelectedDate).ToString("dd/MM/yyyy")</td>
+                                            <td>@CoreHelper.GetFormatterAmount(obj.Amount)</td>
+                                            <td>
+                                                @if (obj.CreditDebit == "Credit")
+                                                {
+                                                    <span class="badge bg-success">@obj.CreditDebit</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-important">@obj.CreditDebit</span>
+                                                }
+                                            </td>
+                                            <td>@obj.Remarks</td>
+                                            <td>
+                                                @if (obj.CreditDebit != "Credit")
+                                                {
+                                                    if (obj.AmountWhereUsed == (int)PeticaseAmountWhereUsed.Expense)
+                                                    {
+                                                        <a target="_blank" href="/admin/expense/edit/@obj.TableId" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a>
+                                                    }
+                                                }
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblPeticashList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0, 5, 6]
+                }]
+        });
+    });
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+
+
+</script>

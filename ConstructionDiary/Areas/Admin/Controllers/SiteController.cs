@@ -516,7 +516,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objSiteInfo.TotalExpenseAmount = _db.tbl_Expenses.Where(x => x.SiteId == id && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum();
 
                 // Get Material Amount
-                objSiteInfo.TotalMaterialAmount = _db.tbl_MaterialPurchase.Where(x => x.SiteId == id && !x.IsDeleted).ToList().Select(x => x.Total).Sum();
+                //objSiteInfo.TotalMaterialAmount = _db.tbl_MaterialPurchase.Where(x => x.SiteId == id && !x.IsDeleted).ToList().Select(x => x.Total).Sum();
+
+                //Get Material Payment Amount
+                objSiteInfo.TotalMaterialAmount = _db.tbl_MerchantPayment.Where(x => x.SiteId == id).ToList().Select(x => x.Amount).Sum();
 
                 // Get Attendance Amount
                 List<tbl_PersonAttendance> personAttendance = _db.tbl_PersonAttendance.Where(x => x.SiteId == id).ToList();

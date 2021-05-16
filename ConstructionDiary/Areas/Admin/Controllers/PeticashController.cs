@@ -112,6 +112,40 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return View(peticase);
         }
-        
+
+        public ActionResult MyBalance()
+        {
+            List<PeticashVM> lstPeticase = new List<PeticashVM>();
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+                Guid loggedInUserId = new Guid(clsSession.UserID.ToString());
+                int RoleID = clsSession.RoleID;
+
+                lstPeticase = (from p in _db.tbl_Peticase 
+                               where !p.IsDeleted && p.ClientId == ClientId && p.UserId == loggedInUserId
+                               select new PeticashVM
+                               {
+                                   PeticashId = p.PeticashId,
+                                   UserId = p.UserId,
+                                   dtSelectedDate = p.SelectedDate,
+                                   CreditDebit = p.CreditDebit,
+                                   Amount = p.Amount,
+                                   TableId = p.TableId,
+                                   AmountWhereUsed = p.AmountWhereUsed,
+                                   Remarks = p.Remarks,
+                                   IsActive = p.IsActive, 
+                                   CreatedDate = p.CreatedDate
+                               }).OrderByDescending(x => x.CreatedDate).ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return View(lstPeticase);
+        }
+
     }
 }
