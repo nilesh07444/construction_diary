@@ -195,7 +195,11 @@ namespace ConstructionDiary.Areas.Admin
                 new { controller = "Attendance", action = "EditPerson", id = UrlParameter.Optional }
             );
 
-            
+            context.MapRoute(
+                            "Admin_Party",
+                            "admin/party",
+                            new { controller = "Party", action = "Index", id = UrlParameter.Optional }
+                        );
 
         }
     }

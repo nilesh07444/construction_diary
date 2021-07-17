@@ -162,6 +162,7 @@
     <Compile Include="Areas\Admin\Controllers\MerchantController.cs" />
     <Compile Include="Areas\Admin\Controllers\MerchantPaymentController.cs" />
     <Compile Include="Areas\Admin\Controllers\MyAccountController.cs" />
+    <Compile Include="Areas\Admin\Controllers\PartyController.cs" />
     <Compile Include="Areas\Admin\Controllers\PersonController.cs" />
     <Compile Include="Areas\Admin\Controllers\PeticashController.cs" />
     <Compile Include="Areas\Admin\Controllers\ProfileController.cs" />
@@ -270,6 +271,9 @@
     <Compile Include="Models\tbl_MerchantPayment.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_MobileAppImages.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_PackageType.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -277,6 +281,9 @@
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_PagarPersonDetail.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_Party.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_PaymentTransaction.cs">
@@ -301,6 +308,12 @@
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Role.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_Shayari.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_ShayariCategory.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Sites.cs">
@@ -343,6 +356,7 @@
     <Compile Include="ViewModel\MerchantVM.cs" />
     <Compile Include="ViewModel\MyFinanceVM.cs" />
     <Compile Include="ViewModel\PagarVM.cs" />
+    <Compile Include="ViewModel\PartyVM.cs" />
     <Compile Include="ViewModel\PersonFinanceVM.cs" />
     <Compile Include="ViewModel\PersonGroupVM.cs" />
     <Compile Include="ViewModel\PersonVM.cs" />
@@ -2328,6 +2342,10 @@
     <Content Include="Areas\Admin\Views\Peticash\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Peticash\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Peticash\MyBalance.cshtml" />
+    <Content Include="Areas\Admin\Views\Site\AllMaterialPaymentSiteData.cshtml" />
+    <Content Include="Areas\Admin\Views\Party\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Party\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\Party\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

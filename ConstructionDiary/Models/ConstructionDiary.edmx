@@ -315,6 +315,14 @@
           <Property Name="ModifiedDate" Type="datetime" />
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
         </EntityType>
+        <EntityType Name="tbl_MobileAppImages">
+          <Key>
+            <PropertyRef Name="MobileAppImageId" />
+          </Key>
+          <Property Name="MobileAppImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MobileAppId" Type="int" Nullable="false" />
+          <Property Name="UploadedImageName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_PackageType">
           <Key>
             <PropertyRef Name="PackageTypeId" />
@@ -356,6 +364,21 @@
           <Property Name="TotalAttendanceDays" Type="decimal" Precision="18" Scale="2" />
           <Property Name="TotalPagarAmount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_Party">
+          <Key>
+            <PropertyRef Name="PartyId" />
+          </Key>
+          <Property Name="PartyId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="PartyName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="IsDeleted" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="tbl_PaymentTransaction">
           <Key>
@@ -466,6 +489,22 @@
           <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RoleName" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="tbl_Shayari">
+          <Key>
+            <PropertyRef Name="ShayariId" />
+          </Key>
+          <Property Name="ShayariId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShayariContent" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ShayariCategoryId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_ShayariCategory">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="100" />
+          <Property Name="CategoryImage" Type="nvarchar" MaxLength="100" />
+        </EntityType>
         <EntityType Name="tbl_Sites">
           <Key>
             <PropertyRef Name="SiteId" />
@@ -473,6 +512,7 @@
           <Property Name="SiteId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="SiteName" Type="nvarchar" MaxLength="365" />
           <Property Name="SiteDescription" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PartyId" Type="uniqueidentifier" />
           <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
@@ -661,9 +701,11 @@
           <EntitySet Name="tbl_MaterialType" EntityType="Self.tbl_MaterialType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Merchant" EntityType="Self.tbl_Merchant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MerchantPayment" EntityType="Self.tbl_MerchantPayment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_MobileAppImages" EntityType="Self.tbl_MobileAppImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Pagar" EntityType="Self.tbl_Pagar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PagarPersonDetail" EntityType="Self.tbl_PagarPersonDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Party" EntityType="Self.tbl_Party" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonAttendance" EntityType="Self.tbl_PersonAttendance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonGroup" EntityType="Self.tbl_PersonGroup" Schema="dbo" store:Type="Tables" />
@@ -672,6 +714,8 @@
           <EntitySet Name="tbl_PersonType" EntityType="Self.tbl_PersonType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Peticase" EntityType="Self.tbl_Peticase" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Role" EntityType="Self.tbl_Role" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Shayari" EntityType="Self.tbl_Shayari" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_ShayariCategory" EntityType="Self.tbl_ShayariCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Sites" EntityType="Self.tbl_Sites" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Users" EntityType="Self.tbl_Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_tbl_Clients_tbl_PackageType" Association="Self.FK_tbl_Clients_tbl_PackageType">
@@ -922,6 +966,7 @@
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tbl_ContractorFinance" Relationship="Self.FK_tbl_ContractorFinance_tbl_Sites" FromRole="tbl_Sites" ToRole="tbl_ContractorFinance" />
           <NavigationProperty Name="tbl_Expenses" Relationship="Self.FK_tbl_Expenses_tbl_Sites" FromRole="tbl_Sites" ToRole="tbl_Expenses" />
+          <Property Name="PartyId" Type="Guid" />
         </EntityType>
         <EntityType Name="tbl_Users">
           <Key>
@@ -1112,6 +1157,10 @@
           <EntitySet Name="tbl_BillSiteFinal" EntityType="ConstructionDiaryModel.tbl_BillSiteFinal" />
           <EntitySet Name="tbl_MerchantPayment" EntityType="ConstructionDiaryModel.tbl_MerchantPayment" />
           <EntitySet Name="tbl_Peticase" EntityType="ConstructionDiaryModel.tbl_Peticase" />
+          <EntitySet Name="tbl_MobileAppImages" EntityType="ConstructionDiaryModel.tbl_MobileAppImages" />
+          <EntitySet Name="tbl_Party" EntityType="ConstructionDiaryModel.tbl_Party" />
+          <EntitySet Name="tbl_Shayari" EntityType="ConstructionDiaryModel.tbl_Shayari" />
+          <EntitySet Name="tbl_ShayariCategory" EntityType="ConstructionDiaryModel.tbl_ShayariCategory" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1563,6 +1612,45 @@
           <Property Name="ModifiedBy" Type="Guid" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="tbl_MobileAppImages">
+          <Key>
+            <PropertyRef Name="MobileAppImageId" />
+          </Key>
+          <Property Name="MobileAppImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MobileAppId" Type="Int32" Nullable="false" />
+          <Property Name="UploadedImageName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_Party">
+          <Key>
+            <PropertyRef Name="PartyId" />
+          </Key>
+          <Property Name="PartyId" Type="Guid" Nullable="false" />
+          <Property Name="PartyName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_Shayari">
+          <Key>
+            <PropertyRef Name="ShayariId" />
+          </Key>
+          <Property Name="ShayariId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShayariContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ShayariCategoryId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_ShayariCategory">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CategoryImage" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1756,6 +1844,7 @@
           <EntitySetMapping Name="tbl_Sites">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Sites">
               <MappingFragment StoreEntitySet="tbl_Sites">
+                <ScalarProperty Name="PartyId" ColumnName="PartyId" />
                 <ScalarProperty Name="SiteId" ColumnName="SiteId" />
                 <ScalarProperty Name="SiteName" ColumnName="SiteName" />
                 <ScalarProperty Name="SiteDescription" ColumnName="SiteDescription" />
@@ -2158,6 +2247,49 @@
                 <ScalarProperty Name="SelectedDate" ColumnName="SelectedDate" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="PeticashId" ColumnName="PeticashId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_MobileAppImages">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_MobileAppImages">
+              <MappingFragment StoreEntitySet="tbl_MobileAppImages">
+                <ScalarProperty Name="UploadedImageName" ColumnName="UploadedImageName" />
+                <ScalarProperty Name="MobileAppId" ColumnName="MobileAppId" />
+                <ScalarProperty Name="MobileAppImageId" ColumnName="MobileAppImageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Party">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Party">
+              <MappingFragment StoreEntitySet="tbl_Party">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
+                <ScalarProperty Name="PartyId" ColumnName="PartyId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Shayari">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Shayari">
+              <MappingFragment StoreEntitySet="tbl_Shayari">
+                <ScalarProperty Name="ShayariCategoryId" ColumnName="ShayariCategoryId" />
+                <ScalarProperty Name="ShayariContent" ColumnName="ShayariContent" />
+                <ScalarProperty Name="ShayariId" ColumnName="ShayariId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_ShayariCategory">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_ShayariCategory">
+              <MappingFragment StoreEntitySet="tbl_ShayariCategory">
+                <ScalarProperty Name="CategoryImage" ColumnName="CategoryImage" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

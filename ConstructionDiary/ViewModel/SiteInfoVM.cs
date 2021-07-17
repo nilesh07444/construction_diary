@@ -30,6 +30,8 @@ namespace ConstructionDiary
         public decimal? TotalCreditAmount { get; set; } = 0;
         public decimal? TotalRemainingAmount { get; set; } = 0;
         public bool IsActive { get; set; }
+        public Guid? PartyId { get; set; }
+        public string PartyName { get; set; }
     }
 
 }

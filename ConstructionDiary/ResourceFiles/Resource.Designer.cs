@@ -214,6 +214,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Party.
+        /// </summary>
+        public static string AddNewParty {
+            get {
+                return ResourceManager.GetString("AddNewParty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Person.
         /// </summary>
         public static string AddNewPerson {
@@ -1191,6 +1200,33 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Pagar {
             get {
                 return ResourceManager.GetString("Pagar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Party.
+        /// </summary>
+        public static string Party {
+            get {
+                return ResourceManager.GetString("Party", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Party List.
+        /// </summary>
+        public static string PartyList {
+            get {
+                return ResourceManager.GetString("PartyList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Party Name.
+        /// </summary>
+        public static string PartyName {
+            get {
+                return ResourceManager.GetString("PartyName", resourceCulture);
             }
         }
         

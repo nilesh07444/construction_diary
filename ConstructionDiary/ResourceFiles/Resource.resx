@@ -720,4 +720,16 @@
   <data name="PeticashList" xml:space="preserve">
     <value>Peticash List</value>
   </data>
+  <data name="PartyName" xml:space="preserve">
+    <value>Party Name</value>
+  </data>
+  <data name="AddNewParty" xml:space="preserve">
+    <value>Add New Party</value>
+  </data>
+  <data name="Party" xml:space="preserve">
+    <value>Party</value>
+  </data>
+  <data name="PartyList" xml:space="preserve">
+    <value>Party List</value>
+  </data>
 </root>

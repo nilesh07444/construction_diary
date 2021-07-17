@@ -1,0 +1,152 @@
+﻿@using ConstructionDiary.Models
+@using ConstructionDiary.ResourceFiles
+@model List<PartyVM>
+@{
+    ViewBag.Title = "Party";
+}
+
+@{    
+    int counter = 1;
+}
+
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+            
+            <section class="panel">
+
+                <div class="panel-body">
+                     
+                    <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-success" href="/admin/party/add"><i class="fa fa-plus"></i> @Resource.AddNewParty</a>
+                            </div>
+                        </div>
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped table-hover" id="tblPartyList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="30%">@Resource.PartyName</th>
+                                    <th>@Resource.Remarks</th>
+                                    <th width="15%">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (PartyVM obj in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@obj.PartyName</td>
+                                            <td>@obj.Remarks</td>
+                                            <td>
+                                                <a href="/admin/party/edit/@obj.PartyId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button onclick="fnDeleteParty('@obj.PartyId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deletePartyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                @Resource.SureWantToDelete
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteParty" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteParty" class="btn btn-danger" type="button"> @Resource.Delete </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblPartyList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0]
+                }]
+        });
+    });
+
+    jQuery(document).on("click", "#btnDeleteParty", function () {
+
+        var Party_id = jQuery("#hdnDeleteParty").val();
+        if (Party_id != "" && Party_id != null) {
+            $('#deletePartyModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteParty", "Party")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?Id=" + Party_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Party deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Party Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    function fnDeleteParty(Party_id) {
+        jQuery("#hdnDeleteParty").val(Party_id);
+        $('#deletePartyModal').modal('show');
+    }
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+      
+    function isNullOrUndefinedCustom(str) {
+        if (str == "" || str == undefined || str == null)
+            return true;
+        else
+            return false;
+    }
+       
+</script>

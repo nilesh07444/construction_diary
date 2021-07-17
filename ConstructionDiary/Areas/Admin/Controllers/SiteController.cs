@@ -55,6 +55,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                  SiteName = site.SiteName,
                                                  SiteDescription = site.SiteDescription,
                                                  IsActive = site.IsActive,
+                                                 PartyId = site.PartyId,
                                                  TotalBillAmount = _db.tbl_BillSiteNew.Where(x => x.SiteId == site.SiteId).ToList().Select(x => x.TotalAmount).Sum(),
                                                  TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum()
                                              }).ToList();
@@ -247,7 +248,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 decimal? TotalCreditAmount = list.Where(x => x.CreditOrDebit == "Credit").Select(x => x.Amount).Sum();
                 string strTotalCreditAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalCreditAmount));
 
-                decimal? TotalDebitAmount = list.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum(); 
+                decimal? TotalDebitAmount = list.Where(x => x.CreditOrDebit == "Debit").Select(x => x.Amount).Sum();
                 string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));
 
                 decimal? RemainingAmount = TotalCreditAmount - TotalDebitAmount;
@@ -307,7 +308,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         {
                                             strcolval = obj.CreditOrDebit == "Debit" ? CoreHelper.GetFormatterAmount(obj.Amount) : "";
                                             break;
-                                        } 
+                                        }
                                     case "Payment Type":
                                         {
                                             strcolval = obj.PaymentType;
@@ -623,6 +624,35 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                            }).OrderByDescending(x => x.dtPurchaseDate).ToList();
 
             return View(lstMaterial);
+        }
+        public ActionResult AllMaterialPaymentSiteData(Guid Id) // Id=SiteId
+        {
+            List<MerchantPaymentVM> lstMerchantPayment = new List<MerchantPaymentVM>();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            ViewBag.SiteId = Id;
+            ViewBag.SiteName = _db.tbl_Sites.First(x => x.SiteId == Id).SiteName;
+
+            lstMerchantPayment = (from c in _db.tbl_MerchantPayment
+                                  join marchant in _db.tbl_Merchant on c.MerchantId equals marchant.MerchantId into outerJoinMerchant
+                                  from marchant in outerJoinMerchant.DefaultIfEmpty()
+                                  where c.ClientId == ClientId
+                                        && c.SiteId == Id
+                                  select new MerchantPaymentVM
+                                  {
+                                      MerchantPaymentId = c.MerchantPaymentId,
+                                      dtPaymentDate = c.PaymentDate,
+                                      ChequeFor = c.ChequeFor,
+                                      ChequeNo = c.ChequeNo,
+                                      BankName = c.BankName,
+                                      Amount = c.Amount,
+                                      PaymentType = c.PaymentType,
+                                      SiteId = c.SiteId,
+                                      MerchantName = (marchant != null ? marchant.FirmName : ""),
+                                      Remarks = c.Remarks
+                                  }).OrderByDescending(x => x.dtPaymentDate).ToList();
+
+            return View(lstMerchantPayment);
         }
 
         public ActionResult AllExpenseSiteData(Guid Id) // Id=SiteId

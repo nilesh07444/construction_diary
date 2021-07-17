@@ -720,4 +720,16 @@
   <data name="PeticashList" xml:space="preserve">
     <value>પેટીકેશ લિસ્ટ</value>
   </data>
+  <data name="PartyName" xml:space="preserve">
+    <value>પાર્ટી  નું નામ</value>
+  </data>
+  <data name="AddNewParty" xml:space="preserve">
+    <value>નવી પાર્ટી ઉમેરો</value>
+  </data>
+  <data name="Party" xml:space="preserve">
+    <value>પાર્ટી</value>
+  </data>
+  <data name="PartyList" xml:space="preserve">
+    <value>પાર્ટી  લિસ્ટ</value>
+  </data>
 </root>

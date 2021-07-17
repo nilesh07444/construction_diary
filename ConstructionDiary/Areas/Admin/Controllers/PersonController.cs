@@ -812,7 +812,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 var MyCombinedList = financeList.Concat(billList);
 
-                var list = MyCombinedList.OrderByDescending(x => x.CreatedDate).ToList();
+                var list = MyCombinedList.OrderBy(x => x.SelectedDate).ToList();
 
                 decimal? TotalDebitAmount = financeList.Select(x => x.Amount).Sum();
                 string strTotalDebitAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalDebitAmount));

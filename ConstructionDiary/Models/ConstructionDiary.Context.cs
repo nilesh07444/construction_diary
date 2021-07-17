@@ -59,6 +59,10 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_BillSiteFinal> tbl_BillSiteFinal { get; set; }
         public virtual DbSet<tbl_MerchantPayment> tbl_MerchantPayment { get; set; }
         public virtual DbSet<tbl_Peticase> tbl_Peticase { get; set; }
+        public virtual DbSet<tbl_MobileAppImages> tbl_MobileAppImages { get; set; }
+        public virtual DbSet<tbl_Party> tbl_Party { get; set; }
+        public virtual DbSet<tbl_Shayari> tbl_Shayari { get; set; }
+        public virtual DbSet<tbl_ShayariCategory> tbl_ShayariCategory { get; set; }
     
         public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList(Nullable<System.Guid> clientId)
         {

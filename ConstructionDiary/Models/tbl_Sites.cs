@@ -31,6 +31,7 @@ namespace ConstructionDiary.Models
         public Nullable<System.Guid> UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<System.Guid> PartyId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_ContractorFinance> tbl_ContractorFinance { get; set; }
