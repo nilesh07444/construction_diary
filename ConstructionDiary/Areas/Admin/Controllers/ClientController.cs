@@ -109,7 +109,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 client.ClientId = objClient.ClientId;
                 client.ClientName = objClient.ClientName;
                 client.FirmName = objClient.FirmName;
-                client.Address = client.Address;
+                client.Address = objClient.Address;
                 client.PackageTypeId = objClient.PackageTypeId;
                 client.dtExpireDate = objClient.ExpireDate;
                 if (objClient.ExpireDate != null)
