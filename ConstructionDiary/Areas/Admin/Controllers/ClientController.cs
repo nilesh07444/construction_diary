@@ -29,6 +29,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                              PackageTypeId = client.PackageTypeId,
                                              dtExpireDate = client.ExpireDate,
                                              IsActive = client.IsActive,
+                                             Address = client.Address,
                                              PackageType = pkg_type.PackageType,
                                              //TotalUsers = getTotalUsers(client.ClientId)
                                          }).ToList();
@@ -73,6 +74,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objClient.ClientId = Guid.NewGuid();
                     objClient.ClientName = client.ClientName;
                     objClient.FirmName = client.FirmName;
+                    objClient.Address = client.Address;
                     objClient.PackageTypeId = client.PackageTypeId;
                     objClient.ExpireDate = exp_date;
                     objClient.IsActive = true;
@@ -107,6 +109,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 client.ClientId = objClient.ClientId;
                 client.ClientName = objClient.ClientName;
                 client.FirmName = objClient.FirmName;
+                client.Address = client.Address;
                 client.PackageTypeId = objClient.PackageTypeId;
                 client.dtExpireDate = objClient.ExpireDate;
                 if (objClient.ExpireDate != null)
@@ -127,7 +130,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
             {
-
                 try
                 {
                     tbl_Clients objClient = _db.tbl_Clients.Where(x => x.ClientId == client.ClientId).FirstOrDefault();
@@ -144,6 +146,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objClient.ClientName = client.ClientName;
                         objClient.FirmName = client.FirmName;
                         objClient.PackageTypeId = client.PackageTypeId;
+                        objClient.Address = client.Address;
                         objClient.ExpireDate = exp_date;
                         objClient.Remarks = client.Remarks;
                         objClient.ModifiedDate = DateTime.UtcNow;
@@ -244,7 +247,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 {
                     var existData = _db.tbl_Users.Where(x => !x.IsDeleted &&
                                                        (
-                                                           x.UserName.ToLower() == user.UserName.ToLower() || 
+                                                           x.UserName.ToLower() == user.UserName.ToLower() ||
                                                            (!string.IsNullOrEmpty(user.EmailId) && x.EmailId.ToLower() == user.EmailId.ToLower())
                                                        )).FirstOrDefault();
 
@@ -295,7 +298,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 user.UserRoleList = _db.tbl_Role.Where(x => x.RoleId > 1)
                          .Select(o => new SelectListItem { Value = o.RoleId.ToString(), Text = o.RoleName })
                          .ToList();
-                 
+
                 tbl_Users objUser = _db.tbl_Users.Where(x => x.UserId == id).FirstOrDefault();
 
                 if (objUser != null)
@@ -317,7 +320,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
 
             }
-               
+
             return View(user);
         }
 

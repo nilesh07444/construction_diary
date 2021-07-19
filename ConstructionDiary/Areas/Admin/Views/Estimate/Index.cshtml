@@ -1,0 +1,155 @@
+﻿@using ConstructionDiary.Models
+@using ConstructionDiary.ResourceFiles
+@model List<EstimateVM>
+@{
+    ViewBag.Title = "Estimate";
+
+    int counter = 1;
+}
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Estimate List</strong>
+                </header>
+                <div class="panel-body">
+
+                    <div class="adv-table">
+                        <div class="clearfix">
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-success" href="/admin/estimate/add"><i class="fa fa-plus"></i> Add New Estimate</a>
+                            </div>
+                        </div>
+                        <div class="space15"></div>
+
+                        <table class="display table table-bordered table-striped table-hover" id="tblEstimateList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="15%">Estimate Date</th>
+                                    <th width="20%">Party Name</th>
+                                    <th width="15%">Total Amount</th>
+                                    <th>@Resource.Remarks</th>
+                                    <th width="5%">@Resource.Download</th>
+                                    <th width="10%">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (EstimateVM obj in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@Convert.ToDateTime(obj.EstimateDate).ToString("dd/MM/yyyy")</td>
+                                            <td>@obj.PartyName</td>
+                                            <td>@CoreHelper.GetFormatterAmount(obj.TotalAmount)</td>
+                                            <td>@obj.Remarks</td>
+                                            <td>
+                                                <button title="Download PDF" onclick="fnDownloadEstimate('@obj.EstimateId')" class="btn btn-block btn-xs"><i class="fa fa-download"></i></button>
+                                            </td>
+                                            <td>
+                                                @*<a href="/admin/estimate/edit/@obj.EstimateId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>*@
+                                                <button onclick="fnDeleteEstimate('@obj.EstimateId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteEstimateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                @Resource.SureWantToDelete
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeleteEstimate" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteEstimate" class="btn btn-danger" type="button"> @Resource.Delete </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblEstimateList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0]
+                }]
+        });
+    });
+
+    jQuery(document).on("click", "#btnDeleteEstimate", function () {
+
+        var Estimate_id = jQuery("#hdnDeleteEstimate").val();
+        if (Estimate_id != "" && Estimate_id != null) {
+            $('#deleteEstimateModal').modal('hide');
+            $.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteEstimate", "Estimate")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?EstimateId=" + Estimate_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Estimate deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Estimate Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    function fnDeleteEstimate(Estimate_id) {
+        jQuery("#hdnDeleteEstimate").val(Estimate_id);
+        $('#deleteEstimateModal').modal('show');
+    }
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+    });
+    function fnDownloadEstimate(EstimateId) {
+        window.location.href = "/admin/estimate/ExportPDFOfEstimate/" + EstimateId;
+    }
+</script>

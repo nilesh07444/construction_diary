@@ -25,9 +25,9 @@ namespace ConstructionDiary
 
         [Display(Name = "ExpiryDate", ResourceType = typeof(Resource))]
         public string ExpireDate { get; set; }
-        public DateTime? dtExpireDate { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+         
+        [Display(Name = "Address", ResourceType = typeof(Resource))]
+        public string Address { get; set; }
 
         [Display(Name = "Remarks", ResourceType = typeof(Resource))]
         public string Remarks { get; set; }
@@ -35,5 +35,9 @@ namespace ConstructionDiary
         public List<SelectListItem> PackageTypeList { get; set; }
         public int TotalUsers { get; set; }
 
+        //
+        public DateTime? dtExpireDate { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

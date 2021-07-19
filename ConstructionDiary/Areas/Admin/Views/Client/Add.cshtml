@@ -19,58 +19,65 @@
 
                                 @Html.AntiForgeryToken()
 
-                                <div class="form-horizontal">
+                            <div class="form-horizontal">
 
-                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.ClientName, htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.EditorFor(model => model.ClientName, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
-                                            @Html.ValidationMessageFor(model => model.ClientName, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.FirmName, htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.EditorFor(model => model.FirmName, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.PackageTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.DropDownList("PackageTypeId", new SelectList(Model.PackageTypeList, "Value", "Text"), "-Select Package Type-", new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(m => m.PackageTypeId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.ExpireDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.TextBoxFor(model => model.ExpireDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
-                                            <span class="input-group-btn add-on">
-                                                <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.Remarks, htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "500" } })
-                                            @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-offset-2 col-md-10">
-                                            <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
-                                            <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
-                                        </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ClientName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ClientName, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
+                                        @Html.ValidationMessageFor(model => model.ClientName, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FirmName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.FirmName, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", maxlength = "500" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PackageTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.DropDownList("PackageTypeId", new SelectList(Model.PackageTypeList, "Value", "Text"), "-Select Package Type-", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.PackageTypeId, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ExpireDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(model => model.ExpireDate, new { @class = "form-control default-date-picker", placeholder = "DD/MM/YYYY", @readonly = "readonly" })
+                                        <span class="input-group-btn add-on">
+                                            <button class="btn clscalender" type="button"><i class="fa fa-calendar"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Remarks, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "500" } })
+                                        @Html.ValidationMessageFor(model => model.Remarks, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
+                                        <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
                             }
 
                         </div>

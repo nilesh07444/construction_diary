@@ -62,6 +62,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     tbl_Party objParty = new tbl_Party();
                     objParty.PartyId = Guid.NewGuid();
                     objParty.PartyName = partyVM.PartyName;
+                    objParty.Remarks = partyVM.Remarks;
                     objParty.ClientId = ClientId;
                     objParty.IsActive = true;
                     objParty.IsDeleted = false;
@@ -119,6 +120,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 {
                     tbl_Party objParty = _db.tbl_Party.Where(x => x.PartyId == partyVM.PartyId).FirstOrDefault();
                     objParty.PartyName = partyVM.PartyName;
+                    objParty.Remarks = partyVM.Remarks;
                     objParty.ClientId = ClientId;
                     objParty.ModifiedBy = clsSession.UserID;
                     objParty.ModifiedDate = DateTime.UtcNow;

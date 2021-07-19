@@ -53,6 +53,8 @@
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Party" Width="1.5" PointX="19.375" PointY="3.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Shayari" Width="1.5" PointX="19.375" PointY="7.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_ShayariCategory" Width="1.5" PointX="19.375" PointY="10.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_Estimate" Width="1.5" PointX="19.375" PointY="13.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_EstimateItem" Width="1.5" PointX="19.375" PointY="17.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
