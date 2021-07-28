@@ -1,17 +1,412 @@
-﻿
+﻿@using ConstructionDiary.ResourceFiles;
+@model EstimateVM
 @{
-    Layout = null;
+    ViewBag.Title = "Estimate";
+
+    decimal grantTotal = 0;
+
+    if (Model != null && Model.EstimateItem != null)
+    {
+        grantTotal = Model.EstimateItem.Sum(x=>x.TotalAmount);
+    }
+
 }
 
-<!DOCTYPE html>
+<section class="wrapper site-min-height">
+    <div class="row">
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
-    <div> 
+        <div class="col-lg-12">
+
+            <section class="panel">
+
+                <header class="panel-heading">
+                    <strong> Edit Estimate </strong>
+                    <a href="/admin/estimate" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                        <i class="fa fa-backward"></i> Back
+                    </a>
+                </header>
+
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-4 form-group">
+                            <label for="EstimateDate">Estimate Date</label><span class="required">*</span>
+                            <input class="form-control default-date-picker" id="EstimateDate" name="EstimateDate" value="@Convert.ToDateTime(Model.EstimateDate).ToString("dd/MM/yyyy")" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            <span id="spn_EstimateDate" class="field-validation-valid text-danger"></span>
+                        </div>
+
+                        <div class="col-sm-4 form-group">
+                            <label for="PartyName">Party Name</label>
+                            <input class="form-control" id="PartyName" name="PartyName" placeholder="Enter Party Name" type="text" value="@Model.PartyName">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <label for="Remarks">@Resource.Remarks</label>
+                            <input class="form-control" id="Remarks" name="Remarks" placeholder="Enter @Resource.Remarks" type="text" value="@Model.Remarks">
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong> @Resource.ItemInfo </strong>
+                </header>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <table class="table table-striped table-hover" id="tbl_Estimate">
+                                <thead>
+                                    <tr>
+                                        <th width="3%">#</th>
+                                        <th>@Resource.ItemName</th>
+                                        <th width="10%">Nos</th>
+                                        <th width="10%">@Resource.Qty</th>
+                                        <th width="10%">@Resource.Rate</th>
+                                        <th width="10%">@Resource.Amount</th>
+                                        <th width="3%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @if (Model != null && Model.EstimateItem != null && Model.EstimateItem.Count > 0)
+                                    {
+                                        int itemCounter = 1;
+                                        foreach (EstimateItemVM obj in Model.EstimateItem)
+                                        {
+                                            Guid newId = obj.EstimateItemId.Value;
+
+                                            <tr id="@newId">
+                                                <td>@itemCounter</td>
+                                                <td>
+                                                    <textarea class="form-control clsItemName" id="ItemName_@newId" name="ItemName_@newId" placeholder="@Resource.ItemName">@obj.ItemName</textarea>
+                                                    <span id="spn_ItemName_@newId" class="field-validation-valid text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control clsNos" id="Nos_@newId" name="Nos_@newId" value="@obj.Nos" placeholder="Nos" type="text">
+                                                    <span id="spn_Nos_@newId" name="spn_Nos_@newId" class="field-validation-valid text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control clsQty" id="Qty_@newId" name="Qty_@newId" value="@obj.Qty" placeholder="@Resource.Qty" type="text">
+                                                    <span id="spn_Qty_@newId" name="spn_Qty_@newId" class="field-validation-valid text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input class="form-control clsRate" id="Rate_@newId" name="Rate_@newId" value="@obj.Rate" placeholder="@Resource.Rate" type="text">
+                                                    <span id="spn_Rate_@newId" name="spn_Rate_@newId" class="field-validation-valid text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <span id="lblTotalItemAmount_@newId"></span> <span id="ItemAmount_@newId">@obj.TotalAmount</span>
+                                                </td>
+                                                <td>
+                                                    <button title="Delete" delete-id="@newId" class="btn btn-round btn-danger clsDelete" type="button" style="display:@(itemCounter ==1 && Model.EstimateItem.Count == 1 ? "none" : "block");"><i class="fa fa-trash-o"></i></button>
+                                                </td>
+                                            </tr>
+                                            itemCounter++;
+                                        }
+                                    }
+
+
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="7">
+                                            <button id="btnAddItem" class="btn btn-round btn-success pull-right" type="button"><i class="fa fa-plus"></i> Add Item</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 invoice-block pull-right">
+                            <ul class="unstyled amounts">
+                                <li>
+                                    <strong>@Resource.GrandTotal : </strong> <span id="lblGrandTotal">@grantTotal</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 form-group">
+                            <input type="hidden" id="hdnEstimateId" value="@Model.EstimateId" />
+                            <button class="btn btn-success" id="btnSubmit" type="button">@Resource.Save</button>
+                            <a href="/admin/estimate" class="btn btn-default">@Resource.Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
-</body>
-</html>
+</section>
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script>
+     
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+    });
+
+    function ReArrangeIndex() {
+        var index = 1;
+        $("#tbl_Estimate tbody tr").each(function () {
+            $(this).find("td:first").text(index);
+            index++;
+        });
+    }
+
+    $(document).on("click", "#btnAddItem", function () {
+
+        var nextIndex = $("#tbl_Estimate tbody tr").length + 1;
+        var newGuid = uuid();
+
+        var htmlData = "<tr id='" + newGuid + "'>";
+        htmlData += "<td>" + nextIndex + "</td>";
+
+        htmlData += "<td><textarea class='form-control clsItemName' id='ItemName_" + newGuid + "' placeholder='@Resource.ItemName' /> <span id='spn_ItemName_" + newGuid + "' class='field-validation-valid text-danger'></span></td>";
+
+        htmlData += "<td><input class='form-control clsNos' id='Nos_" + newGuid + "' placeholder='Nos' type='text'> <span id='spn_Nos_" + newGuid + "' class='field-validation-valid text-danger'></span></td>";
+
+        htmlData += "<td><input class='form-control clsQty' id='Qty_" + newGuid + "' placeholder='@Resource.Qty' type='text'> <span id='spn_Qty_" + newGuid + "' class='field-validation-valid text-danger'></span></td>";
+
+        htmlData += "<td><input class='form-control clsRate' id='Rate_" + newGuid + "' placeholder='@Resource.Rate' type='text'> <span id='spn_Rate_" + newGuid + "' class='field-validation-valid text-danger'></span></td>";
+
+        htmlData += "<td><span id='lblTotalItemAmount_" + newGuid + "'></span> <span id='ItemAmount_" + newGuid + "'>0</span></td>";
+
+        htmlData += "<td><button title='Delete' delete-id='" + newGuid + "' class='btn btn-round btn-danger clsDelete' type='button'><i class='fa fa-trash-o'></i></button></td>";
+
+        htmlData += "</tr>";
+
+        $("tbody").append(htmlData);
+
+        //
+        var itemscount = $("#tbl_Estimate tbody tr").length;
+        if (itemscount > 1)
+            $("#tbl_Estimate tbody tr .clsDelete").show();
+
+    });
+
+    function uuid() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+        });
+    }
+
+    function UpdateValues() {
+
+        var grandTotal = 0;
+
+        $("#tbl_Estimate tbody tr").each(function () {
+
+            var id = $(this).attr("id");
+            var totalValue = $("#ItemAmount_" + id).text();
+
+            if (totalValue && totalValue != undefined) {
+                $("#lblTotalItemAmount_" + id).text("");
+                grandTotal += parseFloat(totalValue);
+            }
+        });
+
+        $("#lblGrandTotal").text(grandTotal);
+    }
+
+    $(document).on("click", ".clsDelete", function () {
+        var itemId = $(this).attr("delete-id");
+        $("tr#" + itemId).remove();
+
+        var itemscount = $("#tbl_Estimate tbody tr").length;
+        if (itemscount == 1)
+            $("#tbl_Estimate tbody tr:first .clsDelete").hide();
+
+        ReArrangeIndex();
+
+        // Get all totals
+        UpdateValues();
+    });
+
+    function IsEmptyOrNull(value) {
+        if (value == "" || value == undefined || value == NaN)
+            return true;
+        else
+            return false;
+    }
+
+    $(document).on("keyup", ".clsNos, .clsQty, .clsRate", function () {
+
+        var id = $(this).attr("id").split("_")[1];
+        var nos = $("#Nos_" + id).val();
+        var qty = $("#Qty_" + id).val();
+        var rate = $("#Rate_" + id).val();
+
+        /* validate start */
+        if (IsEmptyOrNull(nos))
+            nos = 0;
+        else
+            nos = parseFloat(nos);
+
+        if (IsEmptyOrNull(qty))
+            qty = 0;
+        else
+            qty = parseFloat(qty);
+
+        if (IsEmptyOrNull(rate))
+            rate = 0;
+        else
+            rate = parseFloat(rate);
+
+        /* validate end */
+
+        var amount = nos * qty * rate;
+
+        $("#ItemAmount_" + id).text(parseFloat(amount));
+
+        // Get all totals
+        UpdateValues();
+
+        //return this.value;
+    });
+
+    $(document).on("click", "#btnSubmit", function () {
+        var isvalid = true;
+
+        var EstimateDate = $("#EstimateDate").val();
+        var PartyName = $("#PartyName").val();
+        var Remarks = $("#Remarks").val();
+
+        if (IsEmptyOrNull(EstimateDate)) {
+            $("#spn_EstimateDate").text(field_required_msg);
+            $("#spn_EstimateDate").show();
+            isvalid = false;
+        }
+        else {
+            $("#spn_EstimateDate").hide();
+        }
+
+        if (IsEmptyOrNull(PartyName)) {
+            $("#spn_PartyName").text(field_required_msg);
+            $("#spn_PartyName").show();
+            isvalid = false;
+        }
+        else {
+            $("#spn_PartyName").hide();
+        }
+
+        // Validations for Items
+        $("#tbl_Estimate tbody tr").each(function () {
+
+            var field_id = $(this).attr("id");
+            var itemname = $("#ItemName_" + field_id).val();
+            var nos_value = $("#Nos_" + field_id).val();
+            var qty_value = $("#Qty_" + field_id).val();
+            var rate_value = $("#Rate_" + field_id).val();
+
+            // Item Name
+            if (IsEmptyOrNull(itemname)) {
+                $("#spn_ItemName_" + field_id).text(field_required_msg);
+                $("#spn_ItemName_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_ItemName_" + field_id).hide();
+            }
+
+            // Nos
+            if (IsEmptyOrNull(nos_value)) {
+                $("#spn_Nos_" + field_id).text(field_required_msg);
+                $("#spn_Nos_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_Qty_" + field_id).hide();
+            }
+
+            // Qty
+            if (IsEmptyOrNull(qty_value)) {
+                $("#spn_Qty_" + field_id).text(field_required_msg);
+                $("#spn_Qty_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_Qty_" + field_id).hide();
+            }
+
+            // Rate
+            if (IsEmptyOrNull(rate_value)) {
+                $("#spn_Rate_" + field_id).text(field_required_msg);
+                $("#spn_Rate_" + field_id).show();
+                isvalid = false;
+            }
+            else {
+                $("#spn_Rate_" + field_id).hide();
+            }
+
+        });
+
+        if (!isvalid) {
+            jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+            return false;
+        }
+
+        // Create Object
+        var EstimateItem = [];
+        $("#tbl_Estimate tbody tr").each(function () {
+
+            var field_id = $(this).attr("id");
+            var itemname_value = $("#ItemName_" + field_id).val();
+            var nos_value = $("#Nos_" + field_id).val();
+            var qty_value = $("#Qty_" + field_id).val();
+            var rate_value = $("#Rate_" + field_id).val();
+
+            EstimateItem.push({
+                "EstimateItemId": field_id,
+                "ItemName": itemname_value,
+                "Nos": nos_value,
+                "Qty": qty_value,
+                "Rate": rate_value
+            });
+
+        });
+
+        var hdnEstimateId = $("#hdnEstimateId").val();
+
+        var EstimateVM = {
+            "EstimateId": hdnEstimateId,
+            "strEstimateDate": EstimateDate,
+            "PartyName": PartyName,
+            "Remarks": Remarks,
+            "EstimateItem": EstimateItem,
+        };
+
+        // Save
+        StartLoading();
+        var URL = '@Url.Action("UpdateEstimate", "Estimate")';
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: URL,
+            data: {
+                EstimateData: JSON.stringify(EstimateVM)
+            },
+            success: function (response) {
+                if (response.IsError) {
+                alert(response.ErrorMessage);
+                StopLoading();
+            }
+            else {
+                window.location.href = response.RedirectUrl;
+            }
+
+            },
+            error: function (result) {
+                alert("error= " + result);
+                StopLoading();
+            }
+        });
+
+    });
+
+</script>

@@ -1685,8 +1685,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return ReturnMessage;
         }
-
-
+         
         private decimal CalculateBillArea(AreaDebitBillItemVM item)
         {
             decimal areaTotal = 0;

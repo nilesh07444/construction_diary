@@ -29,6 +29,7 @@ namespace ConstructionDiary
         public int Qty { get; set; }
         public decimal Rate { get; set; }
         public decimal TotalAmount { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 
 }

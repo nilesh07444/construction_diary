@@ -58,7 +58,45 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         public ActionResult Edit(Guid Id)
         {
-            return View();
+            EstimateVM objEstimate = new EstimateVM();
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                objEstimate = (from e in _db.tbl_Estimate
+                               where e.EstimateId == Id
+                               orderby e.EstimateId
+                               select new EstimateVM
+                               {
+                                   EstimateId = e.EstimateId,
+                                   EstimateDate = e.EstimateDate,
+                                   PartyName = e.PartyName,
+                                   TotalAmount = e.TotalAmount,
+                                   Remarks = e.Remarks
+                               }).FirstOrDefault();
+
+                if (objEstimate != null)
+                {
+                    objEstimate.EstimateItem = (from i in _db.tbl_EstimateItem
+                                                select new EstimateItemVM
+                                                {
+                                                    EstimateItemId = i.EstimateItemId,
+                                                    ItemName = i.ItemName,
+                                                    Nos = i.Nos,
+                                                    Qty = i.Qty,
+                                                    Rate = i.Rate,
+                                                    TotalAmount = i.TotalAmount,
+                                                    CreatedDate = i.CreatedDate
+                                                }).OrderBy(x => x.CreatedDate).ToList();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return View(objEstimate);
         }
 
         [HttpPost]
@@ -107,8 +145,99 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objItem.Qty = item.Qty;
                         objItem.Rate = item.Rate;
                         objItem.TotalAmount = Convert.ToDecimal(TotalAmt);
+                        objItem.CreatedDate = DateTime.UtcNow;
                         _db.tbl_EstimateItem.Add(objItem);
                         _db.SaveChanges();
+                    });
+
+                    response.IsError = false;
+                    response.RedirectUrl = Url.Action("Index", "Estimate");
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    response.IsError = true;
+                    response.ErrorMessage = ex.Message.ToString();
+                }
+            }
+
+            return Json(response);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateEstimate(string EstimateData)
+        {
+            GeneralResponse response = new GeneralResponse();
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            using (var transaction = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    EstimateVM objEstimateInfo = JsonConvert.DeserializeObject<EstimateVM>(EstimateData);
+
+                    if (objEstimateInfo.EstimateItem != null)
+                    {
+                        List<Guid> lstItemIds = objEstimateInfo.EstimateItem.Select(x => x.EstimateItemId.Value).ToList();
+
+                        List<tbl_EstimateItem> EstimateItemToDelete = (from i in _db.tbl_EstimateItem
+                                                                       where !lstItemIds.Contains(i.EstimateItemId)
+                                                                       select i).ToList();
+
+                        if (EstimateItemToDelete != null && EstimateItemToDelete.Count > 0)
+                        {
+                            _db.tbl_EstimateItem.RemoveRange(EstimateItemToDelete);
+                            _db.SaveChanges();
+                        }
+
+                    }
+
+                    DateTime estimate_date = DateTime.ParseExact(objEstimateInfo.strEstimateDate, "dd/MM/yyyy", null);
+
+                    decimal GrandTotalAmt = CalculateGrandTotal(objEstimateInfo.EstimateItem);
+
+                    // Save data in Estimate
+                    tbl_Estimate objEstimate = _db.tbl_Estimate.Where(x => x.EstimateId == objEstimateInfo.EstimateId).FirstOrDefault();
+                    objEstimate.EstimateDate = estimate_date;
+                    objEstimate.PartyName = objEstimateInfo.PartyName;
+                    objEstimate.TotalAmount = GrandTotalAmt;
+                    objEstimate.Remarks = objEstimateInfo.Remarks;
+                    objEstimate.ModifiedBy = clsSession.UserID;
+                    objEstimate.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+
+                    // Save data in Estimate Item
+                    objEstimateInfo.EstimateItem.ForEach(item =>
+                    {
+                        decimal? TotalAmt = item.Nos * item.Qty * item.Rate;
+
+                        tbl_EstimateItem objEstimateItem = _db.tbl_EstimateItem.Where(x => x.EstimateItemId == item.EstimateItemId).FirstOrDefault();
+                        if (objEstimateItem == null)
+                        {
+                            // Add
+                            tbl_EstimateItem objItem = new tbl_EstimateItem();
+                            objItem.EstimateItemId = Guid.NewGuid();
+                            objItem.EstimateId = objEstimate.EstimateId;
+                            objItem.ItemName = item.ItemName;
+                            objItem.Nos = item.Nos;
+                            objItem.Qty = item.Qty;
+                            objItem.Rate = item.Rate;
+                            objItem.TotalAmount = Convert.ToDecimal(TotalAmt);
+                            objItem.CreatedDate = DateTime.UtcNow;
+                            _db.tbl_EstimateItem.Add(objItem);
+                            _db.SaveChanges();
+                        }
+                        else {
+                            // Update  
+                            objEstimateItem.ItemName = item.ItemName;
+                            objEstimateItem.Nos = item.Nos;
+                            objEstimateItem.Qty = item.Qty;
+                            objEstimateItem.Rate = item.Rate;
+                            objEstimateItem.TotalAmount = Convert.ToDecimal(TotalAmt);  
+                            _db.SaveChanges();
+                        }
+
                     });
 
                     response.IsError = false;
@@ -153,6 +282,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 tbl_Estimate objEstimate = _db.tbl_Estimate.Where(x => x.EstimateId == Id).FirstOrDefault();
 
                 List<EstimateItemVM> lstEstimateItem = (from i in _db.tbl_EstimateItem
+                                                        orderby i.CreatedDate
                                                         where i.EstimateId == Id
                                                         select new EstimateItemVM
                                                         {
@@ -162,7 +292,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                             Qty = i.Qty,
                                                             Rate = i.Rate,
                                                             TotalAmount = i.TotalAmount
-                                                        }).ToList();
+                                                        }).OrderBy(x => x.EstimateItemId).ToList();
 
                 string[] strColumns = new string[6] { "Sr No", "Item Description", "Nos", "Qty", "Rate", "Amount" };
                 if (lstEstimateItem != null && lstEstimateItem.Count() > 0)
@@ -197,7 +327,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='height: 120px; vertical-align: top;'>");
-                    strHTML.Append("<th colspan='4'>From: "+ objClient.ClientName + " <br /> "+ objClient.Address + " </th>");
+                    strHTML.Append("<th colspan='4'>From: " + objClient.ClientName + " <br /> " + objClient.Address + " </th>");
                     strHTML.Append("<th colspan='2'>Date: " + objEstimate.EstimateDate.ToString("dd/MM/yyyy") + "</th>");
                     strHTML.Append("</tr>");
 
@@ -289,7 +419,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         }
 
                                 }
-                                strHTML.Append("<td style='width: "+ colWidth + "; border: 1px solid #000000;'>");
+                                strHTML.Append("<td style='width: " + colWidth + "; border: 1px solid #000000;'>");
                                 strHTML.Append(strcolval);
                                 strHTML.Append("</td>");
                             }
@@ -351,6 +481,43 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         }
 
+        [HttpPost]
+        public string DeleteEstimate(Guid EstimateId)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+
+                tbl_Estimate objEstimate = _db.tbl_Estimate.Where(x => x.EstimateId == EstimateId && x.IsActive == true
+                                                            && x.IsDeleted == false).FirstOrDefault();
+
+                if (objEstimate == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+                    List<tbl_EstimateItem> lstItems = _db.tbl_EstimateItem.Where(x => x.EstimateId == EstimateId).ToList();
+                    if (lstItems.Count > 0)
+                    {
+                        _db.tbl_EstimateItem.RemoveRange(lstItems);
+                        _db.SaveChanges();
+                    }
+
+                    // hard delete
+                    _db.tbl_Estimate.Remove(objEstimate);
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
 
     }
 }

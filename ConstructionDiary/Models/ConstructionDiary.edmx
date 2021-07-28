@@ -192,6 +192,7 @@
           <Property Name="Qty" Type="int" Nullable="false" />
           <Property Name="Rate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="tbl_Expenses">
           <Key>
@@ -1714,6 +1715,7 @@
           <Property Name="Qty" Type="Int32" Nullable="false" />
           <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2379,6 +2381,7 @@
           <EntitySetMapping Name="tbl_EstimateItem">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_EstimateItem">
               <MappingFragment StoreEntitySet="tbl_EstimateItem">
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
                 <ScalarProperty Name="Rate" ColumnName="Rate" />
                 <ScalarProperty Name="Qty" ColumnName="Qty" />
