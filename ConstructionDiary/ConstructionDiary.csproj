@@ -290,6 +290,9 @@
     <Compile Include="Models\tbl_PagarPersonDetail.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_PageModule.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_Party.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -324,6 +327,9 @@
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Sites.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_UserPageModuleAccess.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Users.cs">
@@ -370,6 +376,8 @@
     <Compile Include="ViewModel\PeticashVM.cs" />
     <Compile Include="ViewModel\SiteInfoVM.cs" />
     <Compile Include="ViewModel\UserChangePasswordVM.cs" />
+    <Compile Include="ViewModel\UserPageModuleAccessVM.cs" />
+    <Compile Include="ViewModel\UserPermissionVM.cs" />
     <Compile Include="ViewModel\UserVM.cs" />
     <Compile Include="ViewModel\EstimateVM.cs" />
   </ItemGroup>
@@ -2053,6 +2061,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\default_image.png" />
     <Content Include="Images\default_user_image.png" />
+    <Content Include="Images\rrbuild-letter-head.png" />
     <Content Include="Models\ConstructionDiary.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ConstructionDiary.edmx</DependentUpon>
@@ -2357,6 +2366,7 @@
     <Content Include="Areas\Admin\Views\Estimate\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Estimate\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Estimate\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Attendance\ReOrderPerson.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -2394,6 +2404,7 @@
     <Folder Include="Areas\WebApi\Controllers\" />
     <Folder Include="Areas\WebApi\Models\" />
     <Folder Include="Areas\WebApi\Views\Shared\" />
+    <Folder Include="Images\LetterHead\" />
     <Folder Include="Images\PersonPhoto\" />
     <Folder Include="Images\UserPhoto\" />
   </ItemGroup>
@@ -2417,6 +2428,7 @@
     <EmbeddedResource Include="ResourceFiles\Resource.gu.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.gu.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ResourceFiles\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -2500,8 +2512,10 @@
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
     <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets'))" />
   </Target>
   <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets" Condition="Exists('..\packages\NETStandard.Library.2.0.3\build\netstandard2.0\NETStandard.Library.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

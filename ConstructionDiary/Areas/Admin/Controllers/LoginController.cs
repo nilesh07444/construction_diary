@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using ConstructionDiary.Models;
+using Newtonsoft.Json;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -16,7 +17,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             _db = new ConstructionDiaryEntities();
         }
-        
+
         public ActionResult Index()
         {
             //if (clsSession.SessionID != null)
@@ -79,6 +80,30 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     clsSession.UserName = data.FirstName;
                     clsSession.ClientID = data.ClientId;
                     clsSession.ImagePath = data.UserPhoto;
+
+                    List<UserPageModuleAccessVM> lstPagePermissions = CoreHelper.GetAssignedUserPageAccessListWhileLogin(data.UserId, data.RoleId);
+
+                    UserPermissionVM objUserPermission = new UserPermissionVM();
+                    objUserPermission.Party = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Party).First().IsAssigned;
+                    objUserPermission.Site = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Site).First().IsAssigned;
+                    objUserPermission.Debit = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Debit).First().IsAssigned;
+                    objUserPermission.Credit = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Credit).First().IsAssigned;
+                    objUserPermission.Expense = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Expense).First().IsAssigned;
+                    objUserPermission.Material = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Material).First().IsAssigned;
+                    objUserPermission.Estimate = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Estimate).First().IsAssigned;
+                    objUserPermission.Challan = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Challan).First().IsAssigned;
+                    objUserPermission.Attendance = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Attendance).First().IsAssigned;
+                    objUserPermission.Pagar = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Pagar).First().IsAssigned;
+                    objUserPermission.Peticash = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Peticash).First().IsAssigned;
+                    objUserPermission.Merchant = lstPagePermissions.Where(x => x.PageModuleId == (int)UserPermissionEnum.Merchant).First().IsAssigned;
+
+                    string jsonPermissionValues = JsonConvert.SerializeObject(objUserPermission, Formatting.Indented, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+
+                    clsSession.UserPermission = jsonPermissionValues;
+
                     return RedirectToAction("Index", "Dashboard");
                 }
                 else
@@ -89,7 +114,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
             catch (Exception ex)
             {
-
+                TempData["LoginError"] = "Error: " + ex.Message.ToString();
             }
 
             return View();
@@ -112,6 +137,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             string value = CoreHelper.Decrypt(text);
             return value;
         }
-        
+
     }
 }

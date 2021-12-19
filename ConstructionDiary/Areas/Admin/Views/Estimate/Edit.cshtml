@@ -20,7 +20,7 @@
             <section class="panel">
 
                 <header class="panel-heading">
-                    <strong> Edit Estimate </strong>
+                    <strong>@Resource.UpdateEstimate</strong>
                     <a href="/admin/estimate" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
                         <i class="fa fa-backward"></i> Back
                     </a>
@@ -29,21 +29,21 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-4 form-group">
-                            <label for="EstimateDate">Estimate Date</label><span class="required">*</span>
+                            <label for="EstimateDate">@Resource.EstimateDate</label><span class="required">*</span>
                             <input class="form-control default-date-picker" id="EstimateDate" name="EstimateDate" value="@Convert.ToDateTime(Model.EstimateDate).ToString("dd/MM/yyyy")" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
                             <span id="spn_EstimateDate" class="field-validation-valid text-danger"></span>
                         </div>
 
                         <div class="col-sm-4 form-group">
-                            <label for="PartyName">Party Name</label>
-                            <input class="form-control" id="PartyName" name="PartyName" placeholder="Enter Party Name" type="text" value="@Model.PartyName">
+                            <label for="PartyName">@Resource.PartyName</label>
+                            <input class="form-control" id="PartyName" name="PartyName" placeholder="@Resource.PartyName" type="text" value="@Model.PartyName">
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-12 form-group">
                             <label for="Remarks">@Resource.Remarks</label>
-                            <input class="form-control" id="Remarks" name="Remarks" placeholder="Enter @Resource.Remarks" type="text" value="@Model.Remarks">
+                            <input class="form-control" id="Remarks" name="Remarks" placeholder="@Resource.Remarks" type="text" value="@Model.Remarks">
                         </div>
                     </div>
 

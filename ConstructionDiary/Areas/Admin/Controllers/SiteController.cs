@@ -47,6 +47,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             List<SiteDetailVM> siteDetail = (from site in _db.tbl_Sites
+                                             join party in _db.tbl_Party on site.PartyId equals party.PartyId into outerJoinParty
+                                             from party in outerJoinParty.DefaultIfEmpty()
                                              where site.ClientId == ClientId && !site.IsDeleted
                                              && (string.IsNullOrEmpty(ftraction) || site.IsActive == IsActiveFilter)
                                              select new SiteDetailVM
@@ -57,17 +59,30 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                  IsActive = site.IsActive,
                                                  PartyId = site.PartyId,
                                                  TotalBillAmount = _db.tbl_BillSiteNew.Where(x => x.SiteId == site.SiteId).ToList().Select(x => x.TotalAmount).Sum(),
-                                                 TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum()
+                                                 TotalCreditAmount = _db.tbl_ContractorFinance.Where(x => x.SiteId == site.SiteId && x.CreditOrDebit == "Credit" && x.IsDeleted == false).ToList().Select(x => x.Amount).Sum(),
+                                                 PartyName = (party != null ? party.PartyName : "")
                                              }).ToList();
 
             //var lstSites = (from p in _db.SP_GetSitesList(ClientId)
             //                select p).ToList();
 
+            List<PartyVM> lstParties = (from p in _db.tbl_Party
+                                        where p.ClientId == ClientId && !p.IsDeleted && p.IsActive
+                                        select new PartyVM
+                                        {
+                                            PartyId = p.PartyId,
+                                            PartyName = p.PartyName,
+                                            Remarks = p.Remarks,
+                                            IsActive = p.IsActive
+                                        }).OrderByDescending(x => x.PartyId).ToList();
+
+            ViewData["lstParties"] = lstParties;
+
             return View(siteDetail);
         }
 
         [HttpPost]
-        public string SaveSite(string site_id, string site_name, string site_desc)
+        public string SaveSite(string site_id, string site_name, string site_desc, string str_party_id)
         {
             string ReturnMessage = "";
 
@@ -89,6 +104,13 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                         objSite.SiteName = site_name;
                         objSite.SiteDescription = site_desc;
                         objSite.ClientId = new Guid(clsSession.ClientID.ToString());
+
+                        objSite.PartyId = null;
+                        if (!string.IsNullOrEmpty(str_party_id))
+                        {
+                            objSite.PartyId = new Guid(str_party_id);
+                        }
+
                         objSite.IsActive = true;
                         objSite.IsDeleted = false;
                         objSite.CreatedBy = new Guid(clsSession.UserID.ToString());
@@ -118,6 +140,13 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                         objSiteToUpdate.SiteName = site_name;
                         objSiteToUpdate.SiteDescription = site_desc;
+
+                        objSiteToUpdate.PartyId = null;
+                        if (!string.IsNullOrEmpty(str_party_id))
+                        {
+                            objSiteToUpdate.PartyId = new Guid(str_party_id);
+                        }
+
                         objSiteToUpdate.UpdatedBy = new Guid(clsSession.UserID.ToString());
                         objSiteToUpdate.ModifiedDate = DateTime.UtcNow;
                         _db.SaveChanges();

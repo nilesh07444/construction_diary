@@ -69,6 +69,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                          .Select(o => new SelectListItem { Value = o.RoleId.ToString(), Text = o.RoleName })
                          .ToList();
 
+            List<UserPageModuleAccessVM> UserPageModuleAccessList = CoreHelper.GetAssignedUserPageAccessList(Guid.Empty);
+            ViewData["UserPageModuleAccessList"] = UserPageModuleAccessList;
+
             return View(user);
         }
 
@@ -79,6 +82,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             user.UserRoleList = _db.tbl_Role.Where(x => x.RoleId > 1)
                          .Select(o => new SelectListItem { Value = o.RoleId.ToString(), Text = o.RoleName })
                          .ToList();
+
+            List<UserPageModuleAccessVM> UserPageModuleAccessList = CoreHelper.GetAssignedUserPageAccessList(Guid.Empty);
+            ViewData["UserPageModuleAccessList"] = UserPageModuleAccessList;
 
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
@@ -117,6 +123,30 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objUser.CreatedDate = DateTime.UtcNow;
                     _db.tbl_Users.Add(objUser);
                     _db.SaveChanges();
+
+                    #region Assign selected page to user
+
+                    if (user.RoleId == (int)UserRoles.Staff && !string.IsNullOrEmpty(user.strSelectedPageModuleAccess))
+                    {
+                        List<string> lstSelectedPageModules = user.strSelectedPageModuleAccess.Split(',').ToList<string>();
+
+                        lstSelectedPageModules.ForEach(strPageModuleId =>
+                        {
+                            long pageModuleId = Convert.ToInt64(strPageModuleId);
+
+                            tbl_UserPageModuleAccess userPageModuleAccessVM = new tbl_UserPageModuleAccess();
+                            userPageModuleAccessVM.UserId = objUser.UserId;
+                            userPageModuleAccessVM.PageModuleId = pageModuleId;
+                            userPageModuleAccessVM.CreatedBy = clsSession.UserID;
+                            userPageModuleAccessVM.CreatedDate = DateTime.UtcNow;
+                            _db.tbl_UserPageModuleAccess.Add(userPageModuleAccessVM);
+                            _db.SaveChanges();
+
+                        });
+                    }
+
+                    #endregion
+
                 }
                 catch (Exception ex)
                 {
@@ -171,6 +201,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 }
 
 
+                List<UserPageModuleAccessVM> UserPageModuleAccessList = CoreHelper.GetAssignedUserPageAccessList(id);
+                ViewData["UserPageModuleAccessList"] = UserPageModuleAccessList;
+
             }
             catch (Exception ex)
             {
@@ -187,6 +220,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             user.UserRoleList = _db.tbl_Role.Where(x => x.RoleId > 1)
                          .Select(o => new SelectListItem { Value = o.RoleId.ToString(), Text = o.RoleName })
                          .ToList();
+
+            List<UserPageModuleAccessVM> UserPageModuleAccessList = CoreHelper.GetAssignedUserPageAccessList(user.UserId);
+            ViewData["UserPageModuleAccessList"] = UserPageModuleAccessList;
 
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             if (ModelState.IsValid)
@@ -221,6 +257,57 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objUser.MobileNo = user.MobileNo;
                     objUser.ModifiedDate = DateTime.UtcNow;
                     _db.SaveChanges();
+
+                    #region Assign selected office locations
+
+                    if (user.RoleId == (int)UserRoles.Staff && !string.IsNullOrEmpty(user.strSelectedPageModuleAccess))
+                    {
+                        List<string> lstSelectedPageModules = user.strSelectedPageModuleAccess.Split(',').ToList<string>();
+
+                        long x = 0;
+                        var longSelectedPageModuleList = lstSelectedPageModules.Where(str => long.TryParse(str, out x)).Select(str => x).ToList();
+
+                        // delete unselected locations
+                        List<tbl_UserPageModuleAccess> lstUnSelectedEmployeeOfficeLocations = _db.tbl_UserPageModuleAccess.Where(p => p.UserId == user.UserId && !longSelectedPageModuleList.Contains(p.PageModuleId)).ToList();
+                        if (lstUnSelectedEmployeeOfficeLocations != null && lstUnSelectedEmployeeOfficeLocations.Count > 0)
+                        {
+                            _db.tbl_UserPageModuleAccess.RemoveRange(lstUnSelectedEmployeeOfficeLocations);
+                            _db.SaveChanges();
+                        }
+
+                        // Save missing locations
+                        lstSelectedPageModules.ForEach(strPageModuleId =>
+                        {
+                            long pageModuleId = Convert.ToInt64(strPageModuleId);
+
+                            tbl_UserPageModuleAccess objDuplicateLocation = _db.tbl_UserPageModuleAccess.Where(l => l.UserId == objUser.UserId && l.PageModuleId == pageModuleId).FirstOrDefault();
+
+                            if (objDuplicateLocation == null)
+                            {                               
+                                tbl_UserPageModuleAccess userPageModuleAccessVM = new tbl_UserPageModuleAccess();
+                                userPageModuleAccessVM.UserId = objUser.UserId;
+                                userPageModuleAccessVM.PageModuleId = pageModuleId;
+                                userPageModuleAccessVM.CreatedBy = clsSession.UserID;
+                                userPageModuleAccessVM.CreatedDate = DateTime.UtcNow;
+                                _db.tbl_UserPageModuleAccess.Add(userPageModuleAccessVM);
+                                _db.SaveChanges();
+                            }
+                        });
+
+                    }
+                    else
+                    {
+                        // Remove old locations, if exists
+                        List<tbl_UserPageModuleAccess> lstDeleteUserPageModuleAccess = _db.tbl_UserPageModuleAccess.Where(x => x.UserId == user.UserId).ToList();
+                        if (lstDeleteUserPageModuleAccess != null && lstDeleteUserPageModuleAccess.Count > 0)
+                        {
+                            _db.tbl_UserPageModuleAccess.RemoveRange(lstDeleteUserPageModuleAccess);
+                            _db.SaveChanges();
+                        }
+                    }
+
+                    #endregion
+
                 }
                 catch (Exception ex)
                 {
@@ -260,6 +347,6 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return ReturnMessage;
         }
-
+        
     }
 }

@@ -732,4 +732,43 @@
   <data name="PartyList" xml:space="preserve">
     <value>પાર્ટી  લિસ્ટ</value>
   </data>
+  <data name="AddNewEstimate" xml:space="preserve">
+    <value>નવો એસ્ટીમેટ ઉમેરો</value>
+  </data>
+  <data name="Estimate" xml:space="preserve">
+    <value>એસ્ટીમેટ</value>
+  </data>
+  <data name="EstimateDate" xml:space="preserve">
+    <value>એસ્ટીમેટ તારીખ</value>
+  </data>
+  <data name="EstimateList" xml:space="preserve">
+    <value>એસ્ટીમેટ લિસ્ટ</value>
+  </data>
+  <data name="UpdateEstimate" xml:space="preserve">
+    <value>એસ્ટીમેટ સુધારો</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>કોન્ફીર્મશન</value>
+  </data>
+  <data name="ConfirmLetterHeadQuestion" xml:space="preserve">
+    <value>શું તમારે લેટર હેડ PDF માં રાખવું છે ?</value>
+  </data>
+  <data name="AddNewPagar" xml:space="preserve">
+    <value>નવો પગાર ઉમેરો</value>
+  </data>
+  <data name="PagarAmount" xml:space="preserve">
+    <value>પગાર રકમ</value>
+  </data>
+  <data name="PagarDate" xml:space="preserve">
+    <value>પગાર તારીખ</value>
+  </data>
+  <data name="PagarList" xml:space="preserve">
+    <value>પગાર લિસ્ટ </value>
+  </data>
+  <data name="PagarPayAmount" xml:space="preserve">
+    <value>અત્યારે આપેલી રકમ</value>
+  </data>
+  <data name="PageAccess" xml:space="preserve">
+    <value>પેજ ઍક્સેસ</value>
+  </data>
 </root>

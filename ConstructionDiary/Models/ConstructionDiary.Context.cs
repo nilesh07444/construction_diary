@@ -65,6 +65,8 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_ShayariCategory> tbl_ShayariCategory { get; set; }
         public virtual DbSet<tbl_Estimate> tbl_Estimate { get; set; }
         public virtual DbSet<tbl_EstimateItem> tbl_EstimateItem { get; set; }
+        public virtual DbSet<tbl_PageModule> tbl_PageModule { get; set; }
+        public virtual DbSet<tbl_UserPageModuleAccess> tbl_UserPageModuleAccess { get; set; }
     
         public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList(Nullable<System.Guid> clientId)
         {

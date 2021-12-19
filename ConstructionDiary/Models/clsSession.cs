@@ -100,6 +100,18 @@ namespace ConstructionDiary.Models
             }
         }
 
-       
+        public static string UserPermission
+        {
+            get
+            {
+                return HttpContext.Current.Session["UserPermission"] != null ? Convert.ToString(HttpContext.Current.Session["UserPermission"]) : string.Empty;
+            }
+            set
+            {
+                HttpContext.Current.Session["UserPermission"] = value;
+            }
+        }
+
+
     }
 }

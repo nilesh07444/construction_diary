@@ -1,0 +1,110 @@
+﻿@using ConstructionDiary.ResourceFiles;
+@model List<AttendancePersonVM>
+@{
+    ViewBag.Title = "Attendance";
+    int counter = 1;
+}
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>@Resource.PersonList</strong>
+                </header>
+            </section>
+
+            <section class="panel">
+                <div class="panel-body">
+                    <div class="adv-table">
+
+                        <table class="display table table-bordered table-striped table-hover" id="tblPersonsList">
+                            <thead style="background: darkred; color: antiquewhite;">
+                                <tr>
+                                    <th width="5%"><i class="fa fa-arrows-alt"></i></th>
+                                    <th width="5%">#</th>
+                                    <th>@Resource.Name</th>
+                                    <th width="10%">@Resource.Active</th>
+                                    <th width="15%">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (var obj in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td><i class="fa fa-arrows-alt"></i></td>
+                                            <td>@counter.</td>
+                                            <td>@obj.PersonFirstName</td>
+                                            <td>
+                                                @if (obj.IsActive == true)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-warning">InActive</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <button title="View" data-id="@obj.PersonId" class="btn btn-success btn-xs clsViewPerson"><i class="fa fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+
+<script type="text/javascript" charset="utf-8">
+
+
+
+    jQuery(document).ready(function () {
+        jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+    });
+
+    jQuery(document).on("click", ".clsViewPerson", function () {
+        var person_id = $(this).attr("data-id");
+        window.location.href = "/admin/person/view/" + person_id;
+    });
+
+    jQuery(window).on("load", function () {
+        jQuery.unblockUI();
+
+        $(function () {
+            $("#tblPersonsList tbody").sortable({
+                items: 'tr',
+                cursor: 'pointer',
+                axis: 'y',
+                dropOnEmpty: false,
+                start: function (e, ui) {
+                    ui.item.addClass("selected");
+                },
+                stop: function (e, ui) {
+                    ui.item.removeClass("selected");
+                    //$(this).find("tr").each(function (index) {
+                    //    if (index > 0) {
+                    //        $(this).find("td").eq(2).html(index);
+                    //    }
+                    //});
+                }
+            });
+        });
+    });
+
+</script>

@@ -2,6 +2,8 @@
 @model UserVM
 @{
     ViewBag.Title = "Users";
+
+    List<UserPageModuleAccessVM> lstUserPageModuleAccess = ViewData["UserPageModuleAccessList"] as List<UserPageModuleAccessVM>;
 }
 
 <section class="wrapper site-min-height">
@@ -48,14 +50,6 @@
                                     </div>
 
                                     <div class="form-group">
-                                        @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "control-label col-md-2" })
-                                        <div class="col-md-10">
-                                            @Html.DropDownList("RoleId", new SelectList(Model.UserRoleList, "Value", "Text"), "-Select Role-", new { @class = "form-control" })
-                                            @Html.ValidationMessageFor(m => m.RoleId, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
                                         @Html.LabelFor(model => model.EmailId, htmlAttributes: new { @class = "control-label col-md-2" })
                                         <div class="col-md-10">
                                             @Html.EditorFor(model => model.EmailId, new { htmlAttributes = new { @class = "form-control", maxlength = "150" } })
@@ -71,8 +65,90 @@
                                     </div>
 
                                     <div class="form-group">
+                                        @Html.LabelFor(model => model.RoleId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("RoleId", new SelectList(Model.UserRoleList, "Value", "Text"), "-Select Role-", new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.RoleId, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <!-- Selected Page Access list -->
+                                    <div class="dvSelectedPageAccess form-group" style="display:@(Model.RoleId == (int)UserRoles.Staff ? "inline-block": "none");">
+                                        <label class="control-label col-md-2">@Resource.PageAccess</label>
+                                        <div class="col-md-10">
+                                            @if (lstUserPageModuleAccess != null && lstUserPageModuleAccess.Count > 0)
+                                            {
+                                                <ul class="list-group row">
+                                                    @foreach (UserPageModuleAccessVM page in lstUserPageModuleAccess)
+                                                    {
+                                                        <li class="list-group-item col-xs-4">
+                                                            <input id="page_@page.PageModuleId" type="checkbox" value="@page.PageModuleId" @(page.IsAssigned ? "checked" : "") />
+                                                            <label for="page_@page.PageModuleId" style="font-weight: normal;">
+                                                                @if (page.PageModuleId == (int)UserPermissionEnum.Party)
+                                                                {
+                                                                    @Resource.Party
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Site)
+                                                                {
+                                                                    @Resource.Sites
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Debit)
+                                                                {
+                                                                    @Resource.Debit
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Credit)
+                                                                {
+                                                                    @Resource.Credit
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Expense)
+                                                                {
+                                                                    @Resource.Expenses
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Material)
+                                                                {
+                                                                    @Resource.Material
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Estimate)
+                                                                {
+                                                                    @Resource.Estimate
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Challan)
+                                                                {
+                                                                    @Resource.Challan
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Attendance)
+                                                                {
+                                                                    @Resource.Attendance
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Pagar)
+                                                                {
+                                                                    @Resource.Pagar
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Peticash)
+                                                                {
+                                                                    @Resource.Peticash
+                                                                }
+                                                                else if (page.PageModuleId == (int)UserPermissionEnum.Merchant)
+                                                                {
+                                                                    @Resource.Merchants
+                                                                }
+                                                                else
+                                                                {
+                                                                    @page.PageModuleName
+                                                                }
+
+                                                            </label>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
                                         <div class="col-md-offset-2 col-md-10">
                                             @Html.HiddenFor(x => x.ClientId)
+                                            @Html.HiddenFor(model => model.strSelectedPageModuleAccess)
                                             <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
                                             <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
                                         </div>
@@ -81,6 +157,9 @@
                             }
 
                         </div>
+
+
+
                     </div>
                 </div>
             </section>
@@ -89,6 +168,8 @@
 </section>
 
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
 <script>
 
@@ -101,11 +182,38 @@
 
     jQuery("#cmdSubmit").click(function (event) {
         //event.preventDefault();
+
+        var roleId = $("#RoleId").val();
+        if (roleId != null && roleId == 3) // 3 = staff
+        {
+            var selectedPageAccess = $(".dvSelectedPageAccess input[type='checkbox']:checked");
+            if (selectedPageAccess.length > 0) {
+                var str_selected_pageaccess_values = "";
+                $(".dvSelectedPageAccess input[type='checkbox']:checked").each(function () {
+                    str_selected_pageaccess_values += this.value + ",";
+                });
+                str_selected_pageaccess_values = str_selected_pageaccess_values.substring(0, str_selected_pageaccess_values.length - 1);
+                $("#strSelectedPageModuleAccess").val(str_selected_pageaccess_values);
+            }
+        }
+        else {
+            $("#strSelectedPageModuleAccess").val('');
+        }
+
         if (jQuery("form").valid()) {
             jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
         }
     });
 
+    $(document).on("change", "#RoleId", function () {
+        var roleId = $("#RoleId option:selected").val();
+        if (roleId != null && roleId == 3) {
+            $(".dvSelectedPageAccess").show();
+        }
+        else {
+            $(".dvSelectedPageAccess").hide();
+        }
+    });
 
 </script>
 

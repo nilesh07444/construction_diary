@@ -419,7 +419,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             ViewBag.ftrAction = ftraction;
 
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
-             
+
             List<AttendancePersonVM> lstPersonsNew = (from p in _db.tbl_Persons
                                                       where p.ClientId == ClientId && p.IsAttendancePerson == true && p.IsDeleted == false
                                                       && (string.IsNullOrEmpty(ftraction) || p.IsActive == IsActiveFilter)
@@ -943,7 +943,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetNextPagarInfoOfGroup(Guid GroupId)
+        public JsonResult GetNextPagarInfoOfGroup(Guid GroupId, string strSelectedPagarDate)
         {
 
             PagarVM obj = new PagarVM();
@@ -951,6 +951,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             try
             {
+                DateTime SelectedPagarDate = DateTime.ParseExact(strSelectedPagarDate, "dd/MM/yyyy", null);
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
                 // Get Group Persons
@@ -961,7 +962,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 if (objLastPagar != null)
                 {
                     obj.dtPagarStartDate = objLastPagar.PagarEndDate.AddDays(1);
-                    obj.dtPagarEndDate = DateTime.Today;
+                    obj.dtPagarEndDate = SelectedPagarDate;
                     obj.PrevPagarRemainingAmount = objLastPagar.RemainingAmount;
                 }
                 else
@@ -978,7 +979,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     else
                         obj.dtPagarStartDate = objMinStartAttendanceDate.AttendanceDate;
 
-                    obj.dtPagarEndDate = DateTime.Today;
+                    obj.dtPagarEndDate = SelectedPagarDate;
                 }
 
                 if (obj.dtPagarStartDate.Date > DateTime.UtcNow.Date)
@@ -1206,7 +1207,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetNextPagarInfoOfPerson(Guid PersonId)
+        public JsonResult GetNextPagarInfoOfPerson(Guid PersonId, string strSelectedPagarDate)
         {
 
             PagarVM obj = new PagarVM();
@@ -1214,6 +1215,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             try
             {
+                DateTime SelectedPagarDate = DateTime.ParseExact(strSelectedPagarDate, "dd/MM/yyyy", null);
+
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
                 // Get Group Persons 
@@ -1224,7 +1227,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 if (objLastPagar != null)
                 {
                     obj.dtPagarStartDate = objLastPagar.PagarEndDate.AddDays(1);
-                    obj.dtPagarEndDate = DateTime.Today;
+                    obj.dtPagarEndDate = SelectedPagarDate;
                     obj.PrevPagarRemainingAmount = objLastPagar.RemainingAmount;
                 }
                 else
@@ -1241,7 +1244,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     else
                         obj.dtPagarStartDate = objMinStartAttendanceDate.AttendanceDate;
 
-                    obj.dtPagarEndDate = DateTime.Today;
+                    obj.dtPagarEndDate = SelectedPagarDate;
                 }
 
                 if (obj.dtPagarStartDate.Date > DateTime.UtcNow.Date)
@@ -1265,7 +1268,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     from att in outerJoinAttendance.DefaultIfEmpty()
                     join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
                     from site in outerJoinSite.DefaultIfEmpty()
-                    where attper.PersonId == personId && att.AttendanceDate >= obj.dtPagarStartDate && att.AttendanceDate <= obj.dtPagarEndDate
+                    where attper.PersonId == personId
+                    && att.AttendanceDate >= obj.dtPagarStartDate
+                    && att.AttendanceDate <= obj.dtPagarEndDate
                     select new ReportPersonAttendanceVM
                     {
                         PersonAttendanceId = attper.PersonAttendanceId,
@@ -1311,6 +1316,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
+
         public GroupAttendanceStatusVM getPersonAttendanceByFilter(Guid Id, DateTime startDate, DateTime endDate)
         {
             GroupAttendanceStatusVM objGroupStatus = new GroupAttendanceStatusVM();
@@ -1684,6 +1690,23 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
             }
 
+        }
+
+        public ActionResult ReOrderPerson()
+        {
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            List<AttendancePersonVM> lstPersons = (from p in _db.tbl_Persons
+                                                      where p.ClientId == ClientId && p.IsAttendancePerson == true && p.IsDeleted == false && p.IsActive == true
+                                                      select new AttendancePersonVM
+                                                      {
+                                                          PersonId = p.PersonId,
+                                                          PersonFirstName = p.PersonFirstName,
+                                                          IsActive = p.IsActive,
+                                                          IsGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonId == p.PersonId).Any()
+                                                      }).ToList();
+
+            return View(lstPersons);
         }
 
     }

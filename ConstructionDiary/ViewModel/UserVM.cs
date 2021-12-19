@@ -48,6 +48,8 @@ namespace ConstructionDiary
         public List<SelectListItem> UserRoleList { get; set; }
         public decimal? PeticashBalance { get; set; }
 
+        public string strSelectedPageModuleAccess { get; set; }
+
     }
      
 }

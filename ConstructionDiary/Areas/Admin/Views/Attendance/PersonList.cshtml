@@ -1,4 +1,4 @@
-﻿@using ConstructionDiary.ResourceFiles; 
+﻿@using ConstructionDiary.ResourceFiles;
 @model List<AttendancePersonVM>
 @{
     ViewBag.Title = "Attendance";
@@ -38,7 +38,7 @@
 
             </section>
 
-            <section class="panel"> 
+            <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
@@ -46,30 +46,19 @@
                                 <button id="btnAddPerson" class="btn green">
                                     <i class="fa fa-plus"></i> @Resource.AddNewPerson
                                 </button>
+                                <a style="margin-left: 10px;" href="/admin/attendance/reorderperson" class="btn btn-warning"><i class="fa fa-arrows-alt"></i> Re-Order Person</a>
                             </div>
-                            @*<div class="btn-group pull-right">
-                            <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                Tools <i class="fa fa-angle-down"></i>
-                            </button>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="#">Print</a></li>
-                                <li><a href="#">Save as PDF</a></li>
-                                <li><a href="#">Export to Excel</a></li>
-                            </ul>
-                        </div>*@
                         </div>
                         <div class="space15"></div>
                         <table class="display table table-bordered table-striped table-hover" id="tblPersonsList">
                             <thead>
                                 <tr>
-                                    <th width="5%">#</th>
-                                    @*<th width="5%;">@Resource.Photo</th>*@
-                                    <th>@Resource.Name</th>
-                                    @*<th width="15%;" class="hidden-phone">@Resource.MobileNo</th>*@
-                                    <th width="15%;">@Resource.Attendance</th>
-                                    <th width="15%;">Pagar</th>
+                                    <th width="5%">#</th> 
+                                    <th>@Resource.Name</th> 
+                                    <th width="15%">@Resource.Attendance</th>
+                                    <th width="15%">@Resource.Pagar</th>
                                     <th width="10%">@Resource.Active</th>
-                                    <th width="15%;">@Resource.Action</th>
+                                    <th width="15%">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,11 +73,11 @@
                                             <td>
                                                 @if (obj.IsGroupPerson)
                                                 {
-                                                    <a href="/admin/attendance/viewgrouppagar/@obj.PersonGroupId" class="btn btn-primary">Pagar</a>
+                                                    <a href="/admin/attendance/viewgrouppagar/@obj.PersonGroupId" class="btn btn-primary">@Resource.Pagar</a>
                                                 }
                                                 else
                                                 {
-                                                    <a href="/admin/attendance/viewpersonpagar/@obj.PersonId" class="btn btn-primary">Pagar</a>
+                                                    <a href="/admin/attendance/viewpersonpagar/@obj.PersonId" class="btn btn-primary">@Resource.Pagar</a>
                                                 }
                                             </td>
                                             <td>

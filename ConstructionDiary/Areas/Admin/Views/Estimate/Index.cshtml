@@ -1,9 +1,7 @@
-﻿@using ConstructionDiary.Models
-@using ConstructionDiary.ResourceFiles
+﻿@using ConstructionDiary.ResourceFiles
 @model List<EstimateVM>
 @{
     ViewBag.Title = "Estimate";
-
     int counter = 1;
 }
 
@@ -14,14 +12,14 @@
 
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>Estimate List</strong>
+                    <strong>@Resource.EstimateList</strong>
                 </header>
                 <div class="panel-body">
 
                     <div class="adv-table">
                         <div class="clearfix">
                             <div class="btn-group pull-right">
-                                <a class="btn btn-success" href="/admin/estimate/add"><i class="fa fa-plus"></i> Add New Estimate</a>
+                                <a class="btn btn-success" href="/admin/estimate/add"><i class="fa fa-plus"></i> @Resource.AddNewEstimate</a>
                             </div>
                         </div>
                         <div class="space15"></div>
@@ -30,9 +28,9 @@
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="15%">Estimate Date</th>
-                                    <th width="20%">Party Name</th>
-                                    <th width="15%">Total Amount</th>
+                                    <th width="15%">@Resource.Date</th>
+                                    <th width="20%">@Resource.PartyName</th>
+                                    <th width="15%">@Resource.Total</th>
                                     <th>@Resource.Remarks</th>
                                     <th width="5%">@Resource.Download</th>
                                     <th width="10%">@Resource.Action</th>
@@ -90,6 +88,28 @@
     </div>
 </div>
 <!-- Delete modal -->
+<!-- Letter head confirm Modal -->
+<div class="modal fade" id="letterHeadEstimateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <input type="checkbox" id="chkConfirmLetterHead" name="chkConfirmLetterHead" /> @Resource.ConfirmLetterHeadQuestion
+                </p>
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnLetterHeadEstimateId" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnConfirmDownloadLetterHead" class="btn btn-danger" type="button"> @Resource.Download </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Letter head confirm Modal -->
 
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
@@ -150,6 +170,17 @@
         jQuery.unblockUI();
     });
     function fnDownloadEstimate(EstimateId) {
-        window.location.href = "/admin/estimate/ExportPDFOfEstimate/" + EstimateId;
+        jQuery("#hdnLetterHeadEstimateId").val(EstimateId);
+        $('#letterHeadEstimateModal').modal('show');
     }
+
+    jQuery(document).on("click", "#btnConfirmDownloadLetterHead", function () {
+        var EstimateId = jQuery("#hdnLetterHeadEstimateId").val();
+        var chkConfirmLetterHead = jQuery("#chkConfirmLetterHead:checked").val();
+        var IsLetterRequired = chkConfirmLetterHead != null ? true : false;
+
+        $('#letterHeadEstimateModal').modal('hide');
+        window.location.href = "/admin/estimate/ExportPDFOfEstimate/" + EstimateId + "?IsLetterRequired=" + IsLetterRequired;
+    });
+
 </script>

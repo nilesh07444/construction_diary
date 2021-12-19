@@ -1,10 +1,11 @@
 ﻿@using ConstructionDiary.ResourceFiles;
-@using ConstructionDiary.Models;
 
 @model List<SiteDetailVM>
 @{
     ViewBag.Title = "Site";
     int counter = 1;
+
+    List<PartyVM> lstParties = ViewData["lstParties"] as List<PartyVM>;
 }
 
 <section class="wrapper site-min-height">
@@ -69,13 +70,14 @@
                                     <th width="5%">#</th>
                                     <th>@Resource.SiteName</th>
                                     <th style="display:none;">@Resource.Description</th>
-                                    <th width="8%">@Resource.Bill</th>
-                                    <th>@Resource.Total @Resource.Bill @Resource.Amount</th>
-                                    <th>@Resource.TotalCredit</th>
-                                    <th>@Resource.TotalRemainingAmount</th>
-                                    <th>@Resource.Finance</th>
-                                    <th width="10%">@Resource.Active</th>
-                                    <th>@Resource.Action</th>
+                                    <th>@Resource.PartyName</th>
+                                    <th width="5%">@Resource.Bill</th>
+                                    <th width="7%">@Resource.Bill @Resource.Amount</th>
+                                    <th width="7%">@Resource.TotalCredit</th>
+                                    <th width="10%">@Resource.TotalRemainingAmount</th>
+                                    <th width="5%">@Resource.Finance</th>
+                                    <th width="8%">@Resource.Active</th>
+                                    <th width="10%">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,6 +94,7 @@
                                             <td>@counter.</td>
                                             <td>@obj.SiteName</td>
                                             <td style="display:none;">@obj.SiteDescription</td>
+                                            <td>@obj.PartyName</td>
                                             <td>
                                                 @*<a href="/admin/site/bill/@obj.SiteId" class="btn btn-primary">@Resource.Old @Resource.Bill</a>*@
                                                 <a href="/admin/site/newbill/@obj.SiteId" class="btn btn-primary">@Resource.Bill</a>
@@ -114,7 +117,7 @@
                                             </td>
                                             <td>
                                                 <a href="/admin/site/view/@obj.SiteId" class="btn btn-success btn-xs"><i class="fa fa-check"></i></a>
-                                                <button data-id="@obj.SiteId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
+                                                <button data-id="@obj.SiteId" data-partyid="@obj.PartyId" class="btn btn-primary btn-xs clsEditSite"><i class="fa fa-pencil"></i></button>
                                                 <button onclick="fnDeleteSite('@obj.SiteId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
                                             </td>
                                         </tr>
@@ -147,10 +150,26 @@
                                 <div class=" form">
                                     <form class="cmxform form-horizontal tasi-form" id="siteForm">
                                         <div class="form-group ">
-                                            <label for="txtSitename" class="control-label col-lg-3">@Resource.SiteName</label>
+                                            <label for="txtSitename" class="control-label col-lg-3">@Resource.SiteName *</label>
                                             <div class="col-lg-9">
                                                 <input class="form-control" id="txtSitename" name="txtSitename" minlength="2" type="text" required />
                                                 <span id="spn_sitename" class="clserror">@Resource.Required</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <label for="ddlPartyId" class="control-label col-lg-3">@Resource.PartyName</label>
+                                            <div class="col-lg-9">
+                                                <select id="ddlPartyId" class="form-control">
+                                                    <option value="">-Select-</option>
+                                                    @if (lstParties != null && lstParties.Count > 0)
+                                                    {
+                                                        foreach (var obj in lstParties)
+                                                        {
+                                                            <option value="@obj.PartyId">@obj.PartyName</option>
+                                                        }
+                                                    }
+                                                </select>
+                                                <span id="spn_partyid" class="clserror">@Resource.Required</span>
                                             </div>
                                         </div>
                                         <div class="form-group ">
@@ -242,6 +261,7 @@
         var site_id = jQuery("#hdnSiteIdToEdit").val();
         var site_name = jQuery("#txtSitename").val();
         var site_desc = jQuery("#txtSiteDescription").val();
+        var party_id = jQuery("#ddlPartyId").val();
 
         if (jQuery.trim(site_name) == "") {
             flag = false;
@@ -255,7 +275,7 @@
             $.ajax({
                 type: 'POST',
                 async: true,
-                url: URL + "?site_id=" + site_id + "&site_name=" + site_name + "&site_desc=" + site_desc,
+                url: URL + "?site_id=" + site_id + "&site_name=" + site_name + "&site_desc=" + site_desc + "&str_party_id=" + party_id,
                 success: function (result) {
                     if (result == "created") {
                         showSuccessMsg("Site saved successfully", "dvMessage");
@@ -333,6 +353,7 @@
 
     jQuery(document).on("click", ".clsEditSite", function () {
         var site_id = $(this).attr("data-id");
+        var party_id = $(this).attr("data-partyid");
         var site_name = $(this).parent().parent().find("td:eq(1)").text();
         var site_desc = $(this).parent().parent().find("td:eq(2)").text();
         $('#txtSitename').val(site_name);
@@ -341,6 +362,10 @@
         $('#addNewSiteModal #btnSaveSite').text('@Resource.Save');
         $('#hdnSiteIdToEdit').val(site_id);
         $(".clserror").hide();
+
+        
+            $("#ddlPartyId").val(party_id);
+        
         $('#addNewSiteModal').modal('show');
     });
 
@@ -422,7 +447,7 @@
     });
 
     $(document).on("click", "#btnSearchReport", function () {
-         
+
         var action_value = $("#dllAction").val();
 
         jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });

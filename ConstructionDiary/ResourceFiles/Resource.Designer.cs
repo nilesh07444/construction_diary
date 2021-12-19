@@ -151,6 +151,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Estimate.
+        /// </summary>
+        public static string AddNewEstimate {
+            get {
+                return ResourceManager.GetString("AddNewEstimate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add New Expense.
         /// </summary>
         public static string AddNewExpense {
@@ -210,6 +219,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string AddNewMerchantPayment {
             get {
                 return ResourceManager.GetString("AddNewMerchantPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Pagar.
+        /// </summary>
+        public static string AddNewPagar {
+            get {
+                return ResourceManager.GetString("AddNewPagar", resourceCulture);
             }
         }
         
@@ -583,6 +601,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirmation.
+        /// </summary>
+        public static string Confirmation {
+            get {
+                return ResourceManager.GetString("Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want your letter head in PDF ?.
+        /// </summary>
+        public static string ConfirmLetterHeadQuestion {
+            get {
+                return ResourceManager.GetString("ConfirmLetterHeadQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Confirm Password.
         /// </summary>
         public static string ConfirmPassword {
@@ -813,6 +849,33 @@ namespace ConstructionDiary.ResourceFiles {
         public static string English {
             get {
                 return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Estimate.
+        /// </summary>
+        public static string Estimate {
+            get {
+                return ResourceManager.GetString("Estimate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Estimate Date.
+        /// </summary>
+        public static string EstimateDate {
+            get {
+                return ResourceManager.GetString("EstimateDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Estimate List.
+        /// </summary>
+        public static string EstimateList {
+            get {
+                return ResourceManager.GetString("EstimateList", resourceCulture);
             }
         }
         
@@ -1200,6 +1263,51 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Pagar {
             get {
                 return ResourceManager.GetString("Pagar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pagar Amount.
+        /// </summary>
+        public static string PagarAmount {
+            get {
+                return ResourceManager.GetString("PagarAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pagar Date.
+        /// </summary>
+        public static string PagarDate {
+            get {
+                return ResourceManager.GetString("PagarDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pagar List.
+        /// </summary>
+        public static string PagarList {
+            get {
+                return ResourceManager.GetString("PagarList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pagar Pay Amount.
+        /// </summary>
+        public static string PagarPayAmount {
+            get {
+                return ResourceManager.GetString("PagarPayAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page Access.
+        /// </summary>
+        public static string PageAccess {
+            get {
+                return ResourceManager.GetString("PageAccess", resourceCulture);
             }
         }
         
@@ -1830,6 +1938,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string Type {
             get {
                 return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update Estimate.
+        /// </summary>
+        public static string UpdateEstimate {
+            get {
+                return ResourceManager.GetString("UpdateEstimate", resourceCulture);
             }
         }
         

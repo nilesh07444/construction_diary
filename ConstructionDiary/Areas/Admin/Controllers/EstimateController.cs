@@ -228,13 +228,14 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             _db.tbl_EstimateItem.Add(objItem);
                             _db.SaveChanges();
                         }
-                        else {
+                        else
+                        {
                             // Update  
                             objEstimateItem.ItemName = item.ItemName;
                             objEstimateItem.Nos = item.Nos;
                             objEstimateItem.Qty = item.Qty;
                             objEstimateItem.Rate = item.Rate;
-                            objEstimateItem.TotalAmount = Convert.ToDecimal(TotalAmt);  
+                            objEstimateItem.TotalAmount = Convert.ToDecimal(TotalAmt);
                             _db.SaveChanges();
                         }
 
@@ -269,7 +270,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             return grandTotal;
         }
 
-        public string ExportPDFOfEstimate(Guid Id) // Id = EstimateId
+        public string ExportPDFOfEstimate(Guid Id, bool IsLetterRequired) // Id = EstimateId
         {
 
             string Result = "";
@@ -293,7 +294,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                             Rate = i.Rate,
                                                             TotalAmount = i.TotalAmount
                                                         }).OrderBy(x => x.EstimateItemId).ToList();
-
+                 
                 string[] strColumns = new string[6] { "Sr No", "Item Description", "Nos", "Qty", "Rate", "Amount" };
                 if (lstEstimateItem != null && lstEstimateItem.Count() > 0)
                 {
@@ -304,6 +305,16 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("<style>");
                     strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
                     strHTML.Append("</style>");
+
+                    if (IsLetterRequired && !string.IsNullOrEmpty(objClient.HeaderImageLetterPage))
+                    {
+                        //string headerImage = Server.MapPath("~/Images/LetterHead/" + objClient.HeaderImageLetterPage);
+                        string headerImage = System.Web.Hosting.HostingEnvironment.MapPath("~\\Images\\LetterHead\\"+ objClient.HeaderImageLetterPage);
+
+                        strHTML.Append(" <table width=100% cellspacing=0 cellpadding=2 class=table1>");
+                        strHTML.Append("<tr><th> <img src='" + headerImage + "' style='width:740px; height: 120px; text-align: center;' /> </th></tr>");
+                        strHTML.Append("<tr><td>");
+                    }
 
                     strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #000000;font-size: 12pt;page-break-inside:auto;'>");
                     strHTML.Append("<thead style=\"display:table-header-group;\">");
@@ -446,6 +457,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     strHTML.Append("</tbody>");
                     strHTML.Append("</table>");
+
+                    if (IsLetterRequired && !string.IsNullOrEmpty(objClient.HeaderImageLetterPage))
+                    {
+                        strHTML.Append("</td></tr></table>");
+                    }
 
                     StringReader sr = new StringReader(strHTML.ToString());
 

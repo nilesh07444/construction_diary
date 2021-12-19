@@ -732,4 +732,43 @@
   <data name="PartyList" xml:space="preserve">
     <value>Party List</value>
   </data>
+  <data name="AddNewEstimate" xml:space="preserve">
+    <value>Add New Estimate</value>
+  </data>
+  <data name="Estimate" xml:space="preserve">
+    <value>Estimate</value>
+  </data>
+  <data name="EstimateDate" xml:space="preserve">
+    <value>Estimate Date</value>
+  </data>
+  <data name="EstimateList" xml:space="preserve">
+    <value>Estimate List</value>
+  </data>
+  <data name="UpdateEstimate" xml:space="preserve">
+    <value>Update Estimate</value>
+  </data>
+  <data name="Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="ConfirmLetterHeadQuestion" xml:space="preserve">
+    <value>Do you want your letter head in PDF ?</value>
+  </data>
+  <data name="AddNewPagar" xml:space="preserve">
+    <value>Add New Pagar</value>
+  </data>
+  <data name="PagarAmount" xml:space="preserve">
+    <value>Pagar Amount</value>
+  </data>
+  <data name="PagarDate" xml:space="preserve">
+    <value>Pagar Date</value>
+  </data>
+  <data name="PagarList" xml:space="preserve">
+    <value>Pagar List</value>
+  </data>
+  <data name="PagarPayAmount" xml:space="preserve">
+    <value>Pagar Pay Amount</value>
+  </data>
+  <data name="PageAccess" xml:space="preserve">
+    <value>Page Access</value>
+  </data>
 </root>

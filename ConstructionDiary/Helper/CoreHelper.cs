@@ -9,7 +9,7 @@ namespace ConstructionDiary
 {
     public class CoreHelper
     {
-        ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+
         public static string GetFormatterAmount(Decimal? Amt)
         {
             string ConvertedString = "";
@@ -44,7 +44,7 @@ namespace ConstructionDiary
                 return status;
         }
         public static string Encrypt(string Text)
-        {            
+        {
             var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(Text);
             return System.Convert.ToBase64String(plainTextBytes);
         }
@@ -54,6 +54,82 @@ namespace ConstructionDiary
             var base64EncodedBytes = System.Convert.FromBase64String(Text);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
-               
+
+        public static List<UserPageModuleAccessVM> GetAssignedUserPageAccessList(Guid userId)
+        {
+            ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+
+            List<UserPageModuleAccessVM> list = null;
+            try
+            {
+                if (userId == Guid.Empty)
+                {
+                    list = (from m in _db.tbl_PageModule
+                            select new UserPageModuleAccessVM
+                            {
+                                PageModuleId = m.PageModuleId,
+                                PageModuleName = m.PageModuleName
+                            }).OrderBy(x => x.PageModuleName).ToList();
+                }
+                else
+                {
+                    list = (from m in _db.tbl_PageModule
+                            join um in _db.tbl_UserPageModuleAccess.Where(x => x.UserId == userId) on m.PageModuleId equals um.PageModuleId into userpagemoduleOuter
+                            from um in userpagemoduleOuter.DefaultIfEmpty()
+                            select new UserPageModuleAccessVM
+                            {
+                                PageModuleId = m.PageModuleId,
+                                PageModuleName = m.PageModuleName,
+                                UserId = userId,
+                                IsAssigned = um != null ? true : false
+                            }).OrderBy(x => x.PageModuleName).ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return list;
+        }
+
+        public static List<UserPageModuleAccessVM> GetAssignedUserPageAccessListWhileLogin(Guid userId, int roleId)
+        {
+            ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+
+            List<UserPageModuleAccessVM> list = null;
+            try
+            {
+                if (userId == Guid.Empty)
+                {
+                    list = (from m in _db.tbl_PageModule
+                            select new UserPageModuleAccessVM
+                            {
+                                PageModuleId = m.PageModuleId,
+                                PageModuleName = m.PageModuleName
+                            }).OrderBy(x => x.PageModuleName).ToList();
+                }
+                else
+                {
+                    bool isAdminUser = roleId == (int)UserRoles.SiteOwner || roleId == (int)UserRoles.Admin;
+
+                    list = (from m in _db.tbl_PageModule
+                            join um in _db.tbl_UserPageModuleAccess.Where(x => x.UserId == userId) on m.PageModuleId equals um.PageModuleId into userpagemoduleOuter
+                            from um in userpagemoduleOuter.DefaultIfEmpty()
+                            select new UserPageModuleAccessVM
+                            {
+                                PageModuleId = m.PageModuleId,
+                                PageModuleName = m.PageModuleName,
+                                UserId = userId,
+                                IsAssigned = um != null || isAdminUser ? true : false
+                            }).OrderBy(x => x.PageModuleName).ToList();
+                }
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return list;
+        }
+
     }
 }

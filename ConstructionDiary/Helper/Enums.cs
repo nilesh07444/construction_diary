@@ -7,7 +7,7 @@ namespace ConstructionDiary
 {
     public enum PaymentTypes
     {
-        Cash, 
+        Cash,
         Cheque,
         NEFT,
         RTGS
@@ -45,6 +45,21 @@ namespace ConstructionDiary
         Material = 3,
         Expense = 4,
         Challan = 5
+    }
+    public enum UserPermissionEnum
+    {
+        Party = 1,
+        Site = 2,
+        Debit = 3,
+        Credit = 4,
+        Expense = 5,
+        Material = 6,
+        Estimate = 7,
+        Challan = 8,
+        Attendance = 9,
+        Pagar = 10,
+        Peticash = 11,
+        Merchant = 12
     }
 
 }

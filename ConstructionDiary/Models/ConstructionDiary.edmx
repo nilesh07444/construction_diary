@@ -137,6 +137,8 @@
           <Property Name="ExpireDate" Type="datetime" />
           <Property Name="Address" Type="nvarchar" MaxLength="500" />
           <Property Name="Remarks" Type="nvarchar(max)" />
+          <Property Name="HeaderImageLetterPage" Type="nvarchar" MaxLength="500" />
+          <Property Name="FooterImageLetterPage" Type="nvarchar" MaxLength="500" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -396,6 +398,13 @@
           <Property Name="TotalPagarAmount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="tbl_PageModule">
+          <Key>
+            <PropertyRef Name="PageModuleId" />
+          </Key>
+          <Property Name="PageModuleId" Type="bigint" Nullable="false" />
+          <Property Name="PageModuleName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="tbl_Party">
           <Key>
             <PropertyRef Name="PartyId" />
@@ -551,6 +560,16 @@
           <Property Name="UpdatedBy" Type="uniqueidentifier" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_UserPageModuleAccess">
+          <Key>
+            <PropertyRef Name="UserPageModuleAccessId" />
+          </Key>
+          <Property Name="UserPageModuleAccessId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PageModuleId" Type="bigint" Nullable="false" />
+          <Property Name="UserId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_Users">
           <Key>
@@ -738,6 +757,7 @@
           <EntitySet Name="tbl_PackageType" EntityType="Self.tbl_PackageType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Pagar" EntityType="Self.tbl_Pagar" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PagarPersonDetail" EntityType="Self.tbl_PagarPersonDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_PageModule" EntityType="Self.tbl_PageModule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Party" EntityType="Self.tbl_Party" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PaymentTransaction" EntityType="Self.tbl_PaymentTransaction" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PersonAttendance" EntityType="Self.tbl_PersonAttendance" Schema="dbo" store:Type="Tables" />
@@ -750,6 +770,7 @@
           <EntitySet Name="tbl_Shayari" EntityType="Self.tbl_Shayari" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ShayariCategory" EntityType="Self.tbl_ShayariCategory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Sites" EntityType="Self.tbl_Sites" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_UserPageModuleAccess" EntityType="Self.tbl_UserPageModuleAccess" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Users" EntityType="Self.tbl_Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_tbl_Clients_tbl_PackageType" Association="Self.FK_tbl_Clients_tbl_PackageType">
             <End Role="tbl_PackageType" EntitySet="tbl_PackageType" />
@@ -829,6 +850,8 @@
           <NavigationProperty Name="tbl_MaterialType" Relationship="ConstructionDiaryModel.FK_tbl_MaterialType_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_MaterialType" />
           <NavigationProperty Name="tbl_Merchant" Relationship="ConstructionDiaryModel.FK_tbl_Merchant_tbl_Clients" FromRole="tbl_Clients" ToRole="tbl_Merchant" />
           <Property Name="Address" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="HeaderImageLetterPage" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FooterImageLetterPage" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tbl_ContractorFinance">
           <Key>
@@ -1197,6 +1220,8 @@
           <EntitySet Name="tbl_ShayariCategory" EntityType="ConstructionDiaryModel.tbl_ShayariCategory" />
           <EntitySet Name="tbl_Estimate" EntityType="ConstructionDiaryModel.tbl_Estimate" />
           <EntitySet Name="tbl_EstimateItem" EntityType="ConstructionDiaryModel.tbl_EstimateItem" />
+          <EntitySet Name="tbl_PageModule" EntityType="ConstructionDiaryModel.tbl_PageModule" />
+          <EntitySet Name="tbl_UserPageModuleAccess" EntityType="ConstructionDiaryModel.tbl_UserPageModuleAccess" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1717,6 +1742,23 @@
           <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="tbl_PageModule">
+          <Key>
+            <PropertyRef Name="PageModuleId" />
+          </Key>
+          <Property Name="PageModuleId" Type="Int64" Nullable="false" />
+          <Property Name="PageModuleName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_UserPageModuleAccess">
+          <Key>
+            <PropertyRef Name="UserPageModuleAccessId" />
+          </Key>
+          <Property Name="UserPageModuleAccessId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PageModuleId" Type="Int64" Nullable="false" />
+          <Property Name="UserId" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1737,6 +1779,8 @@
           <EntitySetMapping Name="tbl_Clients">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Clients">
               <MappingFragment StoreEntitySet="tbl_Clients">
+                <ScalarProperty Name="FooterImageLetterPage" ColumnName="FooterImageLetterPage" />
+                <ScalarProperty Name="HeaderImageLetterPage" ColumnName="HeaderImageLetterPage" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
                 <ScalarProperty Name="ClientName" ColumnName="ClientName" />
@@ -2389,6 +2433,25 @@
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
                 <ScalarProperty Name="EstimateItemId" ColumnName="EstimateItemId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PageModule">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PageModule">
+              <MappingFragment StoreEntitySet="tbl_PageModule">
+                <ScalarProperty Name="PageModuleName" ColumnName="PageModuleName" />
+                <ScalarProperty Name="PageModuleId" ColumnName="PageModuleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_UserPageModuleAccess">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_UserPageModuleAccess">
+              <MappingFragment StoreEntitySet="tbl_UserPageModuleAccess">
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="PageModuleId" ColumnName="PageModuleId" />
+                <ScalarProperty Name="UserPageModuleAccessId" ColumnName="UserPageModuleAccessId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
