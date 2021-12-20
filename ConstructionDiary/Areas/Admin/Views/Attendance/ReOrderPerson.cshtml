@@ -4,6 +4,7 @@
     ViewBag.Title = "Attendance";
     int counter = 1;
 }
+
 <section class="wrapper site-min-height">
     <!-- page start-->
     <div class="row">
@@ -18,13 +19,16 @@
             <section class="panel">
                 <div class="panel-body">
                     <div class="adv-table">
-
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-primary btnUpdateOrder" href="javascript:void(0);" style="margin-bottom:10px;"><i class="fa fa-plus"></i> Update Order</a>
+                        </div>
                         <table class="display table table-bordered table-striped table-hover" id="tblPersonsList">
                             <thead style="background: darkred; color: antiquewhite;">
                                 <tr>
                                     <th width="5%"><i class="fa fa-arrows-alt"></i></th>
                                     <th width="5%">#</th>
                                     <th>@Resource.Name</th>
+                                    <th>@Resource.PersonType</th>
                                     <th width="10%">@Resource.Active</th>
                                     <th width="15%">@Resource.Action</th>
                                 </tr>
@@ -34,10 +38,11 @@
                                 {
                                     foreach (var obj in Model)
                                     {
-                                        <tr class="gradeX">
+                                        <tr class="gradeX" person-id="@obj.PersonId">
                                             <td><i class="fa fa-arrows-alt"></i></td>
                                             <td>@counter.</td>
                                             <td>@obj.PersonFirstName</td>
+                                            <td>@obj.PersonTypeName</td>
                                             <td>
                                                 @if (obj.IsActive == true)
                                                 {
@@ -57,6 +62,11 @@
                                 }
                             </tbody>
                         </table>
+
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-primary btnUpdateOrder" href="javascript:void(0);" style="margin-top:10px;"><i class="fa fa-plus"></i> Update Order</a>
+                        </div>
+
                     </div>
                 </div>
             </section>
@@ -107,4 +117,38 @@
         });
     });
 
+
+    jQuery(document).on("click", ".btnUpdateOrder", function () {
+        var personLength = $("#tblPersonsList tbody tr").length;
+        if (personLength != null && personLength > 0) {
+
+            var selected = $('#tblPersonsList tbody tr').map(function () {
+                var personId = $(this).attr("person-id");
+                return personId;
+            }).get();
+
+            var postData = { selectedPersonIds: selected };
+            var ajaxUrl = "/admin/Attendance/UpdatePersonOrder";
+            $.ajax({
+                type: "POST",
+                url: ajaxUrl,
+                dataType: 'json',
+                data: postData,
+                traditional: true,
+                success: function (data) {
+                    if (data == "SUCCESS") {
+                        alert("Order updated successfully");
+                    }
+                    else {
+                        alert("Error: Something went wrong");
+                    }
+                    window.location.reload();
+                },
+                error: function (xhr) {
+                    alert(xhr.responseText);
+                }
+            });
+
+        }
+    });
 </script>

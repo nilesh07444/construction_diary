@@ -29,6 +29,7 @@ namespace ConstructionDiary.Models
         public Nullable<System.Guid> UpdatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<int> OrderNo { get; set; }
     
         public virtual tbl_PersonType tbl_PersonType { get; set; }
     }

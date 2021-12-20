@@ -88,8 +88,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             try
             {
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
-
-                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsAttendancePerson == true && x.IsActive == true && x.IsDeleted == false).OrderBy(x => x.PersonFirstName).ToList();
+                var personList = _db.tbl_Persons.Where(x => x.ClientId == ClientId && x.IsAttendancePerson == true && x.IsActive == true && x.IsDeleted == false)
+                    .OrderBy(x => x.OrderNo).ThenBy(x => x.PersonFirstName).ToList();
                 var siteList = _db.tbl_Sites.Where(x => x.ClientId == ClientId && x.IsActive == true && x.IsDeleted == false).ToList();
 
                 objAttendance.SitesList = siteList.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
@@ -428,8 +428,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                           PersonId = p.PersonId,
                                                           PersonFirstName = p.PersonFirstName,
                                                           IsActive = p.IsActive,
-                                                          IsGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonId == p.PersonId).Any()
-                                                      }).ToList();
+                                                          IsGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonId == p.PersonId).Any(),
+                                                          OrderNo = p.OrderNo
+                                                      }).OrderBy(x => x.OrderNo).ThenBy(x => x.PersonFirstName).ToList();
 
             lstPersonsNew.ForEach(item =>
             {
@@ -1697,16 +1698,64 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             List<AttendancePersonVM> lstPersons = (from p in _db.tbl_Persons
-                                                      where p.ClientId == ClientId && p.IsAttendancePerson == true && p.IsDeleted == false && p.IsActive == true
-                                                      select new AttendancePersonVM
-                                                      {
-                                                          PersonId = p.PersonId,
-                                                          PersonFirstName = p.PersonFirstName,
-                                                          IsActive = p.IsActive,
-                                                          IsGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonId == p.PersonId).Any()
-                                                      }).ToList();
+                                                   join t in _db.tbl_PersonType on p.PersonTypeId equals t.Id
+                                                   where p.ClientId == ClientId && p.IsAttendancePerson == true && p.IsDeleted == false && p.IsActive == true
+                                                   select new AttendancePersonVM
+                                                   {
+                                                       PersonId = p.PersonId,
+                                                       PersonFirstName = p.PersonFirstName,
+                                                       IsActive = p.IsActive,
+                                                       PersonTypeId = p.PersonTypeId,
+                                                       PersonTypeName = t.PersonType,
+                                                       IsGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonId == p.PersonId).Any(),
+                                                       OrderNo = p.OrderNo
+                                                   }).OrderBy(x => x.OrderNo).ThenBy(x => x.PersonFirstName).ToList();
 
             return View(lstPersons);
+        }
+
+        [HttpPost]
+        public JsonResult UpdatePersonOrder(List<Guid> selectedPersonIds)
+        {
+            string message = string.Empty;
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                List<tbl_Persons> lstAllPersons = _db.tbl_Persons.Where(p => p.ClientId == ClientId && p.IsAttendancePerson == true && p.IsDeleted == false && p.IsActive == true).ToList();
+                if (lstAllPersons != null && lstAllPersons.Count > 0)
+                {
+                    // Update all person's order to null
+                    lstAllPersons.ForEach(x => { x.OrderNo = null; });
+                    _db.SaveChanges();
+
+                    // Update selected person's order from 1 to n. 
+                    if (selectedPersonIds != null && selectedPersonIds.Count > 0)
+                    {
+                        int counter = 1;
+                        selectedPersonIds.ForEach(personId =>
+                        {
+                            tbl_Persons objPerson = _db.tbl_Persons.Where(x => x.PersonId == personId).FirstOrDefault();
+                            if (objPerson != null)
+                            {
+                                objPerson.OrderNo = counter;
+                                _db.SaveChanges();
+                            }
+                            counter++;
+                        });
+
+                    }
+
+                    message = "SUCCESS";
+                }
+            }
+            catch (Exception ex)
+            {
+                message = "ERROR";
+            }
+
+            return Json(message, JsonRequestBehavior.AllowGet);
         }
 
     }

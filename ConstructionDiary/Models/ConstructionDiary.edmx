@@ -487,6 +487,7 @@
           <Property Name="DailyRate" Type="int" />
           <Property Name="PersonTypeId" Type="int" />
           <Property Name="IsAttendancePerson" Type="bit" />
+          <Property Name="OrderNo" Type="int" />
           <Property Name="IsActive" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
           <Property Name="ClientId" Type="uniqueidentifier" />
@@ -990,6 +991,7 @@
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="tbl_PersonType" Relationship="Self.FK_tbl_Persons_tbl_Persons" FromRole="tbl_Persons" ToRole="tbl_PersonType" />
+          <Property Name="OrderNo" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_PersonType">
           <Key>
@@ -1918,6 +1920,7 @@
           <EntitySetMapping Name="tbl_Persons">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Persons">
               <MappingFragment StoreEntitySet="tbl_Persons">
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="PersonFirstName" ColumnName="PersonFirstName" />
                 <ScalarProperty Name="PersonAddress" ColumnName="PersonAddress" />

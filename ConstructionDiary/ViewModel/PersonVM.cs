@@ -45,6 +45,11 @@ namespace ConstructionDiary
         public bool IsGroupPerson { get; set; }
         public Guid? PersonGroupId { get; set; }
         public bool? IsActive { get; set; }
+
+        //
+        public int? PersonTypeId { get; set; }
+        public string PersonTypeName { get; set; }
+        public int? OrderNo { get; set; }
     }
 
 }
