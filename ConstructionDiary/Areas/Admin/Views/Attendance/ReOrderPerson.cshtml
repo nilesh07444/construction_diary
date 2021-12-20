@@ -2,6 +2,7 @@
 @model List<AttendancePersonVM>
 @{
     ViewBag.Title = "Attendance";
+    ViewBag.SubTitle = "ReOrderPerson";
     int counter = 1;
 }
 
@@ -75,12 +76,9 @@
     <!-- page end-->
 </section>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
 <script type="text/javascript" charset="utf-8">
-
-
 
     jQuery(document).ready(function () {
         jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
@@ -96,25 +94,31 @@
     jQuery(window).on("load", function () {
         jQuery.unblockUI();
 
-        $(function () {
-            $("#tblPersonsList tbody").sortable({
-                items: 'tr',
-                cursor: 'pointer',
-                axis: 'y',
-                dropOnEmpty: false,
-                start: function (e, ui) {
-                    ui.item.addClass("selected");
-                },
-                stop: function (e, ui) {
-                    ui.item.removeClass("selected");
-                    //$(this).find("tr").each(function (index) {
-                    //    if (index > 0) {
-                    //        $(this).find("td").eq(2).html(index);
-                    //    }
-                    //});
-                }
+        setTimeout(function () {
+
+            $(function () {
+                $("#tblPersonsList tbody").sortable({
+                    items: 'tr',
+                    cursor: 'pointer',
+                    axis: 'y',
+                    dropOnEmpty: false,
+                    start: function (e, ui) {
+                        ui.item.addClass("selected");
+                    },
+                    stop: function (e, ui) {
+                        ui.item.removeClass("selected");
+                        //$(this).find("tr").each(function (index) {
+                        //    if (index > 0) {
+                        //        $(this).find("td").eq(2).html(index);
+                        //    }
+                        //});
+                    }
+                });
             });
-        });
+
+        }, 1000);
+
+
     });
 
 

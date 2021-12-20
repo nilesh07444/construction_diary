@@ -330,7 +330,10 @@
     <script type="text/javascript" src="~/Scripts/bootstrap-multiselect.js"></script>
     <script src="~/Scripts/jquery.table2excel.min.js"></script>
 
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>
+    @if (ViewBag.SubTitle == "ReOrderPerson")
+    {
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>
+    }
     <script>
 
         //owl carousel
