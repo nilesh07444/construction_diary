@@ -43,8 +43,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 Guid ClientId = new Guid(clsSession.ClientID.ToString());
                 int RoleID = clsSession.RoleID;
 
-                if (RoleID != (int)UserRoles.Staff)
-                {
+                //if (RoleID != (int)UserRoles.Staff)
+                //{
                     if (duration == "month")
                     {
                         var myDate = DateTime.Now;
@@ -61,7 +61,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
                         }
                     }
-                }
+                //}
 
                 ViewBag.reportStartDate = startDate.ToString("dd/MM/yyyy");
                 ViewBag.reportEndDate = endDate.ToString("dd/MM/yyyy");
@@ -94,7 +94,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                            join marchant in _db.tbl_Merchant on c.MerchantId equals marchant.MerchantId into outerJoinMerchant
                            from marchant in outerJoinMerchant.DefaultIfEmpty()
                            where !c.IsDeleted && c.ClientId == ClientId
-                                 && (RoleID != (int)UserRoles.Staff || c.CreatedBy == clsSession.UserID)
+                                 //&& (RoleID != (int)UserRoles.Staff || c.CreatedBy == clsSession.UserID)
                                  && (selectedSite == Guid.Empty || c.SiteId == selectedSite)
                                  && c.ChallanDate >= startDate && c.ChallanDate <= endDate
                            select new ChallanVM

@@ -1,5 +1,4 @@
-﻿@using ConstructionDiary.Models;
-@using ConstructionDiary.ResourceFiles;
+﻿@using ConstructionDiary.ResourceFiles;
 @model List<UserVM>
 @{
     ViewBag.Title = "Users";
@@ -37,8 +36,8 @@
                                     <th>@Resource.MobileNo</th>
                                     <th>@Resource.UserName</th>
                                     <th>@Resource.Password</th>
-                                    <th width="5%">Active</th>
-                                    <th width="5%">Action</th>
+                                    <th width="5%">@Resource.Active</th>
+                                    <th width="8%">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -47,30 +46,33 @@
                                     foreach (UserVM user in Model)
                                     {
                                         counter++;
-                                <tr class="gradeX">
-                                    <td>@counter.</td>
-                                    <td>@user.Firstname</td>
-                                    <td>@user.PeticashBalance</td>
-                                    <td>@user.RoleName</td>
-                                    <td>@user.EmailId</td>
-                                    <td>@user.MobileNo</td>
-                                    <td>@user.UserName</td>
-                                    <td>@user.Password</td>
-                                    <td>
-                                        @if (user.IsActive)
-                                        {
-                                            <a href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
-                                        }
-                                        else
-                                        {
-                                            <a href="javascript:void(0);"><span class="badge bg-important">InActive</span></a>
-                                        }
-                                    </td>
-                                    <td>
-                                        <a href="/admin/user/edit/@user.UserId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                        <button onclick="fnDeleteUser('@user.UserId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                    </td>
-                                </tr>
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@user.Firstname</td>
+                                            <td>@user.PeticashBalance</td>
+                                            <td>@user.RoleName</td>
+                                            <td>@user.EmailId</td>
+                                            <td>@user.MobileNo</td>
+                                            <td>@user.UserName</td>
+                                            <td>@user.Password</td>
+                                            <td>
+                                                @if (user.RoleId == (int)UserRoles.Staff)
+                                                {
+                                                    if (user.IsActive)
+                                                    {
+                                                        <a onclick="fnInActiveUser('@user.UserId', false)" href="javascript:void(0);"><span class="badge bg-success">Active</span></a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a onclick="fnInActiveUser('@user.UserId', true)" href="javascript:void(0);"><span class="badge bg-warning">InActive</span></a>
+                                                    }
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="/admin/user/edit/@user.UserId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button onclick="fnDeleteUser('@user.UserId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
                                     }
                                 }
                             </tbody>
@@ -91,20 +93,41 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Delete Confirmation</h4>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
             </div>
             <div class="modal-body">
-                Are you sure want to Delete ?
+                @Resource.SureWantToDelete
             </div>
             <div class="modal-footer">
                 <input type="hidden" id="hdnDeleteUser" />
-                <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
-                <button id="btnDeleteUser" class="btn btn-danger" type="button"> Delete </button>
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeleteUser" class="btn btn-danger" type="button"> @Resource.Delete </button>
             </div>
         </div>
     </div>
 </div>
 <!-- Delete modal -->
+<!-- InActive Modal -->
+<div class="modal fade" id="inActiveUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.ChangeStatus</h4>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to InActive ?
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnInActiveUser" />
+                <input type="hidden" id="hdnInActiveUserStatus" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnInActiveUser" class="btn btn-danger" type="button">InActive</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Active modal -->
 
 <script src="~/Areas/Admin/Content/js/jquery.js"></script>
 
@@ -165,5 +188,68 @@
         jQuery.unblockUI();
     });
 
+
+    function fnInActiveUser(user_id, status) {
+
+        var msgText = "";
+        var buttonText = "";
+        var buttonClass = "";
+
+        if (status == false) {
+            msgText = "Are you want to InActive ?";
+            buttonText = "InActive";
+            buttonClass = "btn btn-danger";
+        }
+        else {
+            msgText = "Are you want to Active ?";
+            buttonText = "Active";
+            buttonClass = "btn btn-success";
+        }
+
+        jQuery("#inActiveUserModal .modal-body").text(msgText);
+        jQuery("#inActiveUserModal #btnInActiveUser").text(buttonText);
+        jQuery("#inActiveUserModal #btnInActiveUser").attr("class", buttonClass);
+
+        jQuery("#hdnInActiveUser").val(user_id);
+        jQuery("#hdnInActiveUserStatus").val(status);
+        $('#inActiveUserModal').modal('show');
+    }
+
+    jQuery(document).on("click", "#btnInActiveUser", function () {
+
+        var user_id = jQuery("#hdnInActiveUser").val();
+        var user_status = jQuery("#hdnInActiveUserStatus").val();
+
+        if (user_id != "" && user_id != null) {
+            $('#inActiveUserModal').modal('hide');
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("ChangeUserStatus", "User")';
+
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?UserId=" + user_id + "&Status=" + user_status,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("User Status Changed successfully");
+                        window.location.reload(); 
+                    }
+                    else if (result == "notfound") {
+                        alert("User Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    console.log("error");
+                    $.unblockUI();
+                }
+            });
+        }
+
+    });
 
 </script>

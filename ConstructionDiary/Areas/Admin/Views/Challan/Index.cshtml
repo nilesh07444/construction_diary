@@ -115,6 +115,7 @@
                                 {
                                     foreach (var obj in Model)
                                     {
+                                        DateTime today = DateTime.Today;
                                         <tr class="gradeX">
                                             <td>@counter.</td>
                                             <td>@Convert.ToDateTime(obj.dtChallanDate).ToString("dd/MM/yyyy")</td>
@@ -139,8 +140,11 @@
                                                 }
                                             </td>
                                             <td>
-                                                <a href="/admin/challan/edit/@obj.ChallanId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
-                                                <button title="Delete" onclick="fnDeleteChallan('@obj.ChallanId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                @if (clsSession.RoleID == (int)UserRoles.Admin || (clsSession.RoleID == (int)UserRoles.Staff && obj.dtChallanDate == today))
+                                                {
+                                                    <a href="/admin/challan/edit/@obj.ChallanId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                    <button title="Delete" onclick="fnDeleteChallan('@obj.ChallanId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                }
                                             </td>
                                         </tr>
                                         counter++;

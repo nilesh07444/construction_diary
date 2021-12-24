@@ -771,4 +771,7 @@
   <data name="PageAccess" xml:space="preserve">
     <value>Page Access</value>
   </data>
+  <data name="ChangeStatus" xml:space="preserve">
+    <value>Change Status</value>
+  </data>
 </root>

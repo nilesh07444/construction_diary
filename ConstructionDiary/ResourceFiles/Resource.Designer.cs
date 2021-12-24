@@ -547,6 +547,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change Status.
+        /// </summary>
+        public static string ChangeStatus {
+            get {
+                return ResourceManager.GetString("ChangeStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cheque For.
         /// </summary>
         public static string ChequeFor {

@@ -283,7 +283,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                             tbl_UserPageModuleAccess objDuplicateLocation = _db.tbl_UserPageModuleAccess.Where(l => l.UserId == objUser.UserId && l.PageModuleId == pageModuleId).FirstOrDefault();
 
                             if (objDuplicateLocation == null)
-                            {                               
+                            {
                                 tbl_UserPageModuleAccess userPageModuleAccessVM = new tbl_UserPageModuleAccess();
                                 userPageModuleAccessVM.UserId = objUser.UserId;
                                 userPageModuleAccessVM.PageModuleId = pageModuleId;
@@ -347,6 +347,36 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return ReturnMessage;
         }
-        
+
+        [HttpPost]
+        public string ChangeUserStatus(Guid UserId, bool Status)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                tbl_Users objSite = _db.tbl_Users.Where(x => x.UserId == UserId && x.IsDeleted == false).FirstOrDefault();
+
+                if (objSite == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+                    objSite.IsActive = Status;
+                    objSite.ModifiedDate = DateTime.UtcNow;
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message.ToString();
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
     }
 }

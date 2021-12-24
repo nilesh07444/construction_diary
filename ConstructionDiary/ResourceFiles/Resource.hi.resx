@@ -771,4 +771,7 @@
   <data name="PageAccess" xml:space="preserve">
     <value>पेज एक्सेस</value>
   </data>
+  <data name="ChangeStatus" xml:space="preserve">
+    <value>स्थिति बदलें</value>
+  </data>
 </root>
