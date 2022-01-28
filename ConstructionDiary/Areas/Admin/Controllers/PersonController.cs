@@ -23,18 +23,36 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         {
             _db = new ConstructionDiaryEntities();
         }
-        public ActionResult Index()
+        public ActionResult Index(string ftraction)
         {
+            bool IsActiveFilter = true;
+
+            if (!string.IsNullOrEmpty(ftraction))
+            {
+                if (ftraction == "active")
+                {
+                    IsActiveFilter = true;
+                }
+                else
+                {
+                    IsActiveFilter = false;
+                }
+            }
+
+            ViewBag.ftrAction = ftraction;
+
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             List<PersonDetailVM> personDetail = (from person in _db.tbl_Persons
                                                  where person.ClientId == ClientId && person.IsDeleted == false && person.IsAttendancePerson == false
+                                                 && (string.IsNullOrEmpty(ftraction) || person.IsActive == IsActiveFilter)
                                                  select new PersonDetailVM
                                                  {
                                                      PersonId = person.PersonId,
                                                      PersonName = person.PersonFirstName,
                                                      TotalBillAmount = _db.tbl_BillDebitNew.Where(x => x.PersonId == person.PersonId).ToList().Select(x => x.TotalAmount).Sum(),
-                                                     TotalDebitAmount = _db.tbl_Finance.Where(x => x.PersonId == person.PersonId && x.CreditOrDebit == "Debit" && !x.IsDeleted).ToList().Select(x => x.Amount).Sum()
+                                                     TotalDebitAmount = _db.tbl_Finance.Where(x => x.PersonId == person.PersonId && x.CreditOrDebit == "Debit" && !x.IsDeleted).ToList().Select(x => x.Amount).Sum(),
+                                                     IsActive = person.IsActive == true ? true : false
                                                  }).ToList();
 
             //var lstPersons = (from p in _db.SP_GetPersonsList(ClientId)
@@ -1685,7 +1703,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             return ReturnMessage;
         }
-         
+
         private decimal CalculateBillArea(AreaDebitBillItemVM item)
         {
             decimal areaTotal = 0;

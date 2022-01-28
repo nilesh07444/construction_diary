@@ -40,8 +40,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                     EstimateDate = e.EstimateDate,
                                     PartyName = e.PartyName,
                                     TotalAmount = e.TotalAmount,
-                                    Remarks = e.Remarks
-                                }).ToList();
+                                    Remarks = e.Remarks,
+                                    CreatedDate = e.CreatedDate
+                                }).OrderByDescending(x => x.EstimateDate).ThenByDescending(x => x.CreatedDate).ToList();
             }
             catch (Exception ex)
             {
@@ -79,6 +80,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 if (objEstimate != null)
                 {
                     objEstimate.EstimateItem = (from i in _db.tbl_EstimateItem
+                                                where i.EstimateId == objEstimate.EstimateId
                                                 select new EstimateItemVM
                                                 {
                                                     EstimateItemId = i.EstimateItemId,
@@ -292,9 +294,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                             Nos = i.Nos,
                                                             Qty = i.Qty,
                                                             Rate = i.Rate,
-                                                            TotalAmount = i.TotalAmount
-                                                        }).OrderBy(x => x.EstimateItemId).ToList();
-                 
+                                                            TotalAmount = i.TotalAmount,
+                                                            CreatedDate = i.CreatedDate
+                                                        }).OrderBy(x => x.CreatedDate).ToList();
+
                 string[] strColumns = new string[6] { "Sr No", "Item Description", "Nos", "Qty", "Rate", "Amount" };
                 if (lstEstimateItem != null && lstEstimateItem.Count() > 0)
                 {
@@ -309,7 +312,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     if (IsLetterRequired && !string.IsNullOrEmpty(objClient.HeaderImageLetterPage))
                     {
                         //string headerImage = Server.MapPath("~/Images/LetterHead/" + objClient.HeaderImageLetterPage);
-                        string headerImage = System.Web.Hosting.HostingEnvironment.MapPath("~\\Images\\LetterHead\\"+ objClient.HeaderImageLetterPage);
+                        string headerImage = System.Web.Hosting.HostingEnvironment.MapPath("~\\Images\\LetterHead\\" + objClient.HeaderImageLetterPage);
 
                         strHTML.Append(" <table width=100% cellspacing=0 cellpadding=2 class=table1>");
                         strHTML.Append("<tr><th> <img src='" + headerImage + "' style='width:740px; height: 120px; text-align: center;' /> </th></tr>");

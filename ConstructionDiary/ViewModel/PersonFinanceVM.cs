@@ -11,7 +11,7 @@ namespace ConstructionDiary
     public class PersonFinanceVM
     {
 
-        [Required(ErrorMessage ="This field is required")]
+        [Required(ErrorMessage = "This field is required")]
         public string SelectedDate { get; set; }
 
         [Required(ErrorMessage = "This field is required")]
@@ -21,7 +21,7 @@ namespace ConstructionDiary
         public Guid GivenAmountBy { get; set; }
 
         public List<SelectListItem> UsersList { get; set; }
-        
+
         [Required(ErrorMessage = "This field is required")]
         public string PaymentType { get; set; }
 
@@ -51,9 +51,10 @@ namespace ConstructionDiary
     {
         public Guid PersonId { get; set; }
         public string PersonName { get; set; }
-        public decimal? TotalBillAmount  { get; set; }
+        public decimal? TotalBillAmount { get; set; }
         public decimal? TotalDebitAmount { get; set; }
         public decimal? TotalRemainingAmount { get; set; }
+        public bool IsActive { get; set; }
     }
 
 }
