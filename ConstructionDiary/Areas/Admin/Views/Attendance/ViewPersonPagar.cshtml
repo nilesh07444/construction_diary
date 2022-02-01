@@ -51,6 +51,7 @@
                                     <th>@Resource.PreviousPagarAmount</th>
                                     <th>@Resource.TotalGivenAmount</th>
                                     <th>@Resource.RemainingAmount</th>
+                                    <th>@Resource.Download</th>
                                     <th width="10%">@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -70,6 +71,7 @@
                                             <td>@obj.PrevPagarRemainingAmount</td>
                                             <td>@obj.AmountPay</td>
                                             <td>@obj.RemainingAmount</td>
+                                            <td><a href="javascript:void(0);" class="btn btn-primary" onclick="fnDownloadPagarPDF('@obj.PagarId')">@Resource.Download</a></td>
                                             <td>
                                                 @if (counter == 1)
                                                 {
@@ -468,5 +470,12 @@
     jQuery(document).on("click", "#btnCancelPagar", function () {
         $('#addNewPagarModal').modal('hide');
     });
+
+
+    function fnDownloadPagarPDF(pagar_id) {
+        var downloadUrl = "/admin/attendance/ExportPDFOfPersonPagar/" + pagar_id;
+        window.location.href = downloadUrl;
+    }
+
 
 </script>

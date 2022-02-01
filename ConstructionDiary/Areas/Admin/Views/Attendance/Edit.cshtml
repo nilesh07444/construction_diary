@@ -63,41 +63,41 @@
                                             foreach (var obj in Model.lstPersonAttendance)
                                             {
                                                 counter++;
-                                        <tr class="gradeX">
-                                            <td>@counter</td>
-                                            <td>@obj.PersonName</td>
-                                            @*<td><span>@obj.PersonDailyRate</span></td>*@
-                                            <td>
-                                                @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text", obj.AttendanceStatus.ToString()), "-Select Status-", new { @id = "attendancestatus_" + obj.PersonAttendanceId, @class = "form-control ddlAttendanceStatus" })
-                                                @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
-                                            </td>
+                                                <tr class="gradeX">
+                                                    <td>@counter</td>
+                                                    <td>@obj.PersonName</td>
+                                                    @*<td><span>@obj.PersonDailyRate</span></td>*@
+                                                    <td>
+                                                        @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].AttendanceStatus, new SelectList(Model.AttendanceStatusList, "Value", "Text", obj.AttendanceStatus.ToString()), "-Select Status-", new { @id = "attendancestatus_" + obj.PersonAttendanceId, @class = "form-control ddlAttendanceStatus" })
+                                                        @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
+                                                    </td>
 
-                                            <td>
-                                                @if (obj.PersonTypeId == 6)
-                                                {
-                                                    @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].TotalRokadiya, new { htmlAttributes = new { @id = "rokadiya_" + obj.PersonAttendanceId, @class = "form-control", maxlength = "100" } })
-                                                }
-                                            </td>
+                                                    <td>
+                                                        @if (obj.PersonTypeId == 6)
+                                                        {
+                                                            @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].TotalRokadiya, new { htmlAttributes = new { @id = "rokadiya_" + obj.PersonAttendanceId, @class = "form-control", maxlength = "100" } })
+                                                        }
+                                                    </td>
 
-                                            <td>
-                                                @{ string strStyle = obj.AttendanceStatus == 0 ? "none" : "blobk"; }
-                                                @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text", obj.SiteId), "-Select Site-", new { @id = "site_" + obj.PersonAttendanceId, @class = "form-control", @style = "display: " + strStyle + " " })
-                                                @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].SiteId, "", new { @class = "text-danger" })
-                                            </td>
-                                            <td>
-                                                @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].WithdrawAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
-                                            </td>
-                                            <td>
-                                                @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].OvertimeAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
-                                            </td>
-                                            <td>
-                                                @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
-                                            </td>
-                                            @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonAttendanceId)
-                                            @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonId)
-                                            @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate)
-                                            @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonTypeId)
-                                        </tr>
+                                                    <td>
+                                                        @{ string strStyle = obj.AttendanceStatus == 0 ? "none" : "blobk"; }
+                                                        @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text", obj.SiteId), "-Select Site-", new { @id = "site_" + obj.PersonAttendanceId, @class = "form-control", @style = "display: " + strStyle + " " })
+                                                        @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].SiteId, "", new { @class = "text-danger" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].WithdrawAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].OvertimeAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
+                                                    </td>
+                                                    @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonAttendanceId)
+                                                    @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonId)
+                                                    @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonDailyRate)
+                                                    @Html.HiddenFor(model => model.lstPersonAttendance[counter - 1].PersonTypeId)
+                                                </tr>
                                             }
                                         }
                                     </tbody>

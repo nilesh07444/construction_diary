@@ -34,6 +34,8 @@ namespace ConstructionDiary
         public int? WithdrawAmount { get; set; }
         public int? OvertimeAmount { get; set; }
         public string Remarks { get; set; }
+
+        public long? OrderNo { get; set; }
     }
 
     public class ReportPersonAttendanceVM : PersonAttendanceVM {
