@@ -22,5 +22,6 @@ namespace ConstructionDiary.Models
         public decimal Rate { get; set; }
         public decimal TotalAmount { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
+        public long SeqNo { get; set; }
     }
 }

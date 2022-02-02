@@ -57,6 +57,8 @@
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_EstimateItem" Width="1.5" PointX="19.375" PointY="17.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_PageModule" Width="1.5" PointX="7.375" PointY="20.75" />
         <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_UserPageModuleAccess" Width="1.5" PointX="14.375" PointY="20.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_VehicleOwner" Width="1.5" PointX="16.375" PointY="20.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_VehicleRent" Width="1.5" PointX="21.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

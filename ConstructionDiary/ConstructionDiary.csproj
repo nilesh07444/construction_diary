@@ -170,6 +170,8 @@
     <Compile Include="Areas\Admin\Controllers\SettingController.cs" />
     <Compile Include="Areas\Admin\Controllers\SiteController.cs" />
     <Compile Include="Areas\Admin\Controllers\UserController.cs" />
+    <Compile Include="Areas\Admin\Controllers\VehicleOwnerController.cs" />
+    <Compile Include="Areas\Admin\Controllers\VehicleRentController.cs" />
     <Compile Include="Areas\Admin\MyBaseController.cs" />
     <Compile Include="Areas\WebApi\WebApiAreaRegistration.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -335,6 +337,12 @@
     <Compile Include="Models\tbl_Users.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_VehicleOwner.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_VehicleRent.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceFiles\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -380,6 +388,7 @@
     <Compile Include="ViewModel\UserPermissionVM.cs" />
     <Compile Include="ViewModel\UserVM.cs" />
     <Compile Include="ViewModel\EstimateVM.cs" />
+    <Compile Include="ViewModel\VehicleRentVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\Admin\Content\assets\advanced-datatable\docs\34cdb56b2c.html" />
@@ -2367,6 +2376,12 @@
     <Content Include="Areas\Admin\Views\Estimate\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Estimate\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\ReOrderPerson.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleRent\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleOwner\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleOwner\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleOwner\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleRent\Add.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleRent\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

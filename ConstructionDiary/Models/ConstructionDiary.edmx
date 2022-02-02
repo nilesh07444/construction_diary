@@ -195,6 +195,7 @@
           <Property Name="Rate" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="TotalAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="SeqNo" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="tbl_Expenses">
           <Key>
@@ -590,6 +591,41 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
+        <EntityType Name="tbl_VehicleOwner">
+          <Key>
+            <PropertyRef Name="VehicleOwnerId" />
+          </Key>
+          <Property Name="VehicleOwnerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="VehicleOwnerName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="MobileNo" Type="nvarchar" MaxLength="15" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_VehicleRent">
+          <Key>
+            <PropertyRef Name="VehicleRentId" />
+          </Key>
+          <Property Name="VehicleRentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="VehicleOwnerId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="VehicleRentDate" Type="datetime" Nullable="false" />
+          <Property Name="FromLocation" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="ToLocation" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="VehicleNumber" Type="nvarchar" MaxLength="50" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="IsPaid" Type="bit" Nullable="false" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
+          <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
         <Association Name="FK_tbl_Clients_tbl_PackageType">
           <End Role="tbl_PackageType" Type="Self.tbl_PackageType" Multiplicity="1" />
           <End Role="tbl_Clients" Type="Self.tbl_Clients" Multiplicity="*" />
@@ -773,6 +809,8 @@
           <EntitySet Name="tbl_Sites" EntityType="Self.tbl_Sites" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_UserPageModuleAccess" EntityType="Self.tbl_UserPageModuleAccess" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Users" EntityType="Self.tbl_Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_VehicleOwner" EntityType="Self.tbl_VehicleOwner" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_VehicleRent" EntityType="Self.tbl_VehicleRent" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_tbl_Clients_tbl_PackageType" Association="Self.FK_tbl_Clients_tbl_PackageType">
             <End Role="tbl_PackageType" EntitySet="tbl_PackageType" />
             <End Role="tbl_Clients" EntitySet="tbl_Clients" />
@@ -1224,6 +1262,8 @@
           <EntitySet Name="tbl_EstimateItem" EntityType="ConstructionDiaryModel.tbl_EstimateItem" />
           <EntitySet Name="tbl_PageModule" EntityType="ConstructionDiaryModel.tbl_PageModule" />
           <EntitySet Name="tbl_UserPageModuleAccess" EntityType="ConstructionDiaryModel.tbl_UserPageModuleAccess" />
+          <EntitySet Name="tbl_VehicleOwner" EntityType="ConstructionDiaryModel.tbl_VehicleOwner" />
+          <EntitySet Name="tbl_VehicleRent" EntityType="ConstructionDiaryModel.tbl_VehicleRent" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1743,6 +1783,7 @@
           <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="SeqNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="tbl_PageModule">
           <Key>
@@ -1760,6 +1801,41 @@
           <Property Name="UserId" Type="Guid" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_VehicleOwner">
+          <Key>
+            <PropertyRef Name="VehicleOwnerId" />
+          </Key>
+          <Property Name="VehicleOwnerId" Type="Guid" Nullable="false" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="VehicleOwnerName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MobileNo" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_VehicleRent">
+          <Key>
+            <PropertyRef Name="VehicleRentId" />
+          </Key>
+          <Property Name="VehicleRentId" Type="Guid" Nullable="false" />
+          <Property Name="VehicleOwnerId" Type="Guid" Nullable="false" />
+          <Property Name="VehicleRentDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FromLocation" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ToLocation" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="IsPaid" Type="Boolean" Nullable="false" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
+          <Property Name="ClientId" Type="Guid" Nullable="false" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2428,6 +2504,7 @@
           <EntitySetMapping Name="tbl_EstimateItem">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_EstimateItem">
               <MappingFragment StoreEntitySet="tbl_EstimateItem">
+                <ScalarProperty Name="SeqNo" ColumnName="SeqNo" />
                 <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
                 <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
                 <ScalarProperty Name="Rate" ColumnName="Rate" />
@@ -2455,6 +2532,43 @@
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="PageModuleId" ColumnName="PageModuleId" />
                 <ScalarProperty Name="UserPageModuleAccessId" ColumnName="UserPageModuleAccessId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_VehicleOwner">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_VehicleOwner">
+              <MappingFragment StoreEntitySet="tbl_VehicleOwner">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+                <ScalarProperty Name="VehicleOwnerName" ColumnName="VehicleOwnerName" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="VehicleOwnerId" ColumnName="VehicleOwnerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_VehicleRent">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_VehicleRent">
+              <MappingFragment StoreEntitySet="tbl_VehicleRent">
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="IsPaid" ColumnName="IsPaid" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="VehicleNumber" ColumnName="VehicleNumber" />
+                <ScalarProperty Name="ToLocation" ColumnName="ToLocation" />
+                <ScalarProperty Name="FromLocation" ColumnName="FromLocation" />
+                <ScalarProperty Name="VehicleRentDate" ColumnName="VehicleRentDate" />
+                <ScalarProperty Name="VehicleOwnerId" ColumnName="VehicleOwnerId" />
+                <ScalarProperty Name="VehicleRentId" ColumnName="VehicleRentId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

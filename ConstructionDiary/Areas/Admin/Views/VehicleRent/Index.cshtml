@@ -1,0 +1,163 @@
+﻿@using ConstructionDiary.Models
+@using ConstructionDiary.ResourceFiles;
+@model List<VehicleRentVM>
+@{
+    ViewBag.Title = "VehicleRent";
+    int counter = 1;
+}
+
+<section class="wrapper site-min-height">
+    <!-- page start-->
+    <div class="row">
+        <div class="col-lg-12">
+
+            <section class="panel">
+                <header class="panel-heading">
+                    <strong>Vehicle Rent List</strong>
+                </header>
+                <div class="panel-body">
+
+                    <div class="adv-table">
+                        <div class="clearfix">
+
+                            <div class="btn-group pull-right">
+                                <a class="btn btn-success" href="/admin/vehiclerent/add"><i class="fa fa-plus"></i> Add New Vehicle Rent</a>
+                            </div>
+
+                            @if (clsSession.RoleID != (int)UserRoles.Staff && Model != null && Model.Count > 0)
+                            {
+                                @*<div class="btn-group pull-right">
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                            @Resource.Download <i class="fa fa-angle-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right">
+                                            <li><a id="btnDownloadPdf" href="javascript:void(0);">PDF</a></li>
+                                        </ul>
+                                    </div>*@
+                            }
+                        </div>
+                        <div class="space15"></div>
+                        <table class="display table table-bordered table-striped table-hover" id="tblvehiclerentList">
+                            <thead>
+                                <tr>
+                                    <th width="5%">#</th>
+                                    <th width="10%">Date</th>
+                                    <th width="10%">Owner Name</th>
+                                    <th width="10%">From</th>
+                                    <th width="10%">To</th>
+                                    <th width="10%">@Resource.Amount</th>
+                                    <th width="10%">@Resource.Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.Count > 0)
+                                {
+                                    foreach (var obj in Model)
+                                    {
+                                        <tr class="gradeX">
+                                            <td>@counter.</td>
+                                            <td>@obj.dtVehicleRentDate.ToString("dd/MM/yyyy")</td>
+                                            <td>@obj.VehicleOwnerName</td>
+                                            <td>@obj.FromLocation</td>
+                                            <td>@obj.ToLocation</td>
+                                            <td>@obj.Amount</td>
+                                            <td>
+                                                <a href="/admin/vehiclerent/edit/@obj.VehicleRentId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                                <button title="Delete" onclick="fnDeletevehiclerent('@obj.VehicleRentId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                            </td>
+                                        </tr>
+                                        counter++;
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- page end-->
+</section>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deletevehiclerentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@Resource.DeleteConfirm</h4>
+            </div>
+            <div class="modal-body">
+                @Resource.SureWantToDelete
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="hdnDeletevehiclerent" />
+                <button data-dismiss="modal" class="btn btn-default" type="button">@Resource.Close</button>
+                <button id="btnDeletevehiclerent" class="btn btn-danger" type="button">@Resource.Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete modal -->
+
+<script src="~/Areas/Admin/Content/js/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    jQuery(document).ready(function () {
+        jQuery('html, body').animate({ scrollTop: 0 }, 1000);
+
+        jQuery('#tblvehiclerentList').dataTable({
+            "aaSorting": [],
+            "aoColumnDefs": [
+                {
+                    'bSortable': false,
+                    'aTargets': [0]
+                }]
+        });
+    });
+
+    function fnDeletevehiclerent(vehiclerent_id) {
+        jQuery("#hdnDeletevehiclerent").val(vehiclerent_id);
+        $('#deletevehiclerentModal').modal('show');
+    }
+
+    jQuery(document).on("click", "#btnDeletevehiclerent", function () {
+
+        var vehiclerent_id = jQuery("#hdnDeletevehiclerent").val();
+        if (vehiclerent_id != "" && vehiclerent_id != null) {
+            $('#deletevehiclerentModal').modal('hide');
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            var URL = '@Url.Action("DeleteVehicleRent", "VehicleRent")';
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: URL + "?Id=" + vehiclerent_id,
+                success: function (result) {
+                    if (result == "success") {
+                        alert("Vehicle Rent Deleted successfully");
+                        window.location.reload();
+                    }
+                    else if (result == "notfound") {
+                        alert("Vehicle Rent Not Found");
+                    }
+                    else {
+                        alert("Something went wrong. Please try again");
+                    }
+
+                    $.unblockUI();
+                },
+                error: function (resultData) {
+                    $.unblockUI();
+                }
+            });
+        }
+    });
+
+    function isNullOrUndefinedCustom(str) {
+        if (str == "" || str == undefined || str == null)
+            return true;
+        else
+            return false;
+    }
+
+</script>
