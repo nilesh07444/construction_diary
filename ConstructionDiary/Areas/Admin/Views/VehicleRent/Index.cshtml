@@ -13,7 +13,7 @@
 
             <section class="panel">
                 <header class="panel-heading">
-                    <strong>Vehicle Rent List</strong>
+                    <strong>@Resource.VehicleRentList</strong>
                 </header>
                 <div class="panel-body">
 
@@ -21,7 +21,7 @@
                         <div class="clearfix">
 
                             <div class="btn-group pull-right">
-                                <a class="btn btn-success" href="/admin/vehiclerent/add"><i class="fa fa-plus"></i> Add New Vehicle Rent</a>
+                                <a class="btn btn-success" href="/admin/vehiclerent/add"><i class="fa fa-plus"></i> @Resource.AddNewVehicleRent</a>
                             </div>
 
                             @if (clsSession.RoleID != (int)UserRoles.Staff && Model != null && Model.Count > 0)
@@ -41,10 +41,10 @@
                             <thead>
                                 <tr>
                                     <th width="5%">#</th>
-                                    <th width="10%">Date</th>
-                                    <th width="10%">Owner Name</th>
-                                    <th width="10%">From</th>
-                                    <th width="10%">To</th>
+                                    <th width="10%">@Resource.Date</th>
+                                    <th width="10%">@Resource.VehicleOwnerName</th>
+                                    <th width="10%">@Resource.FromLocation</th>
+                                    <th width="10%">@Resource.ToLocation</th>
                                     <th width="10%">@Resource.Amount</th>
                                     <th width="10%">@Resource.Action</th>
                                 </tr>

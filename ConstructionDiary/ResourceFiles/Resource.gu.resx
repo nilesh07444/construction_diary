@@ -774,4 +774,40 @@
   <data name="ChangeStatus" xml:space="preserve">
     <value>સ્ટેટસ બદલો</value>
   </data>
+  <data name="AddNewVehicleOwner" xml:space="preserve">
+    <value>નવો ગાડી માલિક ઉમેરો</value>
+  </data>
+  <data name="FromLocation" xml:space="preserve">
+    <value>ક્યાંથી</value>
+  </data>
+  <data name="ToLocation" xml:space="preserve">
+    <value>કયા </value>
+  </data>
+  <data name="VehicleNumber" xml:space="preserve">
+    <value>ગાડી નંબર </value>
+  </data>
+  <data name="VehicleOwnerList" xml:space="preserve">
+    <value>ગાડી માલિક લિસ્ટ</value>
+  </data>
+  <data name="VehicleOwnerName" xml:space="preserve">
+    <value>ગાડી માલિક નું નામ</value>
+  </data>
+  <data name="VehicleRent" xml:space="preserve">
+    <value>ગાડી ભાડું</value>
+  </data>
+  <data name="VehicleRentDate" xml:space="preserve">
+    <value>ભાડે તારીખ</value>
+  </data>
+  <data name="VehicleRentList" xml:space="preserve">
+    <value>ગાડી ભાડું લિસ્ટ </value>
+  </data>
+  <data name="EditVehicleOwner" xml:space="preserve">
+    <value>ગાડી માલિક ની વિગત સુધારો</value>
+  </data>
+  <data name="EditVehicleRent" xml:space="preserve">
+    <value>ગાડી ભાડું ની વિગત સુધારો</value>
+  </data>
+  <data name="AddNewVehicleRent" xml:space="preserve">
+    <value>નવું ગાડી ભાડું ઉમેરો </value>
+  </data>
 </root>

@@ -13,22 +13,22 @@ namespace ConstructionDiary
         public Guid VehicleRentId { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
-        //[Display(Name = "VehicleRentDate", ResourceType = typeof(Resource))]
+        [Display(Name = "VehicleRentDate", ResourceType = typeof(Resource))]
         public string VehicleRentDate { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
-        //[Display(Name = "VehicleOwnerName", ResourceType = typeof(Resource))]
+        [Display(Name = "VehicleOwnerName", ResourceType = typeof(Resource))]
         public Guid VehicleOwnerId { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
-        //[Display(Name = "FromLocation", ResourceType = typeof(Resource))]
+        [Display(Name = "FromLocation", ResourceType = typeof(Resource))]
         public string FromLocation { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
-        //[Display(Name = "ToLocation", ResourceType = typeof(Resource))]
+        [Display(Name = "ToLocation", ResourceType = typeof(Resource))]
         public string ToLocation { get; set; }
 
-        //[Display(Name = "VehicleNumber", ResourceType = typeof(Resource))]
+        [Display(Name = "VehicleNumber", ResourceType = typeof(Resource))]
         public string VehicleNumber { get; set; }
 
         [Display(Name = "Amount", ResourceType = typeof(Resource))]
@@ -55,7 +55,7 @@ namespace ConstructionDiary
         public Guid VehicleOwnerId { get; set; }
 
         [Required(ErrorMessageResourceType = typeof(Resource), ErrorMessageResourceName = "Required")]
-        //[Display(Name = "VehicleOwnerName", ResourceType = typeof(Resource))]
+        [Display(Name = "VehicleOwnerName", ResourceType = typeof(Resource))]
         public string VehicleOwnerName { get; set; }
 
         [Display(Name = "MobileNo", ResourceType = typeof(Resource))]

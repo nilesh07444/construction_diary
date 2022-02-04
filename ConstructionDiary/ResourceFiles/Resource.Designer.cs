@@ -304,6 +304,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add New Vehicle Owner.
+        /// </summary>
+        public static string AddNewVehicleOwner {
+            get {
+                return ResourceManager.GetString("AddNewVehicleOwner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Vehicle Rent.
+        /// </summary>
+        public static string AddNewVehicleRent {
+            get {
+                return ResourceManager.GetString("AddNewVehicleRent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
         public static string Address {
@@ -835,6 +853,24 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit Vehicle Owner.
+        /// </summary>
+        public static string EditVehicleOwner {
+            get {
+                return ResourceManager.GetString("EditVehicleOwner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit Vehicle Rent.
+        /// </summary>
+        public static string EditVehicleRent {
+            get {
+                return ResourceManager.GetString("EditVehicleRent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email Id.
         /// </summary>
         public static string EmailId {
@@ -966,6 +1002,15 @@ namespace ConstructionDiary.ResourceFiles {
         public static string FirmName {
             get {
                 return ResourceManager.GetString("FirmName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From Location.
+        /// </summary>
+        public static string FromLocation {
+            get {
+                return ResourceManager.GetString("FromLocation", resourceCulture);
             }
         }
         
@@ -1708,6 +1753,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To Location.
+        /// </summary>
+        public static string ToLocation {
+            get {
+                return ResourceManager.GetString("ToLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total.
         /// </summary>
         public static string Total {
@@ -2001,6 +2055,60 @@ namespace ConstructionDiary.ResourceFiles {
         public static string UsersList {
             get {
                 return ResourceManager.GetString("UsersList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle Number.
+        /// </summary>
+        public static string VehicleNumber {
+            get {
+                return ResourceManager.GetString("VehicleNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle Owner List.
+        /// </summary>
+        public static string VehicleOwnerList {
+            get {
+                return ResourceManager.GetString("VehicleOwnerList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle Owner Name.
+        /// </summary>
+        public static string VehicleOwnerName {
+            get {
+                return ResourceManager.GetString("VehicleOwnerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle Rent.
+        /// </summary>
+        public static string VehicleRent {
+            get {
+                return ResourceManager.GetString("VehicleRent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle Rent Date.
+        /// </summary>
+        public static string VehicleRentDate {
+            get {
+                return ResourceManager.GetString("VehicleRentDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vehicle Rent List.
+        /// </summary>
+        public static string VehicleRentList {
+            get {
+                return ResourceManager.GetString("VehicleRentList", resourceCulture);
             }
         }
         

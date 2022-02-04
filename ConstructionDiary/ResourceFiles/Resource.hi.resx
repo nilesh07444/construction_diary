@@ -774,4 +774,40 @@
   <data name="ChangeStatus" xml:space="preserve">
     <value>स्थिति बदलें</value>
   </data>
+  <data name="AddNewVehicleOwner" xml:space="preserve">
+    <value>नया वाहन स्वामी जोड़ें</value>
+  </data>
+  <data name="FromLocation" xml:space="preserve">
+    <value>स्थान से</value>
+  </data>
+  <data name="ToLocation" xml:space="preserve">
+    <value>स्थान के लिए</value>
+  </data>
+  <data name="VehicleNumber" xml:space="preserve">
+    <value>वाहन संख्या</value>
+  </data>
+  <data name="VehicleOwnerList" xml:space="preserve">
+    <value>वाहन मालिक सूची</value>
+  </data>
+  <data name="VehicleOwnerName" xml:space="preserve">
+    <value>वाहन मालिक का नाम</value>
+  </data>
+  <data name="VehicleRent" xml:space="preserve">
+    <value>वाहन का किराया</value>
+  </data>
+  <data name="VehicleRentDate" xml:space="preserve">
+    <value>वाहन किराए की तिथि</value>
+  </data>
+  <data name="VehicleRentList" xml:space="preserve">
+    <value>वाहन किराए की सूची</value>
+  </data>
+  <data name="EditVehicleOwner" xml:space="preserve">
+    <value>वाहन स्वामी संपादित करें</value>
+  </data>
+  <data name="EditVehicleRent" xml:space="preserve">
+    <value>वाहन किराया संपादित करें</value>
+  </data>
+  <data name="AddNewVehicleRent" xml:space="preserve">
+    <value>नया वाहन किराया जोड़ें</value>
+  </data>
 </root>
