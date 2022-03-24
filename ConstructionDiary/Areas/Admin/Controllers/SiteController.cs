@@ -283,7 +283,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 decimal? RemainingAmount = TotalCreditAmount - TotalDebitAmount;
                 string strRemainingAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(RemainingAmount));
 
-                string[] strColumns = new string[6] { "Date", "Credit", "Debit", "Payment Type", "Bank Name", "Remarks" };
+                string[] strColumns = new string[7] { "Date", "Credit", "Debit", "Payment Type", "Bank Name", "Cheque For", "Remarks" };
                 if (list != null && list.Count() > 0)
                 {
 
@@ -348,6 +348,11 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                             strcolval = obj.ChequeNo + " " + obj.BankName;
                                             break;
                                         }
+                                    case "Cheque For":
+                                        {
+                                            strcolval = obj.ChequeFor;
+                                            break;
+                                        }
                                     case "Remarks":
                                         {
                                             strcolval = obj.Remarks;
@@ -372,7 +377,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
                     strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalCreditAmount + " </th>");
                     strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalDebitAmount + " </th>");
-                    strHTML.Append("<th colspan='3' style='border: 1px solid #ccc;'>=  " + strRemainingAmount + " </th>");
+                    strHTML.Append("<th colspan='4' style='border: 1px solid #ccc;'>=  " + strRemainingAmount + " </th>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");

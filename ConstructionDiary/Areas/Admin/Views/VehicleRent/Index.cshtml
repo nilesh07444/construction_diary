@@ -4,6 +4,11 @@
 @{
     ViewBag.Title = "VehicleRent";
     int counter = 1;
+
+    List<SelectListItem> lstVehicleOwners = ViewData["VehicleOwnerList"] as List<SelectListItem>;
+
+    decimal? TotalVehicleRentAmount = Model.Select(x => x.Amount).Sum();
+    string strTotalVehicleRentAmount = CoreHelper.GetFormatterAmount(Convert.ToDecimal(TotalVehicleRentAmount));
 }
 
 <section class="wrapper site-min-height">
@@ -11,11 +16,78 @@
     <div class="row">
         <div class="col-lg-12">
 
+
             <section class="panel">
                 <header class="panel-heading">
                     <strong>@Resource.VehicleRentList</strong>
                 </header>
                 <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-2 form-group">
+                            <label for="Duration">@Resource.Duration</label>
+                            <select class="form-control" id="Duration" name="Duration">
+                                <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
+                                <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="">
+                                <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
+                                <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            </div>
+                            <span id="spn_StartDate" class="formerror">@Resource.Required</span>
+                        </div>
+                        <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="">
+                                <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
+                                <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            </div>
+                            <span id="spn_EndDate" class="formerror">@Resource.Required</span>
+                        </div>
+
+                        <div class="col-sm-2 form-group">
+                            <div class="">
+                                <label for="dllSite">@Resource.VehicleOwnerName</label><span class="required">*</span>
+                                <select class="form-control" id="ddlVehicleOwner">
+                                    <option value="">-All Vehicle Owner-</option>
+                                    @if (lstVehicleOwners != null && lstVehicleOwners.Count > 0)
+                                    {
+                                        foreach (SelectListItem owner in lstVehicleOwners)
+                                        {
+                                            <option value="@owner.Value" @(ViewBag.VehicleOwner == owner.Value ? "selected" : "")>@owner.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <span id="spn_SiteId" class="formerror">@Resource.Required</span>
+                        </div>
+                        <div class="col-sm-2 form-group">
+                            <label></label>
+                            <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="panel">
+
+                <div class="panel-body">
+                    <div class="row state-overview">
+                        <div class="col-lg-3 col-sm-6">
+                            <section class="panel" style="border: 1px solid #ddd;">
+                                <div class="symbol terques">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                </div>
+                                <div class="value">
+                                    <h1>@strTotalVehicleRentAmount</h1>
+                                    <p>@Resource.Total</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
 
                     <div class="adv-table">
                         <div class="clearfix">
@@ -158,6 +230,63 @@
             return true;
         else
             return false;
+    }
+
+    $(document).on("change", "#Duration", function () {
+        var seletedType = $(this).val();
+        if (seletedType == "custom") {
+            $(".clsFilterdate").addClass("clsShow").removeClass("clsHide");
+        }
+        else {
+            $(".clsFilterdate").addClass("clsHide").removeClass("clsShow");
+        }
+    });
+
+    $(document).on("click", "#btnSearchReport", function () {
+
+        var duration = $("#Duration").val();
+        var startDate = $("#StartDate").val();
+        var endDate = $("#EndDate").val();
+        var ddlVehicleOwner = $("#ddlVehicleOwner").val();
+
+        var flag = true;
+        $(".formerror").hide();
+
+        if (duration == "") {
+            $("#spn_Duration").show();
+            flag = false;
+        }
+
+        if (duration == "custom") {
+            if (isNullOrUndefinedCustom(startDate)) {
+                $("#spn_StartDate").show();
+                flag = false;
+            }
+            if (isNullOrUndefinedCustom(endDate)) {
+                $("#spn_EndDate").show();
+                flag = false;
+            }
+        }
+
+        if (flag == true) {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            reloadFilterUrl(duration, startDate, endDate, ddlVehicleOwner);
+        }
+
+    });
+
+    function reloadFilterUrl(duration, startDate, endDate, ddlVehicleOwner) {
+
+        var url = "/admin/vehiclerent?duration=" + duration + "&vehicleOwner=" + ddlVehicleOwner;
+
+        if (duration == "custom") {
+            if (!isNullOrUndefinedCustom(startDate))
+                url += "&start=" + startDate;
+
+            if (!isNullOrUndefinedCustom(endDate))
+                url += "&end=" + endDate;
+        }
+        window.location.href = url;
     }
 
 </script>
