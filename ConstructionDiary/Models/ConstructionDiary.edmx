@@ -14,6 +14,8 @@
           <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="tbl_BillDebitItem">
           <Key>
@@ -262,6 +264,8 @@
           <Property Name="GeneralSettingId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="AllShayari2021app_PlayStoreUrl" Type="nvarchar" MaxLength="200" />
           <Property Name="AllShayari2021app_PrivacyUrl" Type="nvarchar" MaxLength="200" />
+          <Property Name="ChanakyaNitiQuotes_PlayStoreUrl" Type="nvarchar" MaxLength="200" />
+          <Property Name="ChanakyaNitiQuotes_PrivacyUrl" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="tbl_MaterialPurchase">
           <Key>
@@ -277,7 +281,7 @@
           <Property Name="CGST_Amount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="SGST_Amount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="AdjustmentAmount" Type="decimal" Precision="18" Scale="2" />
-          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SubTotal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Total" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
@@ -674,6 +678,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_tbl_MaterialPurchase_tbl_Merchant">
+          <End Role="tbl_Merchant" Type="Self.tbl_Merchant" Multiplicity="0..1" />
+          <End Role="tbl_MaterialPurchase" Type="Self.tbl_MaterialPurchase" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Merchant">
+              <PropertyRef Name="MerchantId" />
+            </Principal>
+            <Dependent Role="tbl_MaterialPurchase">
+              <PropertyRef Name="MerchantId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_tbl_MaterialPurchaseItems_tbl_MaterialPurchase">
           <End Role="tbl_MaterialPurchase" Type="Self.tbl_MaterialPurchase" Multiplicity="1" />
           <End Role="tbl_MaterialPurchaseItems" Type="Self.tbl_MaterialPurchaseItems" Multiplicity="*" />
@@ -827,6 +843,10 @@
             <End Role="tbl_Sites" EntitySet="tbl_Sites" />
             <End Role="tbl_Expenses" EntitySet="tbl_Expenses" />
           </AssociationSet>
+          <AssociationSet Name="FK_tbl_MaterialPurchase_tbl_Merchant" Association="Self.FK_tbl_MaterialPurchase_tbl_Merchant">
+            <End Role="tbl_Merchant" EntitySet="tbl_Merchant" />
+            <End Role="tbl_MaterialPurchase" EntitySet="tbl_MaterialPurchase" />
+          </AssociationSet>
           <AssociationSet Name="FK_tbl_MaterialPurchaseItems_tbl_MaterialPurchase" Association="Self.FK_tbl_MaterialPurchaseItems_tbl_MaterialPurchase">
             <End Role="tbl_MaterialPurchase" EntitySet="tbl_MaterialPurchase" />
             <End Role="tbl_MaterialPurchaseItems" EntitySet="tbl_MaterialPurchaseItems" />
@@ -869,6 +889,8 @@
           <Property Name="ClientId" Type="Guid" Nullable="false" />
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" />
+          <Property Name="ModifiedBy" Type="Guid" />
         </EntityType>
         <EntityType Name="tbl_Clients">
           <Key>
@@ -965,6 +987,8 @@
           <Property Name="GeneralSettingId" Type="Guid" Nullable="false" />
           <Property Name="AllShayari2021app_PlayStoreUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="AllShayari2021app_PrivacyUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ChanakyaNitiQuotes_PlayStoreUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ChanakyaNitiQuotes_PrivacyUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="tbl_PackageType">
           <Key>
@@ -1259,11 +1283,11 @@
           <EntitySet Name="tbl_Shayari" EntityType="ConstructionDiaryModel.tbl_Shayari" />
           <EntitySet Name="tbl_ShayariCategory" EntityType="ConstructionDiaryModel.tbl_ShayariCategory" />
           <EntitySet Name="tbl_Estimate" EntityType="ConstructionDiaryModel.tbl_Estimate" />
-          <EntitySet Name="tbl_EstimateItem" EntityType="ConstructionDiaryModel.tbl_EstimateItem" />
           <EntitySet Name="tbl_PageModule" EntityType="ConstructionDiaryModel.tbl_PageModule" />
           <EntitySet Name="tbl_UserPageModuleAccess" EntityType="ConstructionDiaryModel.tbl_UserPageModuleAccess" />
           <EntitySet Name="tbl_VehicleOwner" EntityType="ConstructionDiaryModel.tbl_VehicleOwner" />
           <EntitySet Name="tbl_VehicleRent" EntityType="ConstructionDiaryModel.tbl_VehicleRent" />
+          <EntitySet Name="tbl_EstimateItem" EntityType="ConstructionDiaryModel.tbl_EstimateItem" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1378,7 +1402,7 @@
           <Property Name="CGST_Amount" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="SGST_Amount" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="AdjustmentAmount" Type="Decimal" Precision="18" Scale="2" />
-          <Property Name="SubTotal" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SubTotal" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="ClientId" Type="Guid" Nullable="false" />
           <Property Name="IsActive" Type="Boolean" Nullable="false" />
@@ -1771,20 +1795,6 @@
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
           <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="tbl_EstimateItem">
-          <Key>
-            <PropertyRef Name="EstimateItemId" />
-          </Key>
-          <Property Name="EstimateItemId" Type="Guid" Nullable="false" />
-          <Property Name="EstimateId" Type="Guid" Nullable="false" />
-          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Nos" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Qty" Type="Int32" Nullable="false" />
-          <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
-          <Property Name="SeqNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-        </EntityType>
         <EntityType Name="tbl_PageModule">
           <Key>
             <PropertyRef Name="PageModuleId" />
@@ -1837,6 +1847,20 @@
           <Property Name="ModifiedBy" Type="Guid" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
         </EntityType>
+        <EntityType Name="tbl_EstimateItem">
+          <Key>
+            <PropertyRef Name="EstimateItemId" />
+          </Key>
+          <Property Name="EstimateItemId" Type="Guid" Nullable="false" />
+          <Property Name="EstimateId" Type="Guid" Nullable="false" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Nos" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Qty" Type="Int32" Nullable="false" />
+          <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="SeqNo" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1846,6 +1870,8 @@
           <EntitySetMapping Name="tbl_Attendance">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Attendance">
               <MappingFragment StoreEntitySet="tbl_Attendance">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
                 <ScalarProperty Name="AttendaceId" ColumnName="AttendaceId" />
                 <ScalarProperty Name="AttendanceDate" ColumnName="AttendanceDate" />
                 <ScalarProperty Name="ClientId" ColumnName="ClientId" />
@@ -1942,6 +1968,8 @@
           <EntitySetMapping Name="tbl_GeneralSetting">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_GeneralSetting">
               <MappingFragment StoreEntitySet="tbl_GeneralSetting">
+                <ScalarProperty Name="ChanakyaNitiQuotes_PrivacyUrl" ColumnName="ChanakyaNitiQuotes_PrivacyUrl" />
+                <ScalarProperty Name="ChanakyaNitiQuotes_PlayStoreUrl" ColumnName="ChanakyaNitiQuotes_PlayStoreUrl" />
                 <ScalarProperty Name="AllShayari2021app_PrivacyUrl" ColumnName="AllShayari2021app_PrivacyUrl" />
                 <ScalarProperty Name="AllShayari2021app_PlayStoreUrl" ColumnName="AllShayari2021app_PlayStoreUrl" />
                 <ScalarProperty Name="GeneralSettingId" ColumnName="GeneralSettingId" />
@@ -2501,21 +2529,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tbl_EstimateItem">
-            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_EstimateItem">
-              <MappingFragment StoreEntitySet="tbl_EstimateItem">
-                <ScalarProperty Name="SeqNo" ColumnName="SeqNo" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="Rate" ColumnName="Rate" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="Nos" ColumnName="Nos" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
-                <ScalarProperty Name="EstimateItemId" ColumnName="EstimateItemId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tbl_PageModule">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_PageModule">
               <MappingFragment StoreEntitySet="tbl_PageModule">
@@ -2569,6 +2582,21 @@
                 <ScalarProperty Name="VehicleRentDate" ColumnName="VehicleRentDate" />
                 <ScalarProperty Name="VehicleOwnerId" ColumnName="VehicleOwnerId" />
                 <ScalarProperty Name="VehicleRentId" ColumnName="VehicleRentId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_EstimateItem">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_EstimateItem">
+              <MappingFragment StoreEntitySet="tbl_EstimateItem">
+                <ScalarProperty Name="SeqNo" ColumnName="SeqNo" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Nos" ColumnName="Nos" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="EstimateId" ColumnName="EstimateId" />
+                <ScalarProperty Name="EstimateItemId" ColumnName="EstimateItemId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

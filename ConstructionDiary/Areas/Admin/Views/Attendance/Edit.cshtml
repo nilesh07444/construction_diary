@@ -107,6 +107,17 @@
 
                             <div style="margin-top: 15px;">
                                 <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <p><strong>@Resource.CreatedBy:</strong> @Model.CreatedBy</p>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p style="text-align:right;"><strong>@Resource.UpdatedBy:</strong> @(string.IsNullOrEmpty(Model.UpdatedBy) ? "-" : Model.UpdatedBy)</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 15px;">
+                                <div class="form-group">
                                     <div class="col-sm-12">
                                         @Html.HiddenFor(x => x.AttendaceId)
                                         <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />

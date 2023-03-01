@@ -810,4 +810,10 @@
   <data name="AddNewVehicleRent" xml:space="preserve">
     <value>Add New Vehicle Rent</value>
   </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Created By</value>
+  </data>
+  <data name="UpdatedBy" xml:space="preserve">
+    <value>Updated By</value>
+  </data>
 </root>

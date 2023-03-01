@@ -19,5 +19,7 @@ namespace ConstructionDiary.Models
         public System.Guid ClientId { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
+        public Nullable<System.Guid> CreatedBy { get; set; }
+        public Nullable<System.Guid> ModifiedBy { get; set; }
     }
 }

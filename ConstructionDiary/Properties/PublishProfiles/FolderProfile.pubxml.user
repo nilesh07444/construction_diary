@@ -7,7 +7,8 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <_PublishTargetUrl>E:\Publish\ConstructionDiary</_PublishTargetUrl>
-    <History>True|2022-03-24T14:05:53.1014390Z;True|2022-03-24T10:56:00.4180214+05:30;True|2021-07-21T12:02:53.7117358+05:30;True|2021-07-21T11:55:55.7398227+05:30;True|2021-07-19T23:43:05.5972823+05:30;True|2021-05-15T17:56:46.1936108+05:30;True|2021-05-06T23:41:03.6929908+05:30;True|2021-05-01T23:49:01.6442702+05:30;</History>
+    <History>True|2023-03-01T17:54:05.9735973Z;True|2023-03-01T23:07:37.6367144+05:30;True|2023-02-13T11:48:36.0455682+05:30;True|2023-02-10T00:17:34.3091660+05:30;True|2022-07-12T18:40:55.2475843+05:30;True|2022-07-05T23:39:27.3514662+05:30;True|2022-03-24T19:35:53.1014390+05:30;True|2022-03-24T10:56:00.4180214+05:30;True|2021-07-21T12:02:53.7117358+05:30;True|2021-07-21T11:55:55.7398227+05:30;True|2021-07-19T23:43:05.5972823+05:30;True|2021-05-15T17:56:46.1936108+05:30;True|2021-05-06T23:41:03.6929908+05:30;True|2021-05-01T23:49:01.6442702+05:30;</History>
+    <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
     <File Include="Areas/Admin/Content/assets/.DS_Store">
@@ -5780,7 +5781,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/05/2021 18:29:12</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/Edit.cshtml">
-      <publishTime>02/01/2022 12:18:33</publishTime>
+      <publishTime>03/01/2023 22:59:43</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/EditPerson.cshtml">
       <publishTime>01/05/2021 18:29:12</publishTime>
@@ -5789,13 +5790,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/05/2021 18:29:12</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/Index.cshtml">
-      <publishTime>01/05/2021 18:29:12</publishTime>
+      <publishTime>03/01/2023 22:59:13</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/PersonGroup.cshtml">
-      <publishTime>12/04/2021 10:52:47</publishTime>
+      <publishTime>07/05/2022 23:19:17</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/PersonList.cshtml">
-      <publishTime>01/28/2022 10:01:34</publishTime>
+      <publishTime>07/05/2022 23:19:12</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Attendance/ReOrderPerson.cshtml">
       <publishTime>12/20/2021 12:00:51</publishTime>
@@ -5963,7 +5964,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/01/2021 23:42:07</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Finance.cshtml">
-      <publishTime>05/01/2021 23:38:15</publishTime>
+      <publishTime>03/01/2023 23:03:44</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Index.cshtml">
       <publishTime>01/28/2022 10:06:58</publishTime>
@@ -6098,10 +6099,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/21/2020 16:24:54</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>03/24/2022 19:35:47</publishTime>
+      <publishTime>03/01/2023 23:24:01</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>03/24/2022 19:35:47</publishTime>
+      <publishTime>03/01/2023 23:24:01</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>04/16/2020 20:38:42</publishTime>
@@ -6113,10 +6114,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/18/2020 14:17:16</publishTime>
     </File>
     <File Include="bin/gu/ConstructionDiary.resources.dll">
-      <publishTime>03/24/2022 19:35:47</publishTime>
+      <publishTime>03/01/2023 23:24:01</publishTime>
     </File>
     <File Include="bin/hi/ConstructionDiary.resources.dll">
-      <publishTime>03/24/2022 19:35:47</publishTime>
+      <publishTime>03/01/2023 23:24:01</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>08/27/2020 11:20:20</publishTime>
@@ -6386,7 +6387,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/24/2021 19:53:55</publishTime>
     </File>
     <File Include="Models/ConstructionDiary.edmx.diagram">
-      <publishTime>02/02/2022 12:02:46</publishTime>
+      <publishTime>02/13/2023 11:43:52</publishTime>
     </File>
     <File Include="Scripts/bootstrap-multiselect.css">
       <publishTime>01/05/2021 18:29:12</publishTime>
@@ -6464,7 +6465,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/05/2021 18:29:12</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/24/2022 19:35:48</publishTime>
+      <publishTime>02/10/2023 00:17:28</publishTime>
     </File>
   </ItemGroup>
 </Project>

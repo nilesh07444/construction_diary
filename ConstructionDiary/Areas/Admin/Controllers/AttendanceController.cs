@@ -12,6 +12,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 using Newtonsoft.Json;
 using ConstructionDiary.ResourceFiles;
+using System.Security.Policy;
 
 namespace ConstructionDiary.Areas.Admin.Controllers
 {
@@ -24,18 +25,55 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             _db = new ConstructionDiaryEntities();
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string duration, string start, string end)
         {
+            if (string.IsNullOrEmpty(duration))
+                duration = "month";
+
+            ViewBag.Duration = duration;
+            ViewBag.StartDate = start;
+            ViewBag.EndDate = end;
+             
+            DateTime startDate = DateTime.Today;
+            DateTime endDate = DateTime.Today;
+
+            if (duration == "month")
+            {
+                var myDate = DateTime.Now;
+                startDate = new DateTime(myDate.Year, myDate.Month, 1);
+
+                DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                endDate = lastDay;
+            }
+            else if (duration == "custom")
+            {
+                if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
+                {
+                    startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                    endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
+                }
+            }
+
+            //
+
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
 
             List<AttendanceVM> lstAttendance = (from atte in _db.tbl_Attendance
+                                                join createdByUser in _db.tbl_Users on atte.CreatedBy equals createdByUser.UserId into outerJoinCreatedBy
+                                                from createdByUser in outerJoinCreatedBy.DefaultIfEmpty()
+                                                join updatedByUser in _db.tbl_Users on atte.ModifiedBy equals updatedByUser.UserId into outerJoinUpdatedBy
+                                                from updatedByUser in outerJoinUpdatedBy.DefaultIfEmpty()
                                                 where atte.ClientId == ClientId
+                                                && atte.AttendanceDate >= startDate && atte.AttendanceDate <= endDate
                                                 select new AttendanceVM
                                                 {
                                                     ClientId = atte.ClientId,
                                                     AttendanceDate = atte.AttendanceDate,
                                                     AttendaceId = atte.AttendaceId,
                                                     TotalPaidAmount = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PayableAmount != null).Select(x => x.PayableAmount).Sum(),
+
+                                                    CreatedBy = (createdByUser != null ? createdByUser.FirstName : ""),
+                                                    UpdatedBy = (updatedByUser != null ? updatedByUser.FirstName : "")
 
                                                     //TotalPerson = (_db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PersonTypeId != 6).ToList().Count() +
                                                     //                _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PersonTypeId == 6).ToList().Select(x=>x.TotalRokadiya).Sum()),
@@ -155,6 +193,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objAttandance.AttendanceDate = aDate;
                     objAttandance.ClientId = ClientId;
                     objAttandance.CreatedDate = DateTime.Now;
+                    objAttandance.CreatedBy = new Guid(clsSession.UserID.ToString());
                     _db.tbl_Attendance.Add(objAttandance);
                     _db.SaveChanges();
 
@@ -239,7 +278,25 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                      .Select(o => new SelectListItem { Value = o.StatusValue.ToString(), Text = o.StatusText })
                      .ToList();
 
-                tbl_Attendance objAttendanceData = _db.tbl_Attendance.Where(x => x.AttendaceId == Id).FirstOrDefault();
+                AttendanceVM objAttendanceData = (from atte in _db.tbl_Attendance
+                                    join createdByUser in _db.tbl_Users on atte.CreatedBy equals createdByUser.UserId into outerJoinCreatedBy
+                                    from createdByUser in outerJoinCreatedBy.DefaultIfEmpty()
+                                    join updatedByUser in _db.tbl_Users on atte.ModifiedBy equals updatedByUser.UserId into outerJoinUpdatedBy
+                                    from updatedByUser in outerJoinUpdatedBy.DefaultIfEmpty()
+                                    where atte.AttendaceId == Id
+                                    select new AttendanceVM
+                                    {
+                                        ClientId = atte.ClientId,
+                                        AttendanceDate = atte.AttendanceDate,
+                                        AttendaceId = atte.AttendaceId,
+                                        TotalPaidAmount = _db.tbl_PersonAttendance.Where(x => x.AttendanceId == atte.AttendaceId && x.PayableAmount != null).Select(x => x.PayableAmount).Sum(),
+
+                                        CreatedBy = (createdByUser != null ? createdByUser.FirstName : ""),
+                                        UpdatedBy = (updatedByUser != null ? updatedByUser.FirstName : "")
+                                         
+                                    }).FirstOrDefault();
+
+                //tbl_Attendance objAttendanceData = _db.tbl_Attendance.Where(x => x.AttendaceId == Id).FirstOrDefault();
                 if (objAttendanceData != null)
                 {
                     objAttendance.AttendaceId = objAttendanceData.AttendaceId;
@@ -264,6 +321,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                          Remarks = personatta.Remarks,
                                                          OrderNo = person.OrderNo
                                                      }).OrderBy(x => x.OrderNo).ThenBy(x => x.PersonName).ToList();
+
+                objAttendance.CreatedBy = objAttendanceData.CreatedBy;
+                objAttendance.UpdatedBy = objAttendanceData.UpdatedBy;
 
             }
             catch (Exception ex)
@@ -302,6 +362,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     tbl_Attendance objAttandance = _db.tbl_Attendance.Where(x => x.AttendaceId == attandance.AttendaceId).FirstOrDefault();
                     objAttandance.AttendanceDate = aDate;
                     objAttandance.ModifiedDate = DateTime.UtcNow;
+                    objAttandance.ModifiedBy = new Guid(clsSession.UserID.ToString());
                     //_db.SaveChanges();
 
                     List<PersonAttendanceVM> listPersons = attandance.lstPersonAttendance;
@@ -437,6 +498,16 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             {
                 if (item.IsGroupPerson)
                     item.PersonGroupId = _db.tbl_PersonGroupMap.Where(x => x.PersonId == item.PersonId).FirstOrDefault().PersonGroupId;
+
+
+                if (item.IsGroupPerson)
+                {
+                    item.RemainingAmount = GetRemainingAmountOfGroup(item.PersonGroupId.Value);
+                }
+                else
+                {
+                    item.RemainingAmount = GetRemainingAmountOfPerson(item.PersonId);
+                }
             });
 
             return View(lstPersonsNew);
@@ -609,18 +680,26 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         public ActionResult PersonGroup()
         {
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
-            List<PersonGroupVM> objGroup = new List<PersonGroupVM>();
+            List<PersonGroupVM> lstGroups = new List<PersonGroupVM>();
 
-            objGroup = (from grp in _db.tbl_PersonGroup
-                        where grp.ClientId == ClientId
-                        select new PersonGroupVM
-                        {
-                            PersonGroupId = grp.PersonGroupId,
-                            GroupName = grp.GroupName,
-                            TotalGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == grp.PersonGroupId).ToList().Count()
-                        }).ToList();
+            lstGroups = (from grp in _db.tbl_PersonGroup
+                         where grp.ClientId == ClientId
+                         select new PersonGroupVM
+                         {
+                             PersonGroupId = grp.PersonGroupId,
+                             GroupName = grp.GroupName,
+                             TotalGroupPerson = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == grp.PersonGroupId).ToList().Count()
+                         }).ToList();
 
-            return View(objGroup);
+            if (lstGroups != null && lstGroups.Count > 0)
+            {
+                lstGroups.ForEach(item =>
+                {
+                    item.RemainingAmount = GetRemainingAmountOfGroup(item.PersonGroupId);
+                });
+            }
+
+            return View(lstGroups);
         }
 
         public ActionResult AddPersonGroup()
@@ -1522,21 +1601,21 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
                     strHTML.Append("</style>");
 
-                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:50%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
                     strHTML.Append("<thead style=\"display:table-header-group;\">");
                     string Title = "Pagar Of " + GroupName;
 
                     strHTML.Append("<tr>");
-                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #000000\">");
                     strHTML.Append(Title);
                     strHTML.Append("</th>");
                     strHTML.Append("</tr>");
-                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + objPagar.dtPagarStartDate.ToString("dd/MM/yyyy") + " To " + objPagar.dtPagarEndDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #000000\">From " + objPagar.dtPagarStartDate.ToString("dd/MM/yyyy") + " To " + objPagar.dtPagarEndDate.ToString("dd/MM/yyyy") + " </th></tr>");
                     strHTML.Append("<tr>");
 
                     for (int idx = 0; idx < strColumns.Length; idx++)
                     {
-                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append("<th style=\"border: 1px solid #000000\">");
                         strHTML.Append(strColumns[idx]);
                         strHTML.Append("</th>");
                     }
@@ -1578,7 +1657,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         }
 
                                 }
-                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">");
                                 strHTML.Append(strcolval);
                                 strHTML.Append("</td>");
                             }
@@ -1588,9 +1667,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     // Total
                     strHTML.Append("<tr>");
-                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
-                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalDays + " </th>");
-                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalPagarAmount + " </th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;'> " + strTotalDays + " </th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;'> " + strTotalPagarAmount + " </th>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");
@@ -1598,63 +1677,63 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     // Calculation table
 
-                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='margin-top:20px; width:50%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='margin-top:20px; width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
                     strHTML.Append("<tbody>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.TotalPagar + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + objPagar.PagarAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + Resource.TotalPagar + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"><strong> " + objPagar.PagarAmount.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.Withdraw + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.TotalUpadAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + Resource.Withdraw + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + objPagar.TotalUpadAmount.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     decimal AfterWithdrawLessAmt = objPagar.PagarAmount - objPagar.TotalUpadAmount;
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.TotalPagar + "
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> <strong>" + AfterWithdrawLessAmt.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"></td>"); // " + Resource.TotalPagar + "
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> <strong>" + AfterWithdrawLessAmt.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.Overtime + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.TotalOvertimeAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + Resource.Overtime + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + objPagar.TotalOvertimeAmount.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     decimal AfterOvertimeLessAmt = AfterWithdrawLessAmt + objPagar.TotalOvertimeAmount;
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.TotalPagar + "
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + AfterOvertimeLessAmt.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"></td>"); // " + Resource.TotalPagar + "
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"><strong> " + AfterOvertimeLessAmt.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.PreviousPagarAmount + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.PrevPagarRemainingAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\">" + Resource.PreviousPagarAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + objPagar.PrevPagarRemainingAmount.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     decimal CreditDebitAmount = AfterOvertimeLessAmt + objPagar.PrevPagarRemainingAmount;
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.PrevCreditDebit + "
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> <strong>" + CreditDebitAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"></td>"); // " + Resource.PrevCreditDebit + "
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> <strong>" + CreditDebitAmount.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.TotalGivenAmount + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.AmountPay.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\">" + Resource.TotalGivenAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + objPagar.AmountPay.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.RemainingAmount + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + objPagar.RemainingAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\">" + Resource.RemainingAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"><strong> " + objPagar.RemainingAmount.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.Remarks + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.Remarks + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\">" + Resource.Remarks + "</td>");
+                    strHTML.Append("<td style=\"width: auto; text-align:right; border: 1px solid #000000\"> " + objPagar.Remarks + "</td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");
@@ -1666,7 +1745,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
                     var ms = new MemoryStream(myByteArray);
 
-                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    Document pdfDoc = new Document(PageSize.A4, 20f, 20f, 20f, 20f);
                     PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
                     writer.PageEvent = new PDFGeneratePageEventHelper();
                     pdfDoc.Open();
@@ -1818,21 +1897,21 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
                     strHTML.Append("</style>");
 
-                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:50%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
                     strHTML.Append("<thead style=\"display:table-header-group;\">");
                     string Title = "Pagar Of " + PersonName;
 
                     strHTML.Append("<tr>");
-                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #000000\">");
                     strHTML.Append(Title);
                     strHTML.Append("</th>");
                     strHTML.Append("</tr>");
-                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">From " + objPagar.dtPagarStartDate.ToString("dd/MM/yyyy") + " To " + objPagar.dtPagarEndDate.ToString("dd/MM/yyyy") + " </th></tr>");
+                    strHTML.Append("<tr><th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #000000\">From " + objPagar.dtPagarStartDate.ToString("dd/MM/yyyy") + " To " + objPagar.dtPagarEndDate.ToString("dd/MM/yyyy") + " </th></tr>");
                     strHTML.Append("<tr>");
 
                     for (int idx = 0; idx < strColumns.Length; idx++)
                     {
-                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append("<th style=\"border: 1px solid #000000\">");
                         strHTML.Append(strColumns[idx]);
                         strHTML.Append("</th>");
                     }
@@ -1874,7 +1953,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         }
 
                                 }
-                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">");
                                 strHTML.Append(strcolval);
                                 strHTML.Append("</td>");
                             }
@@ -1884,9 +1963,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     // Total
                     strHTML.Append("<tr>");
-                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
-                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalDays + " </th>");
-                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalPagarAmount + " </th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;'> " + strTotalDays + " </th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;'> " + strTotalPagarAmount + " </th>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");
@@ -1894,63 +1973,63 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     // Calculation table
 
-                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='margin-top:20px; width:50%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
+                    strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='margin-top:20px; width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
                     strHTML.Append("<tbody>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.TotalPagar + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + objPagar.PagarAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + Resource.TotalPagar + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"><strong> " + objPagar.PagarAmount.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.Withdraw + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.TotalUpadAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + Resource.Withdraw + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + objPagar.TotalUpadAmount.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     decimal AfterWithdrawLessAmt = objPagar.PagarAmount - objPagar.TotalUpadAmount;
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.TotalPagar + "
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> <strong>" + AfterWithdrawLessAmt.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"></td>"); // " + Resource.TotalPagar + "
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> <strong>" + AfterWithdrawLessAmt.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + Resource.Overtime + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.TotalOvertimeAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + Resource.Overtime + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + objPagar.TotalOvertimeAmount.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     decimal AfterOvertimeLessAmt = AfterWithdrawLessAmt + objPagar.TotalOvertimeAmount;
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.TotalPagar + "
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + AfterOvertimeLessAmt.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"></td>"); // " + Resource.TotalPagar + "
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"><strong> " + AfterOvertimeLessAmt.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.PreviousPagarAmount + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.PrevPagarRemainingAmount.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">" + Resource.PreviousPagarAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + objPagar.PrevPagarRemainingAmount.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     decimal CreditDebitAmount = AfterOvertimeLessAmt + objPagar.PrevPagarRemainingAmount;
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"></td>"); // " + Resource.PrevCreditDebit + "
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> <strong>" + CreditDebitAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"></td>"); // " + Resource.PrevCreditDebit + "
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> <strong>" + CreditDebitAmount.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.TotalGivenAmount + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.AmountPay.ToString("0.##") + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">" + Resource.TotalGivenAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + objPagar.AmountPay.ToString("0.##") + "</td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.RemainingAmount + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"><strong> " + objPagar.RemainingAmount.ToString("0.##") + "</strong></td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">" + Resource.RemainingAmount + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"><strong> " + objPagar.RemainingAmount.ToString("0.##") + "</strong></td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("<tr style='page-break-inside:avoid; page-break-after:auto;'>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">" + Resource.Remarks + "</td>");
-                    strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\"> " + objPagar.Remarks + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">" + Resource.Remarks + "</td>");
+                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\"> " + objPagar.Remarks + "</td>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");
@@ -1962,7 +2041,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     var myByteArray = System.Text.Encoding.UTF8.GetBytes(myString);
                     var ms = new MemoryStream(myByteArray);
 
-                    Document pdfDoc = new Document(PageSize.A4.Rotate(), 20f, 20f, 20f, 20f);
+                    Document pdfDoc = new Document(PageSize.A4, 20f, 20f, 20f, 20f);
                     PdfWriter writer = PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
                     writer.PageEvent = new PDFGeneratePageEventHelper();
                     pdfDoc.Open();
@@ -1990,5 +2069,225 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
         }
 
+        public decimal GetRemainingAmountOfPerson(Guid PersonId)
+        {
+            decimal remainingAmount = 0;
+
+            PagarVM obj = new PagarVM();
+            obj.PersonId = PersonId;
+
+            try
+            {
+                DateTime SelectedPagarDate = DateTime.Now;
+
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                // Get Group Persons 
+                List<Guid> lstPersonsIds = new List<Guid>();
+                lstPersonsIds.Add(PersonId);
+
+                tbl_Pagar objLastPagar = _db.tbl_Pagar.Where(x => x.PersonId == PersonId).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
+                if (objLastPagar != null)
+                {
+                    obj.dtPagarStartDate = objLastPagar.PagarEndDate.AddDays(1);
+                    obj.dtPagarEndDate = SelectedPagarDate;
+                    obj.PrevPagarRemainingAmount = objLastPagar.RemainingAmount;
+                }
+                else
+                {
+                    // Get minimum StartDate from all persons
+                    tbl_Attendance objMinStartAttendanceDate = (from a in _db.tbl_Attendance
+                                                                join pa in _db.tbl_PersonAttendance on a.AttendaceId equals pa.AttendanceId
+                                                                where lstPersonsIds.Contains(pa.PersonId)
+                                                                select a
+                                                    ).OrderBy(x => x.AttendanceDate).FirstOrDefault();
+
+                    if (objMinStartAttendanceDate == null)
+                        obj.dtPagarStartDate = DateTime.Today;
+                    else
+                        obj.dtPagarStartDate = objMinStartAttendanceDate.AttendanceDate;
+
+                    obj.dtPagarEndDate = SelectedPagarDate;
+                }
+
+                if (obj.dtPagarStartDate.Date > DateTime.UtcNow.Date)
+                    obj.dtPagarStartDate = DateTime.UtcNow;
+
+                obj.PagarStartDate = Convert.ToDateTime(obj.dtPagarStartDate).ToString("dd/MM/yyyy");
+                obj.PagarEndDate = Convert.ToDateTime(obj.dtPagarEndDate).ToString("dd/MM/yyyy");
+
+                GroupAttendanceStatusVM GroupAttendanceStatus = getPersonAttendanceByFilter(PersonId, obj.dtPagarStartDate, obj.dtPagarEndDate);
+
+                List<PagarPersonDetailVM> lstPagarPersonDetail = new List<PagarPersonDetailVM>();
+
+                lstPersonsIds.ForEach(personId =>
+                {
+                    PagarPersonDetailVM objPagarPersonDetailVM = new PagarPersonDetailVM();
+                    objPagarPersonDetailVM.PagarPersonId = personId;
+
+                    List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == personId
+                    && att.AttendanceDate >= obj.dtPagarStartDate
+                    && att.AttendanceDate <= obj.dtPagarEndDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        PersonTypeId = attper.PersonTypeId,
+                        TotalRokadiya = attper.TotalRokadiya,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+                    if (lst != null)
+                    {
+                        objPagarPersonDetailVM.TotalAttendanceDays = lst.Sum(x => x.AttendanceStatus);
+                        objPagarPersonDetailVM.TotalPagarAmount = lst.Sum(x => x.PayableAmount);
+                        objPagarPersonDetailVM.TotalWithdrawAmount = (decimal)lst.Sum(x => x.WithdrawAmount);
+                        objPagarPersonDetailVM.TotalOvertimeAmount = (decimal)lst.Sum(x => x.OvertimeAmount);
+                    }
+
+                    lstPagarPersonDetail.Add(objPagarPersonDetailVM);
+
+                });
+
+                if (lstPagarPersonDetail != null && lstPagarPersonDetail.Count > 0)
+                {
+                    obj.PagarAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalPagarAmount));
+                    obj.TotalUpadAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalWithdrawAmount));
+                    obj.TotalOvertimeAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalOvertimeAmount));
+                }
+
+                obj.RemainingAmount = (obj.PagarAmount + obj.TotalOvertimeAmount + obj.PrevPagarRemainingAmount) - obj.TotalUpadAmount;
+
+                remainingAmount = obj.RemainingAmount;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return remainingAmount;
+        }
+
+        public decimal GetRemainingAmountOfGroup(Guid GroupId)
+        {
+            decimal remainingAmount = 0;
+
+            PagarVM obj = new PagarVM();
+
+            try
+            {
+                DateTime SelectedPagarDate = DateTime.Now;
+
+                // Get Group Persons
+                List<tbl_PersonGroupMap> lstGropPersons = _db.tbl_PersonGroupMap.Where(x => x.PersonGroupId == GroupId).ToList();
+                List<Guid> lstPersonsIds = lstGropPersons.Select(x => x.PersonId).ToList();
+
+                tbl_Pagar objLastPagar = _db.tbl_Pagar.Where(x => x.GroupId == GroupId).OrderByDescending(x => x.CreatedDate).FirstOrDefault();
+                if (objLastPagar != null)
+                {
+                    obj.dtPagarStartDate = objLastPagar.PagarEndDate.AddDays(1);
+                    obj.dtPagarEndDate = SelectedPagarDate;
+                    obj.PrevPagarRemainingAmount = objLastPagar.RemainingAmount;
+                }
+                else
+                {
+                    // Get minimum StartDate from all persons
+                    tbl_Attendance objMinStartAttendanceDate = (from a in _db.tbl_Attendance
+                                                                join pa in _db.tbl_PersonAttendance on a.AttendaceId equals pa.AttendanceId
+                                                                where lstPersonsIds.Contains(pa.PersonId)
+                                                                select a
+                                                    ).OrderBy(x => x.AttendanceDate).FirstOrDefault();
+
+                    if (objMinStartAttendanceDate == null)
+                        obj.dtPagarStartDate = DateTime.Today;
+                    else
+                        obj.dtPagarStartDate = objMinStartAttendanceDate.AttendanceDate;
+
+                    obj.dtPagarEndDate = SelectedPagarDate;
+                }
+
+                if (obj.dtPagarStartDate.Date > DateTime.UtcNow.Date)
+                    obj.dtPagarStartDate = DateTime.UtcNow;
+
+                obj.PagarStartDate = Convert.ToDateTime(obj.dtPagarStartDate).ToString("dd/MM/yyyy");
+                obj.PagarEndDate = Convert.ToDateTime(obj.dtPagarEndDate).ToString("dd/MM/yyyy");
+
+                GroupAttendanceStatusVM GroupAttendanceStatus = getGroupAttendanceByFilter(GroupId, obj.dtPagarStartDate, obj.dtPagarEndDate);
+
+                List<PagarPersonDetailVM> lstPagarPersonDetail = new List<PagarPersonDetailVM>();
+
+                lstGropPersons.ForEach(item =>
+                {
+                    PagarPersonDetailVM objPagarPersonDetailVM = new PagarPersonDetailVM();
+                    objPagarPersonDetailVM.PagarPersonId = item.PersonId;
+                    objPagarPersonDetailVM.GroupId = GroupId;
+
+
+                    List<ReportPersonAttendanceVM> lst = (
+                    from attper in _db.tbl_PersonAttendance
+                    join att in _db.tbl_Attendance on attper.AttendanceId equals att.AttendaceId into outerJoinAttendance
+                    from att in outerJoinAttendance.DefaultIfEmpty()
+                    join site in _db.tbl_Sites on attper.SiteId equals site.SiteId into outerJoinSite
+                    from site in outerJoinSite.DefaultIfEmpty()
+                    where attper.PersonId == item.PersonId && att.AttendanceDate >= obj.dtPagarStartDate && att.AttendanceDate <= obj.dtPagarEndDate
+                    select new ReportPersonAttendanceVM
+                    {
+                        PersonAttendanceId = attper.PersonAttendanceId,
+                        AttendanceDate = att.AttendanceDate,
+                        PersonId = attper.PersonId,
+                        PersonTypeId = attper.PersonTypeId,
+                        TotalRokadiya = attper.TotalRokadiya,
+                        AttendanceStatus = attper.AttendanceStatus,
+                        OvertimeAmount = attper.OvertimeAmount,
+                        PersonDailyRate = attper.PersonDailyRate,
+                        WithdrawAmount = attper.WithdrawAmount,
+                        SiteId = attper.SiteId,
+                        SiteName = site.SiteName,
+                        PayableAmount = attper.PayableAmount,
+                        Remarks = attper.Remarks
+                    }).OrderBy(x => x.AttendanceDate).ToList();
+
+                    if (lst != null)
+                    {
+                        objPagarPersonDetailVM.TotalAttendanceDays = lst.Sum(x => x.AttendanceStatus);
+                        objPagarPersonDetailVM.TotalPagarAmount = lst.Sum(x => x.PayableAmount);
+                        objPagarPersonDetailVM.TotalWithdrawAmount = (decimal)lst.Sum(x => x.WithdrawAmount);
+                        objPagarPersonDetailVM.TotalOvertimeAmount = (decimal)lst.Sum(x => x.OvertimeAmount);
+                    }
+
+                    lstPagarPersonDetail.Add(objPagarPersonDetailVM);
+
+                });
+
+                if (lstPagarPersonDetail != null && lstPagarPersonDetail.Count > 0)
+                {
+                    obj.PagarAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalPagarAmount));
+                    obj.TotalUpadAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalWithdrawAmount));
+                    obj.TotalOvertimeAmount = Convert.ToDecimal(lstPagarPersonDetail.Sum(x => x.TotalOvertimeAmount));
+                }
+
+                obj.RemainingAmount = (obj.PagarAmount + obj.TotalOvertimeAmount + obj.PrevPagarRemainingAmount) - obj.TotalUpadAmount;
+
+                remainingAmount = obj.RemainingAmount;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return remainingAmount;
+        }
     }
 }

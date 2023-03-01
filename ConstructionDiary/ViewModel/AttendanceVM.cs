@@ -18,6 +18,8 @@ namespace ConstructionDiary
         public decimal? TotalFullDay { get; set; }
         public decimal? TotalHalfDay { get; set; }
         public decimal? TotalAbsent { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
     }
 
     public class PersonAttendanceVM
@@ -54,6 +56,8 @@ namespace ConstructionDiary
 
         public List<SelectListItem> SitesList { get; set; }
         public List<SelectListItem> AttendanceStatusList { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
     }
 
     public class AttendanceStatusVM

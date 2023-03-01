@@ -10,10 +10,47 @@
     <!-- page start-->
     <div class="row">
         <div class="col-lg-12">
+
             <section class="panel">
                 <header class="panel-heading">
                     <strong>@Resource.AttendanceList</strong>
                 </header>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-2 form-group">
+                            <label for="Duration">@Resource.Duration</label>
+                            <select class="form-control" id="Duration" name="Duration">
+                                <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
+                                <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-2 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="">
+                                <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
+                                <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            </div>
+                            <span id="spn_StartDate" class="formerror">@Resource.Required</span>
+                        </div>
+                        <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                            <div class="">
+                                <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
+                                <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                            </div>
+                            <span id="spn_EndDate" class="formerror">@Resource.Required</span>
+                        </div> 
+                        <div class="col-sm-2 form-group">
+                            <label></label>
+                            <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="panel">
+                
                 <div class="panel-body">
                     <div class="adv-table">
                         <div class="clearfix">
@@ -29,13 +66,15 @@
                         <table class="display table table-bordered table-striped table-hover" id="tblAttendanceList">
                             <thead>
                                 <tr>
-                                    <th width="10%">@Resource.Date</th>
-                                    <th width="15%">@Resource.Amount</th> 
-                                    <th width="15%">@Resource.FullDay</th>
-                                    <th width="15%">@Resource.HalfDay</th>
-                                    <th width="15%">@Resource.Absent</th>
-                                    <th width="15%">@Resource.Total</th>
-                                    <th>@Resource.Action</th>
+                                    <th width="11%">@Resource.Date</th>
+                                    <th width="10%">@Resource.Amount</th>
+                                    <th width="8%">@Resource.FullDay</th>
+                                    <th width="8%">@Resource.HalfDay</th>
+                                    <th width="8%">@Resource.Absent</th>
+                                    <th width="7%">@Resource.Total</th>
+                                    <th>@Resource.CreatedBy</th>
+                                    <th>@Resource.UpdatedBy</th>
+                                    <th width="10%">@Resource.Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,29 +83,31 @@
                                     DateTime today = DateTime.Today;
                                     foreach (AttendanceVM attendance in Model)
                                     {
-                                <tr class="gradeX">
-                                    <td>@Convert.ToDateTime(attendance.AttendanceDate).ToString("dd/MM/yyyy")</td>
-                                    <td>
-                                        @{ string amt = "0"; }
-                                        @if (attendance.TotalPaidAmount != null)
-                                        {
-                                            amt = CoreHelper.GetFormatterAmount(attendance.TotalPaidAmount);
-                                        }
-                                        <span style="float:right; padding-right: 15px;">@amt</span>
-                                    </td> 
-                                    <td>@Convert.ToDecimal(attendance.TotalFullDay).ToString("0.##")</td>
-                                    <td>@Convert.ToDecimal(attendance.TotalHalfDay).ToString("0.##")</td>
-                                    <td>@Convert.ToDecimal(attendance.TotalAbsent).ToString("0.##")</td>
-                                    <td>@Convert.ToDecimal(attendance.TotalPerson).ToString("0.##")</td>
-                                    <td>
-                                        @if (clsSession.RoleID == (int)UserRoles.Admin || (clsSession.RoleID == (int)UserRoles.Staff && attendance.AttendanceDate == today))
-                                        {
-                                            <a href="/admin/attendance/edit/@attendance.AttendaceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                        <tr class="gradeX">
+                                            <td>@Convert.ToDateTime(attendance.AttendanceDate).ToString("dd/MM/yyyy")</td>
+                                            <td>
+                                                @{ string amt = "0"; }
+                                                @if (attendance.TotalPaidAmount != null)
+                                                {
+                                                    amt = CoreHelper.GetFormatterAmount(attendance.TotalPaidAmount);
+                                                }
+                                                <span style="float:right; padding-right: 15px;">@amt</span>
+                                            </td>
+                                            <td>@Convert.ToDecimal(attendance.TotalFullDay).ToString("0.##")</td>
+                                            <td>@Convert.ToDecimal(attendance.TotalHalfDay).ToString("0.##")</td>
+                                            <td>@Convert.ToDecimal(attendance.TotalAbsent).ToString("0.##")</td>
+                                            <td>@Convert.ToDecimal(attendance.TotalPerson).ToString("0.##")</td>
+                                            <td>@attendance.CreatedBy</td>
+                                            <td>@attendance.UpdatedBy</td>
+                                            <td>
+                                                @if (clsSession.RoleID == (int)UserRoles.Admin || (clsSession.RoleID == (int)UserRoles.Staff && attendance.AttendanceDate == today))
+                                                {
+                                                    <a href="/admin/attendance/edit/@attendance.AttendaceId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
 
-                                            <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
-                                        }
-                                    </td>
-                                </tr>
+                                                    <button onclick="fnDeleteAttendance('@attendance.AttendaceId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>
+                                                }
+                                            </td>
+                                        </tr>
                                     }
                                 }
                             </tbody>
@@ -159,6 +200,73 @@
     jQuery(window).on("load", function () {
         jQuery.unblockUI();
     });
+
+
+    $(document).on("click", "#btnSearchReport", function () {
+
+        var duration = $("#Duration").val();
+        var startDate = $("#StartDate").val();
+        var endDate = $("#EndDate").val();
+         
+        var flag = true;
+        $(".formerror").hide();
+
+        if (duration == "") {
+            $("#spn_Duration").show();
+            flag = false;
+        }
+
+        if (duration == "custom") {
+            if (isNullOrUndefinedCustom(startDate)) {
+                $("#spn_StartDate").show();
+                flag = false;
+            }
+            if (isNullOrUndefinedCustom(endDate)) {
+                $("#spn_EndDate").show();
+                flag = false;
+            }
+        }
+
+        if (flag == true) {
+            jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
+            reloadFilterUrl(duration, startDate, endDate);
+        }
+
+    });
+
+    function reloadFilterUrl(duration, startDate, endDate) {
+
+        var url = "/admin/attendance?duration=" + duration;
+
+        if (duration == "custom") {
+            if (!isNullOrUndefinedCustom(startDate))
+                url += "&start=" + startDate;
+
+            if (!isNullOrUndefinedCustom(endDate))
+                url += "&end=" + endDate;
+        }
+        window.location.href = url;
+    }
+
+    function isNullOrUndefinedCustom(str) {
+        if (str == "" || str == undefined || str == null)
+            return true;
+        else
+            return false;
+    }
+
+    $(document).on("change", "#Duration", function () {
+        var seletedType = $(this).val();
+
+        if (seletedType == "custom") {
+            $(".clsFilterdate").addClass("clsShow").removeClass("clsHide");
+        }
+        else {
+            $(".clsFilterdate").addClass("clsHide").removeClass("clsShow");
+        }
+
+    });
+
 
 
 </script>

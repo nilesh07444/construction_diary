@@ -334,7 +334,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                              from st in outerJoinSite.DefaultIfEmpty()
                                              where finance.PersonId == personId
                                              && (selectedSite == Guid.Empty || finance.SiteId == selectedSite)
-                                             && finance.SelectedDate >= startDate && finance.SelectedDate <= endDate
+                                             //&& finance.SelectedDate >= startDate && finance.SelectedDate <= endDate
                                              && finance.IsActive && !finance.IsDeleted
                                              select new FinanceList
                                              {

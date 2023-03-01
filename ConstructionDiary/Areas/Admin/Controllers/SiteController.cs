@@ -294,17 +294,17 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     strHTML.Append("@page {@bottom-center {content: \"Page \" counter(page) \" of \" counter(pages);}}");
                     strHTML.Append("</style>");
                     strHTML.Append("<table cellspacing='0' border='1' cellpadding='5' style='width:100%; repeat-header:yes;repeat-footer:yes;border-collapse: collapse;border: 1px solid #ccc;font-size: 12pt;page-break-inside:auto;'>");
-                    strHTML.Append("<thead style=\"display:table-header-group;\">");
+                    strHTML.Append("<thead style='display:table-header-group; text-align:center;'>");
                     string Title = "Credit List Of " + objSite.SiteName;
                     strHTML.Append("<tr>");
-                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #ccc\">");
+                    strHTML.Append("<th colspan=\"" + strColumns.Length + "\" style=\"border: 1px solid #000000\">");
                     strHTML.Append(Title);
                     strHTML.Append("</th>");
                     strHTML.Append("</tr>");
                     strHTML.Append("<tr>");
                     for (int idx = 0; idx < strColumns.Length; idx++)
                     {
-                        strHTML.Append("<th style=\"border: 1px solid #ccc\">");
+                        strHTML.Append("<th style='border: 1px solid #000000; text-align:center;'>");
                         strHTML.Append(strColumns[idx]);
                         strHTML.Append("</th>");
                     }
@@ -364,7 +364,18 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         }
 
                                 }
-                                strHTML.Append("<td style=\"width: auto; border: 1px solid #ccc\">");
+                                if (strColumns[Col] == "Credit" || strColumns[Col] == "Debit")
+                                {
+                                    strHTML.Append("<td style='width: auto; border: 1px solid #000000;text-align:right;'>");
+                                }
+                                else if (strColumns[Col] == "Date" || strColumns[Col] == "Payment Type")
+                                {
+                                    strHTML.Append("<td style='width: auto; border: 1px solid #000000;text-align:center;'>");
+                                }
+                                else
+                                {
+                                    strHTML.Append("<td style=\"width: auto; border: 1px solid #000000\">");
+                                } 
                                 strHTML.Append(strcolval);
                                 strHTML.Append("</td>");
                             }
@@ -374,10 +385,10 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                     // Total
                     strHTML.Append("<tr>");
-                    strHTML.Append("<th style='text-align:right; border: 1px solid #ccc;'>Total</th>");
-                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalCreditAmount + " </th>");
-                    strHTML.Append("<th style='border: 1px solid #ccc;'> " + strTotalDebitAmount + " </th>");
-                    strHTML.Append("<th colspan='4' style='border: 1px solid #ccc;'>=  " + strRemainingAmount + " </th>");
+                    strHTML.Append("<th style='text-align:right; border: 1px solid #000000;'>Total</th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;text-align:right; padding-right:250px !important;'> " + strTotalCreditAmount + " </th>");
+                    strHTML.Append("<th style='border: 1px solid #000000;text-align:right; padding-right:250px !important;'> " + strTotalDebitAmount + " </th>");
+                    strHTML.Append("<th colspan='4' style='border: 1px solid #000000;padding-right:10px;'>=  " + strRemainingAmount + " </th>");
                     strHTML.Append("</tr>");
 
                     strHTML.Append("</tbody>");

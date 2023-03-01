@@ -810,4 +810,10 @@
   <data name="AddNewVehicleRent" xml:space="preserve">
     <value>નવું ગાડી ભાડું ઉમેરો </value>
   </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>એન્ટ્રી કોને પાડી</value>
+  </data>
+  <data name="UpdatedBy" xml:space="preserve">
+    <value>એન્ટ્રી કોને સુધારી</value>
+  </data>
 </root>

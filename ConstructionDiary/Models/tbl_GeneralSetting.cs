@@ -17,5 +17,7 @@ namespace ConstructionDiary.Models
         public System.Guid GeneralSettingId { get; set; }
         public string AllShayari2021app_PlayStoreUrl { get; set; }
         public string AllShayari2021app_PrivacyUrl { get; set; }
+        public string ChanakyaNitiQuotes_PlayStoreUrl { get; set; }
+        public string ChanakyaNitiQuotes_PrivacyUrl { get; set; }
     }
 }

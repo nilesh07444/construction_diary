@@ -28,7 +28,7 @@ namespace ConstructionDiary.Models
         public Nullable<decimal> CGST_Amount { get; set; }
         public Nullable<decimal> SGST_Amount { get; set; }
         public Nullable<decimal> AdjustmentAmount { get; set; }
-        public Nullable<decimal> SubTotal { get; set; }
+        public decimal SubTotal { get; set; }
         public decimal Total { get; set; }
         public System.Guid ClientId { get; set; }
         public bool IsActive { get; set; }

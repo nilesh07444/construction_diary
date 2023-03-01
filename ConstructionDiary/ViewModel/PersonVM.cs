@@ -49,7 +49,8 @@ namespace ConstructionDiary
         //
         public int? PersonTypeId { get; set; }
         public string PersonTypeName { get; set; }
-        public int? OrderNo { get; set; }
+        public int? OrderNo { get; set; } 
+        public decimal RemainingAmount { get; set; }
     }
 
 }

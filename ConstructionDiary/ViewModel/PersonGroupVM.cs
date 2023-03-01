@@ -14,6 +14,9 @@ namespace ConstructionDiary
         public List<SelectListItem> PersonList { get; set; }
 
         public List<SelectedPersonGroupVM> SelectedPersonList { get; set; }
+
+        //
+        public decimal RemainingAmount { get; set; }
     }
 
     public class SelectedPersonGroupVM
