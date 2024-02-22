@@ -816,4 +816,7 @@
   <data name="UpdatedBy" xml:space="preserve">
     <value>Updated By</value>
   </data>
+  <data name="BalanceAmount" xml:space="preserve">
+    <value>Balance Amount</value>
+  </data>
 </root>

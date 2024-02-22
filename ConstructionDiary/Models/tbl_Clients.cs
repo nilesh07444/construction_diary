@@ -17,9 +17,9 @@ namespace ConstructionDiary.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public tbl_Clients()
         {
-            this.tbl_Users = new HashSet<tbl_Users>();
             this.tbl_MaterialType = new HashSet<tbl_MaterialType>();
             this.tbl_Merchant = new HashSet<tbl_Merchant>();
+            this.tbl_Users = new HashSet<tbl_Users>();
         }
     
         public System.Guid ClientId { get; set; }
@@ -27,21 +27,21 @@ namespace ConstructionDiary.Models
         public string FirmName { get; set; }
         public int PackageTypeId { get; set; }
         public Nullable<System.DateTime> ExpireDate { get; set; }
+        public string Address { get; set; }
         public string Remarks { get; set; }
+        public string HeaderImageLetterPage { get; set; }
+        public string FooterImageLetterPage { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public string Address { get; set; }
-        public string HeaderImageLetterPage { get; set; }
-        public string FooterImageLetterPage { get; set; }
     
         public virtual tbl_PackageType tbl_PackageType { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tbl_Users> tbl_Users { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_MaterialType> tbl_MaterialType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_Merchant> tbl_Merchant { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<tbl_Users> tbl_Users { get; set; }
     }
 }

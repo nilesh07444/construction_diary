@@ -21,6 +21,7 @@ namespace ConstructionDiary.Models
         public Nullable<System.Guid> MerchantId { get; set; }
         public string CarNo { get; set; }
         public string ChallanPhoto { get; set; }
+        public string Remarks { get; set; }
         public System.Guid ClientId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -28,6 +29,5 @@ namespace ConstructionDiary.Models
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.Guid> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public string Remarks { get; set; }
     }
 }

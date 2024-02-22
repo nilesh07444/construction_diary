@@ -30,6 +30,7 @@ namespace ConstructionDiary
         public string PersonName { get; set; }
         public string FirstName { get; set; }
         public tbl_Files ObjFile { get; set; }
+        public decimal UpdatedAmount { get; set; }
     }
 
     public class MyFinanceList

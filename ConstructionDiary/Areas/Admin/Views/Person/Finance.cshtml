@@ -80,66 +80,66 @@
     <div class="row">
         <div class="col-lg-12">
             @*@if (clsSession.RoleID != (int)UserRoles.Staff)
-            {
-                <section class="panel">
-                    <header class="panel-heading">
-                        <strong>@Resource.FinanceList</strong>
+                {
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <strong>@Resource.FinanceList</strong>
 
-                        <a href="/admin/person" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
-                            <i class="fa fa-backward"></i> Back
-                        </a>
+                            <a href="/admin/person" class="btn btn-warning" style="float: right; top: -5px; position: relative;">
+                                <i class="fa fa-backward"></i> Back
+                            </a>
 
-                    </header>
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-sm-2 form-group">
-                                <label for="Duration">@Resource.Duration</label>
-                                <select class="form-control" id="Duration" name="Duration">
-                                    <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
-                                    <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
-                                </select>
-                            </div>
-
-                            <div class="col-sm-2 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
-                                <div class="">
-                                    <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
-                                    <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
-                                </div>
-                                <span id="spn_StartDate" class="formerror">@Resource.Required</span>
-                            </div>
-                            <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
-                                <div class="">
-                                    <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
-                                    <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
-                                </div>
-                                <span id="spn_EndDate" class="formerror">@Resource.Required</span>
-                            </div>
-                            <div class="col-sm-2 form-group clsSite">
-                                <div class="">
-                                    <label for="dllSite">@Resource.SiteName</label><span class="required">*</span>
-                                    <select class="form-control" id="ddlSite">
-                                        <option value="">-All Sites-</option>
-                                        @if (lstSites != null && lstSites.Count > 0)
-                                        {
-                                            foreach (SelectListItem site in lstSites)
-                                            {
-                                                <option value="@site.Value" @(ViewBag.Site == site.Value ? "selected" : "")>@site.Text</option>
-                                            }
-                                        }
+                        </header>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-sm-2 form-group">
+                                    <label for="Duration">@Resource.Duration</label>
+                                    <select class="form-control" id="Duration" name="Duration">
+                                        <option value="month" @(ViewBag.Duration == "month" ? "selected" : "")>This Month</option>
+                                        <option value="custom" @(ViewBag.Duration == "custom" ? "selected" : "")>Custom</option>
                                     </select>
                                 </div>
-                                <span id="spn_SiteId" class="formerror">@Resource.Required</span>
-                            </div>
-                            <div class="col-sm-2 form-group">
-                                <label></label>
-                                <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
-                            </div>
 
+                                <div class="col-sm-2 form-group  clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                                    <div class="">
+                                        <label for="StartDate">@Resource.StartDate</label><span class="required">*</span>
+                                        <input class="form-control default-date-picker" id="StartDate" name="StartDate" value="@ViewBag.StartDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                                    </div>
+                                    <span id="spn_StartDate" class="formerror">@Resource.Required</span>
+                                </div>
+                                <div class="col-sm-2 form-group clsFilterdate @(ViewBag.Duration == "custom" ? "clsShow" : "clsHide")">
+                                    <div class="">
+                                        <label for="EndDate">@Resource.EndDate</label><span class="required">*</span>
+                                        <input class="form-control default-date-picker" id="EndDate" name="EndDate" value="@ViewBag.EndDate" placeholder="DD/MM/YYYY" readonly="readonly" type="text">
+                                    </div>
+                                    <span id="spn_EndDate" class="formerror">@Resource.Required</span>
+                                </div>
+                                <div class="col-sm-2 form-group clsSite">
+                                    <div class="">
+                                        <label for="dllSite">@Resource.SiteName</label><span class="required">*</span>
+                                        <select class="form-control" id="ddlSite">
+                                            <option value="">-All Sites-</option>
+                                            @if (lstSites != null && lstSites.Count > 0)
+                                            {
+                                                foreach (SelectListItem site in lstSites)
+                                                {
+                                                    <option value="@site.Value" @(ViewBag.Site == site.Value ? "selected" : "")>@site.Text</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <span id="spn_SiteId" class="formerror">@Resource.Required</span>
+                                </div>
+                                <div class="col-sm-2 form-group">
+                                    <label></label>
+                                    <button id="btnSearchReport" type="button" class="btn btn-success" style="margin-top:25px; float:left;"><i class="fa fa-search"></i> @Resource.Search</button>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
 
-                </section>
-            }*@
+                    </section>
+                }*@
 
             <section class="panel">
 
@@ -171,6 +171,7 @@
                                     <th style="width:20%;">@Resource.SiteName</th>
                                     @*<th style="width:10%;">@Resource.Type</th>*@
                                     <th style="width:10%;">@Resource.PaymentType</th>
+                                    <th style="width:10%;">@Resource.GivenTakenBy</th>
                                     <th style="width:10%;">@Resource.BankName</th>
                                     <th class="hidden-phone">@Resource.Remarks</th>
                                     <th width="10%">@Resource.File</th>
@@ -190,6 +191,7 @@
                                                     <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>
                                                 </td>*@
                                             <td>@obj.PaymentType</td>
+                                            <td>@obj.FirstName</td>
                                             <td>@obj.ChequeNo @obj.BankName</td>
                                             <td class="hidden-phone">@obj.Remarks</td>
                                             <td>

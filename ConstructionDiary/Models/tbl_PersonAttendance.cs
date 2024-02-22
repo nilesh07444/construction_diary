@@ -23,12 +23,12 @@ namespace ConstructionDiary.Models
         public Nullable<decimal> PayableAmount { get; set; }
         public Nullable<int> WithdrawAmount { get; set; }
         public Nullable<int> OvertimeAmount { get; set; }
+        public Nullable<decimal> TotalRokadiya { get; set; }
+        public Nullable<int> PersonTypeId { get; set; }
         public string Remarks { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.Guid CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<System.Guid> ModifiedBy { get; set; }
-        public Nullable<decimal> TotalRokadiya { get; set; }
-        public Nullable<int> PersonTypeId { get; set; }
     }
 }

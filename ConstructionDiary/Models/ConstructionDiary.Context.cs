@@ -28,47 +28,50 @@ namespace ConstructionDiary.Models
         }
     
         public virtual DbSet<tbl_Attendance> tbl_Attendance { get; set; }
-        public virtual DbSet<tbl_Clients> tbl_Clients { get; set; }
-        public virtual DbSet<tbl_ContractorFinance> tbl_ContractorFinance { get; set; }
-        public virtual DbSet<tbl_Expenses> tbl_Expenses { get; set; }
-        public virtual DbSet<tbl_Finance> tbl_Finance { get; set; }
-        public virtual DbSet<tbl_GeneralSetting> tbl_GeneralSetting { get; set; }
-        public virtual DbSet<tbl_PackageType> tbl_PackageType { get; set; }
-        public virtual DbSet<tbl_PaymentTransaction> tbl_PaymentTransaction { get; set; }
-        public virtual DbSet<tbl_PersonAttendance> tbl_PersonAttendance { get; set; }
-        public virtual DbSet<tbl_Persons> tbl_Persons { get; set; }
-        public virtual DbSet<tbl_PersonType> tbl_PersonType { get; set; }
-        public virtual DbSet<tbl_Role> tbl_Role { get; set; }
-        public virtual DbSet<tbl_Sites> tbl_Sites { get; set; }
-        public virtual DbSet<tbl_Users> tbl_Users { get; set; }
-        public virtual DbSet<tbl_ExpenseType> tbl_ExpenseType { get; set; }
-        public virtual DbSet<tbl_MaterialType> tbl_MaterialType { get; set; }
-        public virtual DbSet<tbl_MaterialPurchase> tbl_MaterialPurchase { get; set; }
-        public virtual DbSet<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
-        public virtual DbSet<tbl_Merchant> tbl_Merchant { get; set; }
-        public virtual DbSet<tbl_PersonGroup> tbl_PersonGroup { get; set; }
-        public virtual DbSet<tbl_PersonGroupMap> tbl_PersonGroupMap { get; set; }
-        public virtual DbSet<tbl_Files> tbl_Files { get; set; }
-        public virtual DbSet<tbl_BillSiteItem> tbl_BillSiteItem { get; set; }
-        public virtual DbSet<tbl_BillSiteNew> tbl_BillSiteNew { get; set; }
         public virtual DbSet<tbl_BillDebitItem> tbl_BillDebitItem { get; set; }
         public virtual DbSet<tbl_BillDebitNew> tbl_BillDebitNew { get; set; }
-        public virtual DbSet<tbl_Challan> tbl_Challan { get; set; }
-        public virtual DbSet<tbl_PagarPersonDetail> tbl_PagarPersonDetail { get; set; }
-        public virtual DbSet<tbl_Pagar> tbl_Pagar { get; set; }
         public virtual DbSet<tbl_BillSiteFinal> tbl_BillSiteFinal { get; set; }
+        public virtual DbSet<tbl_BillSiteItem> tbl_BillSiteItem { get; set; }
+        public virtual DbSet<tbl_BillSiteNew> tbl_BillSiteNew { get; set; }
+        public virtual DbSet<tbl_Challan> tbl_Challan { get; set; }
+        public virtual DbSet<tbl_Clients> tbl_Clients { get; set; }
+        public virtual DbSet<tbl_ContractorFinance> tbl_ContractorFinance { get; set; }
+        public virtual DbSet<tbl_Estimate> tbl_Estimate { get; set; }
+        public virtual DbSet<tbl_EstimateItem> tbl_EstimateItem { get; set; }
+        public virtual DbSet<tbl_Expenses> tbl_Expenses { get; set; }
+        public virtual DbSet<tbl_ExpenseType> tbl_ExpenseType { get; set; }
+        public virtual DbSet<tbl_Files> tbl_Files { get; set; }
+        public virtual DbSet<tbl_Finance> tbl_Finance { get; set; }
+        public virtual DbSet<tbl_GeneralSetting> tbl_GeneralSetting { get; set; }
+        public virtual DbSet<tbl_MaterialPurchase> tbl_MaterialPurchase { get; set; }
+        public virtual DbSet<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
+        public virtual DbSet<tbl_MaterialType> tbl_MaterialType { get; set; }
+        public virtual DbSet<tbl_Merchant> tbl_Merchant { get; set; }
         public virtual DbSet<tbl_MerchantPayment> tbl_MerchantPayment { get; set; }
-        public virtual DbSet<tbl_Peticase> tbl_Peticase { get; set; }
+        public virtual DbSet<tbl_MobileAppCategoryItems> tbl_MobileAppCategoryItems { get; set; }
         public virtual DbSet<tbl_MobileAppImages> tbl_MobileAppImages { get; set; }
+        public virtual DbSet<tbl_MobileApps> tbl_MobileApps { get; set; }
+        public virtual DbSet<tbl_MobileAppsCategory> tbl_MobileAppsCategory { get; set; }
+        public virtual DbSet<tbl_PackageType> tbl_PackageType { get; set; }
+        public virtual DbSet<tbl_Pagar> tbl_Pagar { get; set; }
+        public virtual DbSet<tbl_PagarPersonDetail> tbl_PagarPersonDetail { get; set; }
+        public virtual DbSet<tbl_PageModule> tbl_PageModule { get; set; }
         public virtual DbSet<tbl_Party> tbl_Party { get; set; }
+        public virtual DbSet<tbl_PaymentTransaction> tbl_PaymentTransaction { get; set; }
+        public virtual DbSet<tbl_PersonAttendance> tbl_PersonAttendance { get; set; }
+        public virtual DbSet<tbl_PersonGroup> tbl_PersonGroup { get; set; }
+        public virtual DbSet<tbl_PersonGroupMap> tbl_PersonGroupMap { get; set; }
+        public virtual DbSet<tbl_Persons> tbl_Persons { get; set; }
+        public virtual DbSet<tbl_PersonType> tbl_PersonType { get; set; }
+        public virtual DbSet<tbl_Peticase> tbl_Peticase { get; set; }
+        public virtual DbSet<tbl_Role> tbl_Role { get; set; }
         public virtual DbSet<tbl_Shayari> tbl_Shayari { get; set; }
         public virtual DbSet<tbl_ShayariCategory> tbl_ShayariCategory { get; set; }
-        public virtual DbSet<tbl_Estimate> tbl_Estimate { get; set; }
-        public virtual DbSet<tbl_PageModule> tbl_PageModule { get; set; }
+        public virtual DbSet<tbl_Sites> tbl_Sites { get; set; }
         public virtual DbSet<tbl_UserPageModuleAccess> tbl_UserPageModuleAccess { get; set; }
+        public virtual DbSet<tbl_Users> tbl_Users { get; set; }
         public virtual DbSet<tbl_VehicleOwner> tbl_VehicleOwner { get; set; }
         public virtual DbSet<tbl_VehicleRent> tbl_VehicleRent { get; set; }
-        public virtual DbSet<tbl_EstimateItem> tbl_EstimateItem { get; set; }
     
         public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList(Nullable<System.Guid> clientId)
         {
@@ -109,15 +112,6 @@ namespace ConstructionDiary.Models
         public virtual ObjectResult<SP_GetTodayPersonFinance_Result> SP_GetTodayPersonFinance()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPersonFinance_Result>("SP_GetTodayPersonFinance");
-        }
-    
-        public virtual ObjectResult<SP_GetTodayPartyFinance1_Result> SP_GetTodayPartyFinance1(Nullable<System.Guid> clientId)
-        {
-            var clientIdParameter = clientId.HasValue ?
-                new ObjectParameter("ClientId", clientId) :
-                new ObjectParameter("ClientId", typeof(System.Guid));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetTodayPartyFinance1_Result>("SP_GetTodayPartyFinance1", clientIdParameter);
         }
     }
 }

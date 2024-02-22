@@ -15,6 +15,8 @@ namespace ConstructionDiary.Models
     public partial class tbl_MerchantPayment
     {
         public System.Guid MerchantPaymentId { get; set; }
+        public System.DateTime PaymentDate { get; set; }
+        public System.Guid ClientId { get; set; }
         public Nullable<System.Guid> SiteId { get; set; }
         public System.Guid MerchantId { get; set; }
         public decimal Amount { get; set; }
@@ -27,7 +29,5 @@ namespace ConstructionDiary.Models
         public System.Guid CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
         public Nullable<System.Guid> ModifiedBy { get; set; }
-        public System.DateTime PaymentDate { get; set; }
-        public System.Guid ClientId { get; set; }
     }
 }

@@ -18,6 +18,7 @@ namespace ConstructionDiary.Models
         public System.DateTime EstimateDate { get; set; }
         public string PartyName { get; set; }
         public decimal TotalAmount { get; set; }
+        public string Remarks { get; set; }
         public System.Guid ClientId { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
@@ -25,6 +26,5 @@ namespace ConstructionDiary.Models
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.Guid> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public string Remarks { get; set; }
     }
 }

@@ -816,4 +816,7 @@
   <data name="UpdatedBy" xml:space="preserve">
     <value>એન્ટ્રી કોને સુધારી</value>
   </data>
+  <data name="BalanceAmount" xml:space="preserve">
+    <value>બેલેન્સ રકમ</value>
+  </data>
 </root>

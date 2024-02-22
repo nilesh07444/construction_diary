@@ -21,15 +21,15 @@ namespace ConstructionDiary.Models
         public string PersonPhoto { get; set; }
         public Nullable<int> DailyRate { get; set; }
         public Nullable<int> PersonTypeId { get; set; }
+        public Nullable<bool> IsAttendancePerson { get; set; }
+        public Nullable<int> OrderNo { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
-        public Nullable<bool> IsAttendancePerson { get; set; }
         public Nullable<System.Guid> ClientId { get; set; }
         public Nullable<System.Guid> CreatedBy { get; set; }
         public Nullable<System.Guid> UpdatedBy { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public Nullable<int> OrderNo { get; set; }
     
         public virtual tbl_PersonType tbl_PersonType { get; set; }
     }

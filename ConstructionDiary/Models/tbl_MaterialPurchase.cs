@@ -22,7 +22,9 @@ namespace ConstructionDiary.Models
     
         public System.Guid MaterialPurchaseId { get; set; }
         public System.DateTime PurchaseDate { get; set; }
+        public Nullable<System.Guid> MerchantId { get; set; }
         public System.Guid SiteId { get; set; }
+        public string MaterialCategory { get; set; }
         public string Remarks { get; set; }
         public Nullable<int> GST_Per { get; set; }
         public Nullable<decimal> CGST_Amount { get; set; }
@@ -37,11 +39,9 @@ namespace ConstructionDiary.Models
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.Guid> ModifiedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public Nullable<System.Guid> MerchantId { get; set; }
-        public string MaterialCategory { get; set; }
     
+        public virtual tbl_Merchant tbl_Merchant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_MaterialPurchaseItems> tbl_MaterialPurchaseItems { get; set; }
-        public virtual tbl_Merchant tbl_Merchant { get; set; }
     }
 }

@@ -403,6 +403,15 @@ namespace ConstructionDiary.ResourceFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Balance Amount.
+        /// </summary>
+        public static string BalanceAmount {
+            get {
+                return ResourceManager.GetString("BalanceAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bank Name.
         /// </summary>
         public static string BankName {

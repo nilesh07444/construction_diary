@@ -17,6 +17,7 @@ namespace ConstructionDiary.Models
         public string UserName { get; set; }
         public Nullable<System.DateTime> SelectedDate { get; set; }
         public Nullable<decimal> Amount { get; set; }
+        public Nullable<decimal> UpdatedAmount { get; set; }
         public string CreditOrDebit { get; set; }
         public Nullable<System.Guid> SiteId { get; set; }
         public string PaymentType { get; set; }

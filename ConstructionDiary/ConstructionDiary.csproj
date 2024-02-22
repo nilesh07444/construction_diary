@@ -208,9 +208,6 @@
     <Compile Include="Models\SP_GetSitesList_Result.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SP_GetTodayPartyFinance1_Result.cs">
-      <DependentUpon>ConstructionDiary.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SP_GetTodayPartyFinance_Result.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -280,7 +277,16 @@
     <Compile Include="Models\tbl_MerchantPayment.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_MobileAppCategoryItems.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_MobileAppImages.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_MobileApps.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_MobileAppsCategory.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_PackageType.cs">
@@ -2308,13 +2314,6 @@
     <Content Include="Areas\Admin\Views\Attendance\AddPerson.cshtml" />
     <Content Include="Areas\Admin\Views\Attendance\EditPerson.cshtml" />
     <Content Include="Areas\Admin\Views\Setting\Index.cshtml" />
-    <EntityDeploy Include="Models\ConstructionDiary.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ConstructionDiary.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\ConstructionDiary.edmx.diagram">
-      <DependentUpon>ConstructionDiary.edmx</DependentUpon>
-    </Content>
     <Content Include="Areas\Admin\Views\Expense\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Expense\Add.cshtml" />
     <Content Include="Areas\Admin\Views\Expense\Edit.cshtml" />
@@ -2382,6 +2381,13 @@
     <Content Include="Areas\Admin\Views\VehicleOwner\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\VehicleRent\Add.cshtml" />
     <Content Include="Areas\Admin\Views\VehicleRent\Edit.cshtml" />
+    <EntityDeploy Include="Models\ConstructionDiary.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ConstructionDiary.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ConstructionDiary.edmx.diagram">
+      <DependentUpon>ConstructionDiary.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
