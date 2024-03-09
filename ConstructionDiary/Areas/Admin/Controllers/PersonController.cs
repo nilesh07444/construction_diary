@@ -359,7 +359,33 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                                  ModifiedDate = finance.ModifiedDate,
                                                  FirstName = user.FirstName,
                                                  ObjFile = _db.tbl_Files.Where(x => x.ParentId == finance.FinanceId && x.FileCategory == (int)FileType.Debit).FirstOrDefault()
-                                             }).OrderByDescending(x => x.SelectedDate).ToList();
+                                             }).OrderBy(x => x.CreatedDate).OrderBy(x => x.SelectedDate).ToList();
+            
+            if (financeList != null && financeList.Count > 0)
+            {
+                int counter = 1;
+
+                decimal updatedAmt = 0;
+
+                financeList.ForEach(obj =>
+                {
+                    if (counter == 1)
+                    {
+                        obj.UpdatedAmount = obj.Amount;
+                        updatedAmt = obj.Amount;
+                    }
+                    else
+                    {
+                        updatedAmt += obj.Amount;
+                        obj.UpdatedAmount = updatedAmt;
+                    }
+                    counter++;
+                });
+                 
+                financeList = financeList.OrderByDescending(x => x.CreatedDate).OrderByDescending(x => x.SelectedDate).ToList();
+            }
+
+
 
             return financeList;
         }

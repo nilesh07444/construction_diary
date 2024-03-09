@@ -168,6 +168,7 @@
                                 <tr>
                                     <th style="width:10%;">@Resource.Date</th>
                                     <th style="width:10%;">@Resource.Amount</th>
+                                    <th style="width:10%;">@Resource.BalanceAmount</th>
                                     <th style="width:20%;">@Resource.SiteName</th>
                                     @*<th style="width:10%;">@Resource.Type</th>*@
                                     <th style="width:10%;">@Resource.PaymentType</th>
@@ -186,6 +187,7 @@
                                         <tr class="gradeX">
                                             <td>@Convert.ToDateTime(obj.SelectedDate).ToString("dd/MM/yyyy")</td>
                                             <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.Amount)</span></td>
+                                            <td><span style="float:right;">@CoreHelper.GetFormatterAmount(obj.UpdatedAmount)</span></td>
                                             <td>@obj.SiteName</td>
                                             @*<td>
                                                     <span class="badge @(obj.CreditOrDebit == "Credit" ? "bg-success" : "bg-important")">@obj.CreditOrDebit</span>

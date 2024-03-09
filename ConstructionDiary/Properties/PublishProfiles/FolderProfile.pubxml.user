@@ -7,7 +7,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <_PublishTargetUrl>E:\Publish\ConstructionDiary</_PublishTargetUrl>
-    <History>True|2024-02-22T17:58:45.2626999Z;True|2024-01-16T22:41:47.5395549+05:30;True|2023-03-01T23:24:05.9735973+05:30;True|2023-03-01T23:07:37.6367144+05:30;True|2023-02-13T11:48:36.0455682+05:30;True|2023-02-10T00:17:34.3091660+05:30;True|2022-07-12T18:40:55.2475843+05:30;True|2022-07-05T23:39:27.3514662+05:30;True|2022-03-24T19:35:53.1014390+05:30;True|2022-03-24T10:56:00.4180214+05:30;True|2021-07-21T12:02:53.7117358+05:30;True|2021-07-21T11:55:55.7398227+05:30;True|2021-07-19T23:43:05.5972823+05:30;True|2021-05-15T17:56:46.1936108+05:30;True|2021-05-06T23:41:03.6929908+05:30;True|2021-05-01T23:49:01.6442702+05:30;</History>
+    <History>True|2024-03-09T16:53:45.7991427Z;True|2024-02-22T23:28:45.2626999+05:30;True|2024-01-16T22:41:47.5395549+05:30;True|2023-03-01T23:24:05.9735973+05:30;True|2023-03-01T23:07:37.6367144+05:30;True|2023-02-13T11:48:36.0455682+05:30;True|2023-02-10T00:17:34.3091660+05:30;True|2022-07-12T18:40:55.2475843+05:30;True|2022-07-05T23:39:27.3514662+05:30;True|2022-03-24T19:35:53.1014390+05:30;True|2022-03-24T10:56:00.4180214+05:30;True|2021-07-21T12:02:53.7117358+05:30;True|2021-07-21T11:55:55.7398227+05:30;True|2021-07-19T23:43:05.5972823+05:30;True|2021-05-15T17:56:46.1936108+05:30;True|2021-05-06T23:41:03.6929908+05:30;True|2021-05-01T23:49:01.6442702+05:30;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -5964,7 +5964,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/01/2021 23:42:07</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Finance.cshtml">
-      <publishTime>07/12/2023 22:49:27</publishTime>
+      <publishTime>03/09/2024 22:12:00</publishTime>
     </File>
     <File Include="Areas/Admin/Views/Person/Index.cshtml">
       <publishTime>01/28/2022 10:06:58</publishTime>
@@ -6099,10 +6099,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/21/2020 16:24:54</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.dll">
-      <publishTime>02/22/2024 23:28:40</publishTime>
+      <publishTime>03/09/2024 22:23:41</publishTime>
     </File>
     <File Include="bin/ConstructionDiary.pdb">
-      <publishTime>02/22/2024 23:28:40</publishTime>
+      <publishTime>03/09/2024 22:23:41</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>04/16/2020 20:38:42</publishTime>
@@ -6114,10 +6114,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>12/18/2020 14:17:16</publishTime>
     </File>
     <File Include="bin/gu/ConstructionDiary.resources.dll">
-      <publishTime>02/22/2024 23:28:40</publishTime>
+      <publishTime>03/09/2024 22:23:41</publishTime>
     </File>
     <File Include="bin/hi/ConstructionDiary.resources.dll">
-      <publishTime>02/22/2024 23:28:40</publishTime>
+      <publishTime>03/09/2024 22:23:41</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>08/27/2020 11:20:20</publishTime>
