@@ -118,6 +118,7 @@
                                     <th width="10%">@Resource.FromLocation</th>
                                     <th width="10%">@Resource.ToLocation</th>
                                     <th width="10%">@Resource.Amount</th>
+                                    <th width="10%">@Resource.Remarks</th>
                                     <th width="10%">@Resource.Action</th>
                                 </tr>
                             </thead>
@@ -132,7 +133,8 @@
                                             <td>@obj.VehicleOwnerName</td>
                                             <td>@obj.FromLocation</td>
                                             <td>@obj.ToLocation</td>
-                                            <td>@obj.Amount</td>
+                                            <td>@CoreHelper.GetFormatterAmount(obj.Amount)</td>
+                                            <td>@obj.Remarks</td>
                                             <td>
                                                 <a href="/admin/vehiclerent/edit/@obj.VehicleRentId" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
                                                 <button title="Delete" onclick="fnDeletevehiclerent('@obj.VehicleRentId')" class="btn btn-danger btn-xs"><i class="fa fa-trash-o "></i></button>

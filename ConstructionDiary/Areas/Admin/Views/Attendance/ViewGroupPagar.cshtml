@@ -171,7 +171,7 @@
                                                 <span><strong id="txtPagarDate" data-startdate="" data-enddate=""></strong></span>
                                             </div>
                                         </div>
-                                        <div class="form-group" style="display: none;">
+                                        <div class="form-group" >
                                             <label class="control-label col-lg-5">@Resource.PagarAmount</label>
                                             <div class="col-lg-7">
                                                 <span><strong id="txtTotalPagarAmount"></strong></span>
@@ -321,8 +321,7 @@
             $("#spn_PayAmount").show();
             return false;
         }
-
-
+         
         jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
 
         var PagarData = {
@@ -381,7 +380,7 @@
             $("#spn_PayAmount").hide();
         }
 
-        var RemainingAmount = (parseFloat(PagarAmount)  + parseFloat(TotalOvertimeAmount) + parseFloat(PrevPagarRemainingAmount)) - (parseFloat(TotalUpadAmount) + parseFloat(AmountPay));
+        var RemainingAmount = (parseFloat(PagarAmount) + parseFloat(PrevPagarRemainingAmount)) - parseFloat(AmountPay);
 
         if (RemainingAmount == "" || RemainingAmount == undefined || RemainingAmount == null || isNaN(RemainingAmount))
             RemainingAmount = 0;
@@ -446,7 +445,7 @@
                     $("#txtPagarDate").attr("data-startdate", data.PagarStartDate);
                     $("#txtPagarDate").attr("data-enddate", data.PagarEndDate);
 
-                    $("#txtTotalPagarAmount").text(data.PagarAmount);
+                    $("#txtTotalPagarAmount").text(data.PagarAmount + data.TotalOvertimeAmount - data.TotalUpadAmount);
                     $("#txtTotalUpadAmount").text(data.TotalUpadAmount);
                     $("#txtTotalOvertimeAmount").text(data.TotalOvertimeAmount);
                     $("#txtTotalPrevPagarAmount").text(data.PrevPagarRemainingAmount);

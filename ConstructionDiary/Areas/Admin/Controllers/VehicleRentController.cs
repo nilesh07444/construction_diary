@@ -86,30 +86,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             int RoleID = clsSession.RoleID;
 
             Guid? selectedVehicleOwner = (!string.IsNullOrEmpty(vehicleOwner) ? new Guid(vehicleOwner) : Guid.Empty);
-
-            //lstExpenses = (from c in _db.tbl_Expenses
-            //               join exp in _db.tbl_ExpenseType on c.ExpenseTypeId equals exp.ExpenseTypeId
-            //               join st in _db.tbl_Sites on c.SiteId equals st.SiteId into outerJoinSite
-            //               from st in outerJoinSite.DefaultIfEmpty()
-            //               where !c.IsDeleted && c.ClientId == ClientId
-            //                     && (RoleID != (int)UserRoles.Staff || c.CreatedBy == clsSession.UserID)
-            //                     && (selectedExpenseType == 0 || c.ExpenseTypeId == selectedExpenseType)
-            //                     && (selectedSite == Guid.Empty || c.SiteId == selectedSite)
-            //                     && c.ExpenseDate >= startDate && c.ExpenseDate <= endDate
-            //               select new VehicleRentVM
-            //               {
-            //                   ExpenseId = c.ExpenseId,
-            //                   dtExpenseDate = c.ExpenseDate,
-            //                   Amount = c.Amount,
-            //                   Description = c.Description,
-            //                   SiteId = c.SiteId,
-            //                   SiteName = st.SiteName,
-            //                   ExpenseTypeId = c.ExpenseTypeId,
-            //                   ExpenseType = exp.ExpenseType,
-            //                   IsActive = c.IsActive,
-            //                   ObjExpenseFile = _db.tbl_Files.Where(x => x.ParentId == c.ExpenseId && x.FileCategory == (int)FileType.Expense).FirstOrDefault()
-            //               }).OrderByDescending(x => x.dtExpenseDate).ToList();
-
+             
             lstVehicleRents = (from rent in _db.tbl_VehicleRent
                                join owner in _db.tbl_VehicleOwner on rent.VehicleOwnerId equals owner.VehicleOwnerId
                                where rent.ClientId == ClientId
@@ -126,7 +103,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                    ToLocation = rent.ToLocation,
                                    IsActive = rent.IsActive,
                                    IsPaid = rent.IsPaid,
-                                   VehicleOwnerName = owner.VehicleOwnerName
+                                   VehicleOwnerName = owner.VehicleOwnerName,
+                                   Remarks = rent.Remarks
                                }).OrderByDescending(x => x.dtVehicleRentDate).ThenByDescending(x => x.VehicleRentId).ToList();
 
             return lstVehicleRents;
