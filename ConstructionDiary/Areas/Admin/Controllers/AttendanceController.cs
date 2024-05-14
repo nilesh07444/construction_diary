@@ -1158,9 +1158,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objPagar.TotalOvertimeAmount = pagarVM.TotalOvertimeAmount;
                 objPagar.AmountPay = pagarVM.AmountPay;
                 objPagar.PrevPagarRemainingAmount = pagarVM.PrevPagarRemainingAmount;
-                objPagar.RemainingAmount = pagarVM.RemainingAmount;
 
-                objPagar.RemainingAmount = (objPagar.PagarAmount + objPagar.PrevPagarRemainingAmount) - (objPagar.AmountPay);
+                objPagar.RemainingAmount = (objPagar.PagarAmount + objPagar.TotalOvertimeAmount + objPagar.PrevPagarRemainingAmount) - (objPagar.AmountPay + objPagar.TotalUpadAmount);
 
                 objPagar.PagarPaidToPerson = null;
                 objPagar.Remarks = pagarVM.Remarks;
@@ -1481,7 +1480,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 objPagar.PrevPagarRemainingAmount = pagarVM.PrevPagarRemainingAmount;
                 objPagar.RemainingAmount = pagarVM.RemainingAmount;
 
-                objPagar.RemainingAmount = (objPagar.PagarAmount + objPagar.PrevPagarRemainingAmount) - (objPagar.AmountPay);
+                objPagar.RemainingAmount = (objPagar.PagarAmount + objPagar.TotalOvertimeAmount + objPagar.PrevPagarRemainingAmount) - (objPagar.AmountPay + objPagar.TotalUpadAmount);
 
                 objPagar.PagarPaidToPerson = null;
                 objPagar.Remarks = pagarVM.Remarks;

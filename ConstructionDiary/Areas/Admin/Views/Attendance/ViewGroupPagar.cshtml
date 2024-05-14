@@ -171,12 +171,21 @@
                                                 <span><strong id="txtPagarDate" data-startdate="" data-enddate=""></strong></span>
                                             </div>
                                         </div>
-                                        <div class="form-group" >
+                                        <div class="form-group" style="display: none;">
                                             <label class="control-label col-lg-5">@Resource.PagarAmount</label>
                                             <div class="col-lg-7">
                                                 <span><strong id="txtTotalPagarAmount"></strong></span>
                                             </div>
                                         </div>
+
+                                        <!--Actual pagar = (total pagar of worked days - upad + overtime) -->
+                                        <div class="form-group">
+                                            <label class="control-label col-lg-5">@Resource.PagarAmount</label>
+                                            <div class="col-lg-7">
+                                                <span><strong id="txtTotalActualPagarAmount"></strong></span>
+                                            </div>
+                                        </div>
+
                                         <div class="form-group" style="display: none;">
                                             <label class="control-label col-lg-5">@Resource.TotalOvertimeAmount</label>
                                             <div class="col-lg-7">
@@ -321,7 +330,7 @@
             $("#spn_PayAmount").show();
             return false;
         }
-         
+
         jQuery.blockUI({ message: "<h4>Please Wait...</h4>" });
 
         var PagarData = {
@@ -380,12 +389,13 @@
             $("#spn_PayAmount").hide();
         }
 
-        var RemainingAmount = (parseFloat(PagarAmount) + parseFloat(PrevPagarRemainingAmount)) - parseFloat(AmountPay);
+        var RemainingAmount = (parseFloat(PagarAmount) + parseFloat(TotalOvertimeAmount) + parseFloat(PrevPagarRemainingAmount)) - (parseFloat(TotalUpadAmount) + parseFloat(AmountPay));
 
         if (RemainingAmount == "" || RemainingAmount == undefined || RemainingAmount == null || isNaN(RemainingAmount))
             RemainingAmount = 0;
 
         $("#txtRemainingAmount").text(RemainingAmount);
+
     }
 
     function PagarPersonWiseAttendaceHtml(pagarObj) {
@@ -445,11 +455,13 @@
                     $("#txtPagarDate").attr("data-startdate", data.PagarStartDate);
                     $("#txtPagarDate").attr("data-enddate", data.PagarEndDate);
 
-                    $("#txtTotalPagarAmount").text(data.PagarAmount + data.TotalOvertimeAmount - data.TotalUpadAmount);
+                    $("#txtTotalPagarAmount").text(data.PagarAmount);
                     $("#txtTotalUpadAmount").text(data.TotalUpadAmount);
                     $("#txtTotalOvertimeAmount").text(data.TotalOvertimeAmount);
                     $("#txtTotalPrevPagarAmount").text(data.PrevPagarRemainingAmount);
                     $("#txtRemainingAmount").text(data.RemainingAmount);
+
+                    $("#txtTotalActualPagarAmount").text(data.PagarAmount + data.TotalOvertimeAmount - data.TotalUpadAmount);
 
                     PagarPersonWiseAttendaceHtml(data);
 
