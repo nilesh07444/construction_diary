@@ -22,6 +22,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             _db = new ConstructionDiaryEntities();
         }
 
+        #region Challan 
         public ActionResult Index(string duration, string start, string end, string site)
         {
             List<ChallanVM> lstChallan = new List<ChallanVM>();
@@ -45,22 +46,22 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 //if (RoleID != (int)UserRoles.Staff)
                 //{
-                    if (duration == "month")
-                    {
-                        var myDate = DateTime.Now;
-                        startDate = new DateTime(myDate.Year, myDate.Month, 1);
+                if (duration == "month")
+                {
+                    var myDate = DateTime.Now;
+                    startDate = new DateTime(myDate.Year, myDate.Month, 1);
 
-                        DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
-                        endDate = lastDay;
-                    }
-                    else if (duration == "custom")
+                    DateTime lastDay = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(1).AddDays(-1);
+                    endDate = lastDay;
+                }
+                else if (duration == "custom")
+                {
+                    if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
                     {
-                        if (!string.IsNullOrEmpty(start) && !string.IsNullOrEmpty(end))
-                        {
-                            startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
-                            endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
-                        }
+                        startDate = DateTime.ParseExact(start, "dd/MM/yyyy", null);
+                        endDate = DateTime.ParseExact(end, "dd/MM/yyyy", null);
                     }
+                }
                 //}
 
                 ViewBag.reportStartDate = startDate.ToString("dd/MM/yyyy");
@@ -75,7 +76,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
             }
             catch (Exception ex)
-            { 
+            {
             }
 
             return View(lstChallan);
@@ -90,26 +91,26 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             Guid selectedSite = (site != null && !string.IsNullOrEmpty(site) ? new Guid(site) : Guid.Empty);
 
             lstChallan = (from c in _db.tbl_Challan
-                           join sites in _db.tbl_Sites on c.SiteId equals sites.SiteId
-                           join marchant in _db.tbl_Merchant on c.MerchantId equals marchant.MerchantId into outerJoinMerchant
-                           from marchant in outerJoinMerchant.DefaultIfEmpty()
-                           where !c.IsDeleted && c.ClientId == ClientId
-                                 //&& (RoleID != (int)UserRoles.Staff || c.CreatedBy == clsSession.UserID)
-                                 && (selectedSite == Guid.Empty || c.SiteId == selectedSite)
-                                 && c.ChallanDate >= startDate && c.ChallanDate <= endDate
-                           select new ChallanVM
-                           {
-                               ChallanId = c.ChallanId,
-                               dtChallanDate = c.ChallanDate,
-                               ChallanNo = c.ChallanNo,
-                               CarNo = c.CarNo,
-                               SiteId = c.SiteId,
-                               SiteName = sites.SiteName,
-                               MerchantName = (marchant != null ? marchant.FirmName : ""),
-                               ChallanPhoto = c.ChallanPhoto,
-                               Remarks = c.Remarks,
-                               ObjFile = _db.tbl_Files.Where(x => x.ParentId == c.ChallanId && x.FileCategory == (int)FileType.Challan).FirstOrDefault()
-                           }).OrderByDescending(x => x.dtChallanDate).ToList();
+                          join sites in _db.tbl_Sites on c.SiteId equals sites.SiteId
+                          join marchant in _db.tbl_Merchant on c.MerchantId equals marchant.MerchantId into outerJoinMerchant
+                          from marchant in outerJoinMerchant.DefaultIfEmpty()
+                          where !c.IsDeleted && c.ClientId == ClientId
+                                //&& (RoleID != (int)UserRoles.Staff || c.CreatedBy == clsSession.UserID)
+                                && (selectedSite == Guid.Empty || c.SiteId == selectedSite)
+                                && c.ChallanDate >= startDate && c.ChallanDate <= endDate
+                          select new ChallanVM
+                          {
+                              ChallanId = c.ChallanId,
+                              dtChallanDate = c.ChallanDate,
+                              ChallanNo = c.ChallanNo,
+                              CarNo = c.CarNo,
+                              SiteId = c.SiteId,
+                              SiteName = sites.SiteName,
+                              MerchantName = (marchant != null ? marchant.FirmName : ""),
+                              ChallanPhoto = c.ChallanPhoto,
+                              Remarks = c.Remarks,
+                              ObjFile = _db.tbl_Files.Where(x => x.ParentId == c.ChallanId && x.FileCategory == (int)FileType.Challan).FirstOrDefault()
+                          }).OrderByDescending(x => x.dtChallanDate).ToList();
 
             return lstChallan;
         }
@@ -131,7 +132,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(ChallanVM challan, HttpPostedFileBase ChallanPhotoFile)
+        public ActionResult Add(ChallanVM challan)
         {
             IEnumerable<ModelError> allErrors = ModelState.Values.SelectMany(v => v.Errors);
             Guid ClientId = new Guid(clsSession.ClientID.ToString());
@@ -149,16 +150,17 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                 try
                 {
 
-                    DateTime exp_date = DateTime.ParseExact(challan.ChallanDate, "dd/MM/yyyy", null);
+                    DateTime challan_date = DateTime.ParseExact(challan.ChallanDate, "dd/MM/yyyy", null);
 
                     tbl_Challan objChallan = new tbl_Challan();
                     objChallan.ChallanId = Guid.NewGuid();
-                    objChallan.ChallanDate = exp_date;
+                    objChallan.ChallanDate = challan_date;
                     objChallan.ChallanNo = challan.ChallanNo;
                     objChallan.SiteId = challan.SiteId;
                     objChallan.MerchantId = challan.MerchantId;
                     objChallan.CarNo = challan.CarNo;
                     objChallan.Remarks = challan.Remarks;
+                    objChallan.IsChallanBillGenerated = challan.IsChallanBillGenerated;
 
                     objChallan.ClientId = ClientId;
                     objChallan.IsActive = true;
@@ -168,25 +170,63 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     _db.tbl_Challan.Add(objChallan);
                     _db.SaveChanges();
 
-                    // Save + Upload Expense File
+                    // Save + Upload Challan File
                     string fileName = string.Empty;
                     string path = Server.MapPath("~/DataFiles/ChallanFile/");
-                    if (ChallanPhotoFile != null)
+                    if (challan.ChallanPhotoFile != null)
                     {
-                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(ChallanPhotoFile.FileName);
+                        fileName = Guid.NewGuid() + "-" + Path.GetFileName(challan.ChallanPhotoFile.FileName);
 
                         string full_path = Path.Combine(path, fileName);
-                        ChallanPhotoFile.SaveAs(full_path);
+                        challan.ChallanPhotoFile.SaveAs(full_path);
 
                         tbl_Files objFile = new tbl_Files();
                         objFile.FileId = Guid.NewGuid();
                         objFile.ParentId = objChallan.ChallanId;
                         objFile.FileCategory = (int)FileType.Challan;
-                        objFile.OriginalFileName = ChallanPhotoFile.FileName;
+                        objFile.OriginalFileName = challan.ChallanPhotoFile.FileName;
                         objFile.EncryptFileName = fileName;
                         _db.tbl_Files.Add(objFile);
                         _db.SaveChanges();
                     }
+
+                    #region Save challan bill
+
+                    if (challan.IsChallanBillGenerated == true)
+                    {
+                        tbl_ChallanBill objChallanBill = new tbl_ChallanBill();
+                        objChallanBill.ChallanBillId = Guid.NewGuid();
+                        objChallanBill.ChallanBillDate = challan_date;
+                        objChallanBill.ChallanId = objChallan.ChallanId;
+                        objChallanBill.MerchantId = objChallan.MerchantId.Value;
+                        objChallanBill.BillAmount = challan.BillAmount.Value;
+                        objChallanBill.CreatedDate = DateTime.UtcNow;
+                        objChallanBill.CreatedBy = new Guid(clsSession.UserID.ToString());
+                        _db.tbl_ChallanBill.Add(objChallanBill);
+                        _db.SaveChanges();
+
+                        if (challan.BillPhotoFile != null)
+                        {
+                            // Save + Upload Challan Bill File
+                            string bill_filepath = Server.MapPath("~/DataFiles/ChallanBillFile/");
+                            string billFileName = Guid.NewGuid() + "-" + Path.GetFileName(challan.BillPhotoFile.FileName);
+
+                            string full_path = Path.Combine(bill_filepath, billFileName);
+                            challan.BillPhotoFile.SaveAs(full_path);
+
+                            tbl_Files objFile = new tbl_Files();
+                            objFile.FileId = Guid.NewGuid();
+                            objFile.ParentId = objChallanBill.ChallanBillId;
+                            objFile.FileCategory = (int)FileType.ChallanBill;
+                            objFile.OriginalFileName = challan.BillPhotoFile.FileName;
+                            objFile.EncryptFileName = billFileName;
+                            _db.tbl_Files.Add(objFile);
+                            _db.SaveChanges();
+                        }
+
+                    }
+
+                    #endregion
 
                 }
                 catch (Exception ex)
@@ -214,7 +254,8 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         CarNo = c.CarNo,
                                         MerchantId = c.MerchantId,
                                         SiteId = c.SiteId,
-                                        Remarks = c.Remarks
+                                        Remarks = c.Remarks,
+                                        IsChallanBillGenerated = c.IsChallanBillGenerated == true ? true : false,
                                     }).FirstOrDefault();
 
             objChallan.ChallanDate = Convert.ToDateTime(objChallan.dtChallanDate).ToString("dd/MM/yyyy");
@@ -259,9 +300,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                     objChallan.MerchantId = challan.MerchantId;
                     objChallan.CarNo = challan.CarNo;
                     objChallan.Remarks = challan.Remarks;
-                      
+
                     objChallan.ModifiedBy = clsSession.UserID;
-                    objChallan.ModifiedDate = DateTime.UtcNow; 
+                    objChallan.ModifiedDate = DateTime.UtcNow;
                     _db.SaveChanges();
 
                     // Save + Upload File
@@ -276,9 +317,9 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                         tbl_Files objFile = _db.tbl_Files.Where(x => x.ParentId == objChallan.ChallanId).FirstOrDefault();
                         if (objFile != null)
-                        { 
+                        {
                             objFile.OriginalFileName = ChallanPhotoFile.FileName;
-                            objFile.EncryptFileName = fileName;                         
+                            objFile.EncryptFileName = fileName;
                             _db.SaveChanges();
                         }
                     }
@@ -336,7 +377,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
 
                 List<ChallanVM> lstChallan = GetChallanListByFilter(start_date, end_date, site);
 
-                string[] strColumns = new string[6] { "Challan Date", "Challan No", "Site Name", "Merchant Name", "Car No" , "Remarks" };
+                string[] strColumns = new string[6] { "Challan Date", "Challan No", "Site Name", "Merchant Name", "Car No", "Remarks" };
                 if (lstChallan != null && lstChallan.Count() > 0)
                 {
 
@@ -388,7 +429,7 @@ namespace ConstructionDiary.Areas.Admin.Controllers
                                         {
                                             strcolval = obj.ChallanNo;
                                             break;
-                                        } 
+                                        }
                                     case "Site Name":
                                         {
                                             strcolval = obj.SiteName;
@@ -466,6 +507,104 @@ namespace ConstructionDiary.Areas.Admin.Controllers
             }
 
         }
+
+        #endregion
+
+        #region Challan Bill
+
+        public ActionResult Bill()
+        {
+            List<ChallanBillVM> lstChallanBill = new List<ChallanBillVM>();
+
+            try
+            {
+                Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+                lstChallanBill = (from cb in _db.tbl_ChallanBill
+                                  join m in _db.tbl_Merchant on cb.MerchantId equals m.MerchantId
+                                  join u in _db.tbl_Users on cb.CreatedBy equals u.UserId
+                                  where u.ClientId == ClientId
+                                  select new ChallanBillVM
+                                  {
+                                      ChallanBillId = cb.ChallanBillId,
+                                      MerchantId = cb.MerchantId,
+                                      dtChallanBillDate = cb.ChallanBillDate,
+                                      BillAmount = cb.BillAmount,
+                                      ChallanId = cb.ChallanId,
+                                      ChallanGroupId = cb.ChallanGroupId,
+                                      MerchantName = m.MerchantName,
+                                      ChallanNo = cb.ChallanId != null ? _db.tbl_Challan.Where(x=>x.ChallanId == cb.ChallanId).FirstOrDefault().ChallanNo : null,
+                                      ObjFile = _db.tbl_Files.Where(x => x.ParentId == cb.ChallanBillId && x.FileCategory == (int)FileType.ChallanBill).FirstOrDefault()
+                                  }).OrderByDescending(x => x.dtChallanBillDate).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return View(lstChallanBill);
+        }
+
+        public ActionResult AddBill()
+        {
+            ChallanBillRequestVM challanBillRequestVM = new ChallanBillRequestVM();
+
+            Guid ClientId = new Guid(clsSession.ClientID.ToString());
+
+            challanBillRequestVM.ChallanList = _db.tbl_Challan.Where(x => x.IsActive == true && x.IsDeleted == false && x.ClientId == ClientId)
+                         .Select(o => new SelectListItem { Value = o.SiteId.ToString(), Text = o.ChallanNo }).OrderBy(o => o.Text)
+                         .ToList();
+
+            return View(challanBillRequestVM);
+        }
+
+        public ActionResult BillView()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public string DeleteChallanBill(Guid ChallanBillId)
+        {
+            string ReturnMessage = "";
+
+            try
+            {
+                tbl_ChallanBill objChallanBill = _db.tbl_ChallanBill.Where(x => x.ChallanBillId == ChallanBillId).FirstOrDefault();
+
+                if (objChallanBill == null)
+                {
+                    ReturnMessage = "notfound";
+                }
+                else
+                {
+                    if (objChallanBill.ChallanId != null)
+                    {
+                        tbl_Challan objChallan = _db.tbl_Challan.Where(x => x.ChallanId == objChallanBill.ChallanId).FirstOrDefault();
+                        if (objChallan == null)
+                        {
+                            objChallan.IsChallanBillGenerated = false;
+                        }
+                    }
+                    else if (objChallanBill.ChallanGroupId != null)
+                    {
+                        List<tbl_ChallanGroup> lstChallanGroup = _db.tbl_ChallanGroup.Where(x => x.ChallanGroupId == objChallanBill.ChallanGroupId).ToList();
+                        _db.tbl_ChallanGroup.RemoveRange(lstChallanGroup);
+                    }
+
+                    _db.tbl_ChallanBill.Remove(objChallanBill);
+                    _db.SaveChanges();
+                    ReturnMessage = "success";
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnMessage = "exception";
+            }
+
+            return ReturnMessage;
+        }
+
+        #endregion
 
     }
 }

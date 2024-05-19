@@ -62,6 +62,8 @@
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_MaterialPurchaseItems_tbl_MaterialType" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Persons_tbl_PersonType" ManuallyRouted="false" />
         <AssociationConnector Association="ConstructionDiaryModel.FK_tbl_Users_tbl_Role" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_ChallanBill" Width="1.5" PointX="3.375" PointY="21.75" />
+        <EntityTypeShape EntityType="ConstructionDiaryModel.tbl_ChallanGroup" Width="1.5" PointX="22.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

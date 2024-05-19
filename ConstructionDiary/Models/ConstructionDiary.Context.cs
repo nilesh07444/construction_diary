@@ -72,6 +72,8 @@ namespace ConstructionDiary.Models
         public virtual DbSet<tbl_Users> tbl_Users { get; set; }
         public virtual DbSet<tbl_VehicleOwner> tbl_VehicleOwner { get; set; }
         public virtual DbSet<tbl_VehicleRent> tbl_VehicleRent { get; set; }
+        public virtual DbSet<tbl_ChallanBill> tbl_ChallanBill { get; set; }
+        public virtual DbSet<tbl_ChallanGroup> tbl_ChallanGroup { get; set; }
     
         public virtual ObjectResult<SP_GetPersonsList_Result> SP_GetPersonsList(Nullable<System.Guid> clientId)
         {

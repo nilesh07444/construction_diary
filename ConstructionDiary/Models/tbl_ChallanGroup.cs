@@ -12,23 +12,13 @@ namespace ConstructionDiary.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tbl_Challan
+    public partial class tbl_ChallanGroup
     {
+        public System.Guid ChallanGroupId { get; set; }
         public System.Guid ChallanId { get; set; }
-        public System.DateTime ChallanDate { get; set; }
-        public string ChallanNo { get; set; }
-        public System.Guid SiteId { get; set; }
-        public Nullable<System.Guid> MerchantId { get; set; }
-        public string CarNo { get; set; }
-        public string ChallanPhoto { get; set; }
-        public string Remarks { get; set; }
-        public System.Guid ClientId { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
-        public System.Guid CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
-        public Nullable<System.Guid> ModifiedBy { get; set; }
+        public System.Guid CreatedBy { get; set; }
         public Nullable<System.DateTime> ModifiedDate { get; set; }
-        public Nullable<bool> IsChallanBillGenerated { get; set; }
+        public Nullable<System.Guid> ModifiedBy { get; set; }
     }
 }

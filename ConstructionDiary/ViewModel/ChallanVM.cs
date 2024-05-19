@@ -36,6 +36,10 @@ namespace ConstructionDiary
         [Display(Name = "Remarks", ResourceType = typeof(Resource))]
         public string Remarks { get; set; }
 
+        public bool IsChallanBillGenerated { get; set; }
+        public HttpPostedFileBase BillPhotoFile { get; set; }
+        public decimal? BillAmount { get; set; }
+
         public Guid ClientId { get; set; }
         public bool IsActive { get; set; }
 

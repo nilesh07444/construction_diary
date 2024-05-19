@@ -235,6 +235,12 @@
     <Compile Include="Models\tbl_Challan.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_ChallanBill.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_ChallanGroup.cs">
+      <DependentUpon>ConstructionDiary.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_Clients.cs">
       <DependentUpon>ConstructionDiary.tt</DependentUpon>
     </Compile>
@@ -368,6 +374,7 @@
     <Compile Include="ViewModel\AttendanceVM.cs" />
     <Compile Include="ViewModel\BillSiteVM.cs" />
     <Compile Include="ViewModel\BillDebitVM.cs" />
+    <Compile Include="ViewModel\ChallanBillVM.cs" />
     <Compile Include="ViewModel\ChallanVM.cs" />
     <Compile Include="ViewModel\ChangePasswordVM.cs" />
     <Compile Include="ViewModel\ClientVM.cs" />
@@ -2388,6 +2395,9 @@
     <Content Include="Models\ConstructionDiary.edmx.diagram">
       <DependentUpon>ConstructionDiary.edmx</DependentUpon>
     </Content>
+    <Content Include="Areas\Admin\Views\Challan\Bill.cshtml" />
+    <Content Include="Areas\Admin\Views\Challan\AddBill.cshtml" />
+    <Content Include="Areas\Admin\Views\Challan\BillView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />

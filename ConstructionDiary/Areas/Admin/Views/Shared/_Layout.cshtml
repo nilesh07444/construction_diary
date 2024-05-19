@@ -209,8 +209,13 @@
                                         <span>@Resource.Material</span>
                                     </a>
                                     <ul class="sub">
-                                        <li><a href="/admin/material">@Resource.MaterialList</a></li>
-                                        <li><a href="/admin/materialtype">@Resource.MaterialTypeList</a></li>
+                                        @if (objPermission.Challan)
+                                        {
+                                            <li><a href="/admin/challan">@Resource.ChallanList</a></li>
+                                            <li><a href="/admin/challan/bill">Challan Bill List</a></li>
+                                        }
+                                        @*<li><a href="/admin/material">@Resource.MaterialList</a></li>
+                                            <li><a href="/admin/materialtype">@Resource.MaterialTypeList</a></li>*@
 
                                         @if (objPermission.Merchant)
                                         {
@@ -232,7 +237,7 @@
                                 </li>
                             }
 
-                            if (objPermission.Challan)
+                            @*if (objPermission.Challan)
                             {
                                 <li>
                                     <a class="@(ViewBag.Title == "Challan" ? "active" : "")" href="/admin/challan">
@@ -240,7 +245,7 @@
                                         <span>@Resource.Challan</span>
                                     </a>
                                 </li>
-                            }
+                            }*@
 
                             if (objPermission.Attendance)
                             {

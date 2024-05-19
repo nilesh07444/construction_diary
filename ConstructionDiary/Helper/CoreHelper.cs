@@ -131,5 +131,29 @@ namespace ConstructionDiary
             return list;
         }
 
+        public static string GetChallanNumbersFromChallanGroupId(Guid ChallanGroupId)
+        {
+            string challanGroup = string.Empty;
+
+            try
+            {
+                ConstructionDiaryEntities _db = new ConstructionDiaryEntities();
+
+                challanGroup = string.Join(",", (from c in _db.tbl_Challan
+                                                 join cg in _db.tbl_ChallanGroup on c.ChallanId equals cg.ChallanId into outerJoinCreatedBy
+                                                 from cg in outerJoinCreatedBy.DefaultIfEmpty()
+                                                 where cg.ChallanGroupId == ChallanGroupId
+                                                 select new tbl_Challan
+                                                 {
+                                                     ChallanNo = c.ChallanNo
+                                                 }).ToList().Select(x => x.ChallanNo).ToArray());
+            }
+            catch (Exception ex)
+            {
+                challanGroup = "ERROR:";
+            }
+            return challanGroup;
+        }
+
     }
 }

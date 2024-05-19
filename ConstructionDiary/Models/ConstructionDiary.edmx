@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="ConstructionDiaryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="ConstructionDiaryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="tbl_Attendance">
           <Key>
             <PropertyRef Name="AttendaceId" />
@@ -120,6 +120,7 @@
           <Property Name="CarNo" Type="nvarchar" MaxLength="50" />
           <Property Name="ChallanPhoto" Type="nvarchar" MaxLength="500" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsChallanBillGenerated" Type="bit" />
           <Property Name="ClientId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsDeleted" Type="bit" Nullable="false" />
@@ -127,6 +128,33 @@
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="uniqueidentifier" />
           <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_ChallanBill">
+          <Key>
+            <PropertyRef Name="ChallanBillId" />
+          </Key>
+          <Property Name="ChallanBillId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChallanBillDate" Type="datetime" Nullable="false" />
+          <Property Name="MerchantId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChallanId" Type="uniqueidentifier" />
+          <Property Name="ChallanGroupId" Type="uniqueidentifier" />
+          <Property Name="BillAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="BillPhoto" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="tbl_ChallanGroup">
+          <Key>
+            <PropertyRef Name="ChallanGroupId" />
+          </Key>
+          <Property Name="ChallanGroupId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ChallanId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedBy" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="ModifiedBy" Type="uniqueidentifier" />
         </EntityType>
         <EntityType Name="tbl_Clients">
           <Key>
@@ -819,6 +847,8 @@
           <EntitySet Name="tbl_BillSiteItem" EntityType="Self.tbl_BillSiteItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_BillSiteNew" EntityType="Self.tbl_BillSiteNew" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Challan" EntityType="Self.tbl_Challan" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_ChallanBill" EntityType="Self.tbl_ChallanBill" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_ChallanGroup" EntityType="Self.tbl_ChallanGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Clients" EntityType="Self.tbl_Clients" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ContractorFinance" EntityType="Self.tbl_ContractorFinance" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Estimate" EntityType="Self.tbl_Estimate" Schema="dbo" store:Type="Tables" />
@@ -906,8 +936,7 @@
             <End Role="tbl_Users" EntitySet="tbl_Users" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ConstructionDiaryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1033,6 +1062,7 @@
           <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ModifiedBy" Type="Guid" />
           <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="IsChallanBillGenerated" Type="Boolean" />
         </EntityType>
         <EntityType Name="tbl_Clients">
           <Key>
@@ -1823,18 +1853,20 @@
             <End Role="tbl_Users" EntitySet="tbl_Users" />
           </AssociationSet>
           <FunctionImport Name="SP_GetPersonsList" ReturnType="Collection(ConstructionDiaryModel.SP_GetPersonsList_Result)">
-            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_GetSiteDetailById" ReturnType="Collection(ConstructionDiaryModel.SP_GetSiteDetailById_Result)">
-            <Parameter Name="SiteId" Mode="In" Type="Guid" />
+          <Parameter Name="SiteId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_GetSitesList" ReturnType="Collection(ConstructionDiaryModel.SP_GetSitesList_Result)">
-            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_GetTodayPartyFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPartyFinance_Result)">
-            <Parameter Name="ClientId" Mode="In" Type="Guid" />
+          <Parameter Name="ClientId" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="SP_GetTodayPersonFinance" ReturnType="Collection(ConstructionDiaryModel.SP_GetTodayPersonFinance_Result)" />
+          <EntitySet Name="tbl_ChallanBill" EntityType="ConstructionDiaryModel.tbl_ChallanBill" />
+          <EntitySet Name="tbl_ChallanGroup" EntityType="ConstructionDiaryModel.tbl_ChallanGroup" />
         </EntityContainer>
         <ComplexType Name="SP_GetPersonsList_Result">
           <Property Type="Guid" Name="PersonId" Nullable="true" />
@@ -1902,6 +1934,33 @@
           <Property Type="String" Name="Remarks" Nullable="true" MaxLength="365" />
           <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="tbl_ChallanBill">
+          <Key>
+            <PropertyRef Name="ChallanBillId" />
+          </Key>
+          <Property Name="ChallanBillId" Type="Guid" Nullable="false" />
+          <Property Name="ChallanBillDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MerchantId" Type="Guid" Nullable="false" />
+          <Property Name="ChallanId" Type="Guid" />
+          <Property Name="ChallanGroupId" Type="Guid" />
+          <Property Name="BillAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BillPhoto" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+        </EntityType>
+        <EntityType Name="tbl_ChallanGroup">
+          <Key>
+            <PropertyRef Name="ChallanGroupId" />
+          </Key>
+          <Property Name="ChallanGroupId" Type="Guid" Nullable="false" />
+          <Property Name="ChallanId" Type="Guid" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedBy" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="Guid" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2020,6 +2079,7 @@
           <EntitySetMapping Name="tbl_Challan">
             <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_Challan">
               <MappingFragment StoreEntitySet="tbl_Challan">
+                <ScalarProperty Name="IsChallanBillGenerated" ColumnName="IsChallanBillGenerated" />
                 <ScalarProperty Name="ChallanId" ColumnName="ChallanId" />
                 <ScalarProperty Name="ChallanDate" ColumnName="ChallanDate" />
                 <ScalarProperty Name="ChallanNo" ColumnName="ChallanNo" />
@@ -2688,6 +2748,35 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="tbl_ChallanBill">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_ChallanBill">
+              <MappingFragment StoreEntitySet="tbl_ChallanBill">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="BillPhoto" ColumnName="BillPhoto" />
+                <ScalarProperty Name="BillAmount" ColumnName="BillAmount" />
+                <ScalarProperty Name="ChallanGroupId" ColumnName="ChallanGroupId" />
+                <ScalarProperty Name="ChallanId" ColumnName="ChallanId" />
+                <ScalarProperty Name="MerchantId" ColumnName="MerchantId" />
+                <ScalarProperty Name="ChallanBillDate" ColumnName="ChallanBillDate" />
+                <ScalarProperty Name="ChallanBillId" ColumnName="ChallanBillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_ChallanGroup">
+            <EntityTypeMapping TypeName="ConstructionDiaryModel.tbl_ChallanGroup">
+              <MappingFragment StoreEntitySet="tbl_ChallanGroup">
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ChallanId" ColumnName="ChallanId" />
+                <ScalarProperty Name="ChallanGroupId" ColumnName="ChallanGroupId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

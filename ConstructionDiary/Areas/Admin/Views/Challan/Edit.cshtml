@@ -69,13 +69,32 @@
                                 </div>
 
                                 <div class="row">
-
                                     <div class="col-sm-4 form-group">
                                         @Html.LabelFor(model => model.ChallanPhotoFile, htmlAttributes: new { @class = "" })
                                         @Html.TextBoxFor(model => model.ChallanPhotoFile, new { type = "file", @class = "form-control" })
                                         @Html.ValidationMessageFor(model => model.ChallanPhotoFile, "", new { @class = "text-danger" })
                                     </div>
+                                </div>
 
+                                <div class="row">
+                                    <div class="col-sm-4 form-group">
+                                        @Html.LabelFor(model => model.IsChallanBillGenerated, htmlAttributes: new { @class = "" })
+                                        <br />
+
+                                        @Html.CheckBox("IsChallanBillGenerated", Model.IsChallanBillGenerated ? true : false)
+                                        @Html.ValidationMessageFor(model => model.IsChallanBillGenerated, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-sm-4 form-group dvBillAmount" style="display:@( Model.IsChallanBillGenerated ? "block" : "none" )">
+                                        @Html.LabelFor(model => model.BillAmount, htmlAttributes: new { @class = "" })
+                                        @Html.EditorFor(model => model.BillAmount, new { htmlAttributes = new { @class = "form-control", @placeholder = Resource.Amount, maxlength = "50", @autocomplete = "off" } })
+                                    </div>
+
+                                    <div class="col-sm-4 form-group dvBillPhotoFile" style="display:@( Model.IsChallanBillGenerated ? "block" : "none" )">
+                                        @Html.LabelFor(model => model.BillPhotoFile, htmlAttributes: new { @class = "" })
+                                        @Html.TextBoxFor(model => model.BillPhotoFile, new { type = "file", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.BillPhotoFile, "", new { @class = "text-danger" })
+                                    </div>
                                 </div>
 
                                 <div class="row">
