@@ -51,11 +51,11 @@
                                                 <th style="width:3%;">#</th>
                                                 <th>@Resource.Name</th>
                                                 @*<th style="width:10%;">@Resource.DailyRate</th>*@
-                                                <th style="width:13%;">@Resource.Status</th>
-                                                <th style="width:10%;">@Resource.Rokadiya</th>
+                                                <th style="width:15%;">@Resource.Status</th>
+                                                @*<th style="width:10%;">@Resource.Rokadiya</th>*@
                                                 <th style="width:15%;">@Resource.SiteName</th>
-                                                <th style="width:10%;">@Resource.Withdraw</th>
-                                                <th style="width:7%;">@Resource.Overtime</th>
+                                                <th style="width:15%;">@Resource.Withdraw</th>
+                                                @*<th style="width:7%;">@Resource.Overtime</th>*@
                                                 <th style="width:15%;">@Resource.Remarks</th>
                                             </tr>
                                         </thead>
@@ -76,12 +76,12 @@
                                                     @Html.ValidationMessageFor(m => m.lstPersonAttendance[counter - 1].AttendanceStatus, "", new { @class = "text-danger" })
                                                 </td>
 
-                                                <td>
+                                                @*<td>
                                                     @if (obj.PersonTypeId == 6)
                                                     {
                                                         @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].TotalRokadiya, new { htmlAttributes = new { @id = "rokadiya_" + obj.PersonId, @class = "form-control", maxlength = "100" } })
                                                     }
-                                                </td>
+                                                </td>*@
 
                                                 <td>
                                                     @Html.DropDownListFor(model => model.lstPersonAttendance[counter - 1].SiteId, new SelectList(Model.SitesList, "Value", "Text"), "-Select-", new { @id = "site_" + obj.PersonId, @class = "form-control" })
@@ -90,9 +90,9 @@
                                                 <td>
                                                     @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].WithdrawAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
                                                 </td>
-                                                <td>
+                                                @*<td>
                                                     @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].OvertimeAmount, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
-                                                </td>
+                                                </td>*@
                                                 <td>
                                                     @Html.EditorFor(model => model.lstPersonAttendance[counter - 1].Remarks, new { htmlAttributes = new { @class = "form-control", maxlength = "100" } })
                                                 </td>
@@ -111,8 +111,7 @@
 
                                 <div style="margin-top: 15px;">
                                     <div class="form-group">
-                                        <div class="col-sm-12">
-
+                                        <div class="col-sm-12"> 
                                             <input id="cmdSubmit" type="submit" value="@Resource.Save" class="btn btn-success" />
                                             <button class="btn btn-default" id="btnCancel" type="button">@Resource.Cancel</button>
                                         </div>
