@@ -10,7 +10,8 @@ namespace ConstructionDiary
         Cash,
         Cheque,
         NEFT,
-        RTGS
+        RTGS,
+        Gpay
     }
     public enum UserRoles
     {
